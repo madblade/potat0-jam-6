@@ -58,9 +58,8 @@ module.exports = function(env) {
         },
 
         devServer: {
-            // host: '0.0.0.0',
+            // host: '0.0.0.0', // <- local network debugging
             contentBase: path.resolve(__dirname, 'dist'),
-            // contentBase: 'http://localhost:8080/dist',
             port: 8080,
             hot: true,
             disableHostCheck: true,

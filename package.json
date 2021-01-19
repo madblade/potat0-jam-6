@@ -47,7 +47,7 @@
     "not ie <= 8"
   ],
   "dependencies": {
-    "bootstrap": "^4.5.3",
+    "bootstrap-css-only": "^4.4.1",
     "font-awesome": ">=4.7.0",
     "jquery": "^3.5.1"
   }

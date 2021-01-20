@@ -21,7 +21,7 @@ let EntitiesModule = {
             callback(geometry);
         }, undefined, error =>
         {
-            console.log(error);
+            console.warn(error);
             errorCallback();
         });
     },

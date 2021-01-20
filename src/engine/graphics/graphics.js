@@ -14,17 +14,17 @@ import { MaterialsModule }  from './materials.js';
 import { MeshesModule }  from './meshes.js';
 import { TexturesModule }  from './textures.js';
 import { EntitiesModule }  from './entities/entities.js';
-import { ItemsGraphicsModule }  from './entities/items.js';
-import { AnimationsModule }  from './entities/animations.js';
-import { PortalsModule }  from './portals/portals.js';
-import { CamerasModule }  from './render/cameras.js';
-import { RenderersModule }  from './render/renderer.js';
-import { ScenesModule }  from './render/scene.js';
-import { FacesModule }  from './terrain/faces.js';
-import { ChunksModule }  from './terrain/chunks.js';
-import { ChunksMeshModule } from './terrain/chunkmesh';
-import { ShadersModule }  from './shaders/shaders.js';
-import { SkyModule }  from './sky/skies.js';
+import { ItemsGraphicsModule } from './entities/items.js';
+import { AnimationsModule }    from './entities/animations.js';
+import { PortalsModule }       from './portals/portals.js';
+import { CamerasModule }       from './render/cameras.js';
+import { RenderersModule }     from './render/renderer.js';
+import { ScenesModule }        from './render/scene.js';
+import { FacesModule }         from './terrain/faces.js';
+import { ChunksModule }        from './terrain/chunks.js';
+import { ChunksMeshModule }    from './terrain/chunkmesh';
+import { ShadersModule }       from './shaders/shaders.js';
+import { SkyModule }           from './sky/skies.js';
 
 let Graphics = function(app)
 {
@@ -48,6 +48,9 @@ let Graphics = function(app)
 
     // Interaction.
     this.controls =     null;
+
+    // Loading.
+    this.loadingManager = null;
 
     // Textures
     this.textureAtlas = null;

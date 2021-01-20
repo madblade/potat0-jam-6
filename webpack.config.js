@@ -51,14 +51,19 @@ module.exports = function(env) {
                     use: ['style-loader', 'css-loader']
                 },
                 {
+                    test: /\.wm2$/,
+                    use: ['file-loader?name=[name].[ext]'],
+                },
+                {
                     test: /\.(png|svg|jpg|gif|fbx|glb)$/,
                     use: ['file-loader'],
                 },
-            ]
+            ],
         },
 
         devServer: {
             // host: '0.0.0.0', // <- local network debugging
+            // writeToDisk: true, // <- debug dist folder
             contentBase: path.resolve(__dirname, 'dist'),
             port: 8080,
             hot: true,
@@ -78,6 +83,18 @@ module.exports = function(env) {
                     }
                 }
             }
+        },
+
+        // experiments: {
+        //     syncWebAssembly: true,
+        //     asyncWebAssembly: true
+        // },
+
+        resolve: { // <- this for Ammo.js
+            fallback: {
+                path: false,
+                fs: false
+            },
         }
     };
 };

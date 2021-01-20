@@ -5,11 +5,18 @@
 'use strict';
 
 // import Stats from 'stats.js';
+import * as Ammo from '../../libs/ammo.wasm';
+require('../../libs/ammo.wasm.wm2');
+
+import { LoadingManager } from 'three';
 
 let CoreModule = {
 
     preload()
     {
+        // Using three’s loading manager.
+        this.initLoadingManager();
+
         // Textures
         this.loadTextures();
 
@@ -17,6 +24,7 @@ let CoreModule = {
         this.loadReferenceMeshes();
 
         // TODO PHYSICS load here physics.
+        this.initPhysics();
 
         // Animations
         this.initializeAnimations();
@@ -26,6 +34,42 @@ let CoreModule = {
                 this.resolveIfLoaded(resolve), 500
             );
         });
+    },
+
+    initPhysics()
+    {
+        window.addEventListener('DOMContentLoaded', function() {
+            // eslint-disable-next-line no-undef
+            Ammo().then(() =>
+            {
+                console.log('Loaded Ammo.js');
+            });
+        });
+    },
+
+    initLoadingManager()
+    {
+        this.loadingManager = new LoadingManager();
+        this.loadingManager.onProgress =
+            function(url, itemsLoaded, itemsTotal)
+            {
+                console.log(`[Graphics/Loader] Loading file ${url} (${itemsLoaded} of ${itemsTotal}).`);
+            };
+        this.loadingManager.onStart =
+            function(url, itemsLoaded, itemsTotal)
+            {
+                console.log(`[Graphics/Loader] Started loading ${url} (${itemsLoaded} of ${itemsTotal}).`);
+            };
+        this.loadingManager.onLoad =
+            function()
+            {
+                console.log('[Graphics/Loader] Loading complete!');
+            };
+        this.loadingManager.onError =
+            function(url)
+            {
+                console.log(`[Graphics/Loader] There was an error loading ${url}.`);
+            };
     },
 
     resolveIfLoaded(resolve)

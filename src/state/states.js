@@ -75,7 +75,6 @@ extend(StateManager.prototype, {
         // HUD
         $('#position').empty();
         $('#chat').empty();
-        $('#network-graph').empty();
         $('#mini-map').empty();
         $('#items').empty();
         $('#hud').empty();

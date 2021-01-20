@@ -16,7 +16,6 @@ let Hud = function(register)
     this.html = `
         <div id="hud" class="noselect">
             <div id="position"></div>
-            <div id="network-graph"></div>
             <div id="diagram"></div>
             <div id="mini-map"></div>
             <!-- <div id="chat"></div>-->
@@ -52,7 +51,6 @@ extend(Hud.prototype, {
     disposeModule()
     {
         $('#hud').remove();
-        // $('#network-graph').remove();
         $('#items').remove();
     },
 
@@ -66,11 +64,6 @@ extend(Hud.prototype, {
             $('#position')
                 .text(text)
                 .css('color', this.orangeColor);
-        }
-
-        if (newState.hasOwnProperty('diagram'))
-        {
-            this.refreshHUDWorldGraph(newState.diagram);
         }
 
         if (newState.hasOwnProperty('itemSelect'))

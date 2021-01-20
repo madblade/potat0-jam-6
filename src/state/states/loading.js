@@ -13,7 +13,7 @@ let LoadingState = function(stateManager)
     this.stateName = 'loading';
     this.html = `
         <div style="" class="title noselect">
-        <p>spix<br/>engineering version</p>
+        <p>Potat0 Jam No. 6<br/>engineering version</p>
         </div>
         <div id="cube" class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>

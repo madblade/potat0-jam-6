@@ -52,7 +52,6 @@ Game.Core = function()
     this.model = {
         hub:          new Hub(this), // TODO make a level manager from that stub.
         backend:      new BackEnd(this), // TODO use existing model (or spix’s) here instead of loading & buffers
-        // TODO rename to BackEnd / FrontEnd
         // TODO refactor chunks into heightmaps.
         // TODO remove interpolation.
         // TODO remove consistency loader entirely. Every level will be in memory.

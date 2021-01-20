@@ -24,7 +24,7 @@ let RendererUpdates = {
 
     updateSkies(mainCamera)
     {
-        let skies = this.graphics.app.model.server.chunkModel.skies;
+        let skies = this.graphics.app.model.backend.chunkModel.skies;
         skies.forEach((sky, worldId) => {
             // TODO [SKY] manage with other cameras
             this.graphics.updateSunPosition(mainCamera, sky, worldId);
@@ -34,8 +34,8 @@ let RendererUpdates = {
     updateWaters(cameraManager, renderer, mainScene, mainCam)
     {
         // Update uniforms
-        let worlds = this.graphics.app.model.server.chunkModel.worlds;
-        let skies = this.graphics.app.model.server.chunkModel.skies;
+        let worlds = this.graphics.app.model.backend.chunkModel.worlds;
+        let skies = this.graphics.app.model.backend.chunkModel.skies;
         let eye = cameraManager.waterCamera.eye;
         // let instancedMaterials = this.graphics.instancedMaterials;
         let waterMaterials = this.graphics.waterMaterials;
@@ -141,8 +141,8 @@ let RendererUpdates = {
     updateShadows() // cameraManager)
     {
         let graphics = this.graphics;
-        let worlds = graphics.app.model.server.chunkModel.worlds;
-        let skies = graphics.app.model.server.chunkModel.skies;
+        let worlds = graphics.app.model.backend.chunkModel.worlds;
+        let skies = graphics.app.model.backend.chunkModel.skies;
         // let eye = cameraManager.waterCamera.eye;
         let eye = graphics.getCameraCoordinates();
         // let eyedir = cameraManager.mainCamera.getCameraForwardVector();

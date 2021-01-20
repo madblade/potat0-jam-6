@@ -13,7 +13,7 @@ import { XModel }       from './x/x.js';
 
 import { UpdateModule } from './updates.js';
 
-let Server = function(app)
+let BackEnd = function(app)
 {
     this.app = app;
 
@@ -24,12 +24,11 @@ let Server = function(app)
     this.selfModel.xModel = this.xModel;
 
     this.isRunning = false;
-    this.isDirty = false;
 };
 
-extend(Server.prototype, UpdateModule);
+extend(BackEnd.prototype, UpdateModule);
 
-extend(Server.prototype, {
+extend(BackEnd.prototype, {
 
     init()
     {
@@ -69,4 +68,4 @@ extend(Server.prototype, {
 
 });
 
-export { Server };
+export { BackEnd };

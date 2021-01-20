@@ -16,6 +16,8 @@ let CoreModule = {
         // Meshes
         this.loadReferenceMeshes();
 
+        // TODO PHYSICS load here physics.
+
         // Animations
         this.initializeAnimations();
 
@@ -70,8 +72,8 @@ let CoreModule = {
 
     animate()
     {
-        let clientModel = this.app.model.client;
-        let serverModel = this.app.model.server;
+        let clientModel = this.app.model.frontend;
+        let serverModel = this.app.model.backend;
         let controlsEngine = this.app.engine.controls;
 
         // Request animation frame.
@@ -107,7 +109,7 @@ let CoreModule = {
         let sceneManager = this.sceneManager;
         let cameraManager = this.cameraManager;
         let rendererManager = this.rendererManager;
-        let portals = this.app.model.server.xModel.portals;
+        let portals = this.app.model.backend.xModel.portals;
 
         // Refresh portals.
         this.processPortalUpdates();
@@ -121,7 +123,9 @@ let CoreModule = {
 
     pingStandalone()
     {
-        let standalone = this.app.localServer.standalone;
+        // TODO PHYSICS update here… ?
+        let standalone = this.app.standalone;
+        if (!standalone) return;
         let server = standalone.server;
         if (!server) return;
         if (!standalone.isRunning()) return;
@@ -166,7 +170,7 @@ let CoreModule = {
 
     initializeCameras()
     {
-        let selfModel = this.app.model.server.selfModel;
+        let selfModel = this.app.model.backend.selfModel;
         let worldId = selfModel.worldId;
         this.addToScene(this.cameraManager.mainCamera.get3DObject(), worldId);
         this.addToScene(this.cameraManager.mainRaycasterCamera.get3DObject(), worldId);
@@ -178,7 +182,7 @@ let CoreModule = {
      */
     getCameraInteraction()
     {
-        return this.app.model.client.getCameraInteraction();
+        return this.app.model.frontend.getCameraInteraction();
     }
 };
 

@@ -9,7 +9,7 @@ import {
     Color, Mesh,
     Vector3
 } from 'three';
-import { ItemType } from '../../../model/server/self/items';
+import { ItemType } from '../../../model/backend/self/items';
 import { createShadowCastingMaterial, getDynamicShadowVolumeGeometry } from './shadow';
 
 const debugChunks = false;

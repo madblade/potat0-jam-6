@@ -11,18 +11,18 @@ import extend               from '../../extend.js';
 import { SelfComponent }    from './self/self.js';
 import { EventComponent }   from './event/event.js';
 
-let Client = function(app)
+let FrontEnd = function(app)
 {
     this.app = app;
 
-    // Client model component.
+    // FrontEnd model component.
     this.selfComponent = new SelfComponent(this);
 
     // Event component.
     this.eventComponent = new EventComponent(this);
 };
 
-extend(Client.prototype, {
+extend(FrontEnd.prototype, {
 
     init()
     {
@@ -66,4 +66,4 @@ extend(Client.prototype, {
 
 });
 
-export { Client };
+export { FrontEnd };

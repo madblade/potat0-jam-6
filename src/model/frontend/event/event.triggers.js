@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { ItemsModelModule } from '../../server/self/items';
+import { ItemsModelModule } from '../../backend/self/items';
 
 let TriggersModule = {
 

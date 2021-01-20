@@ -5,7 +5,7 @@
 'use strict';
 
 import { $ }                from '../../../modules/polyfills/dom.js';
-import { ItemsModelModule } from '../../../model/server/self/items';
+import { ItemsModelModule } from '../../../model/backend/self/items';
 
 let ListenerModule = {
 
@@ -114,7 +114,7 @@ let ListenerModule = {
 
     requestAddBlock(isMainButton)
     {
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         let graphicsEngine = this.app.engine.graphics;
 
         let r = this.getRaycastCoordinates();
@@ -175,7 +175,7 @@ let ListenerModule = {
 
     requestDelBlock()
     {
-        const clientModel = this.app.model.client;
+        const clientModel = this.app.model.frontend;
         const graphicsEngine = this.app.engine.graphics;
 
         let r = this.getRaycastCoordinates();
@@ -212,7 +212,7 @@ let ListenerModule = {
 
     requestItemUse(isButtonUp, isSecondaryItem)
     {
-        const clientModel = this.app.model.client;
+        const clientModel = this.app.model.frontend;
         const graphicsEngine = this.app.engine.graphics;
         let p = graphicsEngine.getCameraCoordinates();
         let f = graphicsEngine.getModelForwardVector();
@@ -223,7 +223,7 @@ let ListenerModule = {
 
     requestMainHandItemAction(isButtonUp)
     {
-        let clientSelfModel = this.app.model.client.selfComponent;
+        let clientSelfModel = this.app.model.frontend.selfComponent;
         let activeItemID = clientSelfModel.getCurrentItemID();
 
         if (!isButtonUp && ItemsModelModule.isItemX(activeItemID))
@@ -244,7 +244,7 @@ let ListenerModule = {
 
     requestSecondaryHandItemAction(isButtonUp)
     {
-        let clientSelfModel = this.app.model.client.selfComponent;
+        let clientSelfModel = this.app.model.frontend.selfComponent;
         let activeItemID = clientSelfModel.getCurrentItemID();
 
         if (!ItemsModelModule.isItemIDSupported(activeItemID))
@@ -285,7 +285,7 @@ let ListenerModule = {
 
     mouseWheelCallback(event)
     {
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         let ey = -event.deltaY;
         // let df = event.deltaFactor;
 

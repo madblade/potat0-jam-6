@@ -10,7 +10,7 @@ let SelfUpdateModule = {
     {
         let register = this.app.register;
         let graphics = this.app.engine.graphics;
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         let handItemWrapper = this.handItemWrapper;
         const id = this.entityId;
 

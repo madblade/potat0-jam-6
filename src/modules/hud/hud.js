@@ -6,14 +6,12 @@
 
 import extend                   from '../../extend.js';
 import $                        from 'jquery';
-import { HUDWorldsModule }      from './hud.worlds';
 import { HUDInventoryModule }   from './hud.inventory';
 
 let Hud = function(register)
 {
     this.register = register;
     this.orangeColor = '#c96530';
-    this.sigma = null;
 
     this.html = `
         <div id="hud" class="noselect">
@@ -46,9 +44,6 @@ extend(Hud.prototype, {
         let announce = $('#announce');
         announce.before(this.html);
 
-        // World map renderer
-        this.initSigma();
-
         // Quick items
         this.initInventory();
     },
@@ -59,7 +54,6 @@ extend(Hud.prototype, {
         $('#hud').remove();
         // $('#network-graph').remove();
         $('#items').remove();
-        this.killSigma();
     },
 
     updateSelfState(newState)
@@ -107,7 +101,6 @@ extend(Hud.prototype, {
 
 });
 
-extend(Hud.prototype, HUDWorldsModule);
 extend(Hud.prototype, HUDInventoryModule);
 
 export { Hud };

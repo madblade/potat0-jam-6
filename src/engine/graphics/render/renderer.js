@@ -143,7 +143,8 @@ extend(RendererManager.prototype, {
         // Update main camera.
         mainCamera.updateProjectionMatrix();
         mainCamera.updateMatrixWorld();
-        mainCamera.matrixWorldInverse.getInverse(mainCamera.matrixWorld);
+        // mainCamera.matrixWorldInverse.getInverse(mainCamera.matrixWorld);
+        mainCamera.matrixWorldInverse.copy(mainCamera.matrixWorld).invert();
         mainScene.updateMatrixWorld();
 
         // Updates.
@@ -152,7 +153,7 @@ extend(RendererManager.prototype, {
             if (this.waterReflection)
             {
                 // get main
-                let currentWid = this.graphics.app.model.server.selfModel.worldId.toString();
+                let currentWid = this.graphics.app.model.backend.selfModel.worldId.toString();
                 if (currentWid === '-1')
                     this.updateWaters(cameraManager, renderer, mainScene, mainCamera);
                 else
@@ -209,7 +210,7 @@ extend(RendererManager.prototype, {
         this.stencilScene.updateMatrixWorld();
         this.graphics.cameraManager.moveCameraFromMouse(0, 0, 0, 0);
 
-        let worlds = this.graphics.app.model.server.chunkModel.worlds;
+        let worlds = this.graphics.app.model.backend.chunkModel.worlds;
         let pathId;
         let sceneId;
         let instancedMaterials = this.graphics.instancedMaterials;
@@ -369,12 +370,12 @@ extend(RendererManager.prototype, {
 
         // Make composer
         // XXX [PERF] optimise composer creation
-        let id = this.graphics.app.model.server.selfModel.worldId.toString();
+        let id = this.graphics.app.model.backend.selfModel.worldId.toString();
         let composer;
         if (this.composers.has(id)) {
             composer = this.composers.get(id);
         } else {
-            let skies = this.graphics.app.model.server.chunkModel.skies;
+            let skies = this.graphics.app.model.backend.chunkModel.skies;
             let s = skies.get(id);
             if (s && s.lights)
             {

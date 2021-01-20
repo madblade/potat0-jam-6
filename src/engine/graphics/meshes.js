@@ -8,7 +8,7 @@ import {
     Mesh,
     BoxGeometry, PlaneGeometry, Object3D
 } from 'three';
-import { ItemType } from '../../model/server/self/items';
+import { ItemType } from '../../model/backend/self/items';
 
 let MeshesModule = {
 
@@ -54,11 +54,12 @@ let MeshesModule = {
 
     loadReferenceMeshes()
     {
+        // TODO LOAD here animated meshes (morphed or skinned)
         this.referenceMeshes = new Map();
         let meshesToLoad = [
-            'portal-gun',
-            'yumi-morph', 'ya',
-            'yari', 'nagamaki', 'naginata', 'nodachi', 'katana'
+            // 'portal-gun',
+            // 'yumi-morph', 'ya',
+            // 'yari', 'nagamaki', 'naginata', 'nodachi', 'katana'
         ];
         this._nbMeshesToLoad = meshesToLoad.length + 1;
 

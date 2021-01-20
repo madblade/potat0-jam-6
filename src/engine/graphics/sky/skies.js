@@ -9,7 +9,7 @@ import {
     Mesh, MeshBasicMaterial, MeshNormalMaterial,
     BoxBufferGeometry, SphereBufferGeometry, Vector3, Color
 } from 'three';
-import { WorldType } from '../../../model/server/chunks';
+import { WorldType } from '../../../model/backend/chunks';
 import {
     LightDefaultColors, LightDefaultIntensities
 } from '../light';
@@ -231,7 +231,7 @@ let SkyModule = {
         s.material.uniforms.sunPosition.value.copy(sunPosition);
         // Better not touch this!
         // This accounts for skybox translations in sky shaders.
-        let model = this.app.model.server;
+        let model = this.app.model.backend;
         let p = model.selfModel.position;
         if (!p) return;
         sky.position.copy(p);

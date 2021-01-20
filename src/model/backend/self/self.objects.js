@@ -36,7 +36,7 @@ let SelfObjectsModule = {
         let graphics = this.app.engine.graphics;
         if (!this.meleeEffectMesh)
         {
-            let em = this.app.model.server.entityModel;
+            let em = this.app.model.backend.entityModel;
             this.meleeEffectMesh = em.createMeleeMesh();
         }
 
@@ -132,7 +132,7 @@ let SelfObjectsModule = {
         let graphics = this.app.engine.graphics;
 
         let worldId = this.worldId;
-        let handItemID = this.app.model.client.selfComponent.getCurrentItemID();
+        let handItemID = this.app.model.frontend.selfComponent.getCurrentItemID();
         let handItem;
 
         if (ItemsModelModule.isItemNaught(handItemID)) handItem = null;

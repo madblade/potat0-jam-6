@@ -73,7 +73,7 @@ let HubState = function(stateManager)
                 </button>
             </div>
         </div>
-        
+
         <div class="input-group">
             <div class="input-group-prepend mb-1 flex-fill">
                 <span class="input-group-text flex-fill">Fantasy World</span>
@@ -261,7 +261,6 @@ extend(HubState.prototype, {
         $('#button-return-main').click(function() {
             // Necessary to disconnect from WebRTC socket
             // (among, possibly, other things).
-            app.engine.connection.disconnect();
             app.setState('main');
         });
 

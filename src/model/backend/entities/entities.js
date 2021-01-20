@@ -129,7 +129,7 @@ extend(EntityModel.prototype, {
             const dxxdyy = dx * dx + dy * dy;
             if (dxxdyy + dz * dz < 1e-12)
             {
-                const selfRotation = this.app.model.server.selfModel.rotation;
+                const selfRotation = this.app.model.backend.selfModel.rotation;
                 v1 = selfRotation[2];
                 v2 = selfRotation[3];
                 let rr = currentEntity.currentRFromServer;

@@ -116,7 +116,8 @@ extend(CameraManager.prototype, {
         camera.getRecorder().updateProjectionMatrix();
         camera.getRecorder().updateMatrixWorld();
         camera.getRecorder().matrixWorldInverse
-            .getInverse(camera.getRecorder().matrixWorld);
+            .copy(camera.getRecorder().matrixWorld).invert();
+        // .getInverse(camera.getRecorder().matrixWorld);
         // console.log(`Successfully added side camera to scene ${worldId}`);
     },
 
@@ -267,7 +268,7 @@ extend(CameraManager.prototype, {
             //     ${rotation[3].toFixed(4)}
             // `);
 
-            let clientModel = this.graphicsEngine.app.model.client;
+            let clientModel = this.graphicsEngine.app.model.frontend;
             clientModel.triggerEvent('r', rotation);
         }
     },
@@ -322,7 +323,8 @@ extend(CameraManager.prototype, {
         //mirrorCamera.
         mirrorCamera.updateProjectionMatrix();
         mirrorCamera.updateMatrixWorld();
-        mirrorCamera.matrixWorldInverse.getInverse(mirrorCamera.matrixWorld);
+        // mirrorCamera.matrixWorldInverse.getInverse(mirrorCamera.matrixWorld);
+        mirrorCamera.matrixWorldInverse.copy(mirrorCamera.matrixWorld).invert();
 
         // now update projection matrix with new clip plane
         // implementing code from: http://www.terathon.com/code/oblique.html
@@ -432,7 +434,7 @@ extend(CameraManager.prototype, {
         this.updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0);
 
         // Apply transform to local model.
-        this.graphicsEngine.app.model.server.selfModel.cameraMoved(this.mainCamera);
+        this.graphicsEngine.app.model.backend.selfModel.cameraMoved(this.mainCamera);
 
         // drunken controls: tmpQuaternion.set(- movementY * 0.002, - movementX * 0.002, 0, 1).normalize();
         // camera.quaternion.multiply(tmpQuaternion);
@@ -497,8 +499,8 @@ extend(CameraManager.prototype, {
     performRaycast()
     {
         let graphicsEngine = this.graphicsEngine;
-        let chunkModel = graphicsEngine.app.model.server.chunkModel;
-        let selfModel = graphicsEngine.app.model.server.selfModel;
+        let chunkModel = graphicsEngine.app.model.backend.chunkModel;
+        let selfModel = graphicsEngine.app.model.backend.selfModel;
 
         let raycaster = this.raycaster;
         let camera = this.mainRaycasterCamera.getRecorder();

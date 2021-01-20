@@ -10,7 +10,7 @@ let ControlsModule = {
     {
         // Warn! this short-circuits client-server validation.
         // Consider pushing item held event to server in normal loop.
-        let selfModel = this.app.model.server.selfModel;
+        let selfModel = this.app.model.backend.selfModel;
         selfModel.updateHandItem();
         if (this._debug)
             console.log(`[Graphics/Controls] Changing for item ${itemID}.`);

@@ -29,16 +29,10 @@ let HomeModule = {
         this.unlistenSettingsMenu();
         // $(window).off('keydown');
         // this.app.setState('loading');
-        app.engine.connection.send('leave');
         app.stopGame();
-        if (app.model.server.isDirty) {
-            app.engine.connection.disconnect();
-            app.setState('main');
-            app.model.server.isDirty = false;
-        } else {
-            let hub = this.app.model.hub;
-            hub.enterHub();
-        }
+        // app.setState('main');
+        let hub = this.app.model.hub;
+        hub.enterHub();
     },
 
     listenHome()

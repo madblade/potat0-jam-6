@@ -5,7 +5,7 @@
 'use strict';
 
 import extend       from '../../../extend.js';
-import { ItemType } from '../../server/self/items';
+import { ItemType } from '../../backend/self/items';
 
 let SelfComponent = function(clientModel)
 {
@@ -147,7 +147,7 @@ extend(SelfComponent.prototype, {
 
     processCameraModeChange(data)
     {
-        let serverSelfModel = this.clientModel.app.model.server.selfModel;
+        let serverSelfModel = this.clientModel.app.model.backend.selfModel;
         let graphicsEngine = this.clientModel.app.engine.graphics;
 
         let avatar = serverSelfModel.avatar;

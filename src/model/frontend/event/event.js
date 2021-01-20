@@ -56,9 +56,7 @@ extend(EventComponent.prototype, {
 
     pushEvents()
     {
-        let connectionEngine = this.clientModel.app.engine.connection;
         let events = this.eventsToPush;
-        let currentEvent;
 
         let maxNumberOfEvents = this.maxNumberOfEventsPer16ms;
         if (this.numberOfEvents > maxNumberOfEvents) {
@@ -68,9 +66,11 @@ extend(EventComponent.prototype, {
 
         // Push to server
         // XXX [PERF] simplify and aggregate per client.
-        for (let eventId = 0, length = events.length; eventId < length; ++eventId) {
-            currentEvent = events[eventId];
-            connectionEngine.send(currentEvent[0], currentEvent[1]);
+        for (let eventId = 0, length = events.length; eventId < length; ++eventId)
+        {
+            // let currentEvent = events[eventId];
+            // connectionEngine.send(currentEvent[0], currentEvent[1]);
+            // TODO PHYSICS push events to PhysicsEngine
         }
 
         // Flush

@@ -20,7 +20,7 @@ let ListenerModule = {
             if (app.getState() !== 'ingame') return;
 
             let k = this.keyControls;
-            let clientModel = app.model.client;
+            let clientModel = app.model.frontend;
             let graphics = app.engine.graphics;
 
             // XXX [GAMEPLAY] numpad / num shortcuts
@@ -100,7 +100,7 @@ let ListenerModule = {
     // Manage alt-tab like border effects
     stopKeyboardInteraction()
     {
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         clientModel.triggerEvent('m', 'xx');
     },
 
@@ -118,7 +118,7 @@ let ListenerModule = {
             if (app.getState() !== 'ingame') return;
 
             let k = this.keyControls;
-            let clientModel = app.model.client;
+            let clientModel = app.model.frontend;
 
             switch (event.keyCode) {
                 case k.arrowUp:

@@ -12,12 +12,13 @@ let TexturesModule = {
 
     loadTextures()
     {
-        this._nbTexturesToLoad = 2;
+        this._nbTexturesToLoad = 0;
 
-        this.textureAtlas = this.loadTextureAtlas('3.jpg');
-        this.textureCoordinates = this.getTextureCoordinates('minecraft>1.5');
+        // TODO LOAD here textures.
+        // this.textureAtlas = this.loadTextureAtlas('3.jpg');
+        // this.textureCoordinates = this.getTextureCoordinates('minecraft>1.5');
 
-        this.textureWaterNormals = this.loadTextureNormals('water-normals.jpg');
+        // this.textureWaterNormals = this.loadTextureNormals('water-normals.jpg');
     },
 
     loadTextureNormals(whatTexture)

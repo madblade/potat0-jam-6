@@ -21,7 +21,7 @@ let ListenerModule = {
     onButtonChange(which, isHeld)
     {
         // console.log(`Button ${which} ${isHeld ? 'pressed' : 'released'}.`);
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         switch (which) {
             case 'triangle':
                 break;
@@ -69,7 +69,7 @@ let ListenerModule = {
 
     movePlayerFromLeftStick()
     {
-        let clientModel = this.app.model.client;
+        let clientModel = this.app.model.frontend;
         let lx = this.touch.leftX;
         let ly = this.touch.leftY;
         let lastLeft = this.touch.leftLast;

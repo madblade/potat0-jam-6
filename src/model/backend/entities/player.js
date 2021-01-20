@@ -142,7 +142,7 @@ let PlayerModule = {
         up.position.set(p.x, p.y, p.z);
         entity.lastPFromServer.set(p.x, p.y, p.z);
         entity.currentPFromServer.set(p.x, p.y, p.z);
-        let rr = this.app.model.server.selfModel.rotation;
+        let rr = this.app.model.backend.selfModel.rotation;
         let r = entity.rotation;
         r.set(rr[1], rr[2], rr[3]);
         let object3D = entity.getObject3D();

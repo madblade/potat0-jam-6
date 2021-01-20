@@ -48,6 +48,7 @@ let EntitiesModule = {
 
         // XXX [ANIMATION] export model to format glTF
         let geometry = this.loadReferenceGeometryFromMemory(model); // Should be 'steve'.
+        if (!geometry) return;
         let bufferGeometry = new BufferGeometry().fromGeometry(geometry);
 
         let mesh = new Mesh(bufferGeometry, new MeshLambertMaterial({
@@ -77,6 +78,13 @@ let EntitiesModule = {
     // For composite entities, wrap heavy model parts in higher level structure.
     finalizeEntity(id, createdEntity, color)
     {
+        if (!createdEntity || !(createdEntity instanceof Object3D))
+        {
+            console.warn('[Graphics/Entities] ' +
+                'Tried to finalize an entity that was not correctly initialized.');
+            return;
+        }
+
         // First only manage avatars.
         let up = new Object3D();
         let wrapper = new Object3D();

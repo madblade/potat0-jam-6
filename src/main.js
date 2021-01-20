@@ -2,7 +2,7 @@
  * (c) madblade 2021
  */
 
-// TODO ACESFilmicToneMapping
+import                './style/app.css';
 
 import { Game } from './game';
 

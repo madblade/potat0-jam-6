@@ -6,7 +6,7 @@
 
 // import Stats from 'stats.js';
 import * as Ammo from '../../libs/ammo.wasm';
-require('../../libs/ammo.wasm.wm2');
+import '../../libs/ammo.wasm.wasm';
 
 import { LoadingManager } from 'three';
 
@@ -25,6 +25,7 @@ let CoreModule = {
 
         // TODO PHYSICS load here physics.
         this.initPhysics();
+        this.Ammo = null;
 
         // Animations
         this.initializeAnimations();
@@ -38,10 +39,13 @@ let CoreModule = {
 
     initPhysics()
     {
+        let scope = this;
         window.addEventListener('DOMContentLoaded', function() {
             // eslint-disable-next-line no-undef
-            Ammo().then(() =>
+            Ammo().then(function(AmmoLib)
             {
+                scope.Ammo = AmmoLib;
+                window.A = AmmoLib;
                 console.log('Loaded Ammo.js');
             });
         });

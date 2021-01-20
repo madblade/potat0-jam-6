@@ -4,6 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
+const PATH = {
+    // input: path.resolve(__dirname, 'src'),
+    // eslint-disable-next-line no-undef
+    output: path.resolve(__dirname, 'dist')
+};
+
 module.exports = function(env) {
     return {
         entry: './src/main.js',
@@ -21,7 +27,7 @@ module.exports = function(env) {
         ],
 
         output: {
-            path: path.resolve(__dirname, 'dist'),
+            path: PATH.output,
             publicPath: './',
             filename: '[name].[hash].js'
         },
@@ -51,8 +57,9 @@ module.exports = function(env) {
                     use: ['style-loader', 'css-loader']
                 },
                 {
-                    test: /\.wm2$/,
-                    use: ['file-loader?name=[name].[ext]'],
+                    test: /\.wasm$/,
+                    use: ['file-loader?name=[name].[ext]?skip_parse=true'],
+                    type: 'javascript/auto'
                 },
                 {
                     test: /\.(png|svg|jpg|gif|fbx|glb)$/,
@@ -64,7 +71,7 @@ module.exports = function(env) {
         devServer: {
             // host: '0.0.0.0', // <- local network debugging
             // writeToDisk: true, // <- debug dist folder
-            contentBase: path.resolve(__dirname, 'dist'),
+            contentBase: PATH.output,
             port: 8080,
             hot: true,
             disableHostCheck: true,

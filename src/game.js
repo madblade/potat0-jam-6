@@ -130,7 +130,7 @@ extend(Game.Core.prototype, {
 
         // Start model loop.
         this.model.frontend.init();
-        this.model.backend.init();
+        this.model.backend.init(level);
     },
 
     runGame()

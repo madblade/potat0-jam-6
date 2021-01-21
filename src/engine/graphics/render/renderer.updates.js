@@ -26,7 +26,6 @@ let RendererUpdates = {
     {
         let skies = this.graphics.app.model.backend.chunkModel.skies;
         skies.forEach((sky, worldId) => {
-            // TODO [SKY] manage with other cameras
             this.graphics.updateSunPosition(mainCamera, sky, worldId);
         });
     },

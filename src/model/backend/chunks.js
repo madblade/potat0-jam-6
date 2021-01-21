@@ -66,7 +66,11 @@ extend(ChunkModel.prototype, {
 
     /** Dynamics **/
 
-    init() {},
+    init(level)
+    {
+        let terrain = level.getTerrain();
+        console.log(terrain);
+    },
 
     refresh()
     {

@@ -31,7 +31,11 @@ extend(EntityModel.prototype, PlayerModule);
 
 extend(EntityModel.prototype, {
 
-    init() {},
+    init(level)
+    {
+        let objects = level.getObjects();
+        console.log(objects);
+    },
 
     interpolatePredictEntities()
     {

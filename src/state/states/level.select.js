@@ -23,14 +23,14 @@ let LevelSelectState = function(stateManager)
 
         <hr />
 
-        <!-- Demo / Tutorial -->
+        <!-- Current progress -->
         <div class="input-group">
             <div class="input-group-prepend mb-1 flex-fill">
-                <span class="input-group-text flex-fill">Demo / Tutorial</span>
+                <span class="input-group-text flex-fill">Farthest Checkpoint</span>
             </div>
             <div class="input-group-append mb-1">
                 <button class="btn btn-outline-light"
-                    id="button-create-demo-game" style="float:none">
+                    id="button-resume" style="float:none">
                     Play
                 </button>
             </div>
@@ -135,11 +135,14 @@ extend(LevelSelectState.prototype, {
             let buttonId = $(this).attr('id');
             let levelIdString = buttonId.substring('button-join-level-'.length);
             let levelId = parseInt(levelIdString, 10);
-            console.log(`TODO: Join ${levelId}!`);
             let ux = app.engine.ux;
             let level = app.model.levels.getLevel(levelId);
             ux.joinLevel(level);
-            // TODO join correct level.
+        });
+
+        $('#button-resume').click(function() {
+            let ux = app.engine.ux;
+            ux.joinFarthestCheckpoint();
         });
     },
 

@@ -30,12 +30,12 @@ extend(BackEnd.prototype, UpdateModule);
 
 extend(BackEnd.prototype, {
 
-    init()
+    init(level)
     {
         this.isRunning = true;
-        this.selfModel.init();
-        this.chunkModel.init();
-        this.entityModel.init();
+        this.selfModel.init(level);
+        this.chunkModel.init(level);
+        this.entityModel.init(level);
         this.xModel.init();
     },
 

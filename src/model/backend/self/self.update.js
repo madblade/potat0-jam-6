@@ -23,7 +23,6 @@ let SelfUpdateModule = {
         const animate = p.x !== newP.x || p.y !== newP.y; // XXX [ANIMATION] manage 3D.
         if (animate) {
             graphics.updateAnimation(id);
-            // TODO [ANIMATION] activate hand-held animation
             // graphics.updateAnimation('yumi');
         }
         p.copy(newP);
@@ -86,7 +85,6 @@ let SelfUpdateModule = {
         let displayHandItem = this.displayHandItem;
 
         if (displayAvatar) graphics.removeFromScene(avatar, oldWorldId);
-        // TODO [GAMEPLAY] differentiate 3d person and 1st person
         if (displayHandItem) graphics.removeFromScene(handItemWrapper, oldWorldId);
 
         graphics.switchToScene(oldWorldId, worldId);

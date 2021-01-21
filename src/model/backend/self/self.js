@@ -68,9 +68,11 @@ let SelfModel = function(app)
 
 extend(SelfModel.prototype, {
 
-    init()
+    init(level)
     {
         this.loadSelf();
+        let player = level.getPlayer();
+        console.log(player);
     },
 
     // Called every client frame.

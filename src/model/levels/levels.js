@@ -4,8 +4,9 @@
 
 'use strict';
 
-import extend    from '../../extend.js';
-import { Level } from './level';
+import extend     from '../../extend.js';
+import { Level }  from './level';
+import { Level0 } from './templates/level0';
 
 let Levels = function(app)
 {
@@ -13,7 +14,7 @@ let Levels = function(app)
     this.games = new Map();
 
     this.levels = [
-        new Level('first level'),
+        new Level0('first level'),
         new Level('second level'),
     ];
 };

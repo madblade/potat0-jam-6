@@ -48,6 +48,8 @@ let CameraManager = function(graphicsEngine)
 
     // Water
     this.waterCamera = this.createWaterCamera();
+    // this.waterCameraHelper = new CameraHelper(this.waterCamera.camera);
+    // this.waterCameraHelper = new CameraHelper(this.mainCamera.cameraObject);
 
     // Optimization
     this.incomingRotationEvents = [];
@@ -241,7 +243,6 @@ extend(CameraManager.prototype, {
         let rotation = [0, 0, 0, 0];
         let acc = [0, 0, 0, 0];
 
-        console.log(incoming);
         // FF, as anyone with sanity would do.
         if (incoming.length === 1)
         {

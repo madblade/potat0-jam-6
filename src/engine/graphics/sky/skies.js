@@ -83,8 +83,8 @@ let SkyModule = {
         {
             sky = this.createFlatSky(worldId);
             this.addToScene(sky.mesh, worldId);
-            this.addToScene(sky.lights.hemisphereLight, worldId);
-            this.addToScene(sky.lights.directionalLight, worldId);
+            // this.addToScene(sky.lights.hemisphereLight, worldId);
+            // this.addToScene(sky.lights.directionalLight, worldId);
             // this.addToScene(sky.lights.ambientLight, worldId);
 
             this.updateSky(
@@ -248,7 +248,7 @@ let SkyModule = {
 
         let theta = 0; // 2 * Math.PI * (inclination - 0.5);
         let phi = 4 * Math.PI * (azimuth - 0.5);
-        phi = Math.PI / 2;
+        phi = Math.PI / 4;
         sky.phi = phi;
         let distance = 400000;
 

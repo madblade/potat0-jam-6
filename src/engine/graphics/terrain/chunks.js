@@ -6,7 +6,7 @@
 
 import {
     BufferAttribute, BufferGeometry,
-    Color, Mesh, PlaneBufferGeometry,
+    Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry,
     Vector3
 } from 'three';
 import { ItemType } from '../../../model/backend/self/items';
@@ -38,7 +38,7 @@ let ChunksModule = {
             {
                 // positions[3 * i]     = points[i];
                 // positions[3 * i + 1] = points[i];
-                positions[3 * i + 2] = points[i];
+                positions[3 * i + 2] = 0;//points[i];
                 normals[3 * i + 2] = -1;
                 i++;
             }
@@ -48,7 +48,7 @@ let ChunksModule = {
         // const isWater = false;
         let newMesh = this.createChunkMesh(geometry, true, true, worldId);
         // newMesh.receiveShadow = true;
-        newMesh.position.set(px, py, 1);
+        newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)
         return newMesh;
     },
 

@@ -33,8 +33,8 @@ let WaterCameraModule = {
             q: new Vector4(),
             textureMatrix: new Matrix4(),
             clipBias: 0.01,
-            eye: new Vector3(0, 0, 0)
-            // waterCameraHelper: new CameraHelper(this.waterCamera)
+            eye: new Vector3(0, 0, 0),
+            // waterCameraHelper: new CameraHelper(waterCamObject)
         };
     },
 
@@ -64,7 +64,7 @@ let WaterCameraModule = {
         if (!this._waterCameraObject)
         {
             this._waterCameraObject = new Object3D();
-            this._waterCameraObject.position.set(0, 0, 16);
+            this._waterCameraObject.position.set(0, 0, 0);
             this._waterCameraObject.rotation.set(0, 0, 0);
             this._waterCameraObject.updateMatrixWorld();
         }
@@ -81,7 +81,7 @@ let WaterCameraModule = {
         view.subVectors(mirrorWorldPosition, cameraWorldPosition);
 
         // Avoid rendering when mirror is facing away
-        if (view.dot(normal) > 0) return;
+        // if (view.dot(normal) > 0) return;
 
         view.reflect(normal).negate();
         view.add(mirrorWorldPosition);

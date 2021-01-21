@@ -15,7 +15,7 @@ let SelfObjectsModule = {
         let graphics = this.app.engine.graphics;
 
         // Player id '-1' never used by any other entity.
-        let entityId = this.entityId;
+        // let entityId = this.entityId;
         let worldId = this.worldId;
 
         // let createdEntity = graphics.initializeEntity(
@@ -30,7 +30,7 @@ let SelfObjectsModule = {
 
         let createdEntity = graphics.createMesh(
             graphics.createGeometry('box'),
-            graphics.createMaterial('flat-phong', {color: 0xffffff})
+            graphics.createMaterial('flat-phong', {color: 0x00ffff})
         );
 
         let up = new Object3D();
@@ -44,13 +44,9 @@ let SelfObjectsModule = {
             return wrapper;
         };
 
+        createdEntity.scale.multiplyScalar(1.);
         selfModel.avatar = up;
         graphics.addToScene(selfModel.avatar, worldId);
-
-        // if (selfModel.displayAvatar)
-        // {
-        //     graphics.addToScene(object3d, worldId);
-        // }
 
         this.updateHandItem();
     },

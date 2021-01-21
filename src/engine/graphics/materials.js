@@ -86,6 +86,17 @@ let MaterialsModule = {
                     color: 0x000000
                 });
                 break;
+            case 'grey-phong-double':
+                console.log('grey');
+                material = new MeshPhongMaterial({
+                    specular: 0xaaaaaa,
+                    flatShading: true,
+                    side: DoubleSide,
+                    color: meta && meta.color ? meta.color : null,
+                    // transparent: true,
+                    // opacity: 1
+                });
+                break;
 
             default: // Block material
                 material = new MeshBasicMaterial({

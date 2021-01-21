@@ -36,18 +36,18 @@ let SelfComponent = function(clientModel)
     this.currentItemSlot = 0; // Index of current item in inventory.
     this.angleFromIntersectionPoint = 0; // For portal placement.
 
-    let emptyItem  = ItemType.NONE;
-    this.quickBarSize = 8;
-    this.defaultQuickBar = [ // Default demo items
-        ItemType.BLOCK_PLANKS,
-        ItemType.KATANA,
-        ItemType.YUMI,
-        ItemType.NONE,
-        // ItemType.PORTAL_GUN_SINGLE,
-        ItemType.PORTAL_GUN_DOUBLE,
-        emptyItem, emptyItem, emptyItem
-    ];
-    this.quickBar = this.defaultQuickBar.slice(); // clones
+    // let emptyItem  = ItemType.NONE;
+    // this.quickBarSize = 8;
+    // this.defaultQuickBar = [ // Default demo items
+    //     ItemType.BLOCK_PLANKS,
+    //     ItemType.KATANA,
+    //     ItemType.YUMI,
+    //     ItemType.NONE,
+    //     ItemType.PORTAL_GUN_SINGLE,
+    //     ItemType.PORTAL_GUN_DOUBLE,
+    //     emptyItem, emptyItem, emptyItem
+    // ];
+    // this.quickBar = this.defaultQuickBar.slice(); // clones
 
     // Dynamic.
 
@@ -71,14 +71,14 @@ extend(SelfComponent.prototype, {
 
     cleanup()
     {
-        this.quickBar = this.defaultQuickBar.slice();
+        // this.quickBar = this.defaultQuickBar.slice();
         this.currentItemSlot = 0;
         this._cameraInteraction = 'first-person';
     },
 
     getCurrentItemID()
     {
-        return this.quickBar[this.currentItemSlot];
+        // return this.quickBar[this.currentItemSlot];
     },
 
     setAngleFromIntersectionPoint(angle)
@@ -173,6 +173,8 @@ extend(SelfComponent.prototype, {
 
     processInteractionChange(data)
     {
+        const allowRoll = false;
+        if (!allowRoll) return; // TODO here process changes
         let graphicsEngine = this.clientModel.app.engine.graphics;
         let register = this.clientModel.app.register;
         let actionType = data[0];

@@ -15,8 +15,6 @@ import SwordTrailFragment       from './sword/trail.fragment.glsl';
 // Sky
 import SkyFlatFragment      from './sky/skyFlat.fragment.glsl';
 import SkyFlatVertex        from './sky/skyFlat.vertex.glsl';
-import SkyCubeFragment      from './sky/skyCube.fragment.glsl';
-import SkyCubeVertex        from './sky/skyCube.vertex.glsl';
 
 // Water
 import WaterFragment        from './water/water.fragment.glsl';
@@ -56,16 +54,6 @@ let ShadersModule = {
     },
 
     // Sky
-    getSkyCubeVertexShader()
-    {
-        return SkyCubeVertex;
-    },
-
-    getSkyCubeFragmentShader()
-    {
-        return SkyCubeFragment;
-    },
-
     getSkyFlatVertexShader()
     {
         return SkyFlatVertex;

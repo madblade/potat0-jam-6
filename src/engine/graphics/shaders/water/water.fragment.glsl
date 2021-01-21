@@ -9,9 +9,6 @@ uniform vec3 sunDirection;
 uniform vec3 eye;
 uniform vec3 waterColor;
 
-varying vec3 vNormal;
-varying float trueZ;
-
 varying vec4 mirrorCoord;
 varying vec4 worldPosition;
 
@@ -25,8 +22,8 @@ vec4 getNoise(vec2 uv) {
 		texture2D(normalSampler, uv2) +
 		texture2D(normalSampler, uv3);
 
-	return noise * 0.5 - 1.0;
-//	return vec4(1, 1, 1, 1) * 0.5 - 1.0; // activate water normals here
+    return noise * 0.5 - 1.0;
+	//return vec4(1, 1, 1, 1) * 0.5 - 1.0; // activate water normals here
 }
 
 void sunLight(
@@ -53,38 +50,32 @@ void main() {
 
     #include <logdepthbuf_fragment>
 
-	if (abs(trueZ - 16.0) < 0.01)
-	{
-		vec4 noise = getNoise( worldPosition.xy * size );
-		vec3 surfaceNormal = normalize( noise.xyz * vec3( 1.5, 1.0, 1.5 ) ); // this for texture
+    vec4 noise = getNoise( worldPosition.xy * size );
+    vec3 surfaceNormal = normalize( noise.xyz * vec3( 1.5, 1.0, 1.5 ) ); // this for texture
 
-		vec3 diffuseLight = vec3(0.0);
-		vec3 specularLight = vec3(0.0);
+    vec3 diffuseLight = vec3(0.0);
+    vec3 specularLight = vec3(0.0);
 
-		vec3 worldToEye = eye - worldPosition.xyz;
-		vec3 eyeDirection = normalize( worldToEye );
-		sunLight( surfaceNormal, eyeDirection, 100.0, 2.0, 0.5, diffuseLight, specularLight );
+    vec3 worldToEye = eye - worldPosition.xyz;
+    vec3 eyeDirection = normalize( worldToEye );
+    sunLight( surfaceNormal, eyeDirection, 100.0, 2.0, 0.5, diffuseLight, specularLight );
 
-		float distance = length(worldToEye);
+    float distance = length(worldToEye);
 
-		vec2 distortion = surfaceNormal.xy * ( 0.001 + 1.0 / distance ) * distortionScale;
-		vec3 reflectionSample = vec3( texture2D( mirrorSampler, mirrorCoord.xy / mirrorCoord.w + distortion ) );
+    vec2 distortion = surfaceNormal.xy * ( 0.001 + 1.0 / distance ) * distortionScale;
+    vec3 reflectionSample = vec3( texture2D( mirrorSampler, mirrorCoord.xy / mirrorCoord.w + distortion ) );
 
-		float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
-		float rf0 = 0.3;
-		float reflectance = rf0 + ( 1.0 - rf0 ) * pow( abs( 1.0 - theta ), 5.0 );
-		vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;
-		vec3 albedo = mix(
-		( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(),
-		( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ),
-		reflectance
-		);
-		vec3 outgoingLight = albedo;
-		gl_FragColor = vec4( outgoingLight, alpha );
-	} else {
-		float fac = dot(vNormal, vec3(sunDirection.x, sunDirection.y, -sunDirection.z));
-		gl_FragColor = vec4(fac * waterColor, alpha);
-	}
+    float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
+    float rf0 = 0.3;
+    float reflectance = rf0 + ( 1.0 - rf0 ) * pow( abs( 1.0 - theta ), 5.0 );
+    vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;
+    vec3 albedo = mix(
+    ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(),
+    ( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ),
+    reflectance
+    );
+    vec3 outgoingLight = albedo;
+    gl_FragColor = vec4( outgoingLight, alpha );
 
     #include <tonemapping_fragment>
     #include <fog_fragment>

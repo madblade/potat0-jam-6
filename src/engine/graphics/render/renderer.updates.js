@@ -35,7 +35,8 @@ let RendererUpdates = {
         // Update uniforms
         let worlds = this.graphics.app.model.backend.chunkModel.worlds;
         let skies = this.graphics.app.model.backend.chunkModel.skies;
-        let eye = cameraManager.waterCamera.eye;
+        // let eye = cameraManager.waterCamera.eye;
+        let eye = cameraManager.mainCamera.getCameraPosition();
         // let instancedMaterials = this.graphics.instancedMaterials;
         let waterMaterials = this.graphics.waterMaterials;
         let darkWater = this.darkWater;
@@ -93,7 +94,7 @@ let RendererUpdates = {
 
             if (materialForWater && materialForWater.uniforms && materialForWater.uniforms.eye)
             {
-                materialForWater.uniforms.eye.value = eye;
+                materialForWater.uniforms.eye.value.copy(eye);
                 materialForWater.uniforms.sunDirection.value = sdir;
                 materialForWater.uniforms.time.value += 0.01;
             }

@@ -240,24 +240,69 @@ extend(CameraManager.prototype, {
 
         let rotation = [0, 0, 0, 0];
         let acc = [0, 0, 0, 0];
-        for (let i = 0, l = incoming.length; i < l; ++i)
+
+        console.log(incoming);
+        // FF, as anyone with sanity would do.
+        if (incoming.length === 1)
         {
-            let inc = incoming[i];
-            acc[0] += inc[0];
-            acc[1] += inc[1];
-            acc[2] += inc[2];
-            acc[3] += inc[3];
+            let inc = incoming[0];
+            acc[0] = inc[0];
+            acc[1] = inc[1];
+            acc[2] = inc[2];
+            acc[3] = inc[3];
+        }
+        // Chrome (there is a bug in Chrome for that! insane.)
+        else if (incoming.length > 1)
+        {
+            for (let i = 0, l = incoming.length; i < l; ++i)
+            {
+                let inc = incoming[i];
+                acc[0] += inc[0];
+                acc[1] += inc[1];
+                acc[2] += inc[2];
+                acc[3] += inc[3];
+            }
+            acc[0] /= incoming.length;
+            acc[1] /= incoming.length;
+            acc[2] /= incoming.length;
+            acc[3] /= incoming.length;
+            const thresh = 10;
+            for (let i = 0, l = incoming.length; i < l; ++i)
+            {
+                let inc = incoming[i];
+                if (Math.abs(inc[0]) > thresh * Math.abs(acc[0])) {
+                    inc[0] = acc[0];
+                }
+                if (Math.abs(inc[1]) > thresh * Math.abs(acc[1])) {
+                    inc[1] = acc[1];
+                }
+                if (Math.abs(inc[2]) > thresh * Math.abs(acc[2])) {
+                    inc[2] = acc[2];
+                }
+                if (Math.abs(inc[3]) > thresh * Math.abs(acc[3])) {
+                    inc[3] = acc[3];
+                }
+            }
+            acc = [0, 0, 0, 0];
+            for (let i = 0, l = incoming.length; i < l; ++i)
+            {
+                let inc = incoming[i];
+                acc[0] += inc[0];
+                acc[1] += inc[1];
+                acc[2] += inc[2];
+                acc[3] += inc[3];
+            }
         }
 
         // console.log(incoming.length);
         let rot = [0, 0, 0, 0];
-        rot = this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3]);
         rotation[0] = rot[0];
         rotation[1] = rot[1];
         rotation[2] = rot[2];
         rotation[3] = rot[3];
 
         this.incomingRotationEvents = [];
+        rot = this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3]);
 
         // Here we could perform additional filtering
         if (rotation)

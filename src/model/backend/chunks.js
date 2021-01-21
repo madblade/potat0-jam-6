@@ -131,8 +131,8 @@ extend(ChunkModel.prototype, {
         if (chk)
             chk.meshes.push(graphicalChunk);
         else
-            world.set(chunkId, { meshes: graphicalChunk });
-        console.log('loaded chunk ' + chunkId);
+            // world.set(chunkId, { meshes: [graphicalChunk], water: [false] });
+            world.set(chunkId, { meshes: [graphicalChunk], water: [true] });
         // TODO init physics
     },
 

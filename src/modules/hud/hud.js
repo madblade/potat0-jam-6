@@ -13,24 +13,13 @@ let Hud = function(register)
     this.register = register;
     this.orangeColor = '#c96530';
 
+    // TODO HUD Here go HUD thingies.
     this.html = `
         <div id="hud" class="noselect">
             <div id="position"></div>
             <div id="diagram"></div>
             <div id="mini-map"></div>
             <!-- <div id="chat"></div>-->
-        </div>
-        <div id="items" class="noselect">
-            <div id="item-table">
-            <div class="square"><div class="content selected" id="item0"></div></div>
-            <div class="square"><div class="content" id="item1"></div></div>
-            <div class="square"><div class="content" id="item2"></div></div>
-            <div class="square"><div class="content" id="item3"></div></div>
-            <div class="square"><div class="content" id="item4"></div></div>
-            <div class="square"><div class="content" id="item5"></div></div>
-            <div class="square"><div class="content" id="item6"></div></div>
-            <div class="square"><div class="content" id="item7"></div></div>
-            </div>
         </div>
     `;
 };
@@ -40,11 +29,11 @@ extend(Hud.prototype, {
     // Game started
     initModule()
     {
-        let announce = $('#announce');
-        announce.before(this.html);
+        // let announce = $('#announce');
+        // announce.before(this.html);
 
         // Quick items
-        this.initInventory();
+        // this.initInventory();
     },
 
     // Game ended

@@ -43,6 +43,7 @@ let LightModule = {
                     if (!worldId || parseInt(worldId, 10) !== -1 || lightType !== 'flat') break;
                     light.castShadow = true;
                     light.shadow.bias = -0.004;
+                    light.shadow.radius = 1;
                     const highRes = this.hasHighResShadows();
                     light.shadow.mapSize.width = highRes ? 4096 : 2048;
                     light.shadow.mapSize.height = highRes ? 4096 : 2048;

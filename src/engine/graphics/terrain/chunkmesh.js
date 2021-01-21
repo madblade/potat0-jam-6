@@ -31,11 +31,11 @@ let ChunksMeshModule = {
                         textureWidth: waterResolution,
                         textureHeight: waterResolution,
                         waterNormals: this.textureWaterNormals,
-                        alpha: 0.5,
-                        sunDirection: new Vector3(0.70707, 0.70707, 0.0),
+                        alpha: 1.0,
+                        sunDirection: new Vector3(0.70707, 0.70707, 0.7),
                         sunColor: 0xffffff,
                         waterColor: 0x7b8a99,
-                        distortionScale: 0.1,
+                        distortionScale: 20.1,
                         size: 10.0,
                         fog: false
                     },
@@ -47,7 +47,7 @@ let ChunksMeshModule = {
         {
             let material = this.createMaterial(
                 // 'textured-phong', 0xaaaaaa, worldId
-                'flat-phong', 0xaaaaaa, worldId
+                'grey-phong-double', 0xaaaaaa, worldId
             );
             return new Mesh(geometry, material);
         }

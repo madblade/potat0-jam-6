@@ -8,30 +8,34 @@ import {
     NearestFilter, RepeatWrapping, TextureLoader
 } from 'three';
 
+import waterNormals from '../../assets/textures/water-normals.jpg';
+
 let TexturesModule = {
 
     loadTextures()
     {
-        this._nbTexturesToLoad = 0;
+        this._nbTexturesToLoad = 1;
 
         // TODO LOAD here textures.
         // this.textureAtlas = this.loadTextureAtlas('3.jpg');
         // this.textureCoordinates = this.getTextureCoordinates('minecraft>1.5');
 
-        // this.textureWaterNormals = this.loadTextureNormals('water-normals.jpg');
+        this.textureWaterNormals = this.loadTextureNormals();
     },
 
-    loadTextureNormals(whatTexture)
+    loadTextureNormals()
     {
         let loader = new TextureLoader();
-        loader.load(`app/assets/textures/${whatTexture}`,
+        loader.load(waterNormals,
             t => {
                 console.log('[Graphics/Textures] Water normals loaded.');
                 t.wrapS = t.wrapT = RepeatWrapping;
                 this.textureWaterNormals = t;
                 this._nbTexturesLoaded++;
             },
-            undefined,
+            () => {
+                // console.log('Progress');
+            },
             () => {
                 console.error('[Graphics/Textures] Failed to load water normals.');
             });

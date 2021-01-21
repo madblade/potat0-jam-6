@@ -4,10 +4,10 @@
 
 'use strict';
 
-import { SkyFlat, SkyCube } from './sky';
+import { SkyFlat } from './sky';
 import {
-    Mesh, MeshBasicMaterial, MeshNormalMaterial,
-    BoxBufferGeometry, SphereBufferGeometry, Vector3, Color
+    Mesh, MeshBasicMaterial,
+    SphereBufferGeometry, Vector3, Color
 } from 'three';
 import { WorldType } from '../../../model/backend/chunks';
 import {
@@ -28,28 +28,6 @@ let SkyModule = {
         );
 
         return { mesh: sky, lights };
-    },
-
-    createCubeSky(center, radius)
-    {
-        // Mesh
-        let sky = new SkyCube(center.x, center.y, center.z, radius);
-        sky.scale.setScalar(450000);
-
-        // Colored cube helper
-        let g = new BoxBufferGeometry(2 * radius, 2 * radius, 2 * radius);
-        let m = new MeshNormalMaterial({wireframe: true});
-        let helper = new Mesh(g, m);
-        helper.position.y = center.y;
-        helper.position.z = center.z;
-        helper.position.x = center.x;
-
-        // Light
-        let lights = this.createSkyLight(
-            new Vector3(-1, -2, -1), 'cube'
-        );
-
-        return { mesh: sky, helper, lights };
     },
 
     createSkyLight(sunPosition, lightType, worldId)
@@ -101,49 +79,7 @@ let SkyModule = {
 
         let sky;
         let skyType = worldMeta.type;
-        if (skyType === WorldType.CUBE)
-        {
-            if (!worldMeta.center || !worldMeta.radius) {
-                console.error('[Chunks/NewSky]: No center and radius specified.');
-                return;
-            }
-            if (worldMeta.chunkSizeX !== worldMeta.chunkSizeY ||
-                worldMeta.chunkSizeX !== worldMeta.chunkSizeZ) {
-                console.error('[Chunks/NewSky]: Cube world must have cube chunks.');
-                return;
-            }
-            let chunkSize = worldMeta.chunkSizeX;
-            let center = new Vector3(
-                (worldMeta.center.x + 0.5) * chunkSize,
-                (worldMeta.center.y + 0.5) * chunkSize,
-                (worldMeta.center.z + 0.5) * chunkSize - 1);
-            let radius = Math.max(worldMeta.radius, 1) * chunkSize - 1;
-
-            sky = this.createCubeSky(center, radius);
-            this.addToScene(sky.mesh, worldId);
-            this.addToScene(sky.lights.hemisphereLight, worldId);
-            this.addToScene(sky.lights.directionalLight, worldId);
-            // this.addToScene(sky.helper, worldId);
-            // let sunSphere = this.createSunSphere();
-            // this.addToScene(sunSphere, worldId);
-
-            // turbidity = 1
-            // rayleigh = 0.25   or 0.5 and mieCoeff = 0.0
-            // mieDirectionalG = 0.0
-            this.updateSky(
-                sky.mesh,
-                sunPosition,
-                10,
-                2,
-                0.005,
-                0.8,
-                1.0,
-                -0.15, // 0.49; // elevation / inclination
-                0.0, // Facing front
-                true // isSunSphereVisible
-            );
-        }
-        else if (skyType === WorldType.FLAT || skyType === WorldType.FANTASY)
+        if (skyType === WorldType.FLAT || skyType === WorldType.FANTASY)
         {
             sky = this.createFlatSky(worldId);
             this.addToScene(sky.mesh, worldId);

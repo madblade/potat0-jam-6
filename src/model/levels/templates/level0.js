@@ -10,8 +10,8 @@ let Level0 = function(title)
 
     let chunks = new Map();
     let points = [];
-    for (let i = 0; i < 32; ++i)
-        for (let j = 0; j < 32; ++j)
+    for (let i = 0; i < 32 + 1; ++i)
+        for (let j = 0; j < 32 + 1; ++j)
             // points.push([i, j, Math.sin((i + j) / 10)]);
             points.push(-1);
     chunks.set('0,0', {

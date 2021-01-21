@@ -18,7 +18,6 @@ let ChunksModule = {
 
     createChunkFromLevel(chunk, worldId)
     {
-        console.log('creating chunk ');
         const dimX = chunk.dimX;
         const dimY = chunk.dimY;
         const widthX = chunk.widthX;
@@ -29,24 +28,27 @@ let ChunksModule = {
         const points = chunk.points;
 
         let geometry = new PlaneBufferGeometry(widthX, widthY, dimX, dimY);
-        geometry.computeBoundingSphere();
         let positions = geometry.attributes.position.array;
+        let normals = geometry.attributes.normal.array;
 
         let i = 0;
-        for (let y = 0; y < dimY + 1; ++y)
+        for (let y = 0; y < dimX + 1; ++y)
         {
-            for (let x = 0; x < dimX + 1; ++x)
+            for (let x = 0; x < dimY + 1; ++x)
             {
                 // positions[3 * i]     = points[i];
                 // positions[3 * i + 1] = points[i];
-                positions[3 * i + 2] = 0; // points[i];
-                // i++;
+                positions[3 * i + 2] = points[i];
+                normals[3 * i + 2] = -1;
+                i++;
             }
         }
+        geometry.computeBoundingSphere();
 
-        const isWater = false;
-        let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
-        newMesh.position.set(px, py, pz);
+        // const isWater = false;
+        let newMesh = this.createChunkMesh(geometry, true, true, worldId);
+        // newMesh.receiveShadow = true;
+        newMesh.position.set(px, py, 1);
         return newMesh;
     },
 

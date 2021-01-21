@@ -162,6 +162,7 @@ let PlayerModule = {
             graphics.createGeometry('box'),
             graphics.createMaterial('flat-phong', 0x5e2c04)
         );
+        // cube.castShadow = true;
         wrapper.add(cube);
         wrapper.rotation.x = Math.PI / 2;
         wrapper.rotation.y = Math.PI;

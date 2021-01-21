@@ -216,7 +216,7 @@ extend(Camera.prototype, {
         let p = this.cameraObject.position;
         p.x = 0;
         p.y = 0;
-        p.z = 4;
+        p.z = 2;
     },
 
     getCameraForwardVector()

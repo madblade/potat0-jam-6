@@ -40,7 +40,6 @@ Game.Core = function()
     // Engine manages client-side rendering, audio, inputs/outputs
     this.engine = {
         // TODO loader & splash screen.
-        // TODO default to TPS.
         // TODO remove FPS support.
         // TODO remove chunks and put heightmaps instead.
         graphics:     new Graphics(this),
@@ -55,7 +54,7 @@ Game.Core = function()
 
     // Model buffers server and client objects
     this.model = {
-        levels:       new Levels(this), // TODO make a level manager from that stub.
+        levels:       new Levels(this),
         backend:      new BackEnd(this), // TODO use existing model (or spix’s) here instead of loading & buffers
         // TODO refactor chunks into heightmaps.
         // TODO remove interpolation.

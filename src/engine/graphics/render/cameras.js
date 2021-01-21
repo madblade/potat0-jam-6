@@ -33,6 +33,7 @@ let CameraManager = function(graphicsEngine)
     // Cameras.
     this.mainCamera = this.createCamera(false, -1);
     this.mainCamera.setCameraId(-1);
+    this.mainCamera.setThirdPerson();
 
     // Raycast with different near plane
     this.mainRaycasterCamera = this.createCamera(true, -1);

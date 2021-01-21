@@ -5,6 +5,7 @@
 'use strict';
 
 import { ItemsModelModule } from './items';
+import { Object3D }         from 'three';
 
 let SelfObjectsModule = {
 
@@ -17,29 +18,39 @@ let SelfObjectsModule = {
         let entityId = this.entityId;
         let worldId = this.worldId;
 
-        let createdEntity = graphics.initializeEntity(
-            entityId, 'steve',
-            0xffff00
-        );
-        let object3d = graphics.finalizeEntity(
-            entityId, createdEntity,
-            0xffff00
-        );
-        selfModel.avatar = object3d;
+        // let createdEntity = graphics.initializeEntity(
+        //     entityId, 'steve',
+        //     0xffff00
+        // );
+        // let object3d = graphics.finalizeEntity(
+        //     entityId, createdEntity,
+        //     0xffff00
+        // );
+        // selfModel.avatar = object3d;
 
-        if (selfModel.displayAvatar)
+        let createdEntity = graphics.createMesh(
+            graphics.createGeometry('box'),
+            graphics.createMaterial('flat-phong', {color: 0xffffff})
+        );
+
+        let up = new Object3D();
+        let wrapper = new Object3D();
+        up.rotation.reorder('ZYX');
+        up.add(wrapper);
+        wrapper.add(createdEntity); // Body.
+
+        up.getWrapper = function()
         {
-            if (object3d)
-                graphics.addToScene(object3d, worldId);
-            else
-            {
-                selfModel.avatar = graphics.createMesh(
-                    graphics.createGeometry('box'),
-                    graphics.createMaterial('flat-phong', {color: 0xffffff})
-                );
-                graphics.addToScene(selfModel.avatar, worldId);
-            }
-        }
+            return wrapper;
+        };
+
+        selfModel.avatar = up;
+        graphics.addToScene(selfModel.avatar, worldId);
+
+        // if (selfModel.displayAvatar)
+        // {
+        //     graphics.addToScene(object3d, worldId);
+        // }
 
         this.updateHandItem();
     },

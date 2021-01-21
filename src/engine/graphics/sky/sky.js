@@ -58,11 +58,10 @@ let SkyFlat = function()
 {
     let shader = {
         uniforms: {
-            luminance: { value: 1 },
             turbidity: { value: 10 },
-            rayleigh: { value: 1 },
+            rayleigh: { value: 3 },
             mieCoefficient: { value: 0.005 },
-            mieDirectionalG: { value: 0.8 },
+            mieDirectionalG: { value: 0.7 },
             sunPosition: { value: new Vector3() },
             cameraPos: { value: new Vector3() }
         },

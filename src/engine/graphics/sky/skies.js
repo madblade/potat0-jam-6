@@ -152,7 +152,7 @@ let SkyModule = {
             // this.addToScene(sky.lights.ambientLight, worldId);
 
             this.updateSky(
-                sky.mesh,
+                sky,
                 sunPosition,
                 10,
                 2,
@@ -160,7 +160,7 @@ let SkyModule = {
                 0.8,
                 1.0,
                 -0.15, // 0.49; // elevation / inclination
-                0.0, // Facing front
+                3.0, // Facing front
                 true // isSunSphereVisible
             );
         }
@@ -186,7 +186,7 @@ let SkyModule = {
         return sunDirection;
     },
 
-    // XXX [SKY] sync (or seed?) sun position from server
+    // TODO [SKY] Bind sun to model.
     updateSunPosition(camera, skyObject, worldId)
     {
         let sky = skyObject.mesh;
@@ -238,7 +238,7 @@ let SkyModule = {
         sky.updateMatrix();
 
         let worldMeta = model.chunkModel.worldProperties.get(worldId);
-        let isWorldFlat = worldMeta.type === WorldType.FLAT;
+        let isWorldFlat = worldMeta && worldMeta.type === WorldType.FLAT;
 
         // Update lights
         let normSunPosition = new Vector3();
@@ -303,16 +303,17 @@ let SkyModule = {
         let sin = Math.sin;
         let cos = Math.cos;
 
-        let uniforms = sky.material.uniforms;
+        let uniforms = sky.mesh.material.uniforms;
         if (!uniforms) return;
         uniforms.turbidity.value = turbidity;
         uniforms.rayleigh.value = rayleigh;
-        uniforms.luminance.value = luminance;
         uniforms.mieCoefficient.value = mieCoefficient;
         uniforms.mieDirectionalG.value = mieDirectionalG;
 
         let theta = 0; // 2 * Math.PI * (inclination - 0.5);
         let phi = 4 * Math.PI * (azimuth - 0.5);
+        phi = Math.PI / 2;
+        sky.phi = phi;
         let distance = 400000;
 
         this.distance = distance;

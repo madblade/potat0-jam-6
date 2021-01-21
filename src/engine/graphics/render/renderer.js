@@ -39,7 +39,7 @@ let RendererManager = function(graphicsEngine)
     //          ++CPU load at chunk create/update.
     //          +++GPU load (adding render passes + fill time).
     this.shadowVolumes = false;
-    this.shadowMap = false;
+    this.shadowMap = true;
     this.highResolutionShadowMap = false;
     if (this.shadowVolumes && this.shadowMap)
     {

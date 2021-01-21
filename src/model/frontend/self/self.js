@@ -13,7 +13,7 @@ let SelfComponent = function(clientModel)
 
     // Camera.
 
-    this._cameraInteraction = 'first-person';
+    this._cameraInteraction = 'third-person';
     this.cameraInteraction = {
         /**
          * @deprecated

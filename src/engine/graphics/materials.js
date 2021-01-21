@@ -6,7 +6,7 @@
 
 import {
     VertexColors, FrontSide,
-    MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial
+    MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, DoubleSide
 } from 'three';
 
 let MaterialsModule = {
@@ -21,6 +21,7 @@ let MaterialsModule = {
                 material = new MeshPhongMaterial({
                     specular: 0xffffff,
                     flatShading: true,
+                    // side: DoubleSide,
                     vertexColors: VertexColors,
                     color: meta && meta.color ? meta.color : null,
                     // transparent: true,

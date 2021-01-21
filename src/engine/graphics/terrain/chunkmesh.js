@@ -45,7 +45,10 @@ let ChunksMeshModule = {
         }
         else
         {
-            let material = this.createMaterial('textured-phong', 0xaaaaaa, worldId);
+            let material = this.createMaterial(
+                // 'textured-phong', 0xaaaaaa, worldId
+                'flat-phong', 0xaaaaaa, worldId
+            );
             return new Mesh(geometry, material);
         }
     },

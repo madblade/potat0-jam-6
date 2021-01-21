@@ -31,7 +31,7 @@ let SelfModel = function(app)
     this.worldNeedsUpdate = false;
     this.needsUpdate = false;
     this.displayAvatar = true;
-    this.displayHandItem = true;
+    this.displayHandItem = false;
 
     this.avatar = null;
     this.handItem = null;
@@ -73,6 +73,8 @@ extend(SelfModel.prototype, {
         this.loadSelf();
         let player = level.getPlayer();
         console.log(player);
+        this.updateSelf([0, 0, 0], [0, 0, 0, 0], '-1');
+        this.updatePosition(this.avatar, this.avatar.position);
     },
 
     // Called every client frame.

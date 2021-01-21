@@ -6,7 +6,7 @@
 
 import {
     BufferAttribute, BufferGeometry,
-    Color, Mesh,
+    Color, Mesh, PlaneBufferGeometry,
     Vector3
 } from 'three';
 import { ItemType } from '../../../model/backend/self/items';
@@ -15,6 +15,40 @@ import { createShadowCastingMaterial, getDynamicShadowVolumeGeometry } from './s
 const debugChunks = false;
 
 let ChunksModule = {
+
+    createChunkFromLevel(chunk, worldId)
+    {
+        console.log('creating chunk ');
+        const dimX = chunk.dimX;
+        const dimY = chunk.dimY;
+        const widthX = chunk.widthX;
+        const widthY = chunk.widthY;
+        const px = chunk.x;
+        const py = chunk.y;
+        const pz = chunk.z;
+        const points = chunk.points;
+
+        let geometry = new PlaneBufferGeometry(widthX, widthY, dimX, dimY);
+        geometry.computeBoundingSphere();
+        let positions = geometry.attributes.position.array;
+
+        let i = 0;
+        for (let y = 0; y < dimY + 1; ++y)
+        {
+            for (let x = 0; x < dimX + 1; ++x)
+            {
+                // positions[3 * i]     = points[i];
+                // positions[3 * i + 1] = points[i];
+                positions[3 * i + 2] = 0; // points[i];
+                // i++;
+            }
+        }
+
+        const isWater = false;
+        let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
+        newMesh.position.set(px, py, pz);
+        return newMesh;
+    },
 
     createChunk(
         chunkId, all, chunkSizeX, chunkSizeY, chunkSizeZ,

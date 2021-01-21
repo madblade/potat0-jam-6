@@ -69,7 +69,71 @@ extend(ChunkModel.prototype, {
     init(level)
     {
         let terrain = level.getTerrain();
-        console.log(terrain);
+        if (!terrain) return;
+
+        let graphics = this.app.engine.graphics;
+        let worlds = terrain.worlds;
+        for (let i = 0; i < worlds.length; ++i)
+        {
+            let currentWorld = worlds[i];
+            let wid = currentWorld.id;
+            this.worlds.set(wid, new Map()); // world id -> world = map[chunk id -> chunk]
+            // graphics.addScene(wid);
+            if (currentWorld.sky === 'standard')
+            {
+                let newSky = graphics.addSky(wid, { type: WorldType.FLAT });
+                this.skies.set(wid, newSky);
+            }
+        }
+
+        let heightMaps = terrain.heightmaps;
+        for (let i = 0; i < heightMaps.length; ++i)
+        {
+            const currentHeightMap = heightMaps[i];
+            const wid = currentHeightMap.world;
+            if (!this.worlds.has(wid)) {
+                console.warn('[Graphics/Chunks] Got a HeightMap for an unknown world.');
+                continue;
+            }
+            const world = this.worlds.get(wid);
+
+            let chunks = currentHeightMap.chunks;
+            let nbX = currentHeightMap.nbChunksX;
+            let nbY = currentHeightMap.nbChunksY;
+            if (nbX > 32 || nbY > 32)
+            {
+                console.error('[Graphics/Chunks] Not supporting large maps (> 32 chunks).');
+                continue;
+            }
+
+            // Put into loaded model.
+            // if (!world.heightmaps) world.heightmaps = [currentHeightMap];
+            // else world.heightmaps.push(currentHeightMap);
+
+            for (let x = 0; x < nbX; ++x)
+                for (let y = 0; y < nbY; ++y)
+                {
+                    const id = `${x},${y}`;
+                    let c = chunks.get(id);
+                    if (!c) console.warn(`[Graphics/Chunks] Could not get chunk ${id}.`);
+                    this.loadChunkFromLevel(c, wid, world);
+                }
+        }
+    },
+
+    loadChunkFromLevel(chunk, worldId, world)
+    {
+        let graphics = this.app.engine.graphics;
+        let graphicalChunk = graphics.createChunkFromLevel(chunk, worldId);
+        graphics.addToScene(graphicalChunk, worldId);
+        const chunkId = `${chunk.x},${chunk.y},${chunk.z}`;
+        let chk = world.get(chunkId);
+        if (chk)
+            chk.meshes.push(graphicalChunk);
+        else
+            world.set(chunkId, { meshes: graphicalChunk });
+        console.log('loaded chunk ' + chunkId);
+        // TODO init physics
     },
 
     refresh()

@@ -4,7 +4,8 @@
 
 /* Includes */
 /* inject:css */
-@import 'hub.css';
+@import 'fonts.css';
+@import 'menu.css';
 @import 'hud.css';
 @import 'loader.css';
 @import 'noselect.css';
@@ -26,11 +27,10 @@ html {
 }
 
 body {
+    font-family: "Raleway", Raleway, sans-serif;
     margin: 0;
     padding: 0;
-    /*color: white;*/
-    /*color: #c96530;*/
-    color: #a15126;
+    color: #db8e65;
     width: 100%;
     height: 100%;
 }
@@ -39,13 +39,7 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    /*background-color: #c96530;*/
-    /*background-color: #362c6b;*/
-    /*background-color: #2b2356;*/
-    /*background-color: #221c45;*/
-    background-color: #1b1637;
-    /*background-image: -webkit-gradient(linear, left top, right bottom, from(#c96530), to(#362c6b));*/
-    /*background-image: linear-gradient(to bottom right, #c96530, #362c6b);*/
+    background-color: #16122c;
     background-attachment: fixed;
 }
 
@@ -62,24 +56,36 @@ hr {
 .small-title {
     position: relative;
     display: block;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: "Raleway", Raleway, sans-serif;
     text-align: center;
     padding-bottom: 40px;
 }
 
 .btn-outline-light {
-    /*background-color: #c96530;*/
-    background-color: #a15126;
-    border-color: #a15126;
+    background-color: #81411e;
+    border-color: #9e4f25;
 }
+
 .btn-outline-light:hover {
-    background-color: #c96530;
-    border-color: #c96530;
+    background-color: #9e4f25;
+    border-color: #9e4f25;
+}
+
+.btn-outline-light:active:focus {
+    background-color: #9e4f25 !important;
+    color: #c1ccc5 !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .btn {
     font-weight: bold;
-    color: #1b1637;
+    color: #c1ccc5;
+}
+
+.btn:hover {
+    color: #c1ccc5;
 }
 
 /* Main Menu */

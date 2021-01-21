@@ -1,0 +1,44 @@
+/* Server hub */
+
+.hub {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.hub #game-instances-table {
+    position: relative;
+    display: block;
+}
+
+.hub .table-bordered th,.hub .table-bordered td {
+    border: 1px solid #495057;
+}
+
+.hub .hub-button {
+    white-space: normal;
+    font-size: 16px;
+    color: white;
+    background: none;
+}
+
+.input-group-text,
+.custom-file-input, .custom-file-label
+{
+    background-color: #2b2356;
+    color: #db805e;
+    border-color: #686156;
+}
+
+.custom-file-input[disabled] ~ .custom-file-label, .custom-file-input:disabled ~ .custom-file-label,
+.custom-file-label::after
+{
+    background-color: #2b2356;
+    color: #db805e;
+    border-color: #686156;
+}
+
+hr {
+    display: block;
+    position: relative;
+    border-color: rgb(48, 52, 54);
+}

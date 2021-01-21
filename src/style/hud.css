@@ -1,9 +1,9 @@
 /* Menus */
 
 #widget {
-    /*z-index: 4;*/
-    /*top: 0; left: 0;*/
-    /*position: absolute;*/
+    z-index: 4;
+    top: 0; left: 0;
+    position: absolute;
 }
 
 #announce {
@@ -15,14 +15,14 @@
 }
 
 #announce tr {
-    color: #495057;
-    background-color: #e9ecef;
+    background-color: #2b2356;
+    color: #db805e;
     cursor: pointer;
 }
 
 #announce tr:hover {
-    color: white;
-    background-color: #c96530;
+    background-color: #413786;
+    color: #db805e;
 }
 
 /* Helpers */

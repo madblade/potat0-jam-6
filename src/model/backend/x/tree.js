@@ -343,7 +343,7 @@ extend(XGraph.prototype, {
 
             if (p0x !== p1x || p0y !== p1y || p0z !== p1z)
             {
-                // console.warn('[Tree/CameraTransform]: // TODO Compute camera chain transform.');
+                // Camera transform should be computed here.
             }
 
             let thetaP0 = sourcePortal.tempOrientation;

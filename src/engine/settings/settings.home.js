@@ -40,22 +40,11 @@ let HomeModule = {
         $('#audio').click(function() { this.goAudio(); }.bind(this));
         $('#home').click(function() { this.goHome(); }.bind(this));
         $('#return').click(function() {
-            // $(window).off('keydown');
             this.unlistenSettingsMenu();
             this.stateManager.setState('ingame');
             this.controlsEngine.requestLock();
             this.app.setFocused(true);
         }.bind(this));
-        // $(window).keydown(function(event) {
-        //     if (!event.keyCode) { return; }
-        //     if (event.keyCode === this.controlsEngine.keyControls.escape) {
-        // Remove listeners and get away from the bike.
-        // this.unlistenSettingsMenu();
-        // this.stateManager.setState('ingame');
-        // }
-        // }.bind(this));
-
-        // this.listeners.push('graphics', 'gameplay', 'audio', 'home', 'return');
     },
 
     unlistenSettingsMenu()

@@ -108,15 +108,6 @@ extend(LevelSelectState.prototype, {
         return content;
     },
 
-    // Consider using this for faster hub state update.
-    updateInstances(newMap)
-    {
-        this.stopTableListeners();
-        let container = $('#game-instances-table');
-        container.html(this.getInstancesHTMLTable(newMap));
-        this.startTableListeners();
-    },
-
     start()
     {
         // Add content then fade in.
@@ -144,7 +135,10 @@ extend(LevelSelectState.prototype, {
             let buttonId = $(this).attr('id');
             let levelIdString = buttonId.substring('button-join-level-'.length);
             let levelId = parseInt(levelIdString, 10);
-            console.log(levelId);
+            console.log(`TODO: Join ${levelId}!`);
+            let ux = app.engine.ux;
+            let level = app.model.levels.getLevel(levelId);
+            ux.joinLevel(level);
             // TODO join correct level.
         });
     },

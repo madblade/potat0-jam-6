@@ -158,7 +158,7 @@ let SelfObjectsModule = {
             handItem = null;
         }
 
-        // TODO [GAMEPLAY] link hand item and mesh when camera is third person.
+        // Third person camera stuff needed here (held items).
         if (selfModel.handItem !== handItem)
         {
             let handItemWrapper = selfModel.handItemWrapper;

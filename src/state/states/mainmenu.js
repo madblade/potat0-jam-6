@@ -27,17 +27,13 @@ let MainMenuState = function(stateManager)
         `
         <div class="row col-12"><div class="col-12">
 
-<!--        <label for="play-quick">Solo mode</label>-->
         <div class="input-group mb-1 center-block" id="play-quick">
-
-<!--            <div class="d-none d-sm-block input-group-prepend flex-fill">-->
-<!--                <span class="input-group-text flex-fill">New Game</span>-->
-<!--            </div>-->
             <div class="input-group-append flex-fill">
                 <button id="button-play"
                     class="btn btn-outline-light flex-fill" type="button">New Game</button>
             </div>
         </div>
+
         <div class="input-group mb-1 center-block" id="play-quick">
             <div class="input-group-append flex-fill">
                 <button id="button-load"
@@ -56,8 +52,7 @@ extend(MainMenuState.prototype, {
     startListeners()
     {
         $('#button-play').click(() => {
-            this.stateManager.app.join();
-            this.stateManager.app.joinedServer();
+            this.stateManager.app.engine.ux.startNewGame();
         });
 
         $('#button-load').click(() => {

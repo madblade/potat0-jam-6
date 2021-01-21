@@ -325,7 +325,7 @@ let PortalsModule = {
     },
 
     // Remove the aforementioned portal.
-    // TODO [PORTAL] manage portal removal
+    // Here portal should be removed.
     removePortalObject(portal) //, worldMap
     {
         // let worldId = portal.worldId;

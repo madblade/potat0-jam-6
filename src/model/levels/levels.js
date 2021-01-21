@@ -25,6 +25,16 @@ extend(Levels.prototype, {
         return this.levels;
     },
 
+    getLevel(levelId)
+    {
+        const level = this.levels[levelId];
+        if (!level)
+        {
+            console.warn(`[Model/Levels] Level ${levelId} not found!`);
+        }
+        return level;
+    },
+
     // TODO remove that (used to be server-bound)
     update(data)
     {

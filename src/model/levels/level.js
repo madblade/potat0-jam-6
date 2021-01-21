@@ -19,6 +19,11 @@ extend(Level.prototype, {
         return this.title;
     },
 
+    getTerrain()
+    {
+        // TODO static objects
+    },
+
     getObjects() {
         // TODO level design
     },

@@ -165,7 +165,8 @@ extend(SelfComponent.prototype, {
         else
             this._cameraInteraction = 'first-person';
 
-        // TODO [GAMEPLAY] Change held item size and parent mesh.
+        // Here, change held item size and parent mesh.
+
         graphicsEngine.changeAvatarVisibility(display, avatar, worldId);
         graphicsEngine.cameraManager.updateCameraPosition(serverSelfModel.position);
     },

@@ -171,13 +171,13 @@ function getDynamicShadowVolumeGeometry(
         else if (nbEdges === 3)
         {
             // 6 vertices: non-manifold boundary edge.
-            // TODO [SHADOWS] handle non-manifold edges
+            // Here handle non-manifold edges
             // This can be computed with normals.
         }
         else if (nbEdges === 4)
         {
             // 8 vertices: non manifold, non-boundary edge.
-            // TODO [SHADOWS] handle non-manifold non-boundary edges
+            // Here handle non-manifold non-boundary edges
             // Same, can be computed with normals, but quite a handful of cases to manage.
         }
         else {
@@ -204,7 +204,6 @@ function createShadowCastingMaterial(
     let lightPosition = new Vector3();
     let eyePosition = new Vector3();
     let customUniforms = UniformsUtils.merge([
-        // ShaderLib.lambert.uniforms,
         ShaderLib.basic.uniforms,
         {
             lightPosition: { value: lightPosition },
@@ -217,11 +216,6 @@ function createShadowCastingMaterial(
         uniforms: customUniforms,
         vertexShader: ShadersModule.getShadowVertexShader(),
         fragmentShader: ShaderLib.basic.fragmentShader,
-        // fragmentShader: ShaderLib.lambert.fragmentShader,
-        // lights: true,
-        // transparent: true,
-        // wireframe: true,
-        // flatShading: true,
         side: FrontSide
     });
 }

@@ -23,6 +23,8 @@ import { FrontEnd }     from './model/frontend/frontend.js';
 
 // Modules
 import { Register } from './modules/register/register.js';
+import { AI }       from './engine/ai/ai';
+import { Physics }  from './engine/physics/physics';
 // import { Polyfills }    from 'modules/polyfills/polyfills.js';
 
 // Global application structure.
@@ -43,10 +45,12 @@ Game.Core = function()
         // TODO remove chunks and put heightmaps instead.
         graphics:     new Graphics(this),
         audio:        new Audio(this),
+        ai:           new AI(this),
+        physics:      new Physics(this),
         // TODO put AI, Physics. Wire to server model.
-        controls:     new UI(this), // TODO add controller API, drop touch
-        settings:     new Settings(this), // TODO CSS + custom settings
-        experience:   new UX(this),
+        controls:     new UI(this), // TODO add gamepad controller API
+        settings:     new Settings(this), // TODO custom settings
+        ux:           new UX(this),
     };
 
     // Model buffers server and client objects
@@ -114,12 +118,10 @@ extend(Game.Core.prototype, {
     },
 
     // Called when a 'join' request is emitted from Hub state.
-    join()
+    configureGame(level)
     {
-        // if (this.getState() !== 'hub')
-        //     throw Error('Could not request game joining outside of Hub.');
-
-        console.log('Join request...');
+        console.log('Configuring Game...');
+        console.log(level);
 
         // Configuration.
         this.setState('preingame');
@@ -129,22 +131,12 @@ extend(Game.Core.prototype, {
         // Start model loop.
         this.model.frontend.init();
         this.model.backend.init();
-        console.log('Game effectively started.');
-
-        // Join game… ?
-    },
-
-    // Run game when joining confirmed.
-    joinedServer()
-    {
-        console.log('[Game/Client] Joined server.');
-
-        // Run game
-        this.runGame();
     },
 
     runGame()
     {
+        console.log('[Game/Client] Starting game.');
+
         this.engine.graphics.run();
         this.engine.controls.run();
         this.engine.audio.run();

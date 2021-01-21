@@ -1,19 +1,31 @@
 /**
- * Keeps track of active server games.
+ * Keeps track of levels.
  */
 
 'use strict';
 
-import extend       from '../../extend.js';
+import extend    from '../../extend.js';
+import { Level } from './level';
 
-let Hub = function(app)
+let Levels = function(app)
 {
     this.app = app;
     this.games = new Map();
+
+    this.levels = [
+        new Level('first level'),
+        new Level('second level'),
+    ];
 };
 
-extend(Hub.prototype, {
+extend(Levels.prototype, {
 
+    getLevels()
+    {
+        return this.levels;
+    },
+
+    // TODO remove that (used to be server-bound)
     update(data)
     {
         data = JSON.parse(data);
@@ -28,16 +40,16 @@ extend(Hub.prototype, {
             map.set(property, games);
         }
 
-        this.enterHub();
+        this.enterLevels();
     },
 
-    enterHub()
+    enterLevels()
     {
         let app = this.app;
         let map = this.games;
-        app.setState('hub', map);
+        app.setState('level-select', map);
     }
 
 });
 
-export { Hub };
+export { Levels };

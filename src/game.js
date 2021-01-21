@@ -12,17 +12,17 @@ import { StateManager } from './state/states.js';
 // Engine
 import { Graphics }     from './engine/graphics/graphics.js';
 import { Audio }        from './engine/audio/audio.js';
-
 import { UI }           from './engine/controls/controls.js';
 import { Settings }     from './engine/settings/settings.js';
+import { UX }           from './engine/ux/ux';
 
 // Model
-import { Hub }          from './model/hub/hub.js';
+import { Levels }       from './model/levels/levels.js';
 import { BackEnd }      from './model/backend/backend.js';
 import { FrontEnd }     from './model/frontend/frontend.js';
 
 // Modules
-import { Register }     from './modules/register/register.js';
+import { Register } from './modules/register/register.js';
 // import { Polyfills }    from 'modules/polyfills/polyfills.js';
 
 // Global application structure.
@@ -45,12 +45,13 @@ Game.Core = function()
         audio:        new Audio(this),
         // TODO put AI, Physics. Wire to server model.
         controls:     new UI(this), // TODO add controller API, drop touch
-        settings:     new Settings(this) // TODO templatize & fill with custom settings
+        settings:     new Settings(this), // TODO CSS + custom settings
+        experience:   new UX(this),
     };
 
     // Model buffers server and client objects
     this.model = {
-        hub:          new Hub(this), // TODO make a level manager from that stub.
+        levels:       new Levels(this), // TODO make a level manager from that stub.
         backend:      new BackEnd(this), // TODO use existing model (or spix’s) here instead of loading & buffers
         // TODO refactor chunks into heightmaps.
         // TODO remove interpolation.
@@ -110,17 +111,6 @@ extend(Game.Core.prototype, {
     {
         // Ensure output type.
         this.state.focus = !!isFocused;
-    },
-
-    // Called when a 'creation' request is emitted from Hub state.
-    requestGameCreation()
-    {
-        if (this.getState() !== 'hub') {
-            console.error('Could not request game creation outside of Hub.');
-            return;
-        }
-
-        // Perform game creation… ?
     },
 
     // Called when a 'join' request is emitted from Hub state.

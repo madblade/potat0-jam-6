@@ -10,7 +10,7 @@ import { $ }                from '../modules/polyfills/dom';
 import { IngameState }      from './states/ingame.js';
 import { LoadingState }     from './states/loading.js';
 import { SettingsState }    from './states/settings.js';
-import { HubState }         from './states/hub.js';
+import { LevelSelectState } from './states/level.select.js';
 import { MainMenuState }    from './states/mainmenu';
 import { PreIngameState }   from './states/pre.ingame';
 
@@ -28,7 +28,7 @@ let StateManager = function(app)
     this.registerState(new IngameState(this));
     this.registerState(new LoadingState(this));
     this.registerState(new SettingsState(this));
-    this.registerState(new HubState(this));
+    this.registerState(new LevelSelectState(this));
     this.registerState(new MainMenuState(this));
     this.registerState(new PreIngameState(this));
 };

@@ -30,7 +30,7 @@ let SelfModel = function(app)
     // Graphical component.
     this.worldNeedsUpdate = false;
     this.needsUpdate = false;
-    this.displayAvatar = false;
+    this.displayAvatar = true;
     this.displayHandItem = true;
 
     this.avatar = null;
@@ -225,7 +225,7 @@ extend(SelfModel.prototype, {
         // Graphical component.
         this.worldNeedsUpdate = false;
         this.needsUpdate = false;
-        this.displayAvatar = false;
+        this.displayAvatar = true;
         this.displayHandItem = true;
 
         this.avatar = null;

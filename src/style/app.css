@@ -28,7 +28,9 @@ html {
 body {
     margin: 0;
     padding: 0;
-    color: white;
+    /*color: white;*/
+    /*color: #c96530;*/
+    color: #a15126;
     width: 100%;
     height: 100%;
 }
@@ -37,9 +39,13 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: #c96530;
-    background-image: -webkit-gradient(linear, left top, right bottom, from(#c96530), to(#362c6b));
-    background-image: linear-gradient(to bottom right, #c96530, #362c6b);
+    /*background-color: #c96530;*/
+    /*background-color: #362c6b;*/
+    /*background-color: #2b2356;*/
+    /*background-color: #221c45;*/
+    background-color: #1b1637;
+    /*background-image: -webkit-gradient(linear, left top, right bottom, from(#c96530), to(#362c6b));*/
+    /*background-image: linear-gradient(to bottom right, #c96530, #362c6b);*/
     background-attachment: fixed;
 }
 
@@ -50,7 +56,7 @@ canvas {
 }
 
 hr {
-    border-color: white;
+    /*border-color: white;*/
 }
 
 .small-title {
@@ -62,7 +68,18 @@ hr {
 }
 
 .btn-outline-light {
+    /*background-color: #c96530;*/
+    background-color: #a15126;
+    border-color: #a15126;
+}
+.btn-outline-light:hover {
     background-color: #c96530;
+    border-color: #c96530;
+}
+
+.btn {
+    font-weight: bold;
+    color: #1b1637;
 }
 
 /* Main Menu */

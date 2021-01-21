@@ -7,24 +7,27 @@
 import extend       from '../../extend.js';
 
 // Base dependencies.
-import { CoreModule }  from './core.js';
-import { ControlsModule }  from './controls.js';
-import { LightModule }  from './light.js';
-import { MaterialsModule }  from './materials.js';
-import { MeshesModule }  from './meshes.js';
-import { TexturesModule }  from './textures.js';
-import { EntitiesModule }  from './entities/entities.js';
-import { ItemsGraphicsModule } from './entities/items.js';
-import { AnimationsModule }    from './entities/animations.js';
-import { PortalsModule }       from './portals/portals.js';
-import { CamerasModule }       from './render/cameras.js';
-import { RenderersModule }     from './render/renderer.js';
-import { ScenesModule }        from './render/scene.js';
-import { FacesModule }         from './terrain/faces.js';
-import { ChunksModule }        from './terrain/chunks.js';
-import { ChunksMeshModule }    from './terrain/chunkmesh';
-import { ShadersModule }       from './shaders/shaders.js';
-import { SkyModule }           from './sky/skies.js';
+import { CoreModule }           from './core.js';
+import { ControlsModule }       from './controls.js';
+import { LightModule }          from './light.js';
+import { MaterialsModule }      from './materials.js';
+import { MeshesModule }         from './meshes.js';
+import { TexturesModule }       from './textures.js';
+import { EntitiesModule }       from './entities/entities.js';
+import { ItemsGraphicsModule }  from './entities/items.js';
+import { AnimationsModule }     from './entities/animations.js';
+import { PortalsModule }        from './portals/portals.js';
+import { CameraManager,
+    CamerasModule }             from './render/cameras.js';
+import { RendererManager,
+    RenderersModule }           from './render/renderer.js';
+import { SceneManager,
+    ScenesModule }              from './render/scene.js';
+import { FacesModule }          from './terrain/faces.js';
+import { ChunksModule }         from './terrain/chunks.js';
+import { ChunksMeshModule }     from './terrain/chunkmesh';
+import { ShadersModule }        from './shaders/shaders.js';
+import { SkyModule }            from './sky/skies.js';
 
 let Graphics = function(app)
 {
@@ -32,6 +35,7 @@ let Graphics = function(app)
     this.app = app;
 
     // User customizable settings.
+    this.settings = {}; // TODO populate settings
     this.debug = false;
 
     // Properties.
@@ -42,9 +46,9 @@ let Graphics = function(app)
 
     // Rendering.
     this.requestId          = null;
-    this.sceneManager       = this.createSceneManager();
-    this.rendererManager    = this.createRendererManager();
-    this.cameraManager      = this.createCameraManager();
+    this.sceneManager       = new SceneManager(this);
+    this.rendererManager    = new RendererManager(this);
+    this.cameraManager      = new CameraManager(this);
 
     // Interaction.
     this.controls =     null;
@@ -83,9 +87,6 @@ let Graphics = function(app)
     this.previousFrameWorld = null;
     this.currentFrameWorld = null;
 
-    // Firefox setInterval issue
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    this._bindStandalone = isFirefox;
 };
 
 extend(Graphics.prototype, CoreModule);

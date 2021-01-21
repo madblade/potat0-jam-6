@@ -7,6 +7,12 @@
 import extend from '../../extend';
 import { $ } from '../../modules/polyfills/dom.js';
 
+const GameHeader = `
+<div class="container small-title">
+    <h2>Potat0 Jam No. 6 / alpha-0.0</h2>
+</div>
+`;
+
 let MainMenuState = function(stateManager)
 {
     this.stateManager = stateManager;
@@ -14,26 +20,29 @@ let MainMenuState = function(stateManager)
 
     this.htmlHead = `
         <div class="container">
-            <div class="container small-title">
-                <h2>spix RC-0.1</h2>
-            </div>
+            ${GameHeader}
         `;
 
     this.htmlQuick =
         `
         <div class="row col-12"><div class="col-12">
 
-        <label for="play-quick">Solo mode</label>
+<!--        <label for="play-quick">Solo mode</label>-->
         <div class="input-group mb-1 center-block" id="play-quick">
 
-            <div class="d-none d-sm-block input-group-prepend flex-fill">
-                <span class="input-group-text flex-fill">No time to set up a server?</span>
+<!--            <div class="d-none d-sm-block input-group-prepend flex-fill">-->
+<!--                <span class="input-group-text flex-fill">New Game</span>-->
+<!--            </div>-->
+            <div class="input-group-append flex-fill">
+                <button id="button-play"
+                    class="btn btn-outline-light flex-fill" type="button">New Game</button>
             </div>
-            <div class="input-group-append">
-                <button id="button-play-quick"
-                    class="btn btn-outline-light" type="button">I want to play at once; make it so!</button>
+        </div>
+        <div class="input-group mb-1 center-block" id="play-quick">
+            <div class="input-group-append flex-fill">
+                <button id="button-load"
+                    class="btn btn-outline-light flex-fill" type="button">Load</button>
             </div>
-
         </div>
 
         </div></div>
@@ -46,9 +55,13 @@ extend(MainMenuState.prototype, {
 
     startListeners()
     {
-        $('#button-play-quick').click(() => {
+        $('#button-play').click(() => {
             this.stateManager.app.join();
             this.stateManager.app.joinedServer();
+        });
+
+        $('#button-load').click(() => {
+            this.stateManager.setState('level-select');
         });
     },
 
@@ -70,7 +83,8 @@ extend(MainMenuState.prototype, {
 
     stopListeners()
     {
-        $('#button-play-quick').off('click');
+        $('#button-play').off('click');
+        $('#button-load').off('click');
     },
 
     end()
@@ -86,4 +100,4 @@ extend(MainMenuState.prototype, {
 
 });
 
-export { MainMenuState };
+export { MainMenuState, GameHeader };

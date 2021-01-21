@@ -16,8 +16,8 @@ let HomeModule = {
                 <tr id="graphics"><td>Graphics</td></tr>
                 <tr id="gameplay"><td>Gameplay</td></tr>
                 <tr id="audio"><td>Audio</td></tr>
-                <tr id="return"><td>Return</td></tr>
-                <tr id="home"><td>Exit</td></tr>
+                <tr id="return"><td>Resume Game</td></tr>
+                <tr id="home"><td>Main Menu</td></tr>
                 </table>
             </div>
         `;
@@ -30,9 +30,7 @@ let HomeModule = {
         // $(window).off('keydown');
         // this.app.setState('loading');
         app.stopGame();
-        // app.setState('main');
-        let hub = this.app.model.hub;
-        hub.enterHub();
+        app.setState('main');
     },
 
     listenHome()

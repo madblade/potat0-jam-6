@@ -535,11 +535,6 @@ extend(CameraManager.prototype, WaterCameraModule);
 
 let CamerasModule = {
 
-    createCameraManager()
-    {
-        return new CameraManager(this);
-    },
-
     getCameraCoordinates()
     {
         return this.cameraManager.mainCamera.getCameraPosition();
@@ -563,4 +558,4 @@ let CamerasModule = {
 
 };
 
-export { CamerasModule, DEFAULT_CAMERA };
+export { CameraManager, CamerasModule, DEFAULT_CAMERA };

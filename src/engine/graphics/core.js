@@ -45,7 +45,6 @@ let CoreModule = {
             Ammo().then(function(AmmoLib)
             {
                 scope.Ammo = AmmoLib;
-                window.A = AmmoLib;
                 console.log('Loaded Ammo.js');
             });
         });
@@ -137,8 +136,8 @@ let CoreModule = {
         // }
 
         // Force standalone update at animanionframe
-        if (this._bindStandalone)
-            this.pingStandalone();
+        this.pingStandalone();
+        // TODO ping physics.
 
         // Bench.
         // this.fps.update();

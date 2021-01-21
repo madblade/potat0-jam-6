@@ -14,22 +14,41 @@
     border: 1px solid #495057;
 }
 
-.hub tr {
-    color: #495057;
-    background-color: #e9ecef;
-    cursor: pointer;
-}
+/*.hub tr {*/
+/*    color: #495057;*/
+/*    background-color: #e9ecef;*/
+/*    cursor: pointer;*/
+/*}*/
 
-.hub tr:hover {
-    color: white;
-    background-color: #c96530;
-}
+/*.hub tr:hover {*/
+/*    color: white;*/
+/*    background-color: #c96530;*/
+/*}*/
 
 .hub .hub-button {
     white-space: normal;
     font-size: 16px;
     color: white;
     background: none;
+}
+
+/*TODO style according to DR */
+.input-group-text,
+.custom-file-input, .custom-file-label
+{
+    background-color: #362c6b;
+    color: #a15126;
+    border-color: rgb(119, 110, 98);
+        /*rgb(60, 65, 68);*/
+}
+
+.custom-file-input[disabled] ~ .custom-file-label, .custom-file-input:disabled ~ .custom-file-label,
+.custom-file-label::after
+{
+    background-color: #362c6b;
+    color: #a15126;
+    border-color: rgb(119, 110, 98);
+    /*rgb(60, 65, 68);*/
 }
 
 .hub .hub-button:hover {
@@ -40,5 +59,6 @@
 hr {
     display: block;
     position: relative;
-    border-top: 1px solid rgba(0, 0, 0, 1.0)
+    /*border-top: 1px solid rgba(0, 0, 0, 1.0);*/
+border-color: rgb(48, 52, 54);
 }

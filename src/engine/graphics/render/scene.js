@@ -125,11 +125,7 @@ extend(SceneManager.prototype, {
 
     cleanup()
     {
-        this.mainScene.dispose();
         this.mainScene = this.createScene(-1);
-        this.subScenes.forEach(s => {
-            s.dispose();
-        });
         this.subScenes.clear();
         this.screens.forEach(s => {
             if (s.mesh) {
@@ -148,11 +144,6 @@ extend(SceneManager.prototype, {
 /** Interface with graphics engine. **/
 
 let ScenesModule = {
-
-    createSceneManager()
-    {
-        return new SceneManager(this);
-    },
 
     addToShadows(mesh)
     {
@@ -247,4 +238,4 @@ let ScenesModule = {
 
 };
 
-export { ScenesModule };
+export { SceneManager, ScenesModule };

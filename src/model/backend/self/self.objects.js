@@ -26,7 +26,20 @@ let SelfObjectsModule = {
             0xffff00
         );
         selfModel.avatar = object3d;
-        if (selfModel.displayAvatar) graphics.addToScene(object3d, worldId);
+
+        if (selfModel.displayAvatar)
+        {
+            if (object3d)
+                graphics.addToScene(object3d, worldId);
+            else
+            {
+                selfModel.avatar = graphics.createMesh(
+                    graphics.createGeometry('box'),
+                    graphics.createMaterial('flat-phong', {color: 0xffffff})
+                );
+                graphics.addToScene(selfModel.avatar, worldId);
+            }
+        }
 
         this.updateHandItem();
     },

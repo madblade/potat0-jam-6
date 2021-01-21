@@ -439,6 +439,7 @@ extend(RendererManager.prototype, {
         });
         this.composers = new Map();
         this.renderRegister.length = 0;
+        this.renderer.renderLists.dispose();
     }
 
 });
@@ -449,11 +450,6 @@ extend(RendererManager.prototype, RendererUpdates);
 /** Interface with graphics engine. **/
 
 let RenderersModule = {
-
-    createRendererManager()
-    {
-        return new RendererManager(this);
-    },
 
     hasShadowMap()
     {
@@ -472,4 +468,4 @@ let RenderersModule = {
 
 };
 
-export { RenderersModule };
+export { RendererManager, RenderersModule };

@@ -23,9 +23,8 @@ let CoreModule = {
         // Meshes
         this.loadReferenceMeshes();
 
-        // TODO PHYSICS load here physics.
+        // Load physics
         this.initPhysics();
-        this.Ammo = null;
 
         // Animations
         this.initializeAnimations();
@@ -39,15 +38,7 @@ let CoreModule = {
 
     initPhysics()
     {
-        let scope = this;
-        window.addEventListener('DOMContentLoaded', function() {
-            // eslint-disable-next-line no-undef
-            Ammo().then(function(AmmoLib)
-            {
-                scope.Ammo = AmmoLib;
-                console.log('Loaded Ammo.js');
-            });
-        });
+        this.app.engine.physics.preload();
     },
 
     initLoadingManager()
@@ -78,7 +69,8 @@ let CoreModule = {
     resolveIfLoaded(resolve)
     {
         if (this._nbTexturesLoaded === this._nbTexturesToLoad &&
-            this._nbMeshesToLoad === this._nbMeshesLoadedOrError)
+            this._nbMeshesToLoad === this._nbMeshesLoadedOrError &&
+            this.app.engine.physics.isLoaded)
         {
             console.log('[Graphics/Core] Everything loaded.');
             resolve();

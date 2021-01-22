@@ -25,7 +25,7 @@ let TexturesModule = {
 
     loadTextureNormals()
     {
-        let loader = new TextureLoader();
+        let loader = new TextureLoader(this.loadingManager);
         loader.load(waterNormals,
             t => {
                 console.log('[Graphics/Textures] Water normals loaded.');

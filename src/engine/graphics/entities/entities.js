@@ -16,7 +16,7 @@ let EntitiesModule = {
 
     loadMeshFromJSON(model, callback, errorCallback)
     {
-        let loader = new LegacyJSONLoader();
+        let loader = new LegacyJSONLoader(this.loadingManager);
         loader.load(`app/assets/models/${model}.json`, geometry => {
             callback(geometry);
         }, undefined, error =>

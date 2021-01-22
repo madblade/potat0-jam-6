@@ -4,6 +4,7 @@
 
 /* Includes */
 /* inject:css */
+@import 'textobject.css';
 @import 'fonts.css';
 @import 'menu.css';
 @import 'hud.css';

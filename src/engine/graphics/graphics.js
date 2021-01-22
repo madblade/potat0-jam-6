@@ -18,16 +18,17 @@ import { ItemsGraphicsModule }  from './entities/items.js';
 import { AnimationsModule }     from './entities/animations.js';
 import { PortalsModule }        from './portals/portals.js';
 import { CameraManager,
-    CamerasModule }             from './render/cameras.js';
+    CamerasModule }         from './render/cameras.js';
 import { RendererManager,
-    RenderersModule }           from './render/renderer.js';
+    RenderersModule }       from './render/renderer.js';
 import { SceneManager,
-    ScenesModule }              from './render/scene.js';
-import { FacesModule }          from './terrain/faces.js';
-import { ChunksModule }         from './terrain/chunks.js';
-import { ChunksMeshModule }     from './terrain/chunkmesh';
-import { ShadersModule }        from './shaders/shaders.js';
-import { SkyModule }            from './sky/skies.js';
+    ScenesModule }          from './render/scene.js';
+import { FacesModule }      from './terrain/faces.js';
+import { ChunksModule }     from './terrain/chunks.js';
+import { ChunksMeshModule } from './terrain/chunkmesh';
+import { ShadersModule }    from './shaders/shaders.js';
+import { SkyModule }        from './sky/skies.js';
+import { TextModule }       from '../text/text';
 
 let Graphics = function(app)
 {
@@ -86,7 +87,6 @@ let Graphics = function(app)
     this.lastRenderGates = new Set();
     this.previousFrameWorld = null;
     this.currentFrameWorld = null;
-
 };
 
 extend(Graphics.prototype, CoreModule);
@@ -107,5 +107,6 @@ extend(Graphics.prototype, ChunksModule);
 extend(Graphics.prototype, ChunksMeshModule);
 extend(Graphics.prototype, ShadersModule);
 extend(Graphics.prototype, SkyModule);
+extend(Graphics.prototype, TextModule);
 
 export { Graphics };

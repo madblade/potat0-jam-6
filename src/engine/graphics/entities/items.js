@@ -32,7 +32,7 @@ let ItemsGraphicsModule = {
             return;
         }
 
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(this.loadingManager);
         loader.load(`app/assets/models/${modelPath}.glb`, gltf => {
             if (modelPath === 'portal-gun')
                 this.finalizePortalMesh(gltf, callback);

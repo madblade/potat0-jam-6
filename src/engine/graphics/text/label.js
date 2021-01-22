@@ -2,7 +2,7 @@
  * HTML Label object to be displayed on top of the scene.
  */
 import { Vector3 } from 'three';
-import extend      from '../../extend';
+import extend      from '../../../extend';
 
 let Label = function(text)
 {

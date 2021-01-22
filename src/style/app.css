@@ -20,6 +20,24 @@
     padding: 0.2em 0;
 }
 
+.ie10-11 {
+    display: none;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    /* IE-only styles here. Works for IS 10 & IE 11 */
+    .ie10-11 {
+        display: block;
+    }
+    body {
+        color: black;
+        background: white;
+    }
+    .smartphones {
+        display: none !important;
+    }
+}
+
 /* Main */
 
 html {

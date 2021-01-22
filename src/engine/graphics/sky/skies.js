@@ -152,7 +152,7 @@ let SkyModule = {
         let camPosition;
         if (camera.projectionMatrix)
         {
-            // let mat4 = new THREE.Matrix4();
+            // let mat4 = new Matrix4();
             // mat4.set(
             //     camera.fov, camera.aspect, camera.far, camera.near,
             //     0, 0, 0, 0,

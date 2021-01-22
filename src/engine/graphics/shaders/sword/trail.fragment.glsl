@@ -1,9 +1,9 @@
 /* To use with RingBufferGeometry */
 /* Example:
-var ringGeometry = new THREE.RingBufferGeometry(
+var ringGeometry = new RingBufferGeometry(
     5, 13, 20, 1, 0, Math.PI
 );
-var material = new THREE.ShaderMaterial({
+var material = new ShaderMaterial({
     uniforms: {
         time: { value: 1.0 },
         outerRadius: { value: 13.0 },
@@ -11,7 +11,7 @@ var material = new THREE.ShaderMaterial({
     },
     vertexShader: document.getElementById('vertexShader').textContent,
     fragmentShader: document.getElementById('fragmentShader').textContent,
-    side: THREE.DoubleSide,
+    side: DoubleSide,
     transparent: true
 });
 // Time from 0. to 1.: ring appears

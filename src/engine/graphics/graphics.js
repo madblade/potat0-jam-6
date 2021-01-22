@@ -28,7 +28,7 @@ import { ChunksModule }     from './terrain/chunks.js';
 import { ChunksMeshModule } from './terrain/chunkmesh';
 import { ShadersModule }    from './shaders/shaders.js';
 import { SkyModule }        from './sky/skies.js';
-import { TextModule }       from '../text/text';
+import { TextModule }       from './text/text';
 
 let Graphics = function(app)
 {

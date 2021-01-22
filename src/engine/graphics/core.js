@@ -5,8 +5,8 @@
 'use strict';
 
 // import Stats from 'stats.js';
-import * as Ammo from '../../libs/ammo.wasm';
-import '../../libs/ammo.wasm.wasm';
+// import * as Ammo from '../../libs/ammo.wasm';
+// import '../../libs/ammo.wasm.wasm';
 
 import { LoadingManager } from 'three';
 

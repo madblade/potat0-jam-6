@@ -20,7 +20,7 @@ import {
 function LegacyJSONLoader(manager)
 {
     if (typeof manager === 'boolean') {
-        console.warn('THREE.JSONLoader: showStatus parameter has been removed from constructor.');
+        console.warn('JSONLoader: showStatus parameter has been removed from constructor.');
         manager = undefined;
     }
 
@@ -51,7 +51,7 @@ Object.assign(LegacyJSONLoader.prototype, {
 
                 if (type !== undefined) {
                     if (type.toLowerCase() === 'object') {
-                        console.error(`THREE.JSONLoader: ${url} should be loaded with THREE.ObjectLoader instead.`);
+                        console.error(`JSONLoader: ${url} should be loaded with ObjectLoader instead.`);
                         return;
                     }
                 }
@@ -375,7 +375,7 @@ Object.assign(LegacyJSONLoader.prototype, {
             }
 
             if (json.morphColors !== undefined && json.morphColors.length > 0) {
-                console.warn('THREE.JSONLoader: "morphColors" no longer supported. Using them as face colors.');
+                console.warn('JSONLoader: "morphColors" no longer supported. Using them as face colors.');
 
                 var faces = geometry.faces;
                 var morphColors = json.morphColors[0].colors;

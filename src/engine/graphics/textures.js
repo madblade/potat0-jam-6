@@ -81,8 +81,8 @@ let TexturesModule = {
         //     p/=2;
         // }
 
-        // Idea #1: use THREE.SceneUtils.createMultiMaterialObject( geometry, materials );
-        // then, let mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+        // Idea #1: use SceneUtils.createMultiMaterialObject( geometry, materials );
+        // then, let mesh = new Mesh( geometry, new MeshFaceMaterial( materials ) );
         // Where materials is an [] of materials and the faces use a materialIndex parameter to get appointed the right mat.
         // Idea #2: shader
 

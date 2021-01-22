@@ -3,7 +3,7 @@
  */
 
 import extend    from '../../extend';
-import * as Ammo from '../../libs/ammo.wasm';
+import { engine } from './engine/engine';
 
 let Physics = function(app)
 {
@@ -17,14 +17,19 @@ extend(Physics.prototype, {
 
     preload()
     {
-        let scope = this;
-        window.addEventListener('DOMContentLoaded', function() {
-            // eslint-disable-next-line no-undef
-            Ammo().then(function(AmmoLib)
+        window.addEventListener('DOMContentLoaded', () => {
+
+            // Ammo().then(AmmoLib =>
+            // {
+            //     this.Ammo = AmmoLib;
+            //     this.isLoaded = true;
+            //     console.log('Loaded Ammo.js');
+            // });
+
+            engine.init(() =>
             {
-                scope.Ammo = AmmoLib;
-                scope.isLoaded = true;
-                console.log('Loaded Ammo.js');
+                console.log('Physics initialized.');
+                this.isLoaded = true;
             });
         });
     },

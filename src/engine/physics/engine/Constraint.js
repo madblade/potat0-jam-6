@@ -1,19 +1,10 @@
-/*global THREE*/
 import { map, root }                                   from './root.js';
-import { BufferAttribute, BufferGeometry, Line, Mesh } from 'three';
-
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    SHOT - CONSTRAINT JOINT
- */
+import {
+    BufferAttribute, BufferGeometry, Line, Mesh
+} from 'three';
 
 function Constraint()
 {
-
     this.ID = 0;
     this.joints = [];
 
@@ -24,61 +15,49 @@ function Constraint()
     this.g = new ConeBufferGeometry(0.1,0.2,6);
     this.g.translate( 0, 0.1, 0 );
     this.g.rotateZ( -Math.PI*0.5 );*/
-
 }
 
 Object.assign(Constraint.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
-
         if (!root.constraintDebug) return;
 
         var n;
 
         this.joints.forEach(function(j, id)
         {
-
-            n = N + (id * 14);
+            n = N + id * 14;
             j.step(n, AR);
-
         });
-
     },
 
-    clear: function()
+    clear()
     {
-
         while (this.joints.length > 0) this.destroy(this.joints.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(j)
+    destroy(j)
     {
-
         map.delete(j.name);
         j.clear();
         //root.destroy( b );
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var j = map.get(name);
 
         var n = this.joints.indexOf(j);
         this.joints.splice(n, 1);
         this.destroy(j);
-
     },
 
-    add: function(o)
+    add(o)
     {
-
-        o.name = o.name !== undefined ? o.name : 'joint' + this.ID++;
+        o.name = o.name !== undefined ? o.name : `joint${this.ID++}`;
 
         // delete old if same name
         this.remove(o.name);
@@ -102,7 +81,6 @@ Object.assign(Constraint.prototype, {
         root.post('add', o);
 
         return joint;
-
     },
 
 });
@@ -112,21 +90,18 @@ export { Constraint };
 
 function Joint(o)
 {
-
     this.type = 'constraint';
     this.name = o.name;
 
     this.isMesh = false;
 
     if (root.constraintDebug) this.init(o);
-
 }
 
 Object.assign(Joint.prototype, {
 
-    step: function(n, AR)
+    step(n, AR)
     {
-
         if (!this.isMesh) return;
 
         if (!this.mesh.visible) this.mesh.visible = true;
@@ -148,12 +123,10 @@ Object.assign(Joint.prototype, {
 
         this.p2.position.fromArray(AR, n + 7);
         this.p2.quaternion.fromArray(AR, n + 10);
-
     },
 
-    init: function(o)
+    init(o)
     {
-
         var vertices = new Float32Array([0, 0, 0, 0, 0, 0]);
         var colors = new Float32Array([0, 1, 0, 1, 1, 0]);
 
@@ -184,23 +157,17 @@ Object.assign(Joint.prototype, {
         this.mesh.visible = false;
 
         if (o.parent !== undefined) {
-
             o.parent.add(this.mesh);
             o.parent = null;
-
         } else {
-
             root.container.add(this.mesh);
-
         }
 
         this.isMesh = true;
-
     },
 
-    clear: function()
+    clear()
     {
-
         if (!this.isMesh) return;
 
         this.mesh.geometry.dispose();
@@ -209,7 +176,6 @@ Object.assign(Joint.prototype, {
         this.p1 = null;
         this.p2 = null;
         this.isMesh = false;
-
     },
 
 });

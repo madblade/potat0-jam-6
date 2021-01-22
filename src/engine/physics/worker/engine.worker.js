@@ -30,9 +30,9 @@ var isInternUpdate = false;
 var Time = typeof performance === 'undefined' ? Date : performance;
 
 //var world = null;
-var Ar,
-    ArPos,
-    ArMax;
+var Ar;
+var ArPos;
+var ArMax;
 var timestep = 1 / 60;
 var damped = 3.0 * timestep; // adjust this multiple as necessary, but for stability don't go below 3.0
 var fixed = false;
@@ -45,11 +45,11 @@ var isSoft = false;
 
 var jointDebug = false;
 
-var solver,
-    solverSoft,
-    collisionConfig,
-    dispatcher,
-    broadphase;
+var solver;
+var solverSoft;
+var collisionConfig;
+var dispatcher;
+var broadphase;
 
 var tmpRemove = [];
 var tmpAdd = [];
@@ -63,51 +63,50 @@ var numBreak = 0;
 
 var ray = null;
 
-var tmpT,
-    tmpP;
+var tmpT;
+var tmpP;
 
-var stepNext = false;
-
+// var stepNext = false;
 
 var t = {now: 0, delta: 0, then: 0, deltaTime: 0, inter: 0, tmp: 0, n: 0, timerate: 0, last: 0};
 
 
-var rigidBody,
-    softBody,
-    constraint,
-    terrains,
-    vehicles,
-    character,
-    collision,
-    raycaster;
+var rigidBody;
+var softBody;
+var constraint;
+var terrains;
+var vehicles;
+var character;
+var collision;
+var raycaster;
 
 var engine = {
 
-    test: function()
+    test()
     {
     },
 
-    setAr: function(r)
+    setAr(r)
     {
         Ar = r;
     },
 
-    getAr: function()
+    getAr()
     {
         return Ar;
     },
 
-    setDrive: function(name)
+    setDrive(name)
     {
         carName = name;
     },
 
-    setMove: function(name)
+    setMove(name)
     {
         heroName = name;
     },
 
-    setAngle: function(o)
+    setAngle(o)
     {
         root.angle = o.angle;
     },
@@ -126,10 +125,9 @@ var engine = {
 
     //},
 
-    internStep: function(o)
+    internStep(o)
     {
         //var now = Time.now();
-
         //isInternUpdate = true;
 
         root.key = o.key;
@@ -144,7 +142,6 @@ var engine = {
             t.last = t.now;
         }
 
-
         //if ( interval ) clearInterval( interval );
         //interval = setInterval( function(){ engine.loop( { key:o.key } ) }, 1000 * timestep );
 
@@ -152,10 +149,8 @@ var engine = {
 
         //t.inter = 1000 * timestep
 
-
         if (interval) clearInterval(interval);
         interval = setInterval(mainLoop, 1000 * timestep);
-
 
         //if ( interval ) clearTimeout( interval );
         //interval = setTimeout( engine.step( { key:o.key } ), 1000 * timestep );
@@ -171,7 +166,7 @@ var engine = {
         console.log('is interne update');
     },
 
-    step: function(o)
+    step(o)
     {
         if (isInternUpdate) {
             if (t.now - 1000 > t.tmp) {
@@ -191,7 +186,6 @@ var engine = {
         //if ( fixed ) root.world.stepSimulation( o.delta, substep, timestep );
         //else root.world.stepSimulation( o.delta, substep );
 
-
         //tmpRemove = tmpRemove.concat( o.remove );
         this.stepRemove();
 
@@ -201,7 +195,6 @@ var engine = {
         this.stepMatrix();
         this.stepOptions();
         this.stepForces();
-
 
         terrains.step();
 
@@ -229,20 +222,32 @@ var engine = {
 
         raycaster.step();
 
-        if (isBuffer) self.postMessage({m: 'step', fps: t.fps, delta: t.delta, flow: root.flow, Ar: Ar}, [Ar.buffer]);
-        else self.postMessage({m: 'step', fps: t.fps, delta: delta, flow: root.flow, Ar: Ar});
-
+        if (isBuffer)
+        {
+            self.postMessage(
+                {
+                    m: 'step', fps: t.fps, delta: t.delta, flow: root.flow, Ar
+                },
+                [Ar.buffer]
+            );
+        }
+        else
+        {
+            self.postMessage({
+                m: 'step', fps: t.fps, delta, flow: root.flow, Ar
+            });
+        }
 
         //if( isInternUpdate ) t.last = t.now;//Time.now();//now;
     },
 
-    clearFlow: function()
+    clearFlow()
     {
         //root.flow = { matrix:{}, force:{}, option:{}, ray:[], terrain:[], vehicle:[] };
         root.flow = {ray: [], terrain: [], vehicle: []};
     },
 
-    reset: function(o)
+    reset(o)
     {
         numBreak = 0;
 
@@ -286,19 +291,19 @@ var engine = {
         self.postMessage({m: 'start'});
     },
 
-    addMulty: function(o)
+    addMulty(o)
     {
         for (var i = 0, lng = o.length; i < lng; i++) this.add(o[i]);
         o = [];
     },
 
-    post: function(m, o)
+    post(m, o)
     {
-        self.postMessage({m: m, o: o});
+        self.postMessage({m, o});
     },
 
 
-    init: function(o)
+    init(o)
     {
         isBuffer = o.isBuffer || false;
 
@@ -355,14 +360,12 @@ var engine = {
     //
     //-----------------------------
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var b = map.get(name);
 
         switch (b.type) {
-
             case 'solid':
             case 'body' :
                 rigidBody.remove(name);
@@ -383,33 +386,24 @@ var engine = {
             case 'ray':
                 raycaster.remove(name);
                 break;
-
         }
-
     },
 
-    setRemove: function(o)
+    setRemove(o)
     {
-
         tmpRemove = tmpRemove.concat(o);
-
     },
 
-    stepRemove: function()
+    stepRemove()
     {
-
         while (tmpRemove.length > 0) this.remove(tmpRemove.pop());
-
     },
 
-    directRemoves: function(o)
+    directRemoves(o)
     {
-
         this.setRemove(o);
         this.stepRemove();
-
     },
-
 
     //-----------------------------
     //
@@ -417,15 +411,12 @@ var engine = {
     //
     //-----------------------------
 
-    add: function(o)
+    add(o)
     {
-
         o.type = o.type === undefined ? 'box' : o.type;
 
         if (o.breakable !== undefined) {
-
             if (o.breakable) numBreak++;
-
         }
 
         var type = o.type;
@@ -439,12 +430,10 @@ var engine = {
         else if (type === 'ray') raycaster.add(o);
         else if (type === 'car') vehicles.add(o);
         else rigidBody.add(o);
-
     },
 
-    addAnchor: function(o)
+    addAnchor(o)
     {
-
         softBody.addAnchor(o);
 
         //if ( ! map.has( o.soft ) || ! map.has( o.body ) ) return;
@@ -452,7 +441,6 @@ var engine = {
         //p1.fromArray(o.pos);
         //map.get( o.soft ).appendAnchor( o.node, map.get( o.body ), collision ? false : true, o.influence || 1 );
         //p1.free();
-
     },
 
     //-----------------------------
@@ -463,7 +451,7 @@ var engine = {
         terrains.setData( o );
     },*/
 
-    setVehicle: function(o)
+    setVehicle(o)
     {
         vehicles.setData(o);
     },
@@ -474,7 +462,7 @@ var engine = {
     //
     //-----------------------------
 
-    createWorld: function(o)
+    createWorld(o)
     {
         if (root.world !== null) {
             console.error('World exists already!!');
@@ -495,7 +483,6 @@ var engine = {
         dispatcher = new Ammo.btCollisionDispatcher(collisionConfig);
 
         switch (o.broadphase === undefined ? 2 : o.broadphase) {
-
             //case 0: broadphase = new Ammo.btSimpleBroadphase(); break;
             case 1:
                 var s = 1000;
@@ -504,7 +491,6 @@ var engine = {
             case 2:
                 broadphase = new Ammo.btDbvtBroadphase();
                 break;
-
         }
 
         root.world = isSoft ? new Ammo.btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collisionConfig, solverSoft) : new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
@@ -517,12 +503,10 @@ var engine = {
         root.world.getSolverInfo().set_m_splitImpulsePenetrationThreshold(0);
         root.world.getSolverInfo().set_m_splitImpulse( true );
         */
-
     },
 
-    clearWorld: function()
+    clearWorld()
     {
-
         Ammo.destroy(root.world);
         Ammo.destroy(solver);
         if (solverSoft !== null) Ammo.destroy(solverSoft);
@@ -531,20 +515,16 @@ var engine = {
         Ammo.destroy(broadphase);
 
         root.world = null;
-
     },
 
-    setWorldscale: function(n)
+    setWorldscale(n)
     {
-
         root.scale = n;
         root.invScale = 1 / n;
-
     },
 
-    setGravity: function(o)
+    setGravity(o)
     {
-
         o = o || {};
 
         root.gravity = new Ammo.btVector3();
@@ -552,17 +532,13 @@ var engine = {
         root.world.setGravity(root.gravity);
 
         if (isSoft) {
-
             var worldInfo = root.world.getWorldInfo();
             worldInfo.set_m_gravity(root.gravity);
-
         }
-
     },
 
-    set: function(o)
+    set(o)
     {
-
         o = o || {};
 
         this.setWorldscale(o.worldscale !== undefined ? o.worldscale : 1);
@@ -586,15 +562,12 @@ var engine = {
 
         // penetration
         if (o.penetration !== undefined) {
-
             var worldDispatch = root.world.getDispatchInfo();
             worldDispatch.set_m_allowedCcdPenetration(o.penetration);// default 0.0399}
-
         }
 
         // gravity
         this.setGravity(o);
-
     },
 
     //-----------------------------
@@ -603,33 +576,26 @@ var engine = {
     //
     //-----------------------------
 
-    setForces: function(o)
+    setForces(o)
     {
-
         root.force = root.force.concat(o);
-
     },
 
-    directForces: function(o)
+    directForces(o)
     {
-
         this.setForces(o);
         this.stepForces();
-
     },
 
-    stepForces: function()
+    stepForces()
     {
-
         var i = root.force.length;
         while (i--) this.applyForces(root.force[i]);
         root.force = [];
-
     },
 
-    applyForces: function(o)
+    applyForces(o)
     {
-
         var name = o.name;
 
         if (!map.has(name)) return;
@@ -645,7 +611,6 @@ var engine = {
         else p2.zero();
 
         switch (o.type) {
-
             case 'force' :
             case 0 :
                 b.applyForce(p1, p2);
@@ -675,7 +640,7 @@ var engine = {
                 b.applyCentralImpulse(p1);
                 break;
 
-            // joint
+                // joint
 
             case 'motor' :
             case 7 :
@@ -693,7 +658,6 @@ var engine = {
         p1.free();
         p2.free();
         q.free();
-
     },
 
     /*
@@ -713,33 +677,26 @@ var engine = {
     //
     //-----------------------------
 
-    setMatrix: function(o)
+    setMatrix(o)
     {
-
         root.matrix = root.matrix.concat(o);
-
     },
 
-    directMatrix: function(o)
+    directMatrix(o)
     {
-
         this.setMatrix(o);
         this.stepMatrix();
-
     },
 
-    stepMatrix: function()
+    stepMatrix()
     {
-
         var i = root.matrix.length;
         while (i--) this.applyMatrix(root.matrix[i]);
         root.matrix = [];
-
     },
 
-    applyMatrix: function(o)
+    applyMatrix(o)
     {
-
         var name = o.name;
 
         if (!map.has(name)) return;
@@ -760,7 +717,6 @@ var engine = {
         if (o.rot === undefined && o.quat === undefined) o.quat = [0, 0, 0, 1];//o.keepRot = true;
 
         if (o.keepX || o.keepY || o.keepZ || o.keepRot) { // keep original position
-
             b.getMotionState().getWorldTransform(t);
             var r = [];
             t.toArray(r);
@@ -769,7 +725,6 @@ var engine = {
             if (o.keepY !== undefined) o.pos[1] = r[1] - o.pos[1];
             if (o.keepZ !== undefined) o.pos[2] = r[2] - o.pos[2];
             if (o.keepRot !== undefined) o.quat = [r[3], r[4], r[5], r[6]];
-
         }
 
         //t.identity();
@@ -777,7 +732,6 @@ var engine = {
 
         // position and rotation
         if (o.pos !== undefined) {
-
             //o.pos = math.vectomult( o.pos, root.invScale );
             if (o.rot !== undefined) o.quat = math.eulerToQuadArray(o.rot, true);// is euler degree
 
@@ -787,51 +741,39 @@ var engine = {
 
             if (b.isKinematic) b.getMotionState().setWorldTransform(t);
             else b.setWorldTransform(t);
-
         }
 
         //https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=11079
 
         if (o.clamped !== undefined) {
-
-            var clamped = (delta > damped) ? 1.0 : delta / damped; // clamp to 1.0 to enforce stability
+            var clamped = delta > damped ? 1.0 : delta / damped; // clamp to 1.0 to enforce stability
             p1.fromArray(o.pos, 0, root.invScale).sub(b.getWorldTransform().getOrigin()).multiplyScalar(clamped);
             b.setLinearVelocity(p1);
-
         }
 
         if (o.velocity && !b.isGhost) {
-
             if (o.velocity[0]) b.setLinearVelocity(p1.fromArray(o.velocity[0], 0, root.invScale));
             if (o.velocity[1]) b.setAngularVelocity(p1.fromArray(o.velocity[1]));
-
         }
 
         if (o.noVelocity && !b.isGhost) {
-
             b.setLinearVelocity(zero);
             b.setAngularVelocity(zero);
-
         }
 
         if (o.noGravity) {
-
             b.setGravity(zero);
-
         }
 
         if (o.activate) {
-
             b.activate();
-
         }
 
         if (b.type === 'body' && !b.isKinematic) b.activate();
-        if (b.type === 'solid') self.postMessage({m: 'moveSolid', o: {name: name, pos: o.pos, quat: o.quat}});
+        if (b.type === 'solid') self.postMessage({m: 'moveSolid', o: {name, pos: o.pos, quat: o.quat}});
 
         //t.free();
         //p1.free();
-
     },
 
     //-----------------------------
@@ -873,33 +815,26 @@ var engine = {
     //  4096 : GROUP6
     //  8192 : GROUP7
 
-    setOptions: function(o)
+    setOptions(o)
     {
-
         root.option = root.option.concat(o);
-
     },
 
-    directOptions: function(o)
+    directOptions(o)
     {
-
         this.setOptions(o);
         this.stepOptions();
-
     },
 
-    stepOptions: function()
+    stepOptions()
     {
-
         var i = root.option.length;
         while (i--) this.applyOption(root.option[i]);
         root.option = [];
-
     },
 
-    applyOption: function(o)
+    applyOption(o)
     {
-
         var name = o.name;
 
         if (!map.has(name)) return;
@@ -917,7 +852,6 @@ var engine = {
                 body.applyOption(o);
                 break;
         }
-
     },
 
     //-----------------------------
@@ -926,23 +860,21 @@ var engine = {
     //
     //-----------------------------
 
-    stepBreak: function()
+    stepBreak()
     {
-
-        var manifold,
-            point,
-            contact,
-            maxImpulse,
-            impulse;
-        var pos,
-            normal,
-            rb0,
-            rb1,
-            body0,
-            body1;
+        var manifold;
+        var point;
+        var contact;
+        var maxImpulse;
+        var impulse;
+        var pos;
+        var normal;
+        var rb0;
+        var rb1;
+        var body0;
+        var body1;
 
         for (var i = 0, il = dispatcher.getNumManifolds(); i < il; i++) {
-
             manifold = dispatcher.getManifoldByIndexInternal(i);
 
             body0 = Ammo.castObject(manifold.getBody0(), Ammo.btRigidBody);
@@ -956,23 +888,18 @@ var engine = {
             contact = false;
             maxImpulse = 0;
             for (var j = 0, jl = manifold.getNumContacts(); j < jl; j++) {
-
                 point = manifold.getContactPoint(j);
                 if (point.getDistance() < 0) {
-
                     contact = true;
                     impulse = point.getAppliedImpulse();
 
                     if (impulse > maxImpulse) {
-
                         maxImpulse = impulse;
                         pos = point.get_m_positionWorldOnB().toArray();
                         normal = point.get_m_normalWorldOnB().toArray();
-
                     }
                     break;
                 }
-
             }
 
             // If no point has contact, abort
@@ -981,13 +908,12 @@ var engine = {
             // Subdivision
 
             if (body0.breakable && maxImpulse > body0.breakOption[0]) {
-                self.postMessage({m: 'makeBreak', o: {name: rb0, pos: math.vectomult(pos, root.scale), normal: normal, breakOption: body0.breakOption}});
+                self.postMessage({m: 'makeBreak', o: {name: rb0, pos: math.vectomult(pos, root.scale), normal, breakOption: body0.breakOption}});
                 //this.remove( rb0 );
             }
 
             if (body1.breakable && maxImpulse > body1.breakOption[0]) {
-
-                self.postMessage({m: 'makeBreak', o: {name: rb1, pos: math.vectomult(pos, root.scale), normal: normal, breakOption: body1.breakOption}});
+                self.postMessage({m: 'makeBreak', o: {name: rb1, pos: math.vectomult(pos, root.scale), normal, breakOption: body1.breakOption}});
                 //this.remove( rb1 );
             }
         }

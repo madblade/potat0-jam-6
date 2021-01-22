@@ -1,8 +1,9 @@
-/*global THREE*/
 import { ConvexGeometry, geometryInfo }               from './Geometry.js';
-import { map, root }                                                  from './root.js';
-import { BufferAttribute, BufferGeometry, Mesh, PlaneBufferGeometry } from 'three';
-import { Tubular }                                                    from './Tubular';
+import { map, root }                                  from './root.js';
+import { BufferAttribute, BufferGeometry,
+    Mesh, PlaneBufferGeometry, Vector3
+} from 'three';
+import { Tubular }                                    from './Tubular';
 
 /**   _   _____ _   _
  *    | | |_   _| |_| |
@@ -15,59 +16,49 @@ import { Tubular }                                                    from './Tu
 
 function SoftBody()
 {
-
     this.ID = 0;
     this.softs = [];
 
     this.tmpMat = null;
-
 }
 
 Object.assign(SoftBody.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
-
         var softPoints = N;
 
         this.softs.forEach(function(b)
         {
-
-            var n,
-                c,
-                cc,
-                p,
-                j,
-                k,
-                u;
+            var n;
+            var c;
+            var cc;
+            var p;
+            var j;
+            var k;
+            var u;
             var g = b.geometry;
             var t = b.softType; // type of softBody
             var order = null;
-            var isWithColor = g.attributes.color ? true : false;
-            var isWithNormal = g.attributes.normal ? true : false;
+            var isWithColor = !!g.attributes.color;
+            var isWithNormal = !!g.attributes.normal;
 
 
             if (t === 2) { // rope
-
                 j = g.positions.length;
                 while (j--) {
-
-                    n = softPoints + (j * 3);
+                    n = softPoints + j * 3;
                     g.positions[j].set(AR[n], AR[n + 1], AR[n + 2]);
-
                 }
 
                 g.updatePath();
-
             } else {
-
                 if (!g.attributes.position) return;
 
                 p = g.attributes.position.array;
                 if (isWithColor) c = g.attributes.color.array;
 
                 if (t === 5 || t === 4) { // softTriMesh // softConvex
-
                     var max = g.numVertices;
                     var maxi = g.maxi;
                     var pPoint = g.pPoint;
@@ -75,34 +66,26 @@ Object.assign(SoftBody.prototype, {
 
                     j = max;
                     while (j--) {
-
-                        n = (j * 3) + softPoints;
-                        if (j == max - 1) k = maxi - pPoint[j];
+                        n = j * 3 + softPoints;
+                        if (j === max - 1) k = maxi - pPoint[j];
                         else k = pPoint[j + 1] - pPoint[j];
                         var d = pPoint[j];
                         while (k--) {
-
                             u = lPoint[d + k] * 3;
                             p[u] = AR[n];
                             p[u + 1] = AR[n + 1];
                             p[u + 2] = AR[n + 2];
-
                         }
-
                     }
-
                 } else { // cloth // ellipsoid
-
                     if (g.attributes.order) order = g.attributes.order.array;
                     j = p.length;
 
                     n = 2;
 
                     if (order !== null) {
-
                         j = order.length;
                         while (j--) {
-
                             k = order[j] * 3;
                             n = j * 3 + softPoints;
                             p[k] = AR[n];
@@ -113,109 +96,80 @@ Object.assign(SoftBody.prototype, {
                             c[k] = cc;
                             c[k + 1] = cc;
                             c[k + 2] = cc;
-
                         }
-
                     } else {
-
                         while (j--) {
-
                             p[j] = AR[j + softPoints];
-                            if (n == 1) {
-
+                            if (n === 1) {
                                 cc = Math.abs(p[j] / 10);
                                 c[j - 1] = cc;
                                 c[j] = cc;
                                 c[j + 1] = cc;
-
                             }
                             n--;
                             n = n < 0 ? 2 : n;
-
                         }
-
                     }
-
                 }
 
                 if (t !== 2) g.computeVertexNormals();
 
                 if (isWithNormal) {
-
                     var norm = g.attributes.normal.array;
 
                     j = max;
                     while (j--) {
-
-                        if (j == max - 1) k = maxi - pPoint[j];
+                        if (j === max - 1) k = maxi - pPoint[j];
                         else k = pPoint[j + 1] - pPoint[j];
-                        var d = pPoint[j];
-                        var ref = lPoint[d] * 3;
+                        let d1 = pPoint[j];
+                        var ref = lPoint[d1] * 3;
                         while (k--) {
-
-                            u = lPoint[d + k] * 3;
+                            u = lPoint[d1 + k] * 3;
                             norm[u] = norm[ref];
                             norm[u + 1] = norm[ref + 1];
                             norm[u + 2] = norm[ref + 2];
-
                         }
-
                     }
 
                     g.attributes.normal.needsUpdate = true;
-
                 }
 
                 if (isWithColor) g.attributes.color.needsUpdate = true;
                 g.attributes.position.needsUpdate = true;
 
                 g.computeBoundingSphere();
-
             }
 
             softPoints += b.points * 3;
-
         });
-
-
     },
 
-    clear: function()
+    clear()
     {
-
         while (this.softs.length > 0) this.destroy(this.softs.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(b)
+    destroy(b)
     {
-
         if (b.parent) b.parent.remove(b);
         map.delete(b.name);
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var b = map.get(name);
 
         var n = this.softs.indexOf(b);
         if (n !== -1) {
-
             this.softs.splice(n, 1);
             this.destroy(b);
-
         }
-
     },
 
-    add: function(o)
+    add(o)
     {
-
-
         var name = o.name !== undefined ? o.name : o.type + this.ID++;
 
         // delete old if same name
@@ -230,28 +184,23 @@ Object.assign(SoftBody.prototype, {
         o.quat = o.quat === undefined ? [0, 0, 0, 1] : o.quat;
         if (o.rot !== undefined) {
             o.quat = root.toQuatArray(o.rot);
-            delete (o.rot);
+            delete o.rot;
         }
 
         // material
 
         var material;
         if (o.material !== undefined) {
-
             if (o.material.constructor === String) material = root.mat[o.material];
             else material = o.material;
-
         } else {
-
             material = root.mat.soft;
-
         }
 
-        var tmp,
-            mesh;
+        var tmp;
+        var mesh;
 
         switch (o.type) {
-
             case 'softMesh':
             case 'softTriMesh':
                 tmp = softMesh(o, material);
@@ -272,7 +221,6 @@ Object.assign(SoftBody.prototype, {
 
                 return;
                 break;
-
         }
 
         mesh = tmp.mesh;
@@ -285,19 +233,16 @@ Object.assign(SoftBody.prototype, {
         //mesh.position.fromArray( o.pos );
         //mesh.quaternion.fromArray( o.quat );
 
-
         root.container.add(mesh);
         this.softs.push(mesh);
 
         map.set(name, mesh);
 
         root.post('add', o);
-
     },
 
-    createEllipsoid: function(o)
+    createEllipsoid(o)
     {
-
         var mesh = ellipsoid(o);
         if (this.tmpMat) mesh.material = this.tmpMat;
         //o = tmp.o;
@@ -306,11 +251,7 @@ Object.assign(SoftBody.prototype, {
         root.container.add(mesh);
         this.softs.push(mesh);
         map.set(o.name, mesh);
-
     },
-
-    /////
-
 
 });
 
@@ -324,7 +265,6 @@ export { SoftBody };
 
 export function softMesh(o, material)
 {
-
     var g = o.shape.clone();
 
     // apply scale before get geometry info
@@ -342,7 +282,6 @@ export function softMesh(o, material)
     g.translate(o.pos[0], o.pos[1], o.pos[2]);
     g.applyMatrix(root.tmpM.makeRotationFromQuaternion(root.tmpQ.fromArray(o.quat)));
 
-
     var mesh = new Mesh(g, material);
 
     mesh.castShadow = true;
@@ -351,11 +290,10 @@ export function softMesh(o, material)
     mesh.softType = 5;
     mesh.points = o.v.length / 3;
 
-    if (o.shape) delete (o.shape);
-    if (o.material) delete (o.material);
+    if (o.shape) delete o.shape;
+    if (o.material) delete o.material;
 
-    return {mesh: mesh, o: o};
-
+    return {mesh, o};
 }
 
 //--------------------------------------
@@ -406,7 +344,6 @@ export function softMesh(o, material)
 
 export function softCloth(o, material)
 {
-
     var div = o.div || [16, 16];
     var size = o.size || [100, 0, 100];
     var pos = o.pos || [0, 0, 0];
@@ -415,7 +352,7 @@ export function softCloth(o, material)
 
     var g = new PlaneBufferGeometry(size[0], size[2], div[0] - 1, div[1] - 1);
     g.setAttribute('color', new BufferAttribute(new Float32Array(max * 3), 3));
-    g.rotateX(-Math.PI90);
+    g.rotateX(-Math.PI / 2);
     //g.translate( -size[0]*0.5, 0, -size[2]*0.5 );
 
     //var numVerts = g.attributes.position.array.length / 3;
@@ -441,7 +378,7 @@ export function softCloth(o, material)
     o.div = div;
     o.pos = pos;
 
-    return {mesh: mesh, o: o};
+    return {mesh, o};
 }
 
 //--------------------------------------
@@ -450,7 +387,6 @@ export function softCloth(o, material)
 
 export function softRope(o, material)
 {
-
     //var max = o.numSegment || 10;
     //var start = o.start || [0,0,0];
     //var end = o.end || [0,10,0];
@@ -478,7 +414,7 @@ export function softRope(o, material)
     mesh.softType = 2;
     mesh.points = g.positions.length;
 
-    return {mesh: mesh, o: o};
+    return {mesh, o};
 }
 
 //--------------------------------------
@@ -494,27 +430,22 @@ function ellipsoid( o ) {
 */
 export function ellipsoid(o)
 {
-
     var max = o.lng;
     var points = [];
     var ar = o.a;
-    var i,
-        j,
-        k,
-        v,
-        n;
+    var i;
+    var j;
+    var k;
+    var v;
+    var n;
 
     // create temp convex geometry and convert to buffergeometry
     for (i = 0; i < max; i++) {
-
         n = i * 3;
         points.push(new Vector3(ar[n], ar[n + 1], ar[n + 2]));
-
     }
 
-
     var gt = new ConvexGeometry(points);
-
 
     var indices = new Uint32Array(gt.faces.length * 3);
     var vertices = new Float32Array(max * 3);
@@ -528,7 +459,6 @@ export function ellipsoid(o)
     //var v = gt.vertices;
     //var i = max, j, k;
     while (i--) {
-
         j = max;
         while (j--) {
             n = j * 3;

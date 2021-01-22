@@ -1,78 +1,64 @@
+
+/* global Ammo */
+
 import { math }      from './math.js';
 import { map, root } from './root.js';
 
 function Terrain()
 {
-
     this.ID = 0;
     this.terrains = [];
-
 }
 
 Object.assign(Terrain.prototype, {
 
-    step: function()
+    step()
     {
-
         var i = root.flow.terrain.length;
         while (i--) this.setData(root.flow.terrain[i]);
         root.flow.terrain = [];
 
         this.terrains.forEach(function(b)
         {
-
             b.update();
-
         });
-
     },
 
-    clear: function()
+    clear()
     {
-
         while (this.terrains.length > 0) this.destroy(this.terrains.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(t)
+    destroy(t)
     {
-
         root.world.removeCollisionObject(t.body);
         t.clear();
         map.delete(t.name);
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var t = map.get(name);
 
         var n = this.terrains.indexOf(t);
         if (n !== -1) {
-
             this.terrains.splice(n, 1);
             this.destroy(t);
-
         }
-
     },
 
-    setData: function(o)
+    setData(o)
     {
-
         if (!map.has(o.name)) return;
         var t = map.get(o.name);
         t.setData(o.heightData);
-
     },
 
-    add: function(o)
+    add(o)
     {
-
-        var name = o.name !== undefined ? o.name : 'terrain' + this.ID++;
+        var name = o.name !== undefined ? o.name : `terrain${this.ID++}`;
 
         // delete old if same name
         this.remove(name);
@@ -87,7 +73,6 @@ Object.assign(Terrain.prototype, {
         this.terrains.push(t);
 
         map.set(name, t);
-
     }
 
 });
@@ -104,7 +89,6 @@ export { Terrain };
 
 function LandScape(name, o)
 {
-
     var trans = math.transform();
     var p1 = math.vector3();
 
@@ -115,10 +99,8 @@ function LandScape(name, o)
     this.type = 'terrain';
 
     if (root.scale !== 1) {
-
         o.pos = math.vectomult(o.pos, root.invScale);
         o.size = math.vectomult(o.size, root.invScale);
-
     }
 
     var size = o.size === undefined ? [1, 1, 1] : o.size;
@@ -184,36 +166,29 @@ function LandScape(name, o)
     p1.free();
 
     o = null;
-
 }
 
 Object.assign(LandScape.prototype, {
 
-    setData: function(data)
+    setData(data)
     {
-
         this.tmpData = data;
         this.nDataBytes = this.tmpData.length * this.tmpData.BYTES_PER_ELEMENT;
         this.needsUpdate = true;
-
     },
 
-    update: function()
+    update()
     {
-
         if (!this.needsUpdate) return;
 
         this.malloc();
         //self.postMessage( { m:'terrain', o: { name: this.name } } );
         this.needsUpdate = false;
         this.tmpData = null;
-
     },
 
-    clear: function()
+    clear()
     {
-
-
         Ammo.destroy(this.body);
         Ammo._free(this.dataHeap.byteOffset);
         //Ammo.destroy( this.data );
@@ -222,17 +197,14 @@ Object.assign(LandScape.prototype, {
         this.data = null;
         this.tmpData = null;
         this.dataHeap = null;
-
     },
 
-    malloc: function()
+    malloc()
     {
-
         //var nDataBytes = this.tmpData.length * this.tmpData.BYTES_PER_ELEMENT;
         if (this.data === null) this.data = Ammo._malloc(this.nDataBytes);
         this.dataHeap = new Uint8Array(Ammo.HEAPU8.buffer, this.data, this.nDataBytes);
         this.dataHeap.set(new Uint8Array(this.tmpData.buffer));
-
     },
 
 });

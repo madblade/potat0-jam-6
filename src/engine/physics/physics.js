@@ -17,15 +17,8 @@ extend(Physics.prototype, {
 
     preload()
     {
-        window.addEventListener('DOMContentLoaded', () => {
-
-            // Ammo().then(AmmoLib =>
-            // {
-            //     this.Ammo = AmmoLib;
-            //     this.isLoaded = true;
-            //     console.log('Loaded Ammo.js');
-            // });
-
+        window.addEventListener('DOMContentLoaded', () =>
+        {
             engine.init(() =>
             {
                 console.log('Physics initialized.');

@@ -10,7 +10,7 @@ import { Line3, Plane, Triangle, Vector3 } from 'three';
 var Visible = 0;
 var Deleted = 1;
 
-var v1 = new Vector3();
+// var v1 = new Vector3();
 
 function ConvexHull()
 {
@@ -37,7 +37,7 @@ function ConvexHull()
 
 Object.assign(ConvexHull.prototype, {
 
-    setFromPoints: function(points)
+    setFromPoints(points)
     {
         if (Array.isArray(points) !== true) {
             console.error('ConvexHull: Points parameter is not an array.');
@@ -58,7 +58,7 @@ Object.assign(ConvexHull.prototype, {
         return this;
     },
 
-    setFromObject: function(object)
+    setFromObject(object)
     {
         var points = [];
 
@@ -66,16 +66,14 @@ Object.assign(ConvexHull.prototype, {
 
         object.traverse(function(node)
         {
-            var i,
-                l,
-                point;
+            var i;
+            var l;
+            var point;
 
             var geometry = node.geometry;
 
             if (geometry !== undefined) {
-
                 if (geometry.isGeometry) {
-
                     var vertices = geometry.vertices;
 
                     for (i = 0, l = vertices.length; i < l; i++) {
@@ -100,10 +98,9 @@ Object.assign(ConvexHull.prototype, {
         });
 
         return this.setFromPoints(points);
-
     },
 
-    containsPoint: function(point)
+    containsPoint(point)
     {
         var faces = this.faces;
 
@@ -118,7 +115,7 @@ Object.assign(ConvexHull.prototype, {
         return true;
     },
 
-    intersectRay: function(ray, target)
+    intersectRay(ray, target)
     {
         // based on "Fast Ray-Convex Polyhedron Intersection"  by Eric Haines, GRAPHICS GEMS II
 
@@ -142,7 +139,7 @@ Object.assign(ConvexHull.prototype, {
 
             // compute the distance from the ray’s origin to the intersection with the plane
 
-            var t = (vD !== 0) ? (-vN / vD) : 0;
+            var t = vD !== 0 ? -vN / vD : 0;
 
             // only proceed if the distance is positive. a negative distance means the intersection point
             // lies "behind" the origin
@@ -177,12 +174,12 @@ Object.assign(ConvexHull.prototype, {
         return target;
     },
 
-    intersectsRay: function(ray)
-    {
-        return this.intersectRay(ray, v1) !== null;
-    },
+    // intersectsRay(ray)
+    // {
+    //     return this.intersectRay(ray, v1) !== null;
+    // },
 
-    makeEmpty: function()
+    makeEmpty()
     {
         this.faces = [];
         this.vertices = [];
@@ -192,7 +189,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Adds a vertex to the 'assigned' list of vertices and assigns it to the given face
 
-    addVertexToFace: function(vertex, face)
+    addVertexToFace(vertex, face)
     {
         vertex.face = face;
 
@@ -208,7 +205,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Removes a vertex from the 'assigned' list of vertices and from the given face
 
-    removeVertexFromFace: function(vertex, face)
+    removeVertexFromFace(vertex, face)
     {
         if (vertex === face.outside) {
             // fix face.outside link
@@ -228,7 +225,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertext list
 
-    removeAllVerticesFromFace: function(face)
+    removeAllVerticesFromFace(face)
     {
         if (face.outside !== null) {
             // reference to the first and last vertex of this face
@@ -253,7 +250,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Removes all the visible vertices that 'face' is able to see
 
-    deleteFaceVertices: function(face, absorbingFace)
+    deleteFaceVertices(face, absorbingFace)
     {
         var faceVertices = this.removeAllVerticesFromFace(face);
 
@@ -294,7 +291,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Reassigns as many vertices as possible from the unassigned list to the new faces
 
-    resolveUnassignedPoints: function(newFaces)
+    resolveUnassignedPoints(newFaces)
     {
         if (this.unassigned.isEmpty() === false) {
             var vertex = this.unassigned.first();
@@ -312,7 +309,6 @@ Object.assign(ConvexHull.prototype, {
                     var face = newFaces[i];
 
                     if (face.mark === Visible) {
-
                         var distance = face.distanceToPoint(vertex.point);
 
                         if (distance > maxDistance) {
@@ -339,7 +335,7 @@ Object.assign(ConvexHull.prototype, {
 
     // Computes the extremes of a simplex which will be the initial hull
 
-    computeExtremes: function()
+    computeExtremes()
     {
         var min = new Vector3();
         var max = new Vector3();
@@ -347,16 +343,14 @@ Object.assign(ConvexHull.prototype, {
         var minVertices = [];
         var maxVertices = [];
 
-        var i,
-            l,
-            j;
+        var i;
+        var l;
+        var j;
 
         // initially assume that the first vertex is the min/max
 
         for (i = 0; i < 3; i++) {
-
             minVertices[i] = maxVertices[i] = this.vertices[0];
-
         }
 
         min.copy(this.vertices[0].point);
@@ -365,16 +359,13 @@ Object.assign(ConvexHull.prototype, {
         // compute the min/max vertex on all six directions
 
         for (i = 0, l = this.vertices.length; i < l; i++) {
-
             var vertex = this.vertices[i];
             var point = vertex.point;
 
             // update the min coordinates
 
             for (j = 0; j < 3; j++) {
-
                 if (point.getComponent(j) < min.getComponent(j)) {
-
                     min.setComponent(j, point.getComponent(j));
                     minVertices[j] = vertex;
                 }
@@ -384,13 +375,10 @@ Object.assign(ConvexHull.prototype, {
 
             for (j = 0; j < 3; j++) {
                 if (point.getComponent(j) > max.getComponent(j)) {
-
                     max.setComponent(j, point.getComponent(j));
                     maxVertices[j] = vertex;
                 }
-
             }
-
         }
 
         // use min/max vectors to compute an optimal epsilon
@@ -402,62 +390,55 @@ Object.assign(ConvexHull.prototype, {
         );
 
         return {min: minVertices, max: maxVertices};
-
     },
 
     // Computes the initial simplex assigning to its faces all the points
     // that are candidates to form part of the hull
 
-    computeInitialHull: function()
+    computeInitialHull: (function()
     {
-        var line3,
-            plane,
-            closestPoint;
+        var line3;
+        var plane;
+        var closestPoint;
 
         return function computeInitialHull()
         {
-
             if (line3 === undefined) {
-
                 line3 = new Line3();
                 plane = new Plane();
                 closestPoint = new Vector3();
             }
 
-            var vertex,
-                vertices = this.vertices;
+            var vertex;
+            var vertices = this.vertices;
             var extremes = this.computeExtremes();
             var min = extremes.min;
             var max = extremes.max;
 
-            var v0,
-                v1,
-                v2,
-                v3;
-            var i,
-                l,
-                j;
+            var v0;
+            var v1;
+            var v2;
+            var v3;
+            var i;
+            var l;
+            var j;
 
             // 1. Find the two vertices 'v0' and 'v1' with the greatest 1d separation
             // (max.x - min.x)
             // (max.y - min.y)
             // (max.z - min.z)
 
-            var distance,
-                maxDistance = 0;
+            var distance;
+            var maxDistance = 0;
             var index = 0;
 
             for (i = 0; i < 3; i++) {
-
                 distance = max[i].point.getComponent(i) - min[i].point.getComponent(i);
 
                 if (distance > maxDistance) {
-
                     maxDistance = distance;
                     index = i;
-
                 }
-
             }
 
             v0 = min[index];
@@ -469,24 +450,18 @@ Object.assign(ConvexHull.prototype, {
             line3.set(v0.point, v1.point);
 
             for (i = 0, l = this.vertices.length; i < l; i++) {
-
                 vertex = vertices[i];
 
                 if (vertex !== v0 && vertex !== v1) {
-
                     line3.closestPointToPoint(vertex.point, true, closestPoint);
 
                     distance = closestPoint.distanceToSquared(vertex.point);
 
                     if (distance > maxDistance) {
-
                         maxDistance = distance;
                         v2 = vertex;
-
                     }
-
                 }
-
             }
 
             // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
@@ -495,28 +470,21 @@ Object.assign(ConvexHull.prototype, {
             plane.setFromCoplanarPoints(v0.point, v1.point, v2.point);
 
             for (i = 0, l = this.vertices.length; i < l; i++) {
-
                 vertex = vertices[i];
 
                 if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
-
                     distance = Math.abs(plane.distanceToPoint(vertex.point));
 
                     if (distance > maxDistance) {
-
                         maxDistance = distance;
                         v3 = vertex;
-
                     }
-
                 }
-
             }
 
             var faces = [];
 
             if (plane.distanceToPoint(v3.point) < 0) {
-
                 // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
 
                 faces.push(
@@ -529,7 +497,6 @@ Object.assign(ConvexHull.prototype, {
                 // set the twin edge
 
                 for (i = 0; i < 3; i++) {
-
                     j = (i + 1) % 3;
 
                     // join face[ i ] i > 0, with the first face
@@ -539,11 +506,8 @@ Object.assign(ConvexHull.prototype, {
                     // join face[ i ] with face[ i + 1 ], 1 <= i <= 3
 
                     faces[i + 1].getEdge(1).setTwin(faces[j + 1].getEdge(0));
-
                 }
-
             } else {
-
                 // the face is able to see the point so 'plane.normal' is pointing inside the tetrahedron
 
                 faces.push(
@@ -556,7 +520,6 @@ Object.assign(ConvexHull.prototype, {
                 // set the twin edge
 
                 for (i = 0; i < 3; i++) {
-
                     j = (i + 1) % 3;
 
                     // join face[ i ] i > 0, with the first face
@@ -566,95 +529,71 @@ Object.assign(ConvexHull.prototype, {
                     // join face[ i ] with face[ i + 1 ]
 
                     faces[i + 1].getEdge(0).setTwin(faces[j + 1].getEdge(1));
-
                 }
-
             }
 
             // the initial hull is the tetrahedron
 
             for (i = 0; i < 4; i++) {
-
                 this.faces.push(faces[i]);
-
             }
 
             // initial assignment of vertices to the faces of the tetrahedron
 
             for (i = 0, l = vertices.length; i < l; i++) {
-
                 vertex = vertices[i];
 
                 if (vertex !== v0 && vertex !== v1 && vertex !== v2 && vertex !== v3) {
-
                     maxDistance = this.tolerance;
                     var maxFace = null;
 
                     for (j = 0; j < 4; j++) {
-
                         distance = this.faces[j].distanceToPoint(vertex.point);
 
                         if (distance > maxDistance) {
-
                             maxDistance = distance;
                             maxFace = this.faces[j];
-
                         }
-
                     }
 
                     if (maxFace !== null) {
-
                         this.addVertexToFace(vertex, maxFace);
-
                     }
-
                 }
-
             }
 
             return this;
-
         };
-
-    }(),
+    }()),
 
     // Removes inactive faces
 
-    reindexFaces: function()
+    reindexFaces()
     {
-
         var activeFaces = [];
 
         for (var i = 0; i < this.faces.length; i++) {
-
             var face = this.faces[i];
 
             if (face.mark === Visible) {
-
                 activeFaces.push(face);
-
             }
-
         }
 
         this.faces = activeFaces;
 
         return this;
-
     },
 
     // Finds the next vertex to create faces with the current hull
 
-    nextVertexToAdd: function()
+    nextVertexToAdd()
     {
-
         // if the 'assigned' list of vertices is empty, no vertices are left. return with 'undefined'
 
         if (this.assigned.isEmpty() === false) {
-
-            var eyeVertex,
-                maxDistance = 0;
+            var eyeVertex;
+            var maxDistance = 0;
 
             // grap the first available face and start with the first visible vertex of that face
 
@@ -664,33 +603,26 @@ Object.assign(ConvexHull.prototype, {
             // now calculate the farthest vertex that face can see
 
             do {
-
                 var distance = eyeFace.distanceToPoint(vertex.point);
 
                 if (distance > maxDistance) {
-
                     maxDistance = distance;
                     eyeVertex = vertex;
-
                 }
 
                 vertex = vertex.next;
-
             } while (vertex !== null && vertex.face === eyeFace);
 
             return eyeVertex;
-
         }
-
     },
 
     // Computes a chain of half edges in CCW order called the 'horizon'.
     // For an edge to be part of the horizon it must join a face that can see
     // 'eyePoint' and a face that cannot see 'eyePoint'.
 
-    computeHorizon: function(eyePoint, crossEdge, face, horizon)
+    computeHorizon(eyePoint, crossEdge, face, horizon)
     {
-
         // moves face's vertices to the 'unassigned' vertex list
 
         this.deleteFaceVertices(face);
@@ -700,54 +632,40 @@ Object.assign(ConvexHull.prototype, {
         var edge;
 
         if (crossEdge === null) {
-
             edge = crossEdge = face.getEdge(0);
-
         } else {
-
             // start from the next edge since 'crossEdge' was already analyzed
             // (actually 'crossEdge.twin' was the edge who called this method recursively)
 
             edge = crossEdge.next;
-
         }
 
         do {
-
             var twinEdge = edge.twin;
             var oppositeFace = twinEdge.face;
 
             if (oppositeFace.mark === Visible) {
-
                 if (oppositeFace.distanceToPoint(eyePoint) > this.tolerance) {
-
                     // the opposite face can see the vertex, so proceed with next edge
 
                     this.computeHorizon(eyePoint, twinEdge, oppositeFace, horizon);
-
                 } else {
-
                     // the opposite face can't see the vertex, so this edge is part of the horizon
 
                     horizon.push(edge);
-
                 }
-
             }
 
             edge = edge.next;
-
         } while (edge !== crossEdge);
 
         return this;
-
     },
 
     // Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order
 
-    addAdjoiningFace: function(eyeVertex, horizonEdge)
+    addAdjoiningFace(eyeVertex, horizonEdge)
     {
-
         // all the half edges are created in ccw order thus the face is always pointing outside the hull
 
         var face = Face.create(eyeVertex, horizonEdge.tail(), horizonEdge.head());
@@ -759,23 +677,19 @@ Object.assign(ConvexHull.prototype, {
         face.getEdge(-1).setTwin(horizonEdge.twin);
 
         return face.getEdge(0); // the half edge whose vertex is the eyeVertex
-
-
     },
 
     //  Adds 'horizon.length' faces to the hull, each face will be linked with the
     //  horizon opposite face and the face on the left/right
 
-    addNewFaces: function(eyeVertex, horizon)
+    addNewFaces(eyeVertex, horizon)
     {
-
         this.newFaces = [];
 
         var firstSideEdge = null;
         var previousSideEdge = null;
 
         for (var i = 0; i < horizon.length; i++) {
-
             var horizonEdge = horizon[i];
 
             // returns the right side edge
@@ -783,20 +697,15 @@ Object.assign(ConvexHull.prototype, {
             var sideEdge = this.addAdjoiningFace(eyeVertex, horizonEdge);
 
             if (firstSideEdge === null) {
-
                 firstSideEdge = sideEdge;
-
             } else {
-
                 // joins face.getEdge( 1 ) with previousFace.getEdge( 0 )
 
                 sideEdge.next.setTwin(previousSideEdge);
-
             }
 
             this.newFaces.push(sideEdge.face);
             previousSideEdge = sideEdge;
-
         }
 
         // perform final join of new faces
@@ -804,14 +713,12 @@ Object.assign(ConvexHull.prototype, {
         firstSideEdge.next.setTwin(previousSideEdge);
 
         return this;
-
     },
 
     // Adds a vertex to the hull
 
-    addVertexToHull: function(eyeVertex)
+    addVertexToHull(eyeVertex)
     {
-
         var horizon = [];
 
         this.unassigned.clear();
@@ -829,23 +736,19 @@ Object.assign(ConvexHull.prototype, {
         this.resolveUnassignedPoints(this.newFaces);
 
         return this;
-
     },
 
-    cleanup: function()
+    cleanup()
     {
-
         this.assigned.clear();
         this.unassigned.clear();
         this.newFaces = [];
 
         return this;
-
     },
 
-    compute: function()
+    compute()
     {
-
         var vertex;
 
         this.computeInitialHull();
@@ -853,9 +756,7 @@ Object.assign(ConvexHull.prototype, {
         // add all available vertices gradually to the hull
 
         while ((vertex = this.nextVertexToAdd()) !== undefined) {
-
             this.addVertexToHull(vertex);
-
         }
 
         this.reindexFaces();
@@ -863,7 +764,6 @@ Object.assign(ConvexHull.prototype, {
         this.cleanup();
 
         return this;
-
     }
 
 });
@@ -872,7 +772,6 @@ Object.assign(ConvexHull.prototype, {
 
 function Face()
 {
-
     this.normal = new Vector3();
     this.midpoint = new Vector3();
     this.area = 0;
@@ -881,14 +780,12 @@ function Face()
     this.outside = null; // reference to a vertex in a vertex list this face can see
     this.mark = Visible;
     this.edge = null;
-
 }
 
 Object.assign(Face, {
 
-    create: function(a, b, c)
+    create(a, b, c)
     {
-
         var face = new Face();
 
         var e0 = new HalfEdge(a, face);
@@ -906,44 +803,35 @@ Object.assign(Face, {
         face.edge = e0;
 
         return face.compute();
-
     }
 
 });
 
 Object.assign(Face.prototype, {
 
-    getEdge: function(i)
+    getEdge(i)
     {
-
         var edge = this.edge;
 
         while (i > 0) {
-
             edge = edge.next;
             i--;
-
         }
 
         while (i < 0) {
-
             edge = edge.prev;
             i++;
-
         }
 
         return edge;
-
     },
 
-    compute: function()
+    compute: (function()
     {
-
         var triangle;
 
         return function compute()
         {
-
             if (triangle === undefined) triangle = new Triangle();
 
             var a = this.edge.tail();
@@ -959,16 +847,12 @@ Object.assign(Face.prototype, {
             this.constant = this.normal.dot(this.midpoint);
 
             return this;
-
         };
+    }()),
 
-    }(),
-
-    distanceToPoint: function(point)
+    distanceToPoint(point)
     {
-
         return this.normal.dot(point) - this.constant;
-
     }
 
 });
@@ -977,71 +861,55 @@ Object.assign(Face.prototype, {
 
 function HalfEdge(vertex, face)
 {
-
     this.vertex = vertex;
     this.prev = null;
     this.next = null;
     this.twin = null;
     this.face = face;
-
 }
 
 Object.assign(HalfEdge.prototype, {
 
-    head: function()
+    head()
     {
-
         return this.vertex;
-
     },
 
-    tail: function()
+    tail()
     {
-
         return this.prev ? this.prev.vertex : null;
-
     },
 
-    length: function()
+    length()
     {
-
         var head = this.head();
         var tail = this.tail();
 
         if (tail !== null) {
-
             return tail.point.distanceTo(head.point);
-
         }
 
         return -1;
-
     },
 
-    lengthSquared: function()
+    lengthSquared()
     {
-
         var head = this.head();
         var tail = this.tail();
 
         if (tail !== null) {
-
             return tail.point.distanceToSquared(head.point);
-
         }
 
         return -1;
-
     },
 
-    setTwin: function(edge)
+    setTwin(edge)
     {
-
         this.twin = edge;
         edge.twin = this;
 
         return this;
-
     }
 
 });
@@ -1050,12 +918,10 @@ Object.assign(HalfEdge.prototype, {
 
 function VertexNode(point)
 {
-
     this.point = point;
     this.prev = null;
     this.next = null;
     this.face = null; // the face that is able to see this vertex
-
 }
 
 // A double linked list that contains vertex nodes.
@@ -1068,17 +934,17 @@ function VertexList()
 
 Object.assign(VertexList.prototype, {
 
-    first: function()
+    first()
     {
         return this.head;
     },
 
-    last: function()
+    last()
     {
         return this.tail;
     },
 
-    clear: function()
+    clear()
     {
         this.head = this.tail = null;
         return this;
@@ -1086,65 +952,48 @@ Object.assign(VertexList.prototype, {
 
     // Inserts a vertex before the target vertex
 
-    insertBefore: function(target, vertex)
+    insertBefore(target, vertex)
     {
-
         vertex.prev = target.prev;
         vertex.next = target;
 
         if (vertex.prev === null) {
-
             this.head = vertex;
-
         } else {
-
             vertex.prev.next = vertex;
-
         }
 
         target.prev = vertex;
 
         return this;
-
     },
 
     // Inserts a vertex after the target vertex
 
-    insertAfter: function(target, vertex)
+    insertAfter(target, vertex)
     {
-
         vertex.prev = target;
         vertex.next = target.next;
 
         if (vertex.next === null) {
-
             this.tail = vertex;
-
         } else {
-
             vertex.next.prev = vertex;
-
         }
 
         target.next = vertex;
 
         return this;
-
     },
 
     // Appends a vertex to the end of the linked list
 
-    append: function(vertex)
+    append(vertex)
     {
-
         if (this.head === null) {
-
             this.head = vertex;
-
         } else {
-
             this.tail.next = vertex;
-
         }
 
         vertex.prev = this.tail;
@@ -1153,22 +1002,16 @@ Object.assign(VertexList.prototype, {
         this.tail = vertex;
 
         return this;
-
     },
 
     // Appends a chain of vertices where 'vertex' is the head.
 
-    appendChain: function(vertex)
+    appendChain(vertex)
     {
-
         if (this.head === null) {
-
             this.head = vertex;
-
         } else {
-
             this.tail.next = vertex;
-
         }
 
         vertex.prev = this.tail;
@@ -1176,80 +1019,55 @@ Object.assign(VertexList.prototype, {
         // ensure that the 'tail' reference points to the last vertex of the chain
 
         while (vertex.next !== null) {
-
             vertex = vertex.next;
-
         }
 
         this.tail = vertex;
 
         return this;
-
     },
 
     // Removes a vertex from the linked list
 
-    remove: function(vertex)
+    remove(vertex)
     {
-
         if (vertex.prev === null) {
-
             this.head = vertex.next;
-
         } else {
-
             vertex.prev.next = vertex.next;
-
         }
 
         if (vertex.next === null) {
-
             this.tail = vertex.prev;
-
         } else {
-
             vertex.next.prev = vertex.prev;
-
         }
 
         return this;
-
     },
 
     // Removes a list of vertices whose 'head' is 'a' and whose 'tail' is b
 
-    removeSubList: function(a, b)
+    removeSubList(a, b)
     {
-
         if (a.prev === null) {
-
             this.head = b.next;
-
         } else {
-
             a.prev.next = b.next;
-
         }
 
         if (b.next === null) {
-
             this.tail = a.prev;
-
         } else {
-
             b.next.prev = a.prev;
-
         }
 
         return this;
-
     },
 
-    isEmpty: function()
+    isEmpty()
     {
-
         return this.head === null;
-
     }
 
 });

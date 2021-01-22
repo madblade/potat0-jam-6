@@ -1,90 +1,66 @@
-/*global Ammo*/
+
+/* global Ammo */
+
 import { math }      from './math.js';
 import { map, root } from './root.js';
 
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    GUN - CHARACTER
- */
-
 function Character()
 {
-
     this.ID = 0;
     this.heroes = [];
-
 }
 
 Object.assign(Character.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
-
         var n;
 
         this.heroes.forEach(function(hero, id)
         {
-
-            n = N + (id * 8);
+            n = N + id * 8;
             hero.step(AR, n);
-
         });
-
     },
 
-    control: function(name)
+    control(name)
     {
-
         if (!map.has(name)) return;
         var hero = map.get(name);
 
         hero.move(root.key);
         hero.setAngle(root.angle);
-
     },
 
-    clear: function()
+    clear()
     {
-
         while (this.heroes.length > 0) this.destroy(this.heroes.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(hero)
+    destroy(hero)
     {
-
         root.world.removeCollisionObject(hero.body);
         root.world.removeAction(hero.controller);
         hero.clear();
         map.delete(hero.name);
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var hero = map.get(name);
 
         var n = this.heroes.indexOf(hero);
         if (n !== -1) {
-
             this.heroes.splice(n, 1);
             this.destroy(hero);
-
         }
-
     },
 
-    add: function(o)
+    add(o)
     {
-
-        var name = o.name !== undefined ? o.name : 'hero' + this.ID++;
+        var name = o.name !== undefined ? o.name : `hero${this.ID++}`;
 
         // delete old if same name
         this.remove(name);
@@ -98,18 +74,14 @@ Object.assign(Character.prototype, {
 
         this.heroes.push(hero);
         map.set(name, hero);
-
     }
 
 });
 
-
 export { Character };
-
 
 function Hero(name, o)
 {
-
     this.type = 'character';
 
     this.name = name;
@@ -127,16 +99,14 @@ function Hero(name, o)
     this.position = new Ammo.btVector3();
 
     this.init(o);
-
 }
 
 Object.assign(Hero.prototype, {
 
     isCharacter: true,
 
-    step: function(Ar, n)
+    step(Ar, n)
     {
-
         Ar[n] = this.speed;
         //Hr[n] = b.onGround ? 1 : 0;
 
@@ -154,12 +124,10 @@ Object.assign(Hero.prototype, {
         Ar[ n + 7 ] = quat.w();*/
 
         this.body.getWorldTransform().toArray(Ar, n + 1, root.scale);
-
     },
 
-    move: function(key)
+    move(key)
     {
-
         //var hero = this.controller;
 
         //btScalar walkVelocity = btScalar(1.1) * 4.0; // 4 km/h -> 1.1 m/s
@@ -168,9 +136,9 @@ Object.assign(Hero.prototype, {
         var walkSpeed = 0.3;
         var angleInc = 0.1;
 
-        var x = 0,
-            y = 0,
-            z = 0;
+        var x = 0;
+        var y = 0;
+        var z = 0;
 
         //transW = hero.getGhostObject().getWorldTransform();
 
@@ -191,32 +159,25 @@ Object.assign(Hero.prototype, {
         //if( key[0] == -1 ) x=-heros[id].speed * walkSpeed;
         //if( key[0] == 1 ) x=heros[id].speed * walkSpeed;
 
-        if (key[4] == 1) this.controller.canJump();
+        if (key[4] === 1) this.controller.canJump();
 
         /*if ( key[ 4 ] == 1 && this.controller.onGround() ) { //h.canJump() ){
-
             this.wasJumping = true;
             this.verticalVelocity = 0;
-
         }
 
         if ( this.wasJumping ) {
-
             this.verticalVelocity += 0.04;
             // y = this.controller.verticalVelocity;
             if ( this.verticalVelocity > 0.5 ) {//1.3
-
                 this.verticalVelocity = 0;
                 this.wasJumping = false;
-
             }
-
         }*/
 
         //  if( hero.onGround() ){
         z = walkSpeed * -key[1];
         x = walkSpeed * -key[0];
-
 
         this.speed = z + x;
 
@@ -242,39 +203,31 @@ Object.assign(Hero.prototype, {
 
         // heros[id].preStep ( world );
         //heros[id].setVelocityForTimeInterval(vec3(), 1);
-
     },
 
-    clear: function()
+    clear()
     {
-
-
         Ammo.destroy(this.body);
         Ammo.destroy(this.controller);
 
         this.body = null;
         this.controller = null;
-
     },
 
-    init: function(o)
+    init(o)
     {
-
         var p0 = math.vector3();
         var trans = math.transform();
 
-        o.size = o.size == undefined ? [1, 1, 1] : o.size;
-        o.pos = o.pos == undefined ? [0, 0, 0] : o.pos;
-        o.quat = o.quat == undefined ? [0, 0, 0, 1] : o.quat;
+        o.size = o.size === undefined ? [1, 1, 1] : o.size;
+        o.pos = o.pos === undefined ? [0, 0, 0] : o.pos;
+        o.quat = o.quat === undefined ? [0, 0, 0, 1] : o.quat;
 
         if (root.scale !== 1) {
-
             o.pos = math.vectomult(o.pos, root.invScale);
             //o.size = math.vectomult( o.size, root.invScale );
             if (o.masscenter !== undefined) o.masscenter = math.vectomult(o.masscenter, root.invScale);
-
         }
-
 
         //var capsule = new Ammo.btCapsuleShape( o.size[ 0 ], o.size[ 1 ] );
 
@@ -288,7 +241,6 @@ Object.assign(Hero.prototype, {
 
         body.setCollisionShape(shape);
         body.setCollisionFlags(16);//CHARACTER_OBJECT
-
 
         body.setFriction(o.friction || 0.1);
         body.setRestitution(o.restitution || 0);
@@ -310,24 +262,17 @@ Object.assign(Hero.prototype, {
 
         this.setAngle(0);
 
-
         console.log(controller, body);
 
         // The max slope determines the maximum angle that the controller can walk
 
-
         // controller.warp(v3(o.pos));
 
-
         // world.getPairCache().setInternalGhostPairCallback( new Ammo.btGhostPairCallback() );
-
     },
 
-    applyOption: function(o)
+    applyOption(o)
     {
-
-        //console.log('set')
-
         var controller = this.controller;
 
         if (o.gravity !== undefined) controller.setGravity(o.gravity);//9.8 *3
@@ -340,18 +285,14 @@ Object.assign(Hero.prototype, {
 
         if (o.angle !== undefined) this.setAngle(o.angle);//45
         if (o.position !== undefined) {
-
             this.position.fromArray(o.position, 0, root.invScale);
             this.position.direction(this.q);
             controller.setWalkDirection(this.position);
-
         }
-
     },
 
-    setMatrix: function(o)
+    setMatrix(o)
     {
-
         var p0 = math.vector3();
         o.pos = math.vectomult(o.pos, root.invScale);
         p0.fromArray(o.pos);
@@ -359,17 +300,14 @@ Object.assign(Hero.prototype, {
         this.controller.warp(p0);
 
         p0.free();
-
     },
 
-    setAngle: function(angle)
+    setAngle(angle)
     {
-
         var t = this.body.getWorldTransform();
         this.q.setFromAxisAngle([0, 1, 0], angle);
         t.setRotation(this.q);
         this.angle = angle;
-
     }
 
 });

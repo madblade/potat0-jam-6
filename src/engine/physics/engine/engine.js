@@ -9,7 +9,6 @@ import { Character }           from './Character.js';
 import { Collision }           from './Collision.js';
 import { RayCaster }           from './RayCaster.js';
 import { ConvexObjectBreaker } from './ConvexObjectBreaker.js';
-// import { LZMAdecompact }       from './lzma.js';
 import { map, REVISION, root }                                                                                                                                               from './root.js';
 import {
     BoxBufferGeometry,
@@ -24,15 +23,9 @@ import {
     Vector3, VertexColors
 } from 'three';
 
-// export var engine = (function()
-// {
-//     'use strict';
-
-// var type = 'LZMA'; // LZMA / WASM / ASM
-
-var worker,
-    callback,
-    blob = null;
+var worker;
+var callback;
+var blob = null;
 
 var URL = window.URL || window.webkitURL;
 var Time = typeof performance === 'undefined' ? Date : performance;
@@ -50,17 +43,15 @@ var currentMode = '';
 var oldMode = '';
 
 var PI90 = Math.PI * 0.5;
-var torad = Math.PI / 180;
-var todeg = 180 / Math.PI;
 
-var rigidBody,
-    softBody,
-    terrains,
-    vehicles,
-    character,
-    collision,
-    rayCaster,
-    constraint;
+var rigidBody;
+var softBody;
+var terrains;
+var vehicles;
+var character;
+var collision;
+var rayCaster;
+var constraint;
 
 var convexBreaker = null;
 var ray = null;
@@ -71,7 +62,7 @@ var tmpAdd = [];
 
 var oldFollow = '';
 
-var stats = {skip: 0,};
+var stats = {skip: 0, };
 
 var isInternUpdate = false;
 //var isRequestAnimationFrame = false;
@@ -96,14 +87,13 @@ let engine = {
 
     folder: './build/',
 
-    message: function(e)
+    message(e)
     {
         var data = e.data;
         if (data.Ar) root.Ar = data.Ar;
         if (data.flow) root.flow = data.flow;
 
         switch (data.m) {
-
             case 'initEngine':
                 engine.initEngine();
                 break;
@@ -127,7 +117,7 @@ let engine = {
         }
     },
 
-    init: function(Callback, Type, Option, Counts)
+    init(Callback, Type, Option, Counts)
     {
         this.initArray(Counts);
         this.defaultRoot();
@@ -152,44 +142,35 @@ let engine = {
 
             jointDebug: Option.jointDebug !== undefined ? Option.jointDebug : false,
 
-            isInternUpdate: isInternUpdate,
+            isInternUpdate,
         };
 
-        t.timerate = (1 / option.fps) * 1000;
+        t.timerate = 1 / option.fps * 1000;
         //t.autoFps = option.autoFps;
 
         // type = Type || 'LZMA';
         let type = 'wasm';
 
-        switch (type) {
-            case 'min' :
-                engine.load(engine.folder + 'ammo.hex', true);
-                break;
-
-            case 'LZMA' :
-            case 'lzma' :
-            case 'compact' :
-                engine.load(engine.folder + 'ammo.hex');
-                break;
-
+        switch (type)
+        {
             case 'WASM':
             case 'wasm':
-                blob = document.location.href.replace(/\/[^/]*$/, '/') + engine.folder + 'ammo.wasm.js';
+                blob = `${document.location.href.replace(/\/[^/]*$/, '/') + engine.folder}ammo.wasm.js`;
                 engine.startWorker();
                 break;
 
             case 'BASIC':
             case 'basic':
-                blob = document.location.href.replace(/\/[^/]*$/, '/') + engine.folder + 'ammo.js';
+                blob = `${document.location.href.replace(/\/[^/]*$/, '/') + engine.folder}ammo.js`;
                 engine.startWorker();
                 break;
         }
     },
 
-    set: function(o)
+    set(o)
     {
         o = o || option;
-        t.timerate = o.fps !== undefined ? (1 / o.fps) * 1000 : t.timerate;
+        t.timerate = o.fps !== undefined ? 1 / o.fps * 1000 : t.timerate;
         //t.autoFps = o.autoFps !== undefined ? o.autoFps : false;
 
         option.fixed = o.fixed || false;
@@ -201,32 +182,9 @@ let engine = {
         root.constraintDebug = option.jointDebug;
 
         this.post('set', o);
-
     },
 
-    load: function(link, isMin)
-    {
-
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'arraybuffer';
-        xhr.open('GET', link, true);
-
-        xhr.onreadystatechange = function()
-        {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200 || xhr.status === 0) {
-                    blob = URL.createObjectURL(new Blob([LZMAdecompact(xhr.response)], {type: 'application/javascript'}));
-                    engine.startWorker(isMin);
-                } else {
-                    console.error('Couldn\'t load [' + link + '] [' + xhr.status + ']');
-                }
-            }
-        };
-
-        xhr.send(null);
-    },
-
-    startWorker: function(isMin)
+    startWorker()//isMin)
     {
         // isMin = isMin || false;
         //blob = document.location.href.replace(/\/[^/]*$/,"/") + "./build/ammo.js" ;
@@ -239,17 +197,17 @@ let engine = {
 
         // test transferrables
         var ab = new ArrayBuffer(1);
-        worker.postMessage({m: 'test', ab: ab}, [ab]);
-        isBuffer = ab.byteLength ? false : true;
+        worker.postMessage({m: 'test', ab}, [ab]);
+        isBuffer = !ab.byteLength;
 
         if (isInternUpdate) isBuffer = false;
 
         // start engine worker
-        engine.post('init', {blob: blob, ArPos: root.ArPos, ArMax: root.ArMax, isBuffer: isBuffer, option: option});
+        engine.post('init', {blob, ArPos: root.ArPos, ArMax: root.ArMax, isBuffer, option});
         root.post = engine.post;
     },
 
-    initArray: function(Counts)
+    initArray(Counts)
     {
         Counts = Counts || {};
 
@@ -281,22 +239,21 @@ let engine = {
         ];
 
         root.ArMax = root.ArLng[0] + root.ArLng[1] + root.ArLng[2] + root.ArLng[3] + root.ArLng[4] + root.ArLng[5];
-
     },
 
-    initEngine: function()
+    initEngine()
     {
         URL.revokeObjectURL(blob);
         blob = null;
 
         this.initObject();
 
-        console.log('SHOTGUN ' + REVISION + ' | ' + (isBuffer ? 'buffer' : 'no buffer') + ' | wasm');
+        console.log(`SHOTGUN ${REVISION} | ${isBuffer ? 'buffer' : 'no buffer'} | wasm`);
 
         if (callback) callback();
     },
 
-    start: function(noAutoUpdate)
+    start(noAutoUpdate)
     {
         if (isPause) return;
 
@@ -315,7 +272,6 @@ let engine = {
 
 
         if (!noAutoUpdate && !isInternUpdate) {
-
             timer = option.animFrame ? requestAnimationFrame(engine.sendData) : setInterval(function()
             {
                 engine.sendData();
@@ -326,26 +282,25 @@ let engine = {
 
         if (!noAutoUpdate && isInternUpdate) { //engine.sendStep();
             var key = engine.getKey();
-            worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key: key}, flow: root.flow, Ar: root.Ar});
+            worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key}, flow: root.flow, Ar: root.Ar});
         }
 
         // test ray
         engine.setMode(oldMode);
     },
 
-    prevUpdate: function()
+    prevUpdate()
     {
     },
-    postUpdate: function()
+    postUpdate()
     {
     },
-    pastUpdate: function()
+    pastUpdate()
     {
     },
 
-    update: function()
+    update()
     {
-
         engine.postUpdate(t.delta);
 
         rigidBody.step(root.Ar, root.ArPos[0]);
@@ -362,12 +317,11 @@ let engine = {
         engine.pastUpdate(t.delta);
     },
 
-    step: function(fps, delta)
+    step(fps, delta)
     {
         //t.now = Time.now();
 
         //var start = Time.now();
-
 
         if (isInternUpdate) {
             t.fps = fps;
@@ -387,7 +341,6 @@ let engine = {
 
         if (root.controler) root.controler.follow();
 
-
         engine.stepRemove();
         engine.stepAdd();
 
@@ -395,13 +348,12 @@ let engine = {
 
         stepNext = true;
 
-
         if (isInternUpdate) {
             engine.sendStep();
         }
     },
 
-    sendData: function(stamp)
+    sendData(stamp)
     {
         if (isInternUpdate) return;
 
@@ -411,7 +363,6 @@ let engine = {
         }
 
         if (option.animFrame) {
-
             timer = requestAnimationFrame(engine.sendData);
             //if ( !stepNext ) return;
             t.now = stamp === undefined ? Time.now() : stamp;
@@ -419,7 +370,7 @@ let engine = {
             t.delta = t.deltaTime * 0.001;
 
             if (t.deltaTime > t.timerate) {
-                t.then = t.now - (t.deltaTime % t.timerate);
+                t.then = t.now - t.deltaTime % t.timerate;
 
                 engine.sendStep();
             }
@@ -447,7 +398,7 @@ let engine = {
         }
     },
 
-    sendStep: function()
+    sendStep()
     {
         if (!stepNext) return;
 
@@ -462,43 +413,39 @@ let engine = {
         // timeStep < maxSubSteps * fixedTimeStep if you don't want to lose time.
 
         if (isInternUpdate) {
-
-            if (isBuffer) worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key: key}, flow: root.flow, Ar: root.Ar}, [root.Ar.buffer]);
+            if (isBuffer) worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key}, flow: root.flow, Ar: root.Ar}, [root.Ar.buffer]);
             //else worker.postMessage( { m: 'internStep', o: {  steptime:t.steptime, key:key }, flow: root.flow, Ar: root.Ar } );
-
         } else {
-
-            if (isBuffer) worker.postMessage({m: 'step', o: {delta: t.delta, key: key}, flow: root.flow, Ar: root.Ar}, [root.Ar.buffer]);
-            else worker.postMessage({m: 'step', o: {delta: t.delta, key: key}, flow: root.flow, Ar: root.Ar});
-
+            if (isBuffer) worker.postMessage({m: 'step', o: {delta: t.delta, key}, flow: root.flow, Ar: root.Ar}, [root.Ar.buffer]);
+            else worker.postMessage({m: 'step', o: {delta: t.delta, key}, flow: root.flow, Ar: root.Ar});
         }
 
         stepNext = false;
     },
 
-    simpleStep: function(delta)
+    simpleStep(delta)
     {
         var key = engine.getKey();
-        worker.postMessage({m: 'step', o: {delta: delta, key: key}});
+        worker.postMessage({m: 'step', o: {delta, key}});
     },
 
     /////////
 
-    stepRemove: function()
+    stepRemove()
     {
         if (tmpRemove.length === 0) return;
         this.post('setRemove', tmpRemove);
         while (tmpRemove.length > 0) this.remove(tmpRemove.pop(), true);
     },
 
-    stepAdd: function()
+    stepAdd()
     {
         if (tmpAdd.length === 0) return;
         //this.post( 'setAdd', tmpAdd );
         while (tmpAdd.length > 0) this.add(tmpAdd.shift());
     },
 
-    setView: function(v)
+    setView(v)
     {
         refView = v;
         root.mat = Object.assign({}, root.mat, v.getMat());
@@ -511,36 +458,36 @@ let engine = {
         //if( isInternUpdate ) refView.updateIntern = engine.update;
     },
 
-    getFps: function()
+    getFps()
     {
         return t.fps;
     },
-    getDelta: function()
+    getDelta()
     {
         return t.delta;
     },
-    getIsFixed: function()
+    getIsFixed()
     {
         return option.fixed;
     },
-    getKey: function()
+    getKey()
     {
         return [0, 0, 0, 0, 0, 0, 0, 0];
     },
 
-    tell: function()
+    tell()
     {
     },
-    log: function()
+    log()
     {
     },
 
-    post: function(m, o)
+    post(m, o)
     {
-        worker.postMessage({m: m, o: o});
+        worker.postMessage({m, o});
     },
 
-    reset: function(full)
+    reset(full)
     {
         stats.skip = 0;
 
@@ -576,22 +523,22 @@ let engine = {
         if (refView) refView.reset(full);
 
         // clear physic object;
-        engine.post('reset', {full: full});
+        engine.post('reset', {full});
     },
 
-    pause: function()
+    pause()
     {
         isPause = true;
     },
 
-    play: function()
+    play()
     {
         if (!isPause) return;
         isPause = false;
         engine.start();
     },
 
-    stop: function()
+    stop()
     {
         if (timer === null) return;
 
@@ -601,7 +548,7 @@ let engine = {
         timer = null;
     },
 
-    destroy: function()
+    destroy()
     {
         worker.terminate();
         worker = undefined;
@@ -609,25 +556,23 @@ let engine = {
 
     ////////////////////////////
 
-    addMat: function(m)
+    addMat(m)
     {
         root.tmpMat.push(m);
     },
 
-    ellipsoidMesh: function(o)
+    ellipsoidMesh(o)
     {
         softBody.createEllipsoid(o);
     },
 
-    updateTmpMat: function(envmap, hdr)
+    updateTmpMat(envmap, hdr)
     {
-        var i = root.tmpMat.length,
-            m;
+        var i = root.tmpMat.length;
+        var m;
         while (i--) {
-
             m = root.tmpMat[i];
             if (m.envMap !== undefined) {
-
                 if (m.type === 'MeshStandardMaterial') m.envMap = envmap;
                 else m.envMap = hdr ? null : envmap;
                 m.needsUpdate = true;
@@ -635,17 +580,17 @@ let engine = {
         }
     },
 
-    setVehicle: function(o)
+    setVehicle(o)
     {
         root.flow.vehicle.push(o);
     },
 
-    drive: function(name)
+    drive(name)
     {
         this.post('setDrive', name);
     },
 
-    move: function(name)
+    move(name)
     {
         this.post('setMove', name);
     },
@@ -658,23 +603,22 @@ let engine = {
 
     // if( o.constructor !== Array ) o = [ o ];
 
-    forces: function(o, direct)
+    forces(o, direct)
     {
         direct = direct || false;
         engine.post(direct ? 'directForces' : 'setForces', o);
     },
 
-    options: function(o, direct)
+    options(o, direct)
     {
         direct = direct || false;
         engine.post(direct ? 'directOptions' : 'setOptions', o);
     },
 
-    matrix: function(o, direct)
+    matrix(o, direct)
     {
         direct = direct || false;
         engine.post(direct ? 'directMatrix' : 'setMatrix', o);
-
     },
 
     //-----------------------------
@@ -683,23 +627,23 @@ let engine = {
     //
     //-----------------------------
 
-    clearFlow: function()
+    clearFlow()
     {
         root.flow = {ray: [], terrain: [], vehicle: []};
         //root.flow = { matrix:{}, force:{}, option:{}, ray:[], terrain:[], vehicle:[] };
     },
 
-    anchor: function(o)
+    anchor(o)
     {
         this.post('addAnchor', o);
     },
 
-    break: function(o)
+    break(o)
     {
         this.post('addBreakable', o);
     },
 
-    moveSolid: function(o)
+    moveSolid(o)
     {
         if (!map.has(o.name)) return;
         var b = map.get(o.name);
@@ -707,12 +651,12 @@ let engine = {
         if (o.quat !== undefined) b.quaternion.fromArray(o.quat);
     },
 
-    getBodys: function()
+    getBodys()
     {
         return rigidBody.bodys;
     },
 
-    initObject: function()
+    initObject()
     {
         rigidBody = new RigidBody();
         softBody = new SoftBody();
@@ -722,7 +666,6 @@ let engine = {
         collision = new Collision();
         rayCaster = new RayCaster();
         constraint = new Constraint();
-
     },
 
     //-----------------------------
@@ -731,7 +674,7 @@ let engine = {
     //
     //-----------------------------
 
-    clear: function()
+    clear()
     {
         engine.clearFlow();
 
@@ -753,7 +696,7 @@ let engine = {
     //
     //-----------------------------
 
-    remove: function(name, phy)
+    remove(name, phy)
     {
         // remove physics
         if (!phy) this.post('remove', name);
@@ -790,12 +733,12 @@ let engine = {
         }
     },
 
-    removes: function(o)
+    removes(o)
     {
         tmpRemove = tmpRemove.concat(o);
     },
 
-    removesDirect: function(o)
+    removesDirect(o)
     {
         this.post('directRemoves', o);
     },
@@ -806,7 +749,7 @@ let engine = {
     //
     //-----------------------------
 
-    byName: function(name)
+    byName(name)
     {
         if (!map.has(name)) {
             engine.tell('no find object !!');
@@ -820,12 +763,12 @@ let engine = {
     //
     //-----------------------------
 
-    addGroup: function(list)
+    addGroup(list)
     {
         tmpAdd = tmpAdd.concat(list);
     },
 
-    add: function(o)
+    add(o)
     {
         o = o || {};
         var type = o.type === undefined ? 'box' : o.type;
@@ -841,7 +784,7 @@ let engine = {
         else return rigidBody.add(o);
     },
 
-    defaultRoot: function()
+    defaultRoot()
     {
         // geometry
 
@@ -888,7 +831,7 @@ let engine = {
                 color: 0x33CCFF, name: 'sleep', wireframe: wire//, shadowSide: shadowSide
             }),
             static: new MeshLambertMaterial({
-                color: 0x333333, name: 'static', wireframe: wire,//, shadowSide: shadowSide,
+                color: 0x333333, name: 'static', wireframe: wire, //, shadowSide: shadowSide,
                 transparent: true, opacity: 0.3, depthTest: true, depthWrite: false
             }),
             kinematic: new MeshLambertMaterial({
@@ -927,7 +870,7 @@ let engine = {
         };
     },
 
-    getContainer: function()
+    getContainer()
     {
         return root.container;
     },
@@ -938,9 +881,8 @@ let engine = {
     //
     //-----------------------------
 
-    makeBreak: function(o)
+    makeBreak(o)
     {
-
         var name = o.name;
         if (!map.has(name)) return;
 
@@ -964,14 +906,12 @@ let engine = {
         while (i--) tmpAdd.push(this.addDebris(name, i, debris[i], breakOption));
 
         //while ( i -- ) this.addDebris( name, i, debris[ i ], breakOption );
-
     },
 
-    addDebris: function(name, id, mesh, breakOption)
+    addDebris(name, id, mesh, breakOption)
     {
-
         var o = {
-            name: name + '_debris' + id,
+            name: `${name}_debris${id}`,
             material: mesh.material,
             type: 'convex',
             shape: mesh.geometry,
@@ -986,16 +926,13 @@ let engine = {
 
         // if levelOfSubdivision > 0 make debris breakable !!
         if (breakOption[3] > 0) {
-
             o.breakable = true;
             o.breakOption = breakOption;
-
         }
 
         //this.add( o );
 
         return o;
-
     },
 
     //-----------------------------
@@ -1004,15 +941,12 @@ let engine = {
     //
     //-----------------------------
 
-    setMode: function(mode)
+    setMode(mode)
     {
-
         if (mode !== currentMode) {
-
             if (currentMode === 'picker') engine.removeRayCamera();
             if (currentMode === 'shoot') engine.removeShootCamera();
             if (currentMode === 'lock') engine.removeLockCamera();
-
         }
 
         currentMode = mode;
@@ -1020,66 +954,58 @@ let engine = {
         if (currentMode === 'picker') engine.addRayCamera();
         if (currentMode === 'shoot') engine.addShootCamera();
         if (currentMode === 'lock') engine.addLockCamera();
-
     },
 
     // CAMERA LOCK
 
-    addLockCamera: function()
+    addLockCamera()
     {
 
     },
 
-    removeLockCamera: function()
+    removeLockCamera()
     {
 
     },
 
     // CAMERA SHOOT
 
-    addShootCamera: function()
+    addShootCamera()
     {
 
     },
 
-    removeShootCamera: function()
+    removeShootCamera()
     {
 
     },
 
     // CAMERA RAY
 
-    addRayCamera: function()
+    addRayCamera()
     {
-
         if (!refView) return;
 
         ray = engine.add({name: 'cameraRay', type: 'ray', callback: engine.onRay, mask: 1, visible: false});// only move body
         refView.activeRay(engine.updateRayCamera, false);
-
     },
 
-    removeRayCamera: function()
+    removeRayCamera()
     {
-
         if (!refView) return;
         engine.remove('cameraRay');
         refView.removeRay();
         engine.log();
-
     },
 
-    updateRayCamera: function(offset)
+    updateRayCamera(offset)
     {
-
         //ray.setFromCamera( refView.getMouse(), refView.getCamera() );
         if (mouseMode === 'drag') engine.matrix([{name: 'dragger', pos: offset.toArray(), keepRot: true}]);
-
     },
 
-    onRay: function(o)
+    onRay(o)
     {
-
         var mouse = refView.getMouse();
         var control = refView.getControls();
         var name = o.name === undefined ? '' : o.name;
@@ -1087,35 +1013,24 @@ let engine = {
         ray.setFromCamera(mouse, control.object);
 
         if (mouse.z === 0) {
-
             if (mouseMode === 'drag') {
                 control.enableRotate = true;
                 engine.removeConnector();
             }
 
             mouseMode = 'free';
-
         } else {
-
             if (mouseMode === 'free') {
-
                 if (name) {
-
                     if (mouseMode !== 'drag') {
-
                         refView.setDragPlane(o.point);
                         control.enableRotate = false;
                         engine.addConnector(o);
                         mouseMode = 'drag';
-
                     }
-
                 } else {
-
                     mouseMode = 'rotate';
-
                 }
-
             }
 
             /*if ( mouseMode === 'drag' ){
@@ -1126,10 +1041,10 @@ let engine = {
         }
 
         // debug
-        engine.log(mouseMode + '   ' + name);
+        engine.log(`${mouseMode}   ${name}`);
     },
 
-    addConnector: function(o)
+    addConnector(o)
     {
         //if ( ! map.has( o.name ) ) { console.log('no find !!'); return;}
         //var mesh = map.get( o.name );
@@ -1166,7 +1081,7 @@ let engine = {
         });
     },
 
-    removeConnector: function()
+    removeConnector()
     {
         engine.remove('dragger');
         engine.remove('connector');
@@ -1174,7 +1089,7 @@ let engine = {
         if (oldFollow !== '') engine.setCurrentFollow(oldFollow);
     },
 
-    getLocalPoint: function(vector, mesh)
+    getLocalPoint(vector, mesh)
     {
         mesh.updateMatrix();
         //mesh.updateMatrixWorld(true);
@@ -1185,7 +1100,7 @@ let engine = {
         return vector.applyMatrix4(m1);
     },
 
-    setCurrentFollow: function(name, o)
+    setCurrentFollow(name, o)
     {
         if (!refView) return;
         var target = engine.byName(name);
@@ -1195,7 +1110,7 @@ let engine = {
     },
 
 
-    testCurrentFollow: function(name)
+    testCurrentFollow(name)
     {
         oldFollow = '';
         if (!refView) return;

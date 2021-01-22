@@ -1,168 +1,121 @@
+
+/* global Ammo */
+
 import { math }      from './math.js';
 import { map, root } from './root.js';
 
 function SoftBody()
 {
-
     this.ID = 0;
     this.softs = [];
-
 }
 
 Object.assign(SoftBody.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
-
-        var softPoints = N,
-            n,
-            s,
-            j;
+        var softPoints = N;
+        var n;
+        var s;
+        var j;
         var scale = root.scale;
 
         this.softs.forEach(function(b)
         {
-
-            s = b.get_m_nodes(); // get vertrices list
+            s = b.get_m_nodes(); // get vertices list
             j = s.size();
 
             while (j--) {
-
-                n = softPoints + (j * 3);
+                n = softPoints + j * 3;
                 s.at(j).get_m_x().toArray(AR, n, scale);
-
             }
 
             softPoints += s.size() * 3;
-
         });
-
     },
 
-    getNodes: function(b)
+    getNodes(b)
     {
-
         var list = [];
 
-        var s = b.get_m_nodes(),
-            r; // get vertrices list
+        var s = b.get_m_nodes();
+        var r; // get vertices list
         var lng = s.size();
 
         for (var j = 0; j < lng; j++) {
-
-            //n = ( j * 3 );
             r = s.at(j).get_m_x().toArray();
             if (r[1] > 300) list.push(j);
-            //list.push( r );
-
-
         }
 
         return list;
-
     },
 
-    /*move: function ( o ) {
-
-        if ( ! map.has( o.name ) ) return;
-        var soft = map.get( o.name );
-
-        var s = soft.get_m_nodes();
-        //console.log(s)
-        var j = s.size();
-        while ( j -- ) {
-            //pos = s.at( j ).get_m_x().add( new Ammo.btVector3(0, 10, 0) );
-        }
-
-        soft.set_m_nodes( s );
-
-    },*/
-
-    clear: function()
+    clear()
     {
-
         while (this.softs.length > 0) this.destroy(this.softs.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(b)
+    destroy(b)
     {
-
         root.world.removeSoftBody(b);
         Ammo.destroy(b);
         map.delete(b.name);
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var b = map.get(name);
 
         var n = this.softs.indexOf(b);
         if (n !== -1) {
-
             this.softs.splice(n, 1);
             this.destroy(b);
-
         }
-
     },
 
-    addAreo: function(o)
+    addAero(o)
     {
-
         if (!map.has(o.soft)) return;
         var soft = map.get(o.soft);
-        var p0 = math.vector3().fromeArray(o.wind);
+        var p0 = math.vector3().fromArray(o.wind);
         var i = o.nodes.length;
         while (i--) soft.addAeroForceToNode(p0, o.nodes[i]);
         p0.free();
-
     },
 
-    addAnchor: function(o)
+    addAnchor(o)
     {
-
         if (!map.has(o.soft) || !map.has(o.body)) return;
         var collision = o.collision || false;
         var soft = map.get(o.soft);
         var body = map.get(o.body);
 
         var i = o.nodes.length;
-        while (i--) soft.appendAnchor(o.nodes[i], body, collision ? false : true, o.influence || 1);
-
+        while (i--) soft.appendAnchor(o.nodes[i], body, !collision, o.influence || 1);
     },
 
-    add: function(o)
+    add(o)
     {
-
-        var name = o.name !== undefined ? o.name : 'soft' + this.ID++;
+        var name = o.name !== undefined ? o.name : `soft${this.ID++}`;
 
         // delete old if same name
         this.remove(name);
 
         var worldInfo = root.world.getWorldInfo();
 
-
         var gendiags = o.gendiags || true;
-        //var fixed = o.fixed || 0;
 
-        o.size = o.size == undefined ? [1, 1, 1] : o.size;
+        o.size = o.size === undefined ? [1, 1, 1] : o.size;
         o.pos = o.pos === undefined ? [0, 0, 0] : o.pos;
         o.quat = o.quat === undefined ? [0, 0, 0, 1] : o.quat;
-        o.div = o.div == undefined ? [64, 64] : o.div;
+        o.div = o.div === undefined ? [64, 64] : o.div;
 
         if (root.scale !== 1) {
-
             o.pos = math.vectomult(o.pos, root.invScale);
             o.size = math.vectomult(o.size, root.invScale);
-
         }
-
-        //console.log(o.pos)
 
         var p0 = math.vector3();
         var p1 = math.vector3();
@@ -173,13 +126,11 @@ Object.assign(SoftBody.prototype, {
 
         var softBodyHelpers = new Ammo.btSoftBodyHelpers();
 
-        //console.log( softBodyHelpers )
-
         var body;
 
-        switch (o.type) {
-
-            case 'softMesh': //case 'softConvex':
+        switch (o.type)
+        {
+            case 'softMesh':
 
                 // scale geometry
                 if (root.scale !== 1) {
@@ -232,25 +183,23 @@ Object.assign(SoftBody.prototype, {
 
                 var a = [];
                 var b = body.get_m_nodes();
-                var j = b.size(),
-                    n,
-                    node,
-                    p;
-                while (j--) {
-
-                    n = (j * 3);
-                    node = b.at(j);
+                var j2 = b.size();
+                var n;
+                var node;
+                var p;
+                while (j2--) {
+                    n = j2 * 3;
+                    node = b.at(j2);
                     p = node.get_m_x();
                     a[n] = p.x();
                     a[n + 1] = p.y();
                     a[n + 2] = p.z();
-
                 }
 
                 o.lng = b.size();
                 o.a = a;
 
-                self.postMessage({m: 'ellipsoid', o: o});
+                self.postMessage({m: 'ellipsoid', o});
 
                 break;
 
@@ -258,17 +207,14 @@ Object.assign(SoftBody.prototype, {
 
                 //var j = o.v.length;
                 //while( j-- ) { o.v[ j ] *= root.invScale; }
-
                 var lng = o.v.length / 3;
-                var arr = [];
-                var i = 0,
-                    n;
-
+                // var arr = [];
+                var i = 0;
+                var m;
                 //var ff = new Ammo.btVector3Array();
 
                 for (i = 0; i < lng; i++) {
-
-                    n = i * 3;
+                    m = i * 3;
                     //p1.fromArray( o.v, n, root.invScale );
                     //arr.push( p1.clone() );
                     //body.get_m_nodes().at( i ).set_m_x( p1 );
@@ -278,80 +224,57 @@ Object.assign(SoftBody.prototype, {
                     //arr[i] = new Ammo.btVector3( o.v[n], o.v[n+1], o.v[n+2]);
 
                     //arr.push(  [o.v[n], o.v[n+1], o.v[n+2]] );
-
                 }
-
-                //
-
 
                 var hull = new Ammo.btConvexHullShape();
 
                 for (i = 0; i < lng; i++) {
-
-                    n = i * 3;
-                    p1.fromArray(o.v, n, root.invScale);
+                    m = i * 3;
+                    p1.fromArray(o.v, m, root.invScale);
                     hull.addPoint(p1);
                 }
 
                 //hull.recalcLocalAabb();
                 hull.initializePolyhedralFeatures();
-
                 //console.log(hull, hull.getNumVertices() )
-
                 //console.log(hull.getConvexPolyhedron().m_vertices.size() )
-
                 body = softBodyHelpers.CreateFromConvexHull(worldInfo, hull.getConvexPolyhedron(), hull.getConvexPolyhedron().m_vertices.size(), o.randomize || false);
-
-
                 //body = softBodyHelpers.CreateFromConvexHull( worldInfo, hull.getConvexPolyhedron(), hull.getConvexPolyhedron().get_m_vertices().size(), o.randomize || true );
-
                 //body.setCollisionShape( fff )
                 //body = softBodyHelpers.CreateFromConvexHull( worldInfo, arr, lng, o.randomize || true );
                 //body.generateBendingConstraints( hull.getNumVertices() );
                 body.softType = 4;
 
                 //console.log(body)
-
-
                 // free node
-                /*i = lng;
+                // i = lng;
                 //while ( i -- ) arr[i].free();
                 // force nodes
-                //var i = lng, n;
-                for ( i = 0; i<lng; i++ ) {
-
-                    n = i * 3;
-                    p1.fromArray( o.v, n, root.invScale );
-                    body.get_m_nodes().at( i ).set_m_x( p1 );
-                    //body.get_m_nodes().at( i ).set_m_x(new Ammo.btVector3(o.v[n], o.v[n+1], o.v[n+2]));
-
-                }
-*/
+                //var i = lng, m;
+                // for ( i = 0; i<lng; i++ ) {
+                //     m = i * 3;
+                //     p1.fromArray( o.v, m, root.invScale );
+                //     body.get_m_nodes().at( i ).set_m_x( p1 );
+                //     body.get_m_nodes().at( i ).set_m_x(new Ammo.btVector3(o.v[m], o.v[m+1], o.v[m+2]));
+                // }
                 console.log(body, body.get_m_nodes().size());
 
                 break;
-
-
         }
-
 
         // apply parametre
         this.applyOption(body, o);
-
 
         // apply position and rotation
         trans.identity().fromArray(o.pos.concat(o.quat));
         body.transform(trans);
 
-
         // Soft-soft and soft-rigid collisions
         root.world.addSoftBody(body, o.group || 1, o.mask || -1);
-
 
         body.setActivationState(o.state || 4);
         body.points = body.get_m_nodes().size();
         body.name = name;
-
         body.type = 'soft';
 
         this.softs.push(body);
@@ -366,12 +289,10 @@ Object.assign(SoftBody.prototype, {
         p4.free();
         trans.free();
         o = null;
-
     },
 
-    applyOption: function(body, o)
+    applyOption(body, o)
     {
-
         var sb = body.get_m_cfg();
 
         //console.log(sb.get_kVC())
@@ -394,12 +315,10 @@ Object.assign(SoftBody.prototype, {
         if (o.matching !== undefined) sb.set_kMT(o.matching);// Pose matching coefficient [0,1] def:0
 
         if (o.hardness !== undefined) {
-
             sb.set_kCHR(o.hardness);// Rigid contacts hardness [0,1] def : 1.0
             sb.set_kKHR(o.hardness);// Kinetic contacts hardness [0,1] def : 0.1
             sb.set_kSHR(o.hardness);// Soft contacts hardness [0,1] def: 1.0
             sb.set_kAHR(o.hardness);// Anchors hardness [0,1] def:0.7
-
         }
 
         if (o.timescale !== undefined) sb.set_timescale(o.timescale);// def:1
@@ -419,22 +338,17 @@ Object.assign(SoftBody.prototype, {
 
         //mat.set_m_flags(0);// def 1
 
-
         //console.log(body, sb, mat)
 
-
         if (o.stiffness !== undefined) { // range (0,1)
-
             mat.set_m_kLST(o.stiffness); // linear
             mat.set_m_kAST(o.stiffness); // angular
             mat.set_m_kVST(o.stiffness); // volume
-
         }
 
         if (o.bendingConstraint !== undefined) {
             // ( int distance > 1, material )
             body.generateBendingConstraints(o.bendingConstraint, mat);
-
         }
 
         //body.set_m_cfg( sb );
@@ -442,9 +356,7 @@ Object.assign(SoftBody.prototype, {
         body.setTotalMass(o.mass || 0, o.fromfaces || false);
 
         if (o.cluster !== undefined) {
-
             body.generateClusters(o.cluster, o.maxClusterIterations || 8192);
-
         }
 
         //body.setPose( true, true );
@@ -452,8 +364,6 @@ Object.assign(SoftBody.prototype, {
         if (o.rolling !== undefined) body.setRollingFriction(o.rolling);
         if (o.flag !== undefined) body.setCollisionFlags(o.flag);
         if (o.margin !== undefined) Ammo.castObject(body, Ammo.btCollisionObject).getCollisionShape().setMargin(o.margin * root.invScale);// def 0.25
-
-
     }
 
 });

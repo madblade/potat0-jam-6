@@ -1,8 +1,10 @@
-// ROOT reference of engine
+/*
+ * Root of main-thread engine.
+ */
 
 import { Euler, Matrix4, Quaternion } from 'three';
 
-export var REVISION = '005';
+export var REVISION = 'Shotgun005+Mad';
 
 export var root = {
 
@@ -37,7 +39,7 @@ export var root = {
 
     isRefView: false,
 
-    correctSize: function(s)
+    correctSize(s)
     {
         if (s.length === 1) s[1] = s[0];
         if (s.length === 2) s[2] = s[0];
@@ -50,17 +52,10 @@ export var root = {
     tmpE: new Euler(),
     tmpM: new Matrix4(),
 
-    toQuatArray: function(rotation)
+    toQuatArray(rotation)
     {
         // rotation array in degree
-        return root.tmpQ.setFromEuler(root.tmpE.fromArray(root.vectorad(rotation))).toArray();
-    },
-
-    vectorad: function(r)
-    {
-        var i = r.length;
-        while (i--) r[i] *= root.torad;
-        return r;
+        return root.tmpQ.setFromEuler(root.tmpE.fromArray(rotation)).toArray();
     },
 };
 

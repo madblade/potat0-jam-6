@@ -10,13 +10,13 @@ function Character()
 
 Object.assign(Character.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
         var n;
 
         this.heroes.forEach(function(b, id)
         {
-            n = N + (id * 8);
+            n = N + id * 8;
             var s = AR[n] * 3.33;
             b.userData.speed = s * 100;
             b.position.fromArray(AR, n + 1);
@@ -33,19 +33,19 @@ Object.assign(Character.prototype, {
         });
     },
 
-    clear: function()
+    clear()
     {
         while (this.heroes.length > 0) this.destroy(this.heroes.pop());
         this.ID = 0;
     },
 
-    destroy: function(b)
+    destroy(b)
     {
         if (b.parent) b.parent.remove(b);
         map.delete(b.name);
     },
 
-    remove: function(name)
+    remove(name)
     {
         if (!map.has(name)) return;
         var b = map.get(name);
@@ -57,7 +57,7 @@ Object.assign(Character.prototype, {
         }
     },
 
-    add: function(o)
+    add(o)
     {
         var name = o.name !== undefined ? o.name : o.type + this.ID++;
 
@@ -65,20 +65,7 @@ Object.assign(Character.prototype, {
         this.remove(name);
 
         o.scale = o.scale || 1;
-
         o.size = o.size !== undefined ? o.size : [0.25, 2];
-
-
-        /*if ( o.size.length == 1 ) {
-
-            o.size[ 1 ] = o.size[ 0 ];
-
-        }
-        if ( o.size.length == 2 ) {
-
-            o.size[ 2 ] = o.size[ 0 ];
-
-        }*/
 
         if (o.mesh) {
             var gm = o.mesh.geometry;
@@ -88,10 +75,10 @@ Object.assign(Character.prototype, {
         }
 
         // The total height is height+2*radius, so the height is just the height between the center of each 'sphere' of the capsule caps
-        o.size[1] = o.size[1] - (o.size[0] * 2);
+        o.size[1] = o.size[1] - o.size[0] * 2;
 
         o.pos = o.pos === undefined ? [0, 0, 0] : o.pos;
-        o.rot = o.rot == undefined ? [0, 0, 0] : Math.vectorad(o.rot);
+        o.rot = o.rot === undefined ? [0, 0, 0] : o.rot;
         o.quat = new Quaternion().setFromEuler(new Euler().fromArray(o.rot)).toArray();
 
         var material;
@@ -104,7 +91,7 @@ Object.assign(Character.prototype, {
 
         var g = new Capsule(o.size[0], o.size[1], 6);
 
-        var mesh = new Group();//o.mesh || new Mesh( g );
+        var mesh = new Group();
 
         if (o.debug) {
             var mm = new Mesh(g, root.mat.debug);
@@ -139,15 +126,13 @@ Object.assign(Character.prototype, {
         mesh.position.fromArray(o.pos);
         mesh.quaternion.fromArray(o.quat);
 
-
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.name = name;
 
-        if (o.material) delete (o.material);
-        if (o.mesh) delete (o.mesh);
-        if (o.scale) delete (o.scale);
-
+        if (o.material) delete o.material;
+        if (o.mesh) delete o.mesh;
+        if (o.scale) delete o.scale;
 
         root.container.add(mesh);
         this.heroes.push(mesh);
@@ -159,7 +144,6 @@ Object.assign(Character.prototype, {
         return mesh;
     },
 
-    /////
 });
 
 export { Character };

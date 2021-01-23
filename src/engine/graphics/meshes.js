@@ -61,7 +61,7 @@ let MeshesModule = {
             // 'yumi-morph', 'ya',
             // 'yari', 'nagamaki', 'naginata', 'nodachi', 'katana'
         ];
-        this._nbMeshesToLoad = meshesToLoad.length + 1;
+        this._nbMeshesToLoad = meshesToLoad.length;
 
         meshesToLoad.forEach(id =>
         {
@@ -73,12 +73,12 @@ let MeshesModule = {
             });
         });
 
-        this.loadMeshFromJSON('steve', geometry => {
-            this.referenceMeshes.set('steve', geometry);
-            this._nbMeshesLoadedOrError++;
-        }, () => {
-            this._nbMeshesLoadedOrError++;
-        });
+        // this.loadMeshFromJSON('steve', geometry => {
+        //     this.referenceMeshes.set('steve', geometry);
+        //     this._nbMeshesLoadedOrError++;
+        // }, () => {
+        //     this._nbMeshesLoadedOrError++;
+        // });
     },
 
     renderOnTop(object)

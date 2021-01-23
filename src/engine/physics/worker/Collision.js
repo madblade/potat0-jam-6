@@ -70,9 +70,7 @@ Object.assign(Collision.prototype, {
 
 });
 
-
 export { Collision };
-
 
 //--------------------------------------------------
 //
@@ -118,7 +116,6 @@ function Pair(a, b, name)
         //  console.log( this.pa, this.pb, this.nb );
 
         //console.log( this.maxImpulse );
-
 
         this.result = 1;
     }.bind(this);

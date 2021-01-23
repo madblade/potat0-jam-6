@@ -77,9 +77,7 @@ Object.assign(Terrain.prototype, {
 
 });
 
-
 export { Terrain };
-
 
 //--------------------------------------------------
 //
@@ -115,7 +113,6 @@ function LandScape(name, o)
 
     var flag = o.flag === undefined ? 1 : o.flag;
 
-
     // This parameter is not really used, since we are using PHY_FLOAT height data type and hence it is ignored
     var heightScale = o.heightScale === undefined ? 1 : o.heightScale;
 
@@ -132,10 +129,7 @@ function LandScape(name, o)
     this.setData(o.heightData);
     this.update();
 
-    //var shape = new Ammo.btHeightfieldTerrainShape( sample[0], sample[1], terrainData[name], heightScale, -size[1], size[1], upAxis, hdt, flipEdge );
     var shape = new Ammo.btHeightfieldTerrainShape(sample[0], sample[1], this.data, heightScale, -size[1], size[1], upAxis, hdt, flipEdge);
-
-    //console.log(shape.getMargin())
 
     p1.set(size[0] / sample[0], 1, size[2] / sample[1]);
     shape.setLocalScaling(p1);
@@ -145,7 +139,7 @@ function LandScape(name, o)
     trans.identity().fromArray(pos.concat(quat));
 
     p1.set(0, 0, 0);
-    //shape.calculateLocalInertia( mass, p1 );
+    // shape.calculateLocalInertia( mass, p1 );
     var motionState = new Ammo.btDefaultMotionState(trans);
     var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, p1);
 

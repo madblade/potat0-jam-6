@@ -75,6 +75,10 @@ extend(SelfModel.prototype, {
         console.log(player);
         this.updateSelf([0, 0, 0], [0, 0, 0, 0], '-1');
         this.updatePosition(this.avatar, this.avatar.position);
+
+        // Notify physics engine.
+        let physics = this.app.engine.physics;
+        physics.addCharacterController(this);
     },
 
     // Called every client frame.

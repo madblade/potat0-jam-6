@@ -11,11 +11,11 @@ export function geometryInfo(g, type)
     if (type === 'mesh' || type === 'convex') facesOnly = true;
     //if(type == 'convex') verticesOnly = true;
 
-    var i,
-        j,
-        n,
-        p,
-        n2;
+    var i;
+    var j;
+    var n;
+    var p;
+    var n2;
 
     var tmpGeo = g.isBufferGeometry ? new Geometry().fromBufferGeometry(g) : g;
     tmpGeo.mergeVertices();

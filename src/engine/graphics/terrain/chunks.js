@@ -6,7 +6,7 @@
 
 import {
     BufferAttribute, BufferGeometry,
-    Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry,
+    Color, Mesh, PlaneBufferGeometry,
     Vector3
 } from 'three';
 import { ItemType } from '../../../model/backend/self/items';

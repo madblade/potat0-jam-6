@@ -65,9 +65,6 @@ Object.assign(Constraint.prototype, {
         /*
         if ( o.rotA ){ o.quatA = root.toQuatArray( o.rotA ); delete ( o.rotA ); }
         if ( o.rotB ){ o.quatB = root.toQuatArray( o.rotB ); delete ( o.rotB ); }
-
-        if ( o.angUpper ) o.angUpper = root.vectorad( o.angUpper );
-        if ( o.angLower ) o.angLower = root.vectorad( o.angLower );
         */
 
         var joint = new Joint(o);

@@ -201,7 +201,6 @@ var engine = {
         // breakable object
         if (numBreak !== 0) this.stepBreak();
 
-
         // timeStep < maxSubSteps * fixedTimeStep if you don't want to lose time.
         //'timeStep', units in preferably in seconds
         //root.world.stepSimulation( timestep, substep );
@@ -224,11 +223,15 @@ var engine = {
 
         if (isBuffer)
         {
-            self.postMessage(
-                {
-                    m: 'step', fps: t.fps, delta: t.delta, flow: root.flow, Ar
-                },
-                [Ar.buffer]
+            // console.log(Ar);
+            self.postMessage({
+                m: 'step',
+                fps: t.fps,
+                delta: t.delta,
+                flow: root.flow,
+                Ar: Ar
+            },
+            [Ar.buffer]
             );
         }
         else
@@ -472,8 +475,6 @@ var engine = {
         o = o || {};
 
         zero = new Ammo.btVector3();
-        let r = new RigidBody();
-        console.log('success');
         zero.set(0, 0, 0);
 
         isSoft = o.soft === undefined ? true : o.soft;
@@ -729,7 +730,6 @@ var engine = {
 
         //t.identity();
 
-
         // position and rotation
         if (o.pos !== undefined) {
             //o.pos = math.vectomult( o.pos, root.invScale );
@@ -770,7 +770,9 @@ var engine = {
         }
 
         if (b.type === 'body' && !b.isKinematic) b.activate();
-        if (b.type === 'solid') self.postMessage({m: 'moveSolid', o: {name, pos: o.pos, quat: o.quat}});
+        if (b.type === 'solid') {
+            self.postMessage({m: 'moveSolid', o: {name, pos: o.pos, quat: o.quat}});
+        }
 
         //t.free();
         //p1.free();

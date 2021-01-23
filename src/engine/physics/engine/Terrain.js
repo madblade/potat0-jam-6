@@ -1,81 +1,54 @@
-/*global THREE*/
+
 import { map, root } from './root.js';
 import { Terrain3 }  from './Terrain3';
 
-
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    SHOT - TERRAIN
- */
-
 function Terrain()
 {
-
     this.ID = 0;
     this.terrains = [];
-
-
 }
 
 Object.assign(Terrain.prototype, {
 
-    step: function()
+    step()
     {
-
         root.flow.terrain = [];
 
         this.terrains.forEach(function(t)
         {
-
             if (t.needsUpdate) {
-
                 t.updateGeometry();
                 root.flow.terrain.push({name: t.name, heightData: t.heightData});
                 t.needsUpdate = false;
-
             }
-
         });
-
     },
 
-    clear: function()
+    clear()
     {
-
         while (this.terrains.length > 0) this.destroy(this.terrains.pop());
         this.ID = 0;
-
     },
 
-    destroy: function(t)
+    destroy(t)
     {
-
         if (t.parent) t.parent.remove(t);
         map.delete(t.name);
-
     },
 
-    remove: function(name)
+    remove(name)
     {
-
         if (!map.has(name)) return;
         var t = map.get(name);
 
         var n = this.terrains.indexOf(t);
         if (n !== -1) {
-
             this.terrains.splice(n, 1);
             this.destroy(t);
-
         }
-
     },
 
-    add: function(o)
+    add(o)
     {
         var name = o.name !== undefined ? o.name : o.type + this.ID++;
 
@@ -87,22 +60,20 @@ Object.assign(Terrain.prototype, {
         o.complexity = o.complexity === undefined ? 30 : o.complexity;
         o.name = name;
 
-        var terrain = new Terrain3(o);
-
-        terrain.needsUpdate = false;
-        terrain.type = 'terrain';
-
+        // var terrain = new Terrain3(o);
+        // terrain.needsUpdate = false;
+        // terrain.type = 'terrain';
         //terrain.physicsUpdate = function () { root.post( 'setTerrain', { name:this.name, heightData:this.heightData } ) }
 
-        o.heightData = terrain.heightData;
+        // o.heightData = terrain.heightData;
 
         o.offset = 0;
 
-        root.container.add(terrain);
+        // root.container.add(terrain);
 
-        this.terrains.push(terrain);
+        // this.terrains.push(terrain);
 
-        map.set(name, terrain);
+        // map.set(name, terrain);
 
         root.post('add', o);
     },
@@ -131,7 +102,7 @@ Object.assign(Terrain.prototype, {
 
     },*/
 
-    move: function(name, x, z)
+    move(name, x, z)
     {
         if (!map.has(name)) return;
         var t = map.get(name);
@@ -143,6 +114,5 @@ Object.assign(Terrain.prototype, {
     },
 
 });
-
 
 export { Terrain };

@@ -143,7 +143,6 @@ Object.assign(RigidBody.prototype, {
             if (o.group === undefined) o.group = 4;
         }
 
-
         o.size = o.size === undefined ? [1, 1, 1] : o.size;
         o.pos = o.pos === undefined ? [0, 0, 0] : o.pos;
         o.quat = o.quat === undefined ? [0, 0, 0, 1] : o.quat;
@@ -187,7 +186,7 @@ Object.assign(RigidBody.prototype, {
                 break;
 
             case 'capsule':
-                shape = new Ammo.btCapsuleShape(o.size[0], o.size[1]);
+                shape = new Ammo.btCapsuleShape(o.size[0], o.size[1], o.upAxis || 1);
                 break;
 
             case 'compound':

@@ -255,6 +255,7 @@ extend(CameraManager.prototype, {
         // Chrome (there is a bug in Chrome for that! insane.)
         else if (incoming.length > 1)
         {
+            let spikeDetected = false;
             for (let i = 0, l = incoming.length; i < l; ++i)
             {
                 let inc = incoming[i];
@@ -263,25 +264,33 @@ extend(CameraManager.prototype, {
                 acc[2] += inc[2];
                 acc[3] += inc[3];
             }
-            acc[0] /= incoming.length;
-            acc[1] /= incoming.length;
-            acc[2] /= incoming.length;
-            acc[3] /= incoming.length;
-            const thresh = 10;
+            // acc[0] /= incoming.length;
+            // acc[1] /= incoming.length;
+            // acc[2] /= incoming.length;
+            // acc[3] /= incoming.length;
+            const thresh = 20;
             for (let i = 0, l = incoming.length; i < l; ++i)
             {
                 let inc = incoming[i];
-                if (Math.abs(inc[0]) > thresh * Math.abs(acc[0])) {
-                    inc[0] = acc[0];
+                if (Math.abs(inc[0]) > thresh) {// * Math.abs(acc[0])) {
+                    console.log(inc[0]);
+                    spikeDetected = true;
+                    // inc[0] = acc[0];
                 }
-                if (Math.abs(inc[1]) > thresh * Math.abs(acc[1])) {
-                    inc[1] = acc[1];
+                if (Math.abs(inc[1]) > thresh) {// * Math.abs(acc[1])) {
+                    console.log(inc[1]);
+                    spikeDetected = true;
+                    // inc[1] = acc[1];
                 }
-                if (Math.abs(inc[2]) > thresh * Math.abs(acc[2])) {
-                    inc[2] = acc[2];
+                if (Math.abs(inc[2]) > thresh) {// * Math.abs(acc[2])) {
+                    console.log(inc[2]);
+                    spikeDetected = true;
+                    // inc[2] = acc[2];
                 }
-                if (Math.abs(inc[3]) > thresh * Math.abs(acc[3])) {
-                    inc[3] = acc[3];
+                if (Math.abs(inc[3]) > thresh) {// * Math.abs(acc[3])) {
+                    console.log(inc[3]);
+                    spikeDetected = true;
+                    // inc[3] = acc[3];
                 }
             }
             acc = [0, 0, 0, 0];
@@ -293,16 +302,21 @@ extend(CameraManager.prototype, {
                 acc[2] += inc[2];
                 acc[3] += inc[3];
             }
+            if (spikeDetected)
+            {
+                // TODO [CRIT/PERF] figure that out once and for all
+                console.log(incoming);
+                console.log(acc);
+            }
         }
 
-        // console.log(incoming.length);
         let rot = [0, 0, 0, 0];
         rotation[0] = rot[0];
         rotation[1] = rot[1];
         rotation[2] = rot[2];
         rotation[3] = rot[3];
 
-        this.incomingRotationEvents = [];
+        this.incomingRotationEvents.length = 0;
         rot = this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3]);
 
         // Here we could perform additional filtering

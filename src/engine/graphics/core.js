@@ -114,6 +114,7 @@ let CoreModule = {
         let clientModel = this.app.model.frontend;
         let serverModel = this.app.model.backend;
         let controlsEngine = this.app.engine.controls;
+        let physicsEngie = this.app.engine.physics;
 
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
@@ -128,8 +129,8 @@ let CoreModule = {
         // }
 
         // Force standalone update at animanionframe
-        this.pingStandalone();
-        // TODO ping physics.
+        // TODO ping IA.
+        physicsEngie.refresh();
 
         // Bench.
         // this.fps.update();
@@ -211,6 +212,7 @@ let CoreModule = {
     {
         let selfModel = this.app.model.backend.selfModel;
         let worldId = selfModel.worldId;
+        this.cameraManager.mainCamera.setThirdPerson();
         this.addToScene(this.cameraManager.mainCamera.get3DObject(), worldId);
         this.addToScene(this.cameraManager.mainRaycasterCamera.get3DObject(), worldId);
         // this.addToScene(this.cameraManager.waterCameraHelper, worldId);

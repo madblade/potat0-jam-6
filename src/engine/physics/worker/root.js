@@ -20,7 +20,6 @@ let root = {
         ray: [],
         terrain: [],
         vehicle: [],
-
     },
 
     world: null,
@@ -35,7 +34,6 @@ let root = {
     post: null,
 
     makeShape: null,
-
 };
 
 // ROW map

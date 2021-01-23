@@ -133,7 +133,10 @@ extend(ChunkModel.prototype, {
         else
             // world.set(chunkId, { meshes: [graphicalChunk], water: [false] });
             world.set(chunkId, { meshes: [graphicalChunk], water: [true] });
-        // TODO init physics
+
+        // Notify physics engine.
+        let physics = this.app.engine.physics;
+        physics.addHeightMap(graphicalChunk);
     },
 
     refresh()

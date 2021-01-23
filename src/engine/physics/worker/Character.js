@@ -110,18 +110,18 @@ Object.assign(Hero.prototype, {
         Ar[n] = this.speed;
         //Hr[n] = b.onGround ? 1 : 0;
 
-        /*var t = this.body.getWorldTransform();
-        var pos = t.getOrigin();
-        var quat = t.getRotation();
+        // var t = this.body.getWorldTransform();
+        // var pos = t.getOrigin();
+        // var quat = t.getRotation();
 
-        Ar[ n + 1 ] = pos.x();
-        Ar[ n + 2 ] = pos.y();
-        Ar[ n + 3 ] = pos.z();
+        // Ar[n + 1] = pos.x();
+        // Ar[n + 2] = pos.y();
+        // Ar[n + 3] = pos.z();
 
-        Ar[ n + 4 ] = quat.x();
-        Ar[ n + 5 ] = quat.y();
-        Ar[ n + 6 ] = quat.z();
-        Ar[ n + 7 ] = quat.w();*/
+        // Ar[n + 4] = quat.x();
+        // Ar[n + 5] = quat.y();
+        // Ar[n + 6] = quat.z();
+        // Ar[n + 7] = quat.w();
 
         this.body.getWorldTransform().toArray(Ar, n + 1, root.scale);
     },
@@ -231,7 +231,10 @@ Object.assign(Hero.prototype, {
 
         //var capsule = new Ammo.btCapsuleShape( o.size[ 0 ], o.size[ 1 ] );
 
-        var shapeInfo = o.shapeInfo || {type: 'capsule', size: o.size};
+        var upAxis = o.upAxis || 1;
+        var shapeInfo = o.shapeInfo || {
+            type: 'capsule', size: o.size, upAxis
+        };
 
         var shape = root.makeShape(shapeInfo);
 
@@ -249,7 +252,8 @@ Object.assign(Hero.prototype, {
         body.activate();
         this.body = body;
 
-        var controller = new Ammo.btKinematicCharacterController(body, shape, o.stepH || 0.35, o.upAxis || 1);
+        // var upAxis = 2;
+        var controller = new Ammo.btKinematicCharacterController(body, shape, o.stepH || 0.35, upAxis);
         //var hero = new Ammo.btKinematicCharacterController( body, shape, o.stepH || 0.3 )
         controller.setUseGhostSweepTest(shape);
 
@@ -257,6 +261,7 @@ Object.assign(Hero.prototype, {
         controller.setVelocityForTimeInterval(p0, 1);
 
         // hero.getGhostObject().getWorldTransform().setRotation(q4( o.quat ));
+        // controller.getGhostObject().getWorldTransform().setRotation(o.quat);
         this.controller = controller;
         this.applyOption(o);
 

@@ -156,8 +156,6 @@ Object.assign(Vehicle.prototype, {
 
         //var masscenter = o.masscenter || [0,0.25,0];
 
-        Math.vectorad(rot);
-
         // chassis
         var mesh;
         if (o.mesh) {

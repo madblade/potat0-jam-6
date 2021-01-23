@@ -119,8 +119,8 @@ extend(Game.Core.prototype, {
     // Called when a 'join' request is emitted from Hub state.
     configureGame(level)
     {
-        console.log('Configuring Game...');
-        console.log(level);
+        console.log('[Main] Configuring Game...');
+        // console.log(level);
 
         // Configuration.
         this.setState('preingame');

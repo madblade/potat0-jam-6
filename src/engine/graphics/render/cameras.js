@@ -55,6 +55,7 @@ let CameraManager = function(graphicsEngine)
     this.incomingRotationEvents = [];
     this.oldTheta0 = 0;
     this.oldTheta1 = 0;
+    this.correctSpikes = 0;
 };
 
 // Factory.
@@ -264,49 +265,48 @@ extend(CameraManager.prototype, {
                 acc[2] += inc[2];
                 acc[3] += inc[3];
             }
-            // acc[0] /= incoming.length;
-            // acc[1] /= incoming.length;
-            // acc[2] /= incoming.length;
-            // acc[3] /= incoming.length;
-            const thresh = 20;
-            for (let i = 0, l = incoming.length; i < l; ++i)
+
+            if (this.correctSpikes)
             {
-                let inc = incoming[i];
-                if (Math.abs(inc[0]) > thresh) {// * Math.abs(acc[0])) {
-                    console.log(inc[0]);
-                    spikeDetected = true;
-                    // inc[0] = acc[0];
+                // Reset on mean average.
+                acc[0] /= incoming.length;
+                acc[1] /= incoming.length;
+                acc[2] /= incoming.length;
+                acc[3] /= incoming.length;
+                const thresh = 20; // This is a low threshold!
+                for (let i = 0, l = incoming.length; i < l; ++i)
+                {
+                    let inc = incoming[i];
+                    if (Math.abs(inc[0]) > thresh * Math.abs(acc[0])) {
+                        spikeDetected = true;
+                        inc[0] = acc[0];
+                    }
+                    if (Math.abs(inc[1]) > thresh * Math.abs(acc[1])) {
+                        spikeDetected = true;
+                        inc[1] = acc[1];
+                    }
+                    if (Math.abs(inc[2]) > thresh * Math.abs(acc[2])) {
+                        spikeDetected = true;
+                        inc[2] = acc[2];
+                    }
+                    if (Math.abs(inc[3]) > thresh * Math.abs(acc[3])) {
+                        spikeDetected = true;
+                        inc[3] = acc[3];
+                    }
                 }
-                if (Math.abs(inc[1]) > thresh) {// * Math.abs(acc[1])) {
-                    console.log(inc[1]);
-                    spikeDetected = true;
-                    // inc[1] = acc[1];
+
+                if (spikeDetected)
+                {
+                    acc = [0, 0, 0, 0];
+                    for (let i = 0, l = incoming.length; i < l; ++i)
+                    {
+                        let inc = incoming[i];
+                        acc[0] += inc[0];
+                        acc[1] += inc[1];
+                        acc[2] += inc[2];
+                        acc[3] += inc[3];
+                    }
                 }
-                if (Math.abs(inc[2]) > thresh) {// * Math.abs(acc[2])) {
-                    console.log(inc[2]);
-                    spikeDetected = true;
-                    // inc[2] = acc[2];
-                }
-                if (Math.abs(inc[3]) > thresh) {// * Math.abs(acc[3])) {
-                    console.log(inc[3]);
-                    spikeDetected = true;
-                    // inc[3] = acc[3];
-                }
-            }
-            acc = [0, 0, 0, 0];
-            for (let i = 0, l = incoming.length; i < l; ++i)
-            {
-                let inc = incoming[i];
-                acc[0] += inc[0];
-                acc[1] += inc[1];
-                acc[2] += inc[2];
-                acc[3] += inc[3];
-            }
-            if (spikeDetected)
-            {
-                // TODO [CRIT/PERF] figure that out once and for all
-                console.log(incoming);
-                console.log(acc);
             }
         }
 

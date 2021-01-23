@@ -1,6 +1,6 @@
 
-import * as Ammo from '../../../libs/ammo.wasm';
-import                '../../../libs/ammo.wasm.wasm';
+import * as Ammo from '../../../libs/ammo3.wasm';
+import                '../../../libs/ammo3.wasm.wasm';
 
 import { math, mathExtend } from './math.js';
 import { RigidBody }        from './RigidBody.js';

@@ -5,8 +5,6 @@
 
 'use strict';
 
-import $                        from 'jquery';
-
 let HUDInventoryModule =
 {
     initInventory()

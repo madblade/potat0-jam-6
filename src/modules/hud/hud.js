@@ -5,7 +5,7 @@
 'use strict';
 
 import extend                   from '../../extend.js';
-import $                        from 'jquery';
+import { $ }                    from '../polyfills/dom';
 import { HUDInventoryModule }   from './hud.inventory';
 
 let Hud = function(register)

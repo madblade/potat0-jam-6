@@ -195,6 +195,7 @@ Object.assign(Hero.prototype, {
 
         let v = math.vector3();
         v.set(x, y, z);
+        // v.multiplyScalar(10);
         this.controller.setWalkDirection(v);
         //}
 

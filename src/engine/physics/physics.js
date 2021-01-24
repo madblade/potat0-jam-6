@@ -44,7 +44,7 @@ extend(Physics.prototype, {
 
     refresh()
     {
-        engine.sendData();
+        // engine.sendData();
     },
 
     addHeightMap(graphicalChunk)
@@ -101,7 +101,7 @@ extend(Physics.prototype, {
         // this.app.engine.graphics.addToScene(m3, '-1');
         // this.app.engine.graphics.addToScene(m4, '-1');
 
-        for (let i = 0; i < 200; ++i)
+        for (let i = 0; i < 100; ++i)
         {
             let m5 = engine.add({
                 type:'sphere', size: [d, d, d],

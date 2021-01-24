@@ -136,7 +136,7 @@ let engine = {
         isInternUpdate = Option.use_intern_update || false;
 
         option = {
-            fps: Option.fps || 60,
+            fps: Option.fps || 120,
             worldscale: Option.worldscale || 1,
             gravity: Option.gravity || [0, -10, 0],
             substep: Option.substep || 2,

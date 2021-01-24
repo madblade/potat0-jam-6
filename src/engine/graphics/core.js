@@ -4,11 +4,11 @@
 
 'use strict';
 
-// import Stats from 'stats.js';
 // import * as Ammo from '../../libs/ammo.wasm';
 // import '../../libs/ammo.wasm.wasm';
 
 import { LoadingManager } from 'three';
+import Stats              from 'three/examples/jsm/libs/stats.module';
 
 let CoreModule = {
 
@@ -83,7 +83,7 @@ let CoreModule = {
     {
         // Initialize DOM element
         this.initializeDOM();
-        // this.fps = this.fps || new Stats();
+        this.fps = this.fps || new Stats();
 
         // Controls are tightly linked to camera.
         this.initializeCameras();
@@ -94,11 +94,11 @@ let CoreModule = {
 
         // Init stats.
         // Benches.
-        // let fpsElement = this.fps.dom;
-        // fpsElement.setAttribute('id', 'stats');
-        // fpsElement.style.left = '300px';
-        // if (!document.getElementById('stats'))
-        //     document.body.appendChild(fpsElement);
+        let fpsElement = this.fps.dom;
+        fpsElement.setAttribute('id', 'stats');
+        fpsElement.style.left = '300px';
+        if (!document.getElementById('stats'))
+            document.body.appendChild(fpsElement);
     },
 
     initializeDOM()
@@ -127,6 +127,7 @@ let CoreModule = {
         // {
         //     this.then = this.now - (this.elapsed % fpsInterval);
         // }
+        this.fps.update();
 
         // Force standalone update at animanionframe
         // TODO ping IA.

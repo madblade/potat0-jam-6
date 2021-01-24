@@ -4,7 +4,7 @@
 
 'use strict';
 
-import $                    from 'jquery';
+import { $ }                from '../../modules/polyfills/dom';
 
 import extend               from '../../extend.js';
 

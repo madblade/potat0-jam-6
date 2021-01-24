@@ -4,7 +4,7 @@
 
 'use strict';
 
-import $ from 'jquery';
+import { $ } from '../../modules/polyfills/dom';
 
 let GraphicsModule = {
 

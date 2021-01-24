@@ -73,21 +73,25 @@ extend(Physics.prototype, {
         });
 
         // let c = engine.add({type: 'character', })
-        // let c = engine.add({
-        //     type:'character',
-        //     name: 'sphere5',
-        //     upAxis: 2,
-        //     pos: [0, 0, 1.5],
-        //     scale: 0.07,
-        //     material: new MeshBasicMaterial({color: 0x00ff00, wireframe: true})
-        // });
+        let c = engine.add({
+            type:'character',
+            name: 'sphere5',
+            // upAxis: [0, 1, 0],
+            pos: [1, 0, 1],
+            // rot: [0, 0, Math.PI / 2],
+            rot: [0, Math.PI / 2, Math.PI / 2],
+            gravity: [0, 0, -10],
+            size: [0.25, 1],
+            // scale: 0.07,
+            material: new MeshBasicMaterial({color: 0x00ff00, wireframe: true})
+        });
         // c.rotation.set(Math.PI / 4, Math.PI / 4, Math.PI / 4);
-        // this.app.engine.graphics.addToScene(c, '-1');
+        this.app.engine.graphics.addToScene(c, '-1');
 
         let d = 0.1;
 
-        let m = engine.add({ type:'sphere', size: [1., 1., 1.], pos: [-1, 1, 5], mass: 2, friction: 1, angular: 0.1 });
-        this.app.engine.graphics.addToScene(m, '-1');
+        // let m = engine.add({ type:'sphere', size: [1., 1., 1.], pos: [-1, 1, 5], mass: 2, friction: 1, angular: 0.1 });
+        // this.app.engine.graphics.addToScene(m, '-1');
 
         // let m2 = engine.add({ type:'sphere', size: [d, d, d], pos: [1, 1, 5], mass: 2, friction: 1, angular: 0.1 });
         // let m3 = engine.add({ type:'sphere', size: [d, d, d], pos: [1, -1, 5], mass: 2, friction: 1, angular: 0.1 });
@@ -97,9 +101,16 @@ extend(Physics.prototype, {
         // this.app.engine.graphics.addToScene(m3, '-1');
         // this.app.engine.graphics.addToScene(m4, '-1');
 
-        for (let i = 0; i < 100; ++i)
+        for (let i = 0; i < 1000; ++i)
         {
-            let m5 = engine.add({ type:'sphere', size: [d, d, d], pos: [Math.random() * 2 - 1, Math.random() * 2 - 1, 5 + i/10], mass: 2, friction: 1, angular: 0.1 });
+            let m5 = engine.add({
+                type:'sphere', size: [d, d, d],
+                pos: [
+                    Math.random() * 2 - 1,
+                    Math.random() * 2 - 1,
+                    0.5 + i / 10
+                ],
+                mass: 2, friction: 1, angular: 0.1 });
             this.app.engine.graphics.addToScene(m5, '-1');
         }
 

@@ -214,7 +214,7 @@ var engine = {
 
         rigidBody.step(Ar, ArPos[0]);
         collision.step(Ar, ArPos[1]);
-        character.step(Ar, ArPos[2]);
+        character.step(Ar, ArPos[2], delta);
         vehicles.step(Ar, ArPos[3]);
         softBody.step(Ar, ArPos[4]);
         if (jointDebug) constraint.step(Ar, ArPos[5]);
@@ -494,12 +494,14 @@ var engine = {
                 break;
         }
 
-        root.world = isSoft ? new Ammo.btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collisionConfig, solverSoft) : new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
+        root.world = isSoft ?
+            new Ammo.btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collisionConfig, solverSoft) :
+            new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
 
         root.post = this.post;
 
         // This is required to use btGhostObjects ??
-        //root.world.getPairCache().setInternalGhostPairCallback( new Ammo.btGhostPairCallback() );
+        root.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
         /*
         root.world.getSolverInfo().set_m_splitImpulsePenetrationThreshold(0);
         root.world.getSolverInfo().set_m_splitImpulse( true );

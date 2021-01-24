@@ -71,7 +71,6 @@ Object.assign(Character.prototype, {
         root.world.addCollisionObject(hero.body, o.group || 1, o.mask || -1);
         root.world.addAction(hero.controller);
 
-
         this.heroes.push(hero);
         map.set(name, hero);
     }
@@ -95,8 +94,8 @@ function Hero(name, o)
     this.verticalVelocity = 0;
     this.angleInc = 0.1;
 
-    this.q = new Ammo.btQuaternion();
-    this.position = new Ammo.btVector3();
+    this.q = math.quaternion();
+    this.position = math.vector3();
 
     this.init(o);
 }
@@ -198,7 +197,7 @@ Object.assign(Hero.prototype, {
         this.position.setValue(x, y + this.verticalVelocity, z);
         this.position.direction(this.q);
 
-        this.controller.setWalkDirection(this.position);
+        // this.controller.setWalkDirection(this.position);
         //}
 
         // heros[id].preStep ( world );
@@ -231,7 +230,7 @@ Object.assign(Hero.prototype, {
 
         //var capsule = new Ammo.btCapsuleShape( o.size[ 0 ], o.size[ 1 ] );
 
-        var upAxis = o.upAxis || 1;
+        var upAxis = o.upAxis || [0, 0, 1];
         var shapeInfo = o.shapeInfo || {
             type: 'capsule', size: o.size, upAxis
         };
@@ -243,7 +242,7 @@ Object.assign(Hero.prototype, {
         body.setWorldTransform(trans);
 
         body.setCollisionShape(shape);
-        body.setCollisionFlags(16);//CHARACTER_OBJECT
+        body.setCollisionFlags(16); // CHARACTER_OBJECT
 
         body.setFriction(o.friction || 0.1);
         body.setRestitution(o.restitution || 0);
@@ -257,17 +256,27 @@ Object.assign(Hero.prototype, {
         //var hero = new Ammo.btKinematicCharacterController( body, shape, o.stepH || 0.3 )
         controller.setUseGhostSweepTest(shape);
 
-        p0.setValue(0, 0, 0);
-        controller.setVelocityForTimeInterval(p0, 1);
+        // p0.setValue(0, 0, 0);
+        // controller.setVelocityForTimeInterval(p0, 1);
 
         // hero.getGhostObject().getWorldTransform().setRotation(q4( o.quat ));
         // controller.getGhostObject().getWorldTransform().setRotation(o.quat);
         this.controller = controller;
         this.applyOption(o);
 
-        this.setAngle(0);
-
-        console.log(controller, body);
+        controller.setFallSpeed(10);
+        controller.setJumpSpeed(5);
+        let og = o.gravity;
+        let g = math.vector3();
+        g.set(...og);
+        controller.setGravity(g);
+        setInterval(() => {
+            if (controller.canJump())
+                controller.jump();
+            // let f = math.vector3();
+            // f.copy(controller.getGravity().negate());
+            // controller.setGravity(f);
+        }, 1000);
 
         // The max slope determines the maximum angle that the controller can walk
 
@@ -280,8 +289,8 @@ Object.assign(Hero.prototype, {
     {
         var controller = this.controller;
 
-        if (o.gravity !== undefined) controller.setGravity(o.gravity);//9.8 *3
-        if (o.upAxis !== undefined) controller.setUpAxis(o.upAxis);
+        // if (o.gravity !== undefined) controller.setGravity(o.gravity);//9.8 *3
+        // if (o.upAxis !== undefined) controller.setUp(o.upAxis);
         if (o.canJump !== undefined) controller.canJump(o.canJump);
         if (o.maxJumpHeight !== undefined) controller.setMaxJumpHeight(o.maxJumpHeight);//0.01
         if (o.jumpSpeed !== undefined) controller.setJumpSpeed(o.jumpSpeed);//0.1

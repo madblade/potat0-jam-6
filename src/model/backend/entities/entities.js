@@ -34,7 +34,7 @@ extend(EntityModel.prototype, {
     init(level)
     {
         let objects = level.getObjects();
-        console.log(objects);
+        console.log('[Model/Entities] TODO bind entities to graphics and physics.');
     },
 
     interpolatePredictEntities()

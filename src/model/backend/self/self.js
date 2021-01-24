@@ -72,7 +72,7 @@ extend(SelfModel.prototype, {
     {
         this.loadSelf();
         let player = level.getPlayer();
-        console.log(player);
+        console.log('[Model/Self] TODO Bind player state from level.');
         this.updateSelf([0, 0, 0], [0, 0, 0, 0], '-1');
         this.updatePosition(this.avatar, this.avatar.position);
 

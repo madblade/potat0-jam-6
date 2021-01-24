@@ -315,6 +315,16 @@ let mathExtend = function()
     //--------------------------------------------------
     Ammo.btVector3.prototype = Object.assign(Object.create(Ammo.btVector3.prototype), {
 
+        log()
+        {
+            console.log(`${this.x()}, ${this.y()}, ${this.z()}`);
+        },
+
+        copy(other)
+        {
+            this.setValue(other.x(), other.y(), other.z());
+        },
+
         set(x, y, z)
         {
             this.setValue(x, y, z);

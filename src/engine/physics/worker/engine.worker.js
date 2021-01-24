@@ -214,7 +214,7 @@ var engine = {
 
         rigidBody.step(Ar, ArPos[0]);
         collision.step(Ar, ArPos[1]);
-        character.step(Ar, ArPos[2], delta);
+        character.step(Ar, ArPos[2]);
         vehicles.step(Ar, ArPos[3]);
         softBody.step(Ar, ArPos[4]);
         if (jointDebug) constraint.step(Ar, ArPos[5]);

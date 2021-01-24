@@ -129,9 +129,30 @@ function LandScape(name, o)
     this.setData(o.heightData);
     this.update();
 
-    var shape = new Ammo.btHeightfieldTerrainShape(sample[0], sample[1], this.data, heightScale, -size[1], size[1], upAxis, hdt, flipEdge);
+    console.log(sample[0]);
+    console.log(sample[1]);
+    console.log(size[1]);
+    console.log(upAxis);
+    console.log(heightScale);
+    console.log(sample);
 
-    p1.set(size[0] / sample[0], 1, size[2] / sample[1]);
+    var shape = new Ammo.btHeightfieldTerrainShape(
+        sample[0], // width
+        sample[1], // depth
+        this.data,
+        heightScale, // ignored if 'PHY_FLOAT'
+        -size[2], // min height
+        size[2], // max height
+        upAxis, // 1 = default, 2 = z
+        hdt, flipEdge);
+
+    p1.set(
+        size[0] / (sample[0] - 1),
+        size[1] / (sample[1] - 1),
+        1
+        // size[2] / (sample[2] - 1)
+    );
+    //size[0] / sample[0], 1, size[2] / sample[1]);
     shape.setLocalScaling(p1);
 
     shape.setMargin(margin);

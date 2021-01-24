@@ -128,7 +128,6 @@ Object.assign(Hero.prototype, {
     move(key)
     {
         //var hero = this.controller;
-
         //btScalar walkVelocity = btScalar(1.1) * 4.0; // 4 km/h -> 1.1 m/s
         //btScalar walkSpeed = walkVelocity * dt;
 
@@ -140,14 +139,11 @@ Object.assign(Hero.prototype, {
         var z = 0;
 
         //transW = hero.getGhostObject().getWorldTransform();
-
         //console.log(transW.getOrigin().y())
-
         //y = transW.getOrigin().y();
 
         //if(key[0] == 1 || key[1] == 1 ) heros[id].speed += 0.1;
         //if(key[0] == 0 && key[1] == 0 ) heros[id].speed -= 0.1;
-
 
         //if(heros[id].speed>1) heros[id].speed = 1;
         //if(heros[id].speed<0) heros[id].speed = 0;
@@ -164,7 +160,6 @@ Object.assign(Hero.prototype, {
             this.wasJumping = true;
             this.verticalVelocity = 0;
         }
-
         if ( this.wasJumping ) {
             this.verticalVelocity += 0.04;
             // y = this.controller.verticalVelocity;
@@ -175,16 +170,16 @@ Object.assign(Hero.prototype, {
         }*/
 
         //  if( hero.onGround() ){
-        z = walkSpeed * -key[1];
+        y = walkSpeed * -key[1];
         x = walkSpeed * -key[0];
 
-        this.speed = z + x;
+        this.speed = y + x;
 
         // rotation
 
         this.angle -= key[2] * angleInc;
 
-        this.setAngle(this.angle);
+        // this.setAngle(this.angle);
 
         // var angle = hero.rotation;//key[8]; //heros[id].rotation
 
@@ -194,10 +189,13 @@ Object.assign(Hero.prototype, {
         // transW.setRotation( quatW );
 
         // walkDirection
-        this.position.setValue(x, y + this.verticalVelocity, z);
-        this.position.direction(this.q);
-
+        // this.position.setValue(x, y, z);
+        // this.position.direction(this.q);
         // this.controller.setWalkDirection(this.position);
+
+        let v = math.vector3();
+        v.set(x, y, z);
+        this.controller.setWalkDirection(v);
         //}
 
         // heros[id].preStep ( world );
@@ -272,11 +270,18 @@ Object.assign(Hero.prototype, {
         controller.setGravity(g);
         setInterval(() => {
             if (controller.canJump())
-                controller.jump();
+            {
+                // controller.jump();
+                this.move([
+                    0.05 * (Math.random() * 2 - 1),
+                    0.05 * (Math.random() * 2 - 1),
+                    0, 0
+                ]);
+            }
             // let f = math.vector3();
             // f.copy(controller.getGravity().negate());
             // controller.setGravity(f);
-        }, 1000);
+        }, 500);
 
         // The max slope determines the maximum angle that the controller can walk
 
@@ -319,7 +324,7 @@ Object.assign(Hero.prototype, {
     setAngle(angle)
     {
         var t = this.body.getWorldTransform();
-        this.q.setFromAxisAngle([0, 1, 0], angle);
+        this.q.setFromAxisAngle([0, 0, 1], angle);
         t.setRotation(this.q);
         this.angle = angle;
     }

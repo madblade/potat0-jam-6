@@ -17,7 +17,7 @@ let Level0 = function(title)
     chunks.set('0,0', {
         x: 0, y: 0, z: 0,
         dimX: 32, dimY: 32,
-        widthX: 5, widthY: 5,
+        widthX: 10, widthY: 10,
         points
     });
     this.terrain = {

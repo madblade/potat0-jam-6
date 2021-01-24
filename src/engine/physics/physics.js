@@ -52,7 +52,7 @@ extend(Physics.prototype, {
         let w = graphicalChunk.geometry.parameters.widthSegments;
         let h = graphicalChunk.geometry.parameters.heightSegments;
         let n = (w + 1) * (h + 1);
-        let heightData = new Float64Array(n);
+        let heightData = new Float32Array(n);
         let positionAttribute = graphicalChunk.geometry.attributes.position.array;
         let k = 0;
         for (let i = 0; i < w + 1; ++i)
@@ -66,7 +66,7 @@ extend(Physics.prototype, {
         engine.add({
             type: 'terrain',
             sample: [w + 1, h + 1],
-            size: [10, 10, 0],
+            size: [10, 10, 10],
             upAxis: 2,
             heightData,
             pos: [position.x, position.y, position.z],
@@ -101,7 +101,7 @@ extend(Physics.prototype, {
         // this.app.engine.graphics.addToScene(m3, '-1');
         // this.app.engine.graphics.addToScene(m4, '-1');
 
-        for (let i = 0; i < 1000; ++i)
+        for (let i = 0; i < 200; ++i)
         {
             let m5 = engine.add({
                 type:'sphere', size: [d, d, d],

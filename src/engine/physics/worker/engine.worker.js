@@ -501,7 +501,7 @@ var engine = {
         root.post = this.post;
 
         // This is required to use btGhostObjects ??
-        // root.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
+        root.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
         // root.world.getSolverInfo().set_m_splitImpulsePenetrationThreshold(0.1);
         // root.world.getSolverInfo().set_m_splitImpulse(true);
     },

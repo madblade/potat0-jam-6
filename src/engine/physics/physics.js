@@ -77,7 +77,7 @@ extend(Physics.prototype, {
             type:'character',
             name: 'sphere5',
             // upAxis: [0, 1, 0],
-            pos: [1, 0, 1],
+            pos: [2, 0, 1],
             // rot: [0, 0, Math.PI / 2],
             rot: [0, Math.PI / 2, Math.PI / 2],
             gravity: [0, 0, -10],

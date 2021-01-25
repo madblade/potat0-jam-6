@@ -274,8 +274,8 @@ Object.assign(Hero.prototype, {
             {
                 // controller.jump();
                 this.move([
-                    0.15 * (Math.random() * 2 - 1),
-                    0.15 * (Math.random() * 2 - 1),
+                    1.15 * (Math.random() * 2 - 1),
+                    1.15 * (Math.random() * 2 - 1),
                     0, 0
                 ]);
             }

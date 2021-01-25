@@ -44,7 +44,7 @@ extend(Physics.prototype, {
 
     refresh()
     {
-        // engine.sendData();
+        engine.sendData();
     },
 
     addHeightMap(graphicalChunk)
@@ -113,6 +113,31 @@ extend(Physics.prototype, {
                 mass: 2, friction: 1, angular: 0.1 });
             this.app.engine.graphics.addToScene(m5, '-1');
         }
+
+        // let rand = (min, max) => Math.random() * (max - min) - (max - min) / 2;
+        for (let i = 0; i < 20; ++i) {
+            const x1 = i % 10 - 5; // rand(-5, 5);
+            const x2 = i < 10 ? -5 : 5; // rand(-5, 5);
+            const s = 0.9;//rand(0.5, 3);
+            let b1 = engine.add({
+                type:'box', size: [s, s, s], pos: [x1, x2, 0.5],
+                flag: 1, // static
+                // mass: s
+            });
+            let b2 = engine.add({
+                type:'box', size: [s, s, s], pos: [x2, x1, 0.5],
+                flag: 1, // static
+                // mass: s
+            });
+            this.app.engine.graphics.addToScene(b1, '-1');
+            this.app.engine.graphics.addToScene(b2, '-1');
+        }
+        let b3 = engine.add({ type:'box', size: [1, 1, 1], pos: [0, 1, 0.5], flag: 1 });
+        this.app.engine.graphics.addToScene(b3, '-1');
+        b3 = engine.add({ type:'box', size: [1, 1, 1], pos: [1, 0, 0.5], flag: 1 });
+        this.app.engine.graphics.addToScene(b3, '-1');
+        b3 = engine.add({ type:'box', size: [1, 1, 1], pos: [1, 1, 0.5], flag: 1 });
+        this.app.engine.graphics.addToScene(b3, '-1');
 
         // TODO rotation.
     },

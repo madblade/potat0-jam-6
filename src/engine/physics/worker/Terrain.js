@@ -129,13 +129,6 @@ function LandScape(name, o)
     this.setData(o.heightData);
     this.update();
 
-    console.log(sample[0]);
-    console.log(sample[1]);
-    console.log(size[1]);
-    console.log(upAxis);
-    console.log(heightScale);
-    console.log(sample);
-
     var shape = new Ammo.btHeightfieldTerrainShape(
         sample[0], // width
         sample[1], // depth

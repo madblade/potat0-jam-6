@@ -83,8 +83,8 @@ let SkyModule = {
         {
             sky = this.createFlatSky(worldId);
             this.addToScene(sky.mesh, worldId);
-            // this.addToScene(sky.lights.hemisphereLight, worldId);
-            // this.addToScene(sky.lights.directionalLight, worldId);
+            this.addToScene(sky.lights.hemisphereLight, worldId);
+            this.addToScene(sky.lights.directionalLight, worldId);
             // this.addToScene(sky.lights.ambientLight, worldId);
 
             this.updateSky(

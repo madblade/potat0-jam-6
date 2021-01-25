@@ -801,8 +801,13 @@ let engine = {
                 color: 0x33CCFF, name: 'sleep', wireframe: wire
             }),
             static: new MeshLambertMaterial({
-                color: 0x333333, name: 'static', wireframe: wire,
-                transparent: true, opacity: 0.3, depthTest: true, depthWrite: false
+                color: 0xff0000,
+                // color: 0x333333,
+                name: 'static', wireframe: wire,
+                transparent: true,
+                opacity: 0.5,
+                depthTest: true,
+                depthWrite: true
             }),
             kinematic: new MeshLambertMaterial({
                 color: 0x88FF33, name: 'kinematic', wireframe: wire

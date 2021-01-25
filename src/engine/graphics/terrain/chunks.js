@@ -38,7 +38,8 @@ let ChunksModule = {
             {
                 // positions[3 * i]     = x * .1;//points[i];
                 // positions[3 * i + 1] = y * .1;//points[i];
-                positions[3 * i + 2] = 0.05 * Math.sin(x / 10 + y / 10);//points[i];
+                // positions[3 * i + 2] = 0.05 * Math.sin(x / 10 + y / 10);//points[i];
+                positions[3 * i + 2] = -2 + 0.5 * Math.exp(2 * x / dimY);//points[i];
                 normals[3 * i + 2] = -1;
                 i++;
             }
@@ -48,7 +49,7 @@ let ChunksModule = {
         // const isWater = false;
         let newMesh = this.createChunkMesh(geometry, true, true, worldId);
         // newMesh.receiveShadow = true;
-        newMesh.rotation.set(0, 0, Math.PI / 2);
+        // newMesh.rotation.set(0, 0, Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)
         return newMesh;
     },

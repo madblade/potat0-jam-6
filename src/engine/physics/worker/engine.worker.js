@@ -55,7 +55,7 @@ var tmpRemove = [];
 var tmpAdd = [];
 
 var carName = '';
-var heroName = '';
+var heroName = 'bobby';
 
 var zero = null;
 
@@ -479,14 +479,18 @@ var engine = {
 
         isSoft = o.soft === undefined ? true : o.soft;
         solver = new Ammo.btSequentialImpulseConstraintSolver();
-        solverSoft = isSoft ? new Ammo.btDefaultSoftBodySolver() : null;
-        collisionConfig = isSoft ? new Ammo.btSoftBodyRigidBodyCollisionConfiguration() : new Ammo.btDefaultCollisionConfiguration();
+        solverSoft = isSoft ?
+            new Ammo.btDefaultSoftBodySolver() : null;
+        collisionConfig = isSoft ?
+            new Ammo.btSoftBodyRigidBodyCollisionConfiguration() :
+            new Ammo.btDefaultCollisionConfiguration();
         dispatcher = new Ammo.btCollisionDispatcher(collisionConfig);
 
+        // o.broadphase = 1;
         switch (o.broadphase === undefined ? 2 : o.broadphase) {
             //case 0: broadphase = new Ammo.btSimpleBroadphase(); break;
             case 1:
-                var s = 1000;
+                var s = 10;
                 broadphase = new Ammo.btAxisSweep3(new Ammo.btVector3(-s, -s, -s), new Ammo.btVector3(s, s, s), 4096);
                 break;//16384;
             case 2:
@@ -498,12 +502,16 @@ var engine = {
             new Ammo.btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collisionConfig, solverSoft) :
             new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
 
-        root.post = this.post;
-
-        // This is required to use btGhostObjects ??
-        root.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
+        // This is required to use btGhostObjects (?)
+        root.world.getBroadphase()
+            .getOverlappingPairCache()
+            .setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
+        root.world.getDispatchInfo().set_m_allowedCcdPenetration(0.0001);
+        // root.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
         // root.world.getSolverInfo().set_m_splitImpulsePenetrationThreshold(0.1);
         // root.world.getSolverInfo().set_m_splitImpulse(true);
+
+        root.post = this.post;
     },
 
     clearWorld()

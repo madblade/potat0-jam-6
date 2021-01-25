@@ -29,7 +29,7 @@ Object.assign(Character.prototype, {
         var hero = map.get(name);
 
         hero.move(root.key);
-        hero.setAngle(root.angle);
+        // hero.setAngle(root.angle);
     },
 
     clear()
@@ -131,12 +131,12 @@ Object.assign(Hero.prototype, {
         //btScalar walkVelocity = btScalar(1.1) * 4.0; // 4 km/h -> 1.1 m/s
         //btScalar walkSpeed = walkVelocity * dt;
 
-        var walkSpeed = 0.3;
-        var angleInc = 0.1;
+        var walkSpeed = 0.03;
+        // var angleInc = 0.1;
 
-        var x = 0;
-        var y = 0;
-        var z = 0;
+        let x = 0;
+        let y = 0;
+        let z = 0;
 
         //transW = hero.getGhostObject().getWorldTransform();
         //console.log(transW.getOrigin().y())
@@ -154,7 +154,7 @@ Object.assign(Hero.prototype, {
         //if( key[0] == -1 ) x=-heros[id].speed * walkSpeed;
         //if( key[0] == 1 ) x=heros[id].speed * walkSpeed;
 
-        if (key[4] === 1) this.controller.canJump();
+        // if (key[4] === 1) this.controller.canJump();
 
         /*if ( key[ 4 ] == 1 && this.controller.onGround() ) { //h.canJump() ){
             this.wasJumping = true;
@@ -170,6 +170,7 @@ Object.assign(Hero.prototype, {
         }*/
 
         //  if( hero.onGround() ){
+        z = walkSpeed * -key[2];
         y = walkSpeed * -key[1];
         x = walkSpeed * -key[0];
 
@@ -177,7 +178,7 @@ Object.assign(Hero.prototype, {
 
         // rotation
 
-        this.angle -= key[2] * angleInc;
+        // this.angle -= key[2] * angleInc;
 
         // this.setAngle(this.angle);
 
@@ -195,9 +196,11 @@ Object.assign(Hero.prototype, {
 
         let v = math.vector3();
         v.set(x, y, z);
-        // v.multiplyScalar(10);
-        this.controller.setWalkDirection(v);
-        //}
+
+        if (key[2] > 0 && this.controller.canJump())
+            this.controller.jump();
+        else
+            this.controller.setWalkDirection(v);
 
         // heros[id].preStep ( world );
         //heros[id].setVelocityForTimeInterval(vec3(), 1);
@@ -231,7 +234,11 @@ Object.assign(Hero.prototype, {
 
         var upAxis = o.upAxis || [0, 0, 1];
         var shapeInfo = o.shapeInfo || {
-            type: 'capsule', size: o.size, upAxis
+            // type: 'sphere',
+            type: 'capsule',
+            size: o.size,
+            // size: [1],
+            upAxis
         };
 
         var shape = root.makeShape(shapeInfo);
@@ -247,7 +254,7 @@ Object.assign(Hero.prototype, {
         body.setRestitution(o.restitution || 0);
 
         body.setActivationState(4);
-        body.activate();
+        body.activate(true);
         this.body = body;
 
         // var upAxis = 2;
@@ -265,24 +272,60 @@ Object.assign(Hero.prototype, {
 
         controller.setFallSpeed(10);
         controller.setJumpSpeed(5);
+        controller.setMaxPenetrationDepth(0.2);
+        controller.setMaxSlope(Math.PI - 0.1);
+        // controller.setMaxSlope(Math.PI / 16);
+        // controller.setMaxPenetrationDepth();
+        // controller.setMaxSlope(Math.PI);
+        // controller.setMaxSlope(0);
         let og = o.gravity;
         let g = math.vector3();
         g.set(...og);
         controller.setGravity(g);
+        // controller.setUpInterpolate(true);
+        // let shape2 = new Ammo.btCapsuleShape(o.size[0], o.size[1], 1);
+        this.grav = g;
         setInterval(() => {
+            return;
             if (controller.canJump())
             {
-                // controller.jump();
-                this.move([
-                    1.15 * (Math.random() * 2 - 1),
-                    1.15 * (Math.random() * 2 - 1),
-                    0, 0
-                ]);
+                if (Math.random() > 0.95)
+                    controller.jump();
+                else
+                {
+                    let grav = this.grav;
+                    let mov = math.vector3();
+                    mov.set(
+                        0.15 * (Math.random() * 2 - 1),
+                        0.15 * (Math.random() * 2 - 1),
+                        0.15 * (Math.random() * 2 - 1)
+                    );
+
+                    // project
+                    let denominator = grav.length2();
+                    let scalar = grav.dot(mov) / denominator;
+                    let minus = math.vector3();
+                    minus.copy(grav).multiplyScalar(-scalar).add(mov);
+                    this.move([
+                        minus.x(),
+                        minus.y(),
+                        minus.z(),
+                        0
+                    ]);
+                }
             }
             // let f = math.vector3();
             // f.copy(controller.getGravity().negate());
             // controller.setGravity(f);
         }, 500);
+
+        setTimeout(() => {
+            // let g2 = math.vector3();
+            // g2.set(0, -5, -5);
+            // controller.setGravity(g2);
+            // this.grav = g2;
+            // this.body.setCollisionShape(shape2);
+        }, 3000);
 
         // The max slope determines the maximum angle that the controller can walk
 

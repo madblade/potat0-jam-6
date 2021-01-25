@@ -174,6 +174,7 @@ Object.assign(RigidBody.prototype, {
 
             case 'sphere':
                 shape = new Ammo.btSphereShape(o.size[0]);
+                // shape = new Ammo.btMultiSphereShape();
                 break;
 
             case 'cylinder':
@@ -186,7 +187,8 @@ Object.assign(RigidBody.prototype, {
                 break;
 
             case 'capsule':
-                shape = new Ammo.btCapsuleShape(o.size[0], o.size[1], o.upAxis || 1);
+                // shape = new Ammo.btCapsuleShape(o.size[0], o.size[1], o.upAxis || 1);
+                shape = new Ammo.btCapsuleShape(o.size[0], o.size[1]);
                 break;
 
             case 'compound':
@@ -299,9 +301,15 @@ Object.assign(RigidBody.prototype, {
         // for sphere or capsule margin is the radius
         // https://www.youtube.com/watch?v=BGAwRKPlpCw&hd=1
 
-        if (shape.setMargin !== undefined && o.type !== 'sphere' && o.type !== 'capsule' && o.type !== 'compound') {
-            if (o.margin !== undefined) shape.setMargin(o.margin * root.invScale);
-            else if (shape.getMargin !== undefined && root.scale !== 1) shape.setMargin(shape.getMargin() * root.invScale);
+        if (shape.setMargin !== undefined &&
+            o.type !== 'sphere' &&
+            o.type !== 'capsule' &&
+            o.type !== 'compound')
+        {
+            if (o.margin !== undefined)
+                shape.setMargin(o.margin * root.invScale);
+            else if (shape.getMargin !== undefined && root.scale !== 1)
+                shape.setMargin(shape.getMargin() * root.invScale);
 
             //if( shape.getMargin !== undefined ) console.log(o.type, shape.getMargin(), o.size );
         }

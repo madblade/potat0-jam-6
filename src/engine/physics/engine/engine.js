@@ -88,6 +88,8 @@ var option = {
     jointDebug: false,
 };
 
+let key = [0, 0, 0];
+
 let engine = {
 
     message(e)
@@ -328,6 +330,11 @@ let engine = {
         }
     },
 
+    moveActor()
+    {
+
+    },
+
     sendData(stamp)
     {
         // TODO bench here
@@ -445,7 +452,11 @@ let engine = {
     },
     getKey()
     {
-        return [0, 0, 0, 0, 0, 0, 0, 0];
+        return key;//[0, 0, 0, 0, 0, 0, 0, 0];
+    },
+    setKey(k)
+    {
+        key = k;
     },
 
     tell()

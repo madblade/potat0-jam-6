@@ -323,6 +323,7 @@ let mathExtend = function()
         copy(other)
         {
             this.setValue(other.x(), other.y(), other.z());
+            return this;
         },
 
         set(x, y, z)
@@ -402,6 +403,11 @@ let mathExtend = function()
         length()
         {
             return Math.sqrt(this.x() * this.x() + this.y() * this.y() + this.z() * this.z());
+        },
+
+        length2()
+        {
+            return this.x() * this.x() + this.y() * this.y() + this.z() * this.z();
         },
 
         normalize()

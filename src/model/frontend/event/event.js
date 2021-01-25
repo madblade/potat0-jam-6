@@ -68,9 +68,11 @@ extend(EventComponent.prototype, {
         // XXX [PERF] simplify and aggregate per client.
         for (let eventId = 0, length = events.length; eventId < length; ++eventId)
         {
-            // let currentEvent = events[eventId];
+            let currentEvent = events[eventId];
             // connectionEngine.send(currentEvent[0], currentEvent[1]);
             // TODO PHYSICS push events to PhysicsEngine
+            let physics = this.clientModel.app.engine.physics;
+            physics.pushEvent(currentEvent);
         }
 
         // Flush

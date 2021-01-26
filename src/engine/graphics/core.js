@@ -29,6 +29,7 @@ let CoreModule = {
         // Animations
         this.initializeAnimations();
 
+        // Lazy loading: checks if everything is correctly loaded, every few frames.
         return new Promise(resolve => {
             setTimeout(() =>
                 this.resolveIfLoaded(resolve), 500

@@ -38,8 +38,8 @@ let ChunksModule = {
             {
                 // positions[3 * i]     = x * .1;//points[i];
                 // positions[3 * i + 1] = y * .1;//points[i];
-                // positions[3 * i + 2] = 0.05 * Math.sin(x / 10 + y / 10);//points[i];
-                positions[3 * i + 2] = -2 + 0.5 * Math.exp(2 * x / dimY);//points[i];
+                positions[3 * i + 2] = 0.5 * Math.sin(x / 10 + y / 10);//points[i];
+                // positions[3 * i + 2] = -2 + 0.5 * Math.exp(2 * x / dimY);//points[i];
                 normals[3 * i + 2] = -1;
                 i++;
             }

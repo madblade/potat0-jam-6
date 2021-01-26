@@ -42,7 +42,7 @@ extend(BulletEngine.prototype, {
         {
             engine.init(() =>
             {
-                console.log('Physics initialized.');
+                console.log('[Physics/Bullet] Bullet initialized.');
                 engine.set({
                     fps: 60,
                     substep: 2, // more substep = more accurate simulation default set to 2

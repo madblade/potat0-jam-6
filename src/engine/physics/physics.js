@@ -32,12 +32,15 @@ extend(Physics.prototype, {
 
     refresh()
     {
-        this.bulletEngine.refresh();
+        this.madEngine.solve(); // gameplay physics
+        this.bulletEngine.refresh(); // cosmetic physics
     },
 
     addHeightMap(graphicalChunk)
     {
-        this.bulletEngine.addHeightMap(graphicalChunk);
+        // XXX Uncomment here to bench bullet physics
+        console.log(`[Physics] Should add ${graphicalChunk}.`);
+        // this.bulletEngine.addHeightMap(graphicalChunk);
     },
 
     pushEvent(e)

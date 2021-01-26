@@ -5,16 +5,7 @@ import { BufferAttribute, BufferGeometry,
 } from 'three';
 import { Tubular }                                    from './Tubular';
 
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    SHOT - SOFTBODY
- */
-
-function SoftBody()
+function SoftBodyManager()
 {
     this.ID = 0;
     this.softs = [];
@@ -22,7 +13,7 @@ function SoftBody()
     this.tmpMat = null;
 }
 
-Object.assign(SoftBody.prototype, {
+Object.assign(SoftBodyManager.prototype, {
 
     step(AR, N)
     {
@@ -256,7 +247,7 @@ Object.assign(SoftBody.prototype, {
 });
 
 
-export { SoftBody };
+export { SoftBodyManager };
 
 
 //--------------------------------------

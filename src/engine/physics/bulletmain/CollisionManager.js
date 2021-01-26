@@ -1,12 +1,12 @@
 import { map, root } from './root.js';
 
-function Collision()
+function CollisionManager()
 {
     this.ID = 0;
     this.pairs = [];
 }
 
-Object.assign(Collision.prototype, {
+Object.assign(CollisionManager.prototype, {
 
     step(AR, N)
     {
@@ -64,7 +64,7 @@ Object.assign(Collision.prototype, {
 });
 
 
-export { Collision };
+export { CollisionManager };
 
 
 //-------------------------------------------

@@ -26,7 +26,7 @@ Object.assign(Character.prototype, {
     control(name)
     {
         if (!map.has(name)) return;
-        var hero = map.get(name);
+        // var hero = map.get(name);
 
         // hero.move(root.key);
         // hero.setAngle(root.angle);
@@ -217,7 +217,7 @@ Object.assign(Hero.prototype, {
 
     init(o)
     {
-        var p0 = math.vector3();
+        // var p0 = math.vector3();
         var trans = math.transform();
 
         o.size = o.size === undefined ? [1, 1, 1] : o.size;

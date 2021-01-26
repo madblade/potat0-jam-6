@@ -3,7 +3,7 @@ import {
     BufferAttribute, BufferGeometry, Line, Mesh
 } from 'three';
 
-function Constraint()
+function ConstraintManager()
 {
     this.ID = 0;
     this.joints = [];
@@ -17,7 +17,7 @@ function Constraint()
     this.g.rotateZ( -Math.PI*0.5 );*/
 }
 
-Object.assign(Constraint.prototype, {
+Object.assign(ConstraintManager.prototype, {
 
     step(AR, N)
     {
@@ -82,7 +82,7 @@ Object.assign(Constraint.prototype, {
 
 });
 
-export { Constraint };
+export { ConstraintManager };
 
 
 function Joint(o)

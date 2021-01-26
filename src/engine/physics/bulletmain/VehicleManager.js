@@ -1,42 +1,31 @@
-/*global THREE*/
+
 import { geometryInfo }                             from './Geometry.js';
 import { map, root }                                from './root.js';
 import { BoxGeometry, BufferGeometry, Group, Mesh } from 'three';
 import { CarHelper }                                from './CarHelper';
 
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    SHOT - VEHICLE
- */
-
-function Vehicle()
+function VehicleManager()
 {
-
     this.ID = 0;
     this.cars = [];
-
 }
 
-Object.assign(Vehicle.prototype, {
+Object.assign(VehicleManager.prototype, {
 
-    step: function(AR, N)
+    step(AR, N)
     {
-        var n,
-            num;
+        var n;
+        // var num;
 
         this.cars.forEach(function(b, id)
         {
             //num = b.userData.NumWheels;
-            var j = b.userData.NumWheels,
-                w = 56,
-                k,
-                v;
+            var j = b.userData.NumWheels;
+            var w = 56;
+            var k;
+            var v;
 
-            n = N + (id * 64);//( id * ( num + 2 ) );//( id * 56 );
+            n = N + id * 64;//( id * ( num + 2 ) );//( id * 56 );
             b.userData.speed = AR[n];
 
             b.userData.wr = [AR[n + 62], AR[n + 63]];
@@ -74,7 +63,7 @@ Object.assign(Vehicle.prototype, {
                 k = j;
 
                 while (k--) {
-                    v = (AR[n + w + k]) * ratio;
+                    v = AR[n + w + k] * ratio;
                     v = v > 1 ? 1 : v;
                     v = v < -1 ? -1 : v;
 
@@ -109,13 +98,13 @@ Object.assign(Vehicle.prototype, {
         });
     },
 
-    clear: function()
+    clear()
     {
         while (this.cars.length > 0) this.destroy(this.cars.pop());
         this.ID = 0;
     },
 
-    destroy: function(b)
+    destroy(b)
     {
         var wheel;
         for (var i = 0, lng = b.userData.w.length; i < lng; i++) {
@@ -127,7 +116,7 @@ Object.assign(Vehicle.prototype, {
         map.delete(b.name);
     },
 
-    remove: function(name)
+    remove(name)
     {
         if (!map.has(name)) return;
         var car = map.get(name);
@@ -139,7 +128,7 @@ Object.assign(Vehicle.prototype, {
         }
     },
 
-    add: function(o)
+    add(o)
     {
         var name = o.name !== undefined ? o.name : o.type + this.ID++;
 
@@ -220,12 +209,11 @@ Object.assign(Vehicle.prototype, {
         var s = [];
         var b = [];
         var m;
-        var isWithSusp = o.meshSusp === undefined ? false : true;
-        var isWithBrake = o.meshBrake === undefined ? false : true;
+        var isWithSusp = o.meshSusp !== undefined;
+        var isWithBrake = o.meshBrake !== undefined;
+        var needScale = o.wheel === undefined;
 
-        var needScale = o.wheel == undefined ? true : false;
-
-        var gw = o.wheel || root.geo['wheel'];
+        var gw = o.wheel || root.geo.wheel;
         var gwr = gw.clone();
         gwr.rotateY(Math.Pi);
         root.extraGeo.push(gwr);
@@ -237,9 +225,9 @@ Object.assign(Vehicle.prototype, {
         }
 
         //var i = o.nWheel || 4;
-        var n = o.nWheel || 4,
-            p,
-            fw;
+        var n = o.nWheel || 4;
+        var p;
+        var fw;
         var by = o.decalYBack || 0;
 
         for (var i = 0; i < n; i++) {
@@ -292,25 +280,25 @@ Object.assign(Vehicle.prototype, {
                 }
 
                 if (i === 2) {
+                    // eslint-disable-next-line no-unused-vars
                     p = [-wPos[0], wPos[1] + by, -wPos[2]];
                     fw = false;
                 }
             }
-
 
             if (o.meshBrake) {
                 m = o.meshBrake.clone();
                 // this.scene.add( m );
                 mesh.add(m);
                 m.position.y = radius;
-                if (i == 1 || i == 2) {
+                if (i === 1 || i === 2) {
                     m.rotation.y = Math.Pi;
                     m.position.x = wPos[0];
                     m.rotation.x = Math.Pi;
                 } else {
                     m.position.x = -wPos[0];
                 }
-                if (i == 0 || i == 1) m.position.z = wPos[2];
+                if (i === 0 || i === 1) m.position.z = wPos[2];
                 else m.position.z = -wPos[2];
 
                 b[i] = m;//.children[0];
@@ -320,8 +308,8 @@ Object.assign(Vehicle.prototype, {
                 m = o.meshSusp.clone();
                 mesh.add(m);
                 m.position.y = radius;
-                if (i == 1 || i == 2) m.rotation.y = Math.Pi;
-                if (i == 0 || i == 1) m.position.z = wPos[2];
+                if (i === 1 || i === 2) m.rotation.y = Math.Pi;
+                if (i === 0 || i === 1) m.position.z = wPos[2];
                 else m.position.z = -wPos[2];
 
                 s[i] = m.children[0];
@@ -330,7 +318,7 @@ Object.assign(Vehicle.prototype, {
             if (o.meshWheel) {
                 w[i] = o.meshWheel.clone();
                 needScale = false;
-                if (i == 1 || i == 2) {
+                if (i === 1 || i === 2) {
                     w[i] = new Group();
                     var ww = o.meshWheel.clone();
                     ww.rotation.y = Math.Pi;
@@ -343,15 +331,13 @@ Object.assign(Vehicle.prototype, {
                     }
                 }
             } else {
-                if (i == 1 || i == 2) w[i] = new Mesh(gw, root.mat.move);
+                if (i === 1 || i === 2) w[i] = new Mesh(gw, root.mat.move);
                 else w[i] = new Mesh(gwr, root.mat.move);
             }
 
 
             if (needScale) {
-
                 w[i].scale.set(deep, fw ? radius : radiusBack, fw ? radius : radiusBack);
-
             }
 
             //else w[i].material = this.mat.move;//mat.cars;
@@ -393,17 +379,17 @@ Object.assign(Vehicle.prototype, {
         if (o.mesh) o.mesh = null;
         if (o.wheel) o.wheel = null;
 
-        if (o.shapeType == 'mesh' || o.shapeType == 'convex') o.v = geometryInfo(o.shape, o.shapeType);
+        if (o.shapeType === 'mesh' || o.shapeType === 'convex') o.v = geometryInfo(o.shape, o.shapeType);
 
-        if (o.shape) delete (o.shape);
-        if (o.geometry) delete (o.geometry);
-        if (o.material) delete (o.material);
-        if (o.mesh) delete (o.mesh);
-        if (o.meshWheel) delete (o.meshWheel);
-        if (o.meshSusp) delete (o.meshSusp);
-        if (o.meshBrake) delete (o.meshBrake);
-        if (o.meshSteeringWheel) delete (o.meshSteeringWheel);
-        if (o.wheelMaterial) delete (o.wheelMaterial);
+        if (o.shape) delete o.shape;
+        if (o.geometry) delete o.geometry;
+        if (o.material) delete o.material;
+        if (o.mesh) delete o.mesh;
+        if (o.meshWheel) delete o.meshWheel;
+        if (o.meshSusp) delete o.meshSusp;
+        if (o.meshBrake) delete o.meshBrake;
+        if (o.meshSteeringWheel) delete o.meshSteeringWheel;
+        if (o.wheelMaterial) delete o.wheelMaterial;
 
         this.cars.push(mesh);
 
@@ -415,4 +401,4 @@ Object.assign(Vehicle.prototype, {
     }
 });
 
-export { Vehicle };
+export { VehicleManager };

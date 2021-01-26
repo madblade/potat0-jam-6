@@ -2,13 +2,13 @@ import { map, root } from './root.js';
 import { Capsule }                        from './Geometry.js';
 import { Euler, Group, Mesh, Quaternion } from 'three';
 
-function Character()
+function CharacterManager()
 {
     this.ID = 0;
     this.heroes = [];
 }
 
-Object.assign(Character.prototype, {
+Object.assign(CharacterManager.prototype, {
 
     step(AR, N)
     {
@@ -146,4 +146,4 @@ Object.assign(Character.prototype, {
 
 });
 
-export { Character };
+export { CharacterManager };

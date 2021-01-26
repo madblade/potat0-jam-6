@@ -1,14 +1,13 @@
 
 import { map, root } from './root.js';
-import { Terrain3 }  from './Terrain3';
 
-function Terrain()
+function TerrainManager()
 {
     this.ID = 0;
     this.terrains = [];
 }
 
-Object.assign(Terrain.prototype, {
+Object.assign(TerrainManager.prototype, {
 
     step()
     {
@@ -115,4 +114,4 @@ Object.assign(Terrain.prototype, {
 
 });
 
-export { Terrain };
+export { TerrainManager };

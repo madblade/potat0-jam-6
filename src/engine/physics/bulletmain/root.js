@@ -4,9 +4,10 @@
 
 import { Euler, Matrix4, Quaternion } from 'three';
 
-export var REVISION = 'Shotgun005+Mad';
+let REVISION = 'Shotgun005+Mad';
 
-export var root = {
+// Global (to refactor someday).
+let root = {
 
     Ar: null,
     ArLng: [],
@@ -61,4 +62,6 @@ export var root = {
 
 // ROW map
 
-export var map = new Map();
+let map = new Map();
+
+export { REVISION, root, map };

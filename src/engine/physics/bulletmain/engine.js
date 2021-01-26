@@ -1,15 +1,22 @@
+/**
+ * Reworked ammo.labs wrapper.
+ * @author lo-th
+ * @author madblade
+ */
 
-import Worker from '../worker/engine.worker';
-import { RigidBody }           from './RigidBody.js';
-import { Constraint }          from './Constraint.js';
-import { SoftBody }            from './SoftBody.js';
-import { Terrain }             from './Terrain.js';
-import { Vehicle }             from './Vehicle.js';
-import { Character }           from './Character.js';
-import { Collision }           from './Collision.js';
+'use strict';
+
+import Worker                  from '../bulletworker/engine.worker';
+import { RigidBodyManager }    from './RigidBodyManager.js';
+import { ConstraintManager }   from './ConstraintManager.js';
+import { SoftBodyManager }     from './SoftBodyManager.js';
+import { TerrainManager }      from './TerrainManager.js';
+import { VehicleManager }      from './VehicleManager.js';
+import { CharacterManager }    from './CharacterManager.js';
+import { CollisionManager }    from './CollisionManager.js';
 import { RayCaster }           from './RayCaster.js';
 import { ConvexObjectBreaker } from './ConvexObjectBreaker.js';
-import { map, REVISION, root }                                                                                                                                               from './root.js';
+import { map, REVISION, root } from './root.js';
 import {
     BoxBufferGeometry,
     CircleBufferGeometry, ConeBufferGeometry,
@@ -21,107 +28,106 @@ import {
     PlaneBufferGeometry,
     SphereBufferGeometry,
     Vector3, VertexColors
-} from 'three';
+}             from 'three';
+import extend from '../../../extend';
 
-var worker;
-var callback;
+const Time = typeof performance === 'undefined' ? Date : performance;
+const PI90 = Math.PI * 0.5;
 
-let Time = typeof performance === 'undefined' ? Date : performance;
-let t = {
-    now: 0,
-    delta: 0,
-    then: 0,
-    deltaTime: 0,
-    inter: 0,
-    tmp: 0,
-    n: 0,
-    timerate: 0,
-    steptime: 0
+let AmmoWrapper = function()
+{
+    this.option = {
+        worldscale: 1,
+        gravity: [0, -10, 0],
+        fps: 60,
+
+        substep: 2,
+        broadphase: 2,
+        soft: true,
+
+        animFrame: false,
+        fixed: true,
+        jointDebug: false,
+    };
+    this.key = [0, 0, 0];
+
+    this.rigidBody = null;
+    this.softBody = null;
+    this.terrains = null;
+    this.vehicles = null;
+    this.character = null;
+    this.collision = null;
+    this.rayCaster = null;
+    this.constraint = null;
+
+    this.convexBreaker = null;
+    this.ray = null;
+    this.mouseMode = 'free';
+
+    this.tmpRemove = [];
+    this.tmpAdd = [];
+
+    this.oldFollow = '';
+
+    this.stats = { skip: 0 };
+
+    this.isInternUpdate = false;
+
+    this.t = {
+        now: 0,
+        delta: 0,
+        then: 0,
+        deltaTime: 0,
+        inter: 0,
+        tmp: 0,
+        n: 0,
+        timerate: 0,
+        steptime: 0
+    };
+
+    this.timer = null;
+    this.refView = null;
+
+    this.isBuffer = false;
+    this.isPause = false;
+    this.stepNext = false;
+
+    this.currentMode = '';
+    this.oldMode = '';
+
+    this.worker = null;
+    this.callback = null;
 };
 
-var timer = null;
-
-var refView = null;
-
-var isBuffer = false;
-var isPause = false;
-var stepNext = false;
-
-var currentMode = '';
-var oldMode = '';
-
-var PI90 = Math.PI * 0.5;
-
-var rigidBody;
-var softBody;
-var terrains;
-var vehicles;
-var character;
-var collision;
-var rayCaster;
-var constraint;
-
-var convexBreaker = null;
-var ray = null;
-var mouseMode = 'free';
-
-var tmpRemove = [];
-var tmpAdd = [];
-
-var oldFollow = '';
-
-var stats = {skip: 0, };
-
-var isInternUpdate = false;
-
-var option = {
-    worldscale: 1,
-    gravity: [0, -10, 0],
-    fps: 60,
-
-    substep: 2,
-    broadphase: 2,
-    soft: true,
-
-    animFrame: false,
-    fixed: true,
-    jointDebug: false,
-};
-
-let key = [0, 0, 0];
-
-let engine = {
+extend(AmmoWrapper.prototype, {
 
     message(e)
     {
-        var data = e.data;
-        if (data.Ar) {
+        let data = e.data;
+        if (data.Ar)
             root.Ar = data.Ar;
-        }
-        if (data.flow) {
+        if (data.flow)
             root.flow = data.flow;
-        }
 
-        switch (data.m) {
+        switch (data.m)
+        {
             case 'initEngine':
-                engine.initEngine();
+                this.initEngine();
                 break;
             case 'start':
-                engine.start();
+                this.start();
                 break;
             case 'step':
-                engine.step(data.fps, data.delta);
+                this.step(data.fps, data.delta);
                 break;
-
             case 'moveSolid':
-                engine.moveSolid(data.o);
+                this.moveSolid(data.o);
                 break;
             case 'ellipsoid':
-                engine.ellipsoidMesh(data.o);
+                this.ellipsoidMesh(data.o);
                 break;
-
             case 'makeBreak':
-                engine.makeBreak(data.o);
+                this.makeBreak(data.o);
                 break;
         }
     },
@@ -133,11 +139,11 @@ let engine = {
 
         Option = Option || {};
 
-        callback = Callback;
+        this.callback = Callback;
 
-        isInternUpdate = Option.use_intern_update || false;
+        this.isInternUpdate = Option.use_intern_update || false;
 
-        option = {
+        this.option = {
             fps: Option.fps || 120,
             worldscale: Option.worldscale || 1,
             gravity: Option.gravity || [0, -10, 0],
@@ -145,64 +151,61 @@ let engine = {
             broadphase: Option.broadphase || 2,
             soft: Option.soft !== undefined ? Option.soft : true,
             //penetration: Option.penetration || 0.0399,
-
             fixed: Option.fixed !== undefined ? Option.fixed : true,
             animFrame: Option.animFrame !== undefined ? Option.animFrame : true,
-
             jointDebug: Option.jointDebug !== undefined ? Option.jointDebug : false,
-
-            isInternUpdate,
+            isInternUpdate: this.isInternUpdate,
         };
 
-        t.timerate = 1 / option.fps * 1000;
-        //t.autoFps = option.autoFps;
+        this.t.timerate = 1 / this.option.fps * 1000;
 
-        engine.startWorker();
+        this.startWorker();
     },
 
     set(o)
     {
-        o = o || option;
-        t.timerate = o.fps !== undefined ? 1 / o.fps * 1000 : t.timerate;
-        //t.autoFps = o.autoFps !== undefined ? o.autoFps : false;
+        o = o || this.option;
+        this.t.timerate = o.fps !== undefined ? 1 / o.fps * 1000 : this.t.timerate;
 
-        option.fixed = o.fixed || false;
-        option.animFrame = o.animFrame || false;
-        option.jointDebug = o.jointDebug || false;
-
-        o.isInternUpdate = isInternUpdate;
-
-        root.constraintDebug = option.jointDebug;
+        this.option.fixed = o.fixed || false;
+        this.option.animFrame = o.animFrame || false;
+        this.option.jointDebug = o.jointDebug || false;
+        o.isInternUpdate = this.isInternUpdate;
+        root.constraintDebug = this.option.jointDebug;
 
         this.post('set', o);
     },
 
     startWorker()
     {
-        worker = new Worker();
+        let worker = new Worker();
+        this.worker = worker;
 
         worker.postMessage = worker.webkitPostMessage || worker.postMessage;
-        worker.onmessage = engine.message;
+        worker.onmessage = this.message.bind(this);
 
-        // test transferrables
-        var ab = new ArrayBuffer(1);
-        worker.postMessage({m: 'test', ab}, [ab]);
-        isBuffer = !ab.byteLength;
+        // test transferable arrays
+        let ab = new ArrayBuffer(1);
+        worker.postMessage({ m: 'test', ab }, [ab]);
+        this.isBuffer = !ab.byteLength;
 
-        if (isInternUpdate) isBuffer = false;
+        if (this.isInternUpdate) this.isBuffer = false;
 
         // start engine worker
-        engine.post('init', {
-            ArPos: root.ArPos, ArMax: root.ArMax, isBuffer, option
+        this.post('init', {
+            ArPos: root.ArPos,
+            ArMax: root.ArMax,
+            isBuffer: this.isBuffer,
+            option: this.option
         });
-        root.post = engine.post;
+        root.post = this.post.bind(this);
     },
 
     initArray(Counts)
     {
         Counts = Counts || {};
 
-        var counts = {
+        let counts = {
             maxBody: Counts.maxBody || 1400,
             maxContact: Counts.maxContact || 200,
             maxCharacter: Counts.maxCharacter || 10,
@@ -229,80 +232,78 @@ let engine = {
             root.ArLng[0] + root.ArLng[1] + root.ArLng[2] + root.ArLng[3] + root.ArLng[4],
         ];
 
-        root.ArMax = root.ArLng[0] + root.ArLng[1] + root.ArLng[2] + root.ArLng[3] + root.ArLng[4] + root.ArLng[5];
+        root.ArMax = root.ArLng[0] + root.ArLng[1] + root.ArLng[2] +
+            root.ArLng[3] + root.ArLng[4] + root.ArLng[5];
     },
 
     initEngine()
     {
         this.initObject();
 
-        console.log(`[Physics] Engine loaded, v. ${REVISION} | ${isBuffer ? 'Buffering Mode' : 'Raw'} | WASM`);
+        console.log(`[Physics] Engine loaded, v. ${REVISION} | ${this.isBuffer ? 'Buffering Mode' : 'Raw'} | WASM`);
 
-        if (callback) callback();
+        if (this.callback) this.callback();
     },
 
     start(noAutoUpdate)
     {
-        if (isPause) return;
+        if (this.isPause) return;
+        let option = this.option;
+        let t = this.t;
+        let isBuffer = this.isBuffer;
 
-        engine.stop();
+        this.stop();
 
-        stepNext = true;
+        this.stepNext = true;
 
-        // create tranfere array if buffer
+        // create transfer array if buffer
         if (isBuffer) root.Ar = new Float32Array(root.ArMax);
-
-        //engine.sendData( 0 );
 
         t.then = Time.now();
 
-        if (!noAutoUpdate && !isInternUpdate) {
-            timer = option.animFrame ? requestAnimationFrame(engine.sendData) : setInterval(function()
-            {
-                engine.sendData();
-            }, t.timerate);
+        if (!noAutoUpdate && !this.isInternUpdate) {
+            this.timer = option.animFrame ?
+                requestAnimationFrame(this.sendData) :
+                setInterval(() => this.sendData(), t.timerate);
         }
 
-        if (!noAutoUpdate && isInternUpdate) { //engine.sendStep();
-            var key = engine.getKey();
-            worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key}, flow: root.flow, Ar: root.Ar});
+        if (!noAutoUpdate && this.isInternUpdate) {
+            let key = this.getKey();
+            this.worker.postMessage({
+                m: 'internStep', o: {steptime: t.steptime, key}, flow: root.flow, Ar: root.Ar
+            });
         }
 
         // test ray
-        engine.setMode(oldMode);
+        this.setMode(this.oldMode);
     },
 
-    prevUpdate()
-    {
-    },
-    postUpdate()
-    {
-    },
-    pastUpdate()
-    {
-    },
+    prevUpdate() {},
+
+    postUpdate() {},
+
+    pastUpdate() {},
 
     update()
     {
-        engine.postUpdate(t.delta);
+        this.postUpdate(this.t.delta);
 
-        rigidBody.step(root.Ar, root.ArPos[0]);
-        collision.step(root.Ar, root.ArPos[1]);
-        character.step(root.Ar, root.ArPos[2]);
-        vehicles.step(root.Ar, root.ArPos[3]);
-        softBody.step(root.Ar, root.ArPos[4]);
-        constraint.step(root.Ar, root.ArPos[5]);
+        this.rigidBody.step(root.Ar, root.ArPos[0]);
+        this.collision.step(root.Ar, root.ArPos[1]);
+        this.character.step(root.Ar, root.ArPos[2]);
+        this.vehicles.step(root.Ar, root.ArPos[3]);
+        this.softBody.step(root.Ar, root.ArPos[4]);
+        this.constraint.step(root.Ar, root.ArPos[5]);
+        this.terrains.step();
+        this.rayCaster.step();
 
-        terrains.step();
-
-        rayCaster.step();
-
-        engine.pastUpdate(t.delta);
+        this.pastUpdate(this.t.delta);
     },
 
     step(fps, delta)
     {
-        if (isInternUpdate) {
+        let t = this.t;
+        if (this.isInternUpdate) {
             t.fps = fps;
             t.delta = delta;
         } else {
@@ -315,76 +316,84 @@ let engine = {
             t.n++; // FPS
         }
 
-        engine.tell();
-        engine.update();
+        this.tell();
+        this.update();
 
         if (root.controler) root.controler.follow();
 
-        engine.stepRemove();
-        engine.stepAdd();
+        this.stepRemove();
+        this.stepAdd();
 
-        stepNext = true;
+        this.stepNext = true;
 
-        if (isInternUpdate) {
-            engine.sendStep();
-        }
+        if (this.isInternUpdate)
+            this.sendStep();
     },
 
     moveActor()
     {
-
     },
 
     sendData(stamp)
     {
         // TODO bench here
         // console.log(engine.getFps());
-        if (isInternUpdate) return;
+        if (this.isInternUpdate) return;
 
-        if (refView) if (refView.pause) {
-            engine.stop();
+        if (this.refView && this.refView.pause) {
+            this.stop();
             return;
         }
 
-        if (option.animFrame) {
-            timer = requestAnimationFrame(engine.sendData);
+        let t = this.t;
+        if (this.option.animFrame) {
+            this.timer = requestAnimationFrame(this.sendData);
             t.now = stamp === undefined ? Time.now() : stamp;
             t.deltaTime = t.now - t.then;
             t.delta = t.deltaTime * 0.001;
 
             if (t.deltaTime > t.timerate) {
                 t.then = t.now - t.deltaTime % t.timerate;
-
-                engine.sendStep();
+                this.sendStep();
             }
         } else {
-            if (!stepNext) {
-                stats.skip++;
+            if (!this.stepNext) {
+                this.stats.skip++;
                 return;
             }
 
             t.delta = (t.now - t.then) * 0.001;
             t.then = t.now;
 
-            engine.sendStep();
+            this.sendStep();
         }
     },
 
     sendStep()
     {
-        if (!stepNext) return;
+        if (!this.stepNext) return;
 
+        let worker = this.worker;
+        let t = this.t;
         t.now = Time.now();
 
-        engine.prevUpdate(t.delta);
+        this.prevUpdate(t.delta);
 
-        var key = engine.getKey();
+        let key = this.getKey();
 
-        if (isInternUpdate) {
-            if (isBuffer) worker.postMessage({m: 'internStep', o: {steptime: t.steptime, key}, flow: root.flow, Ar: root.Ar}, [root.Ar.buffer]);
-            //else worker.postMessage( { m: 'internStep', o: {  steptime:t.steptime, key:key }, flow: root.flow, Ar: root.Ar } );
+        if (this.isInternUpdate) {
+            if (this.isBuffer)
+                worker.postMessage({
+                    m: 'internStep',
+                    o: { steptime: t.steptime, key },
+                    flow: root.flow, Ar: root.Ar
+                },
+                [root.Ar.buffer]
+                );
+            // else worker.postMessage( { m: 'internStep', // [mad] unsupported?
+            // o: {  steptime:t.steptime, key:key }, flow: root.flow, Ar: root.Ar } );
         } else {
-            if (isBuffer)
+            if (this.isBuffer)
             {
                 worker.postMessage({
                     m: 'step',
@@ -397,22 +406,26 @@ let engine = {
                 [root.Ar.buffer]
                 );
             }
-            else worker.postMessage({m: 'step', o: {delta: t.delta, key}, flow: root.flow, Ar: root.Ar});
+            else worker.postMessage({
+                m: 'step', o: {delta: t.delta, key},
+                flow: root.flow, Ar: root.Ar
+            });
         }
 
-        stepNext = false;
+        this.stepNext = false; // await array detachment from worker!
     },
 
     simpleStep(delta)
     {
-        var key = engine.getKey();
-        worker.postMessage({m: 'step', o: {delta, key}});
+        let key = this.getKey();
+        this.worker.postMessage({m: 'step', o: {delta, key}});
     },
 
     /////////
 
     stepRemove()
     {
+        let tmpRemove = this.tmpRemove;
         if (tmpRemove.length === 0) return;
         this.post('setRemove', tmpRemove);
         while (tmpRemove.length > 0) this.remove(tmpRemove.pop(), true);
@@ -420,6 +433,7 @@ let engine = {
 
     stepAdd()
     {
+        let tmpAdd = this.tmpAdd;
         if (tmpAdd.length === 0) return;
         //this.post( 'setAdd', tmpAdd );
         while (tmpAdd.length > 0) this.add(tmpAdd.shift());
@@ -427,113 +441,104 @@ let engine = {
 
     setView(v)
     {
-        refView = v;
+        this.refView = v;
         root.mat = Object.assign({}, root.mat, v.getMat());
         root.geo = Object.assign({}, root.geo, v.getGeo());//v.getGeo();
         root.container = v.getContent();
         root.controler = v.getControler();
 
         root.isRefView = true;
-
         //if( isInternUpdate ) refView.updateIntern = engine.update;
     },
 
     getFps()
     {
-        return t.fps;
-    },
-    getDelta()
-    {
-        return t.delta;
-    },
-    getIsFixed()
-    {
-        return option.fixed;
-    },
-    getKey()
-    {
-        return key;//[0, 0, 0, 0, 0, 0, 0, 0];
-    },
-    setKey(k)
-    {
-        key = k;
+        return this.t.fps;
     },
 
-    tell()
+    getDelta()
     {
+        return this.t.delta;
     },
-    log()
+
+    getIsFixed()
     {
+        return this.option.fixed;
     },
+
+    getKey()
+    {
+        return this.key;//[0, 0, 0, 0, 0, 0, 0, 0];
+    },
+
+    setKey(k)
+    {
+        this.key = k;
+    },
+
+    tell() {},
+
+    log() {},
 
     post(m, o)
     {
-        worker.postMessage({m, o});
+        this.worker.postMessage({m, o});
     },
 
     reset(full)
     {
-        stats.skip = 0;
+        this.stats.skip = 0;
 
-        engine.postUpdate = function()
-        {
-        };
-        engine.pastUpdate = function()
-        {
-        };
-        engine.prevUpdate = function()
-        {
-        };
+        this.postUpdate = () => {};
+        this.pastUpdate = () => {};
+        this.prevUpdate = () => {};
 
-        isPause = false;
+        this.isPause = false;
+        this.oldMode = this.currentMode;
+        this.setMode('');
 
-        oldMode = currentMode;
-        engine.setMode('');
+        this.stop();
 
-        engine.stop();
-
-        // remove all mesh
-        engine.clear();
+        // remove all meshes
+        this.clear();
 
         // remove tmp material
         while (root.tmpMat.length > 0) root.tmpMat.pop().dispose();
 
-        tmpRemove = [];
-        tmpAdd = [];
-        oldFollow = '';
+        this.tmpRemove = [];
+        this.tmpAdd = [];
+        this.oldFollow = '';
 
-        if (refView) refView.reset(full);
+        if (this.refView) this.refView.reset(full);
 
         // clear physic object;
-        engine.post('reset', {full});
+        this.post('reset', {full});
     },
 
     pause()
     {
-        isPause = true;
+        this.isPause = true;
     },
 
     play()
     {
-        if (!isPause) return;
-        isPause = false;
-        engine.start();
+        if (!this.isPause) return;
+        this.isPause = false;
+        this.start();
     },
 
     stop()
     {
-        if (timer === null) return;
-
-        if (option.animFrame) window.cancelAnimationFrame(timer);
-        else clearInterval(timer);
-
-        timer = null;
+        if (this.timer === null) return;
+        if (this.option.animFrame) window.cancelAnimationFrame(this.timer);
+        else clearInterval(this.timer);
+        this.timer = null;
     },
 
     destroy()
     {
-        worker.terminate();
-        worker = undefined;
+        this.worker.terminate();
+        this.worker = null;
     },
 
     ////////////////////////////
@@ -545,13 +550,13 @@ let engine = {
 
     ellipsoidMesh(o)
     {
-        softBody.createEllipsoid(o);
+        this.softBody.createEllipsoid(o);
     },
 
     updateTmpMat(envmap, hdr)
     {
-        var i = root.tmpMat.length;
-        var m;
+        let i = root.tmpMat.length;
+        let m;
         while (i--) {
             m = root.tmpMat[i];
             if (m.envMap !== undefined) {
@@ -583,24 +588,22 @@ let engine = {
     //
     //-----------------------------
 
-    // if( o.constructor !== Array ) o = [ o ];
-
     forces(o, direct)
     {
         direct = direct || false;
-        engine.post(direct ? 'directForces' : 'setForces', o);
+        this.post(direct ? 'directForces' : 'setForces', o);
     },
 
     options(o, direct)
     {
         direct = direct || false;
-        engine.post(direct ? 'directOptions' : 'setOptions', o);
+        this.post(direct ? 'directOptions' : 'setOptions', o);
     },
 
     matrix(o, direct)
     {
         direct = direct || false;
-        engine.post(direct ? 'directMatrix' : 'setMatrix', o);
+        this.post(direct ? 'directMatrix' : 'setMatrix', o);
     },
 
     //-----------------------------
@@ -612,7 +615,6 @@ let engine = {
     clearFlow()
     {
         root.flow = {ray: [], terrain: [], vehicle: []};
-        //root.flow = { matrix:{}, force:{}, option:{}, ray:[], terrain:[], vehicle:[] };
     },
 
     anchor(o)
@@ -628,26 +630,26 @@ let engine = {
     moveSolid(o)
     {
         if (!map.has(o.name)) return;
-        var b = map.get(o.name);
+        let b = map.get(o.name);
         if (o.pos !== undefined) b.position.fromArray(o.pos);
         if (o.quat !== undefined) b.quaternion.fromArray(o.quat);
     },
 
-    getBodys()
+    getBodies()
     {
-        return rigidBody.bodys;
+        return this.rigidBody.bodys;
     },
 
     initObject()
     {
-        rigidBody = new RigidBody();
-        softBody = new SoftBody();
-        terrains = new Terrain();
-        vehicles = new Vehicle();
-        character = new Character();
-        collision = new Collision();
-        rayCaster = new RayCaster();
-        constraint = new Constraint();
+        this.rigidBody = new RigidBodyManager();
+        this.softBody = new SoftBodyManager();
+        this.terrains = new TerrainManager();
+        this.vehicles = new VehicleManager();
+        this.character = new CharacterManager();
+        this.collision = new CollisionManager();
+        this.rayCaster = new RayCaster();
+        this.constraint = new ConstraintManager();
     },
 
     //-----------------------------
@@ -658,16 +660,16 @@ let engine = {
 
     clear()
     {
-        engine.clearFlow();
+        this.clearFlow();
 
-        rigidBody.clear();
-        collision.clear();
-        terrains.clear();
-        vehicles.clear();
-        character.clear();
-        softBody.clear();
-        rayCaster.clear();
-        constraint.clear();
+        this.rigidBody.clear();
+        this.collision.clear();
+        this.terrains.clear();
+        this.vehicles.clear();
+        this.character.clear();
+        this.softBody.clear();
+        this.rayCaster.clear();
+        this.constraint.clear();
 
         while (root.extraGeo.length > 0) root.extraGeo.pop().dispose();
     },
@@ -683,41 +685,35 @@ let engine = {
         // remove physics
         if (!phy) this.post('remove', name);
 
-        //if ( ! map.has( name ) ) return;
-        var b = engine.byName(name);
+        let b = this.byName(name);
         if (b === null) return;
 
         switch (b.type) {
             case 'solid':
             case 'body' :
-                rigidBody.remove(name);
+                this.rigidBody.remove(name);
                 break;
-
             case 'soft' :
-                softBody.remove(name);
+                this.softBody.remove(name);
                 break;
-
             case 'terrain' :
-                terrains.remove(name);
+                this.terrains.remove(name);
                 break;
-
             case 'collision' :
-                collision.remove(name);
+                this.collision.remove(name);
                 break;
-
             case 'ray' :
-                rayCaster.remove(name);
+                this.rayCaster.remove(name);
                 break;
-
             case 'constraint':
-                constraint.remove(name);
+                this.constraint.remove(name);
                 break;
         }
     },
 
     removes(o)
     {
-        tmpRemove = tmpRemove.concat(o);
+        this.tmpRemove = this.tmpRemove.concat(o);
     },
 
     removesDirect(o)
@@ -734,7 +730,7 @@ let engine = {
     byName(name)
     {
         if (!map.has(name)) {
-            engine.tell('no find object !!');
+            this.tell(`[Ammo.labs] object ${name} not found!`);
             return null;
         } else return map.get(name);
     },
@@ -747,30 +743,38 @@ let engine = {
 
     addGroup(list)
     {
-        tmpAdd = tmpAdd.concat(list);
+        this.tmpAdd = this.tmpAdd.concat(list);
     },
 
     add(o)
     {
         o = o || {};
-        var type = o.type === undefined ? 'box' : o.type;
-        var prev = type.substring(0, 4);
+        let type = o.type === undefined ? 'box' : o.type;
+        let prev = type.substring(0, 4);
 
-        if (prev === 'join') return constraint.add(o);
-        else if (prev === 'soft') softBody.add(o);
-        else if (type === 'terrain') terrains.add(o);
-        else if (type === 'character') return character.add(o);
-        else if (type === 'collision') return collision.add(o);
-        else if (type === 'car') vehicles.add(o);
-        else if (type === 'ray') return rayCaster.add(o);
-        else return rigidBody.add(o);
+        if (prev === 'join')
+            return this.constraint.add(o);
+        else if (prev === 'soft')
+            this.softBody.add(o); // ! no graphics created
+        else if (type === 'terrain')
+            this.terrains.add(o); // ! no graphics created
+        else if (type === 'character')
+            return this.character.add(o);
+        else if (type === 'collision')
+            return this.collision.add(o);
+        else if (type === 'car')
+            this.vehicles.add(o); // ! no graphics created
+        else if (type === 'ray')
+            return this.rayCaster.add(o);
+        else
+            return this.rigidBody.add(o);
     },
 
     defaultRoot()
     {
         // geometry
 
-        var geo = {
+        let geo = {
             circle: new CircleBufferGeometry(1, 6),
             plane: new PlaneBufferGeometry(1, 1, 1, 1),
             box: new BoxBufferGeometry(1, 1, 1),
@@ -795,7 +799,7 @@ let engine = {
 
         // material
 
-        var wire = false;
+        let wire = false;
 
         root.mat = {
 
@@ -838,14 +842,13 @@ let engine = {
             jointP2: new MeshBasicMaterial({
                 name: 'jointP2', color: 0xFFFF00, depthTest: false, depthWrite: true, wireframe: true
             }),
-
         };
 
         root.container = new Group();
 
         root.destroy = function(b)
         {
-            var m;
+            let m;
             while (b.children.length > 0) {
                 m = b.children.pop();
                 while (m.children.length > 0) m.remove(m.children.pop());
@@ -872,29 +875,27 @@ let engine = {
         var name = o.name;
         if (!map.has(name)) return;
 
-        if (convexBreaker === null) convexBreaker = new ConvexObjectBreaker();
+        if (this.convexBreaker === null) this.convexBreaker = new ConvexObjectBreaker();
 
-        var mesh = map.get(name);
+        let mesh = map.get(name);
 
         // breakOption: [ maxImpulse, maxRadial, maxRandom, levelOfSubdivision ]
-        var breakOption = o.breakOption;
+        let breakOption = o.breakOption;
 
-        var debris = convexBreaker.subdivideByImpact(mesh, o.pos, o.normal, breakOption[1], breakOption[2]); // , 1.5 ??
+        var debris = this.convexBreaker.subdivideByImpact(mesh, o.pos, o.normal, breakOption[1], breakOption[2]); // , 1.5 ??
         // remove one level
         breakOption[3] -= 1;
 
         // remove original object
-        tmpRemove.push(name);
+        this.tmpRemove.push(name);
 
-        var i = debris.length;
-        while (i--) tmpAdd.push(this.addDebris(name, i, debris[i], breakOption));
-
-        //while ( i -- ) this.addDebris( name, i, debris[ i ], breakOption );
+        let i = debris.length;
+        while (i--) this.tmpAdd.push(this.addDebris(name, i, debris[i], breakOption));
     },
 
     addDebris(name, id, mesh, breakOption)
     {
-        var o = {
+        let o = {
             name: `${name}_debris${id}`,
             material: mesh.material,
             type: 'convex',
@@ -908,139 +909,132 @@ let engine = {
             margin: 0.05,
         };
 
-        // if levelOfSubdivision > 0 make debris breakable !!
+        // if levelOfSubdivision > 0 make debris breakable!!
         if (breakOption[3] > 0) {
             o.breakable = true;
             o.breakOption = breakOption;
         }
 
-        //this.add( o );
+        // this.add(o);
 
         return o;
     },
 
     //-----------------------------
     //
-    // EXTRA MODE
+    // CAMERA MODES, FOR REFERENCE
     //
     //-----------------------------
 
     setMode(mode)
     {
-        if (mode !== currentMode) {
-            if (currentMode === 'picker') engine.removeRayCamera();
-            if (currentMode === 'shoot') engine.removeShootCamera();
-            if (currentMode === 'lock') engine.removeLockCamera();
+        if (mode !== this.currentMode) {
+            if (this.currentMode === 'picker') this.removeRayCamera();
+            if (this.currentMode === 'shoot') this.removeShootCamera();
+            if (this.currentMode === 'lock') this.removeLockCamera();
         }
 
-        currentMode = mode;
+        this.currentMode = mode;
 
-        if (currentMode === 'picker') engine.addRayCamera();
-        if (currentMode === 'shoot') engine.addShootCamera();
-        if (currentMode === 'lock') engine.addLockCamera();
+        if (this.currentMode === 'picker') this.addRayCamera();
+        if (this.currentMode === 'shoot') this.addShootCamera();
+        if (this.currentMode === 'lock') this.addLockCamera();
     },
 
-    // CAMERA LOCK
+    // Unsupported
 
-    addLockCamera()
-    {
+    addLockCamera() {},
 
-    },
+    removeLockCamera() {},
 
-    removeLockCamera()
-    {
+    addShootCamera() {},
 
-    },
-
-    // CAMERA SHOOT
-
-    addShootCamera()
-    {
-
-    },
-
-    removeShootCamera()
-    {
-
-    },
+    removeShootCamera() {},
 
     // CAMERA RAY
 
     addRayCamera()
     {
-        if (!refView) return;
+        if (!this.refView) return;
 
-        ray = engine.add({name: 'cameraRay', type: 'ray', callback: engine.onRay, mask: 1, visible: false});// only move body
-        refView.activeRay(engine.updateRayCamera, false);
+        this.ray = this.add({
+            name: 'cameraRay',
+            type: 'ray',
+            callback: this.onRay,
+            mask: 1,
+            visible: false
+        });// only move body
+        this.refView.activeRay(this.updateRayCamera, false);
     },
 
     removeRayCamera()
     {
-        if (!refView) return;
-        engine.remove('cameraRay');
-        refView.removeRay();
-        engine.log();
+        if (!this.refView) return;
+        this.remove('cameraRay');
+        this.refView.removeRay();
+        this.log();
     },
 
     updateRayCamera(offset)
     {
         //ray.setFromCamera( refView.getMouse(), refView.getCamera() );
-        if (mouseMode === 'drag') engine.matrix([{name: 'dragger', pos: offset.toArray(), keepRot: true}]);
+        if (this.mouseMode === 'drag')
+            this.matrix([
+                { name: 'dragger', pos: offset.toArray(), keepRot: true }
+            ]);
     },
 
     onRay(o)
     {
-        var mouse = refView.getMouse();
-        var control = refView.getControls();
-        var name = o.name === undefined ? '' : o.name;
+        let refView = this.refView;
+        let mouse = refView.getMouse();
+        let control = refView.getControls();
+        let name = o.name === undefined ? '' : o.name;
 
-        ray.setFromCamera(mouse, control.object);
+        this.ray.setFromCamera(mouse, control.object);
 
         if (mouse.z === 0) {
-            if (mouseMode === 'drag') {
+            if (this.mouseMode === 'drag') {
                 control.enableRotate = true;
-                engine.removeConnector();
+                this.removeConnector();
             }
-
-            mouseMode = 'free';
+            this.mouseMode = 'free';
         } else {
-            if (mouseMode === 'free') {
+            if (this.mouseMode === 'free') {
                 if (name) {
-                    if (mouseMode !== 'drag') {
+                    if (this.mouseMode !== 'drag') {
                         refView.setDragPlane(o.point);
                         control.enableRotate = false;
-                        engine.addConnector(o);
-                        mouseMode = 'drag';
+                        this.addConnector(o);
+                        this.mouseMode = 'drag';
                     }
                 } else {
-                    mouseMode = 'rotate';
+                    this.mouseMode = 'rotate';
                 }
             }
 
-            /*if ( mouseMode === 'drag' ){
-
-                physic.matrix( [{ name:'dragger', pos: refView.getOffset().toArray() }] );
-
-            }*/
+            // if (this.mouseMode === 'drag' ){
+            //     this.matrix( [{ name:'dragger', pos: this.refView.getOffset().toArray() }] );
+            // }
         }
 
         // debug
-        engine.log(`${mouseMode}   ${name}`);
+        this.log(`${this.mouseMode}   ${name}`);
     },
 
     addConnector(o)
     {
-        var mesh = engine.byName(o.name);
-        if (mesh === null) return;
+        let mesh = this.byName(o.name);
+        if (!mesh) return;
 
         // reste follow on drag
-        engine.testCurrentFollow(o.name);
+        this.testCurrentFollow(o.name);
 
-        var p0 = new Vector3().fromArray(o.point);
-        var qB = mesh.quaternion.toArray();
-        var pos = engine.getLocalPoint(p0, mesh).toArray();
+        let p0 = new Vector3().fromArray(o.point);
+        let qB = mesh.quaternion.toArray();
+        let pos = this.getLocalPoint(p0, mesh).toArray();
 
-        engine.add({
+        this.add({
             name: 'dragger',
             type: 'sphere',
             size: [0.2],
@@ -1052,7 +1046,7 @@ let engine = {
             mask: 32,
         });
 
-        engine.add({
+        this.add({
             name: 'connector',
             type: 'joint_fixe',
             b1: 'dragger', b2: o.name,
@@ -1063,43 +1057,44 @@ let engine = {
 
     removeConnector()
     {
-        engine.remove('dragger');
-        engine.remove('connector');
+        this.remove('dragger');
+        this.remove('connector');
 
-        if (oldFollow !== '') engine.setCurrentFollow(oldFollow);
+        if (this.oldFollow !== '') this.setCurrentFollow(this.oldFollow);
     },
 
     getLocalPoint(vector, mesh)
     {
         mesh.updateMatrix();
-        //mesh.updateMatrixWorld(true);
-        var m1 = new Matrix4();
-        var s = new Vector3(1, 1, 1);
-        var m0 = new Matrix4().compose(mesh.position, mesh.quaternion, s);
-        m1.getInverse(m0);
+        // mesh.updateMatrixWorld(true);
+        let m1 = new Matrix4();
+        let s = new Vector3(1, 1, 1);
+        let m0 = new Matrix4().compose(mesh.position, mesh.quaternion, s);
+        m1.copy(m0).invert();
         return vector.applyMatrix4(m1);
     },
 
     setCurrentFollow(name, o)
     {
-        if (!refView) return;
-        var target = engine.byName(name);
+        let refView = this.refView;
+        if (!this.refView) return;
+        let target = this.byName(name);
         if (target !== null) refView.getControls().initFollow(target, o);
         else refView.getControls().resetFollow();
-        oldFollow = '';
+        this.oldFollow = '';
     },
-
 
     testCurrentFollow(name)
     {
-        oldFollow = '';
+        this.oldFollow = '';
+        let refView = this.refView;
         if (!refView) return;
         if (!refView.getControls().followTarget) return;
         if (refView.getControls().followTarget.name === name) {
             refView.getControls().resetFollow();
-            oldFollow = name;
+            this.oldFollow = name;
         }
     },
-};
+});
 
-export { engine };
+export { AmmoWrapper };

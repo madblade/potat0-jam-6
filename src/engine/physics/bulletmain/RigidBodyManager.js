@@ -5,14 +5,14 @@ import { BoxBufferGeometry, CylinderBufferGeometry, Euler, Group,
     Matrix4, Mesh, Quaternion, SphereBufferGeometry } from 'three';
 import { ChamferBox, ChamferCyl } from './Chamfer';
 
-function RigidBody()
+function RigidBodyManager()
 {
     this.ID = 0;
     this.solids = [];
     this.bodys = [];
 }
 
-Object.assign(RigidBody.prototype, {
+Object.assign(RigidBodyManager.prototype, {
 
     step(AR, N)
     {
@@ -371,5 +371,4 @@ Object.assign(RigidBody.prototype, {
 
 });
 
-
-export { RigidBody };
+export { RigidBodyManager };

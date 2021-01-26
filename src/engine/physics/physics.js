@@ -3,8 +3,11 @@
  */
 
 import extend                from '../../extend';
-import { engine }            from './engine/engine';
-import { MeshBasicMaterial } from 'three';
+import { engine }                                          from './engine/engine';
+import {
+    Matrix4, MeshBasicMaterial,
+    Quaternion, Vector3
+} from 'three';
 
 let Physics = function(app)
 {
@@ -12,6 +15,19 @@ let Physics = function(app)
 
     this.Ammo = null;
     this.isLoaded = false;
+
+    // char mover
+    this.characterHandle = null;
+    // state
+    this._q = new Quaternion();
+    this._p = new Vector3();
+    // decomposition
+    this._qd = new Quaternion();
+    this._pd = new Vector3();
+    this._dd = new Vector3();
+    // mat
+    this._m = new Matrix4();
+    this._matrixAggregate = [];
 };
 
 extend(Physics.prototype, {
@@ -44,7 +60,13 @@ extend(Physics.prototype, {
 
     refresh()
     {
+        let c = this.characterHandle;
+        if (c && this._matrixAggregate.length > 0)
+        {
+            engine.matrix(this._matrixAggregate);
+        }
         engine.sendData();
+        this._matrixAggregate.length = 0; // free
     },
 
     addHeightMap(graphicalChunk)
@@ -78,19 +100,27 @@ extend(Physics.prototype, {
 
         // let c = engine.add({type: 'character', })
         let c = engine.add({
-            type:'character',
+            // type:'character',
+            // type:'cylinder',
+            type:'capsule',
+            kinematic: true,
+            friction: 0.5,
+            restitution: 0.2,
             name: 'bobby',
             // upAxis: [0, 1, 0],
             pos: [2, -2, 1],
             // rot: [0, 0, Math.PI / 2],
             rot: [0, Math.PI / 2, Math.PI / 2],
-            gravity: [0, 0, -10],
+            // gravity: [0, 0, -10],
             size: [.25, 1],
             // scale: 0.07,
             material: new MeshBasicMaterial({color: 0x00ff00, wireframe: true})
         });
         // c.rotation.set(Math.PI / 4, Math.PI / 4, Math.PI / 4);
         this.app.engine.graphics.addToScene(c, '-1');
+        this.characterHandle = c;
+        this._p.copy(c.position);
+        this._q.copy(c.quaternion);
 
         let d = 0.1;
 
@@ -172,16 +202,35 @@ extend(Physics.prototype, {
             case 'u':
                 vector[2] = 1;
                 break;
+            case 'd':
+                vector[2] = -1;
+                break;
             case 'fx':
             case 'bx':
             case 'rx':
             case 'lx':
             case 'ux':
+            case 'dx':
                 break;
             default:
                 return;
         }
-        engine.setKey(vector);
+
+        let c = this.characterHandle;
+        if (c)
+        {
+            let oldQ = this._q; // rotation goes here
+            let oldP = this._p;
+            this._pd.set(...vector);
+            this._pd.normalize().multiplyScalar(0.1);
+            oldP.add(this._pd);
+            this._matrixAggregate.push({
+                name: 'bobby',
+                pos: this._p.toArray(),
+                quat: oldQ.toArray()
+            });
+        }
+        // engine.setKey(vector);
     },
 
     addCharacterController(selfModel)

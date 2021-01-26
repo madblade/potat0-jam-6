@@ -53,6 +53,26 @@ extend(CollisionModel.prototype, {
         this.gravity.copy(g);
     },
 
+    getDistanceToTarget()
+    {
+        if (this.isStatic) return 0;
+        return this.position0.distanceTo(this.position1);
+    },
+
+    destroy()
+    {
+        if (this.isStatic) return;
+        this.position0 = null;
+        this.position1 = null;
+        this.velocity0 = null;
+        this.velocity1 = null;
+        this.accelera0 = null;
+        this.accelera1 = null;
+        this.gravity = null;
+        this.wantedVelocity = null;
+        this.continuousForces = null;
+    }
+
 });
 
 export { CollisionModel };

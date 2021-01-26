@@ -6,6 +6,7 @@
 
 import extend            from '../../../extend';
 
+// Broad phase utility.
 let Sweeper = function(physics)
 {
     this.physics = physics;
@@ -16,10 +17,13 @@ let Sweeper = function(physics)
 
     this.entitiesNeedingToMove = new Set();
     this.dynamicEntities = new Set();
-    this.potentialCollidingPairs = [];
+    this.potentialCollidingPairs = new Set();
 
-    this.physicalEntities = [];
+    this.physicsEntities = [];
     this.availableIndicesInPhysicalEntitiesArray = [];
+
+    // Engine internals.
+    this.locks = [!1, !1, !1, !1, !1, !1];
 };
 
 extend(Sweeper.prototype, {
@@ -28,7 +32,7 @@ extend(Sweeper.prototype, {
 
     reorderObjects()
     {
-        let objects = this.physicalEntities;
+        let objects = this.physicsEntities;
         let axisX = this.orderedObjectsByX;
         let axisY = this.orderedObjectsByY;
         let axisZ = this.orderedObjectsByZ;
@@ -67,17 +71,24 @@ extend(Sweeper.prototype, {
         }
     },
 
+    insertObject()//entity)
+    {
+        // TODO dichotomy insert
+        // 1. dichotomy insert
+        // 2. displacement right
+    },
+
     reserveEntityId()
     {
         if (this.availableIndicesInPhysicalEntitiesArray.length)
             return this.availableIndicesInPhysicalEntitiesArray.pop();
         else
-            return this.physicalEntities.length;
+            return this.physicsEntities.length;
     },
 
     getNumberOfEntities()
     {
-        return this.physicalEntities.length;
+        return this.physicsEntities.length;
     },
 
     // Pre-physics update.
@@ -89,25 +100,144 @@ extend(Sweeper.prototype, {
 
     addPhysicsEntity(entity)
     {
-        // XXX I should check that!
-        this.physicalEntities[entity.entityId] = entity;
+        this.physicsEntities[entity.entityId] = entity;
+        // TODO [PERF] don’t sort, just insert.
+        this.reorderObjects();
+        if (!entity.collisionModel.isStatic)
+            this.dynamicEntities.add(entity);
+    },
+
+    removeEntity(entityId)
+    {
+        let entity = this.physicsEntities[entityId];
+        if (!entity)
+            throw Error('[Mad/Sweeper] Trying to remove entity that’s not there.');
+
+        this.dynamicEntities.remove(entity);
+        this.physicsEntities[entityId] = null; // Free object?
+        this.availableIndicesInPhysicalEntitiesArray.push(entityId);
+        entity.destroy();
+
+        // No need to displace all entities.
     },
 
     // Physics update.
 
     sweepDetectOverlappingPairs()
     {
+        // Broad phase.
 
+        // Clear colliding cache.
+        this.potentialCollidingPairs.clear();
+
+        // Every object tests against its own extent,
+        // So there’s no need to keep track of boundaries.
+        // O(dyn n * average n by extent) -> amortized n, worst case n ^ 2
+        this.physicsEntities.forEach(entity => {
+            const thisId = entity.entityId;
+            const neighbors = this.getOverlappingNeighbors(entity);
+            const currentIsStatic = entity.collisionModel.isStatic;
+            for (let n = 0; n < neighbors.length; ++n)
+            {
+                // Skip static-to-static collision
+                if (currentIsStatic && neighbors[n].collisionModel.isStatic) continue;
+                const otherId = neighbors[n].entityId;
+
+                // Sorted string, ensures unique collision pairs.
+                this.potentialCollidingPairs.add(
+                    `${Math.min(thisId, otherId)},${Math.max(thisId, otherId)}`
+                );
+            }
+        });
     },
 
-    updateObjectAxis(entityId)
+    getOverlappingNeighbors(entity)
     {
-        let axisX = this.orderedObjectsByX;
-        let axisY = this.orderedObjectsByY;
-        let axisZ = this.orderedObjectsByZ;
+        const axisX = this.orderedObjectsByX;
+        const axisY = this.orderedObjectsByY;
+        const axisZ = this.orderedObjectsByZ;
+        const ix = entity.indexOnXArray;
+        const iy = entity.indexOnYArray;
+        const iz = entity.indexOnZArray;
+        const c = entity.collisionModel.boundingSphereCenter;
+        let r2 = entity.collisionModel.boundingSphereRadius;
+        const nbEntities = axisX.length;
 
-        let objects = this.physicalEntities;
-        let object = objects[entityId];
+        // Take displacement into account
+        const dTarget = entity.collisionModel.getDistanceToTarget();
+        r2 += dTarget;
+
+        // Unlock axes.
+        const l = this.locks;
+        let i;
+        for (i = 0; i < 6; ++i) l[i] = false;
+
+        let nbIterations = 0;
+        let b = false;
+        let overlapping = [];
+        do {
+            // check x…
+            i = ix;
+            if (i-- > 0 && this.distanceAndMarginToEntity(axisX[i], c) < r2)
+                overlapping.push(axisX[i]);
+            else l[0] = true;
+            i = ix;
+            if (i++ < axisX.length && this.distanceAndMarginToEntity(axisX[i], c) < r2)
+                overlapping.push(axisX[i]);
+            else l[1] = true;
+            // If left and right are out of range, no one else can overlap!
+            if (l[0] && l[1]) break;
+
+            // check y…
+            // redundancy is handled by the hashset check
+            i = iy;
+            if (i-- > 0 && this.distanceAndMarginToEntity(axisY[i], c) < r2)
+                overlapping.push(axisY[i]);
+            else l[2] = true;
+            i = iy;
+            if (i++ < axisY.length && this.distanceAndMarginToEntity(axisY[i], c) < r2)
+                overlapping.push(axisY[i]);
+            else l[3] = true;
+            if (l[2] && l[3]) break;
+
+            // check z…
+            i = iz;
+            if (i-- > 0 && this.distanceAndMarginToEntity(axisZ[i], c) < r2)
+                overlapping.push(axisZ[i]);
+            else l[2] = true;
+            i = iz;
+            if (i++ < axisZ.length && this.distanceAndMarginToEntity(axisZ[i], c) < r2)
+                overlapping.push(axisZ[i]);
+            else l[3] = true;
+            if (l[2] && l[3]) break;
+
+            b = l[4] && l[5];
+        }
+        while (!b && nbIterations++ < nbEntities / 2); // loop back if no axis is locked!
+
+        return overlapping;
+    },
+
+    distanceAndMarginToEntity(otherEntity, currentCenter)
+    {
+        const otherCenter = otherEntity.collisionModel.boundingSphereCenter;
+        const dx = otherCenter.x - currentCenter.x;
+        const dy = otherCenter.y - currentCenter.y;
+        const dz = otherCenter.z - currentCenter.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz) +
+            otherEntity.getDistanceToTarget();
+    },
+
+    // Post-physics update.
+
+    updateOrderedArraysAfterMove(entityId)
+    {
+        const axisX = this.orderedObjectsByX;
+        const axisY = this.orderedObjectsByY;
+        const axisZ = this.orderedObjectsByZ;
+
+        let objects = this.physicsEntities;
+        let object = objects[entityId]; // it can be static.
         const length = axisX.length;
 
         const p = object.center;
@@ -173,7 +303,6 @@ extend(Sweeper.prototype, {
         // }
     },
 
-    // XXX [PERF] distinguish between 'e' and 'x'
     swap(axisArray, i, j)
     {
         let objects = this.entities;
@@ -202,12 +331,10 @@ extend(Sweeper.prototype, {
         });
     },
 
-    // Post-physics update.
-
     movePhysicsEntity(entity)
     {
         this.anEntityNeedsToMove(entity);
-        // TODO
+        // TODO?
     },
 });
 

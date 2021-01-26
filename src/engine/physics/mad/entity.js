@@ -7,6 +7,7 @@
 import { Vector3 }        from 'three';
 import extend             from '../../../extend';
 
+// Generic entity that can collide.
 let PhysicsEntity = function(
     entityId,
     sweeper,
@@ -28,6 +29,13 @@ let PhysicsEntity = function(
 };
 
 extend(PhysicsEntity.prototype, {
+
+    destroy()
+    {
+        this.collisionModel.destroy();
+        this.center = null;
+        this.collisionModel = null;
+    }
 
 });
 

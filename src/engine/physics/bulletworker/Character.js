@@ -286,7 +286,6 @@ Object.assign(Hero.prototype, {
         // let shape2 = new Ammo.btCapsuleShape(o.size[0], o.size[1], 1);
         this.grav = g;
         setInterval(() => {
-            return;
             if (controller.canJump())
             {
                 if (Math.random() > 0.95)

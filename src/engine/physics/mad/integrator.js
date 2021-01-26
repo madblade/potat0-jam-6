@@ -107,6 +107,9 @@ extend(Integrator.prototype, {
         cm.velocity1.set(0, 0, 0);
         cm.accelera1.set(0, 0, 0);
 
+        // Apply to sweeper model.
+        this.sweeper.updateOrderedArraysAfterMove(entity.entityId);
+
         // TODO notify server model.
     }
 

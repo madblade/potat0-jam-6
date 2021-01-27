@@ -60,18 +60,23 @@ extend(MadEngine.prototype, {
         // Reset stamp before performing physics update.
         this._stamp = TimeUtils.getTimeSecNano();
 
+        // 0. detect entities needing a move pass.
+        this.sweeper.refreshEntitiesNeedingMovement();
+
         // 1. integrate objects needing to move
         this.integrator.integrateMovement(relativeDt);
 
         // 2. detect collisions
         this.sweeper.sweepDetectOverlappingPairs();
 
-        // 3. correct penetration, compute entities not on ground
+        // 3. correct penetration
         this.collider.collidePairs();
+        // 4. collide with heightmaps in a separate pass,
+        // compute entities not on ground
+        this.collider.collideTerrain();
 
-        // 4. notify new entities needing to move
+        // 5. notify new entities needing to move
         this.integrator.applyIntegration();
-        this.sweeper.refreshEntitiesNeedingMovement();
     },
 
     getTimeDilation()

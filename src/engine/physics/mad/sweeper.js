@@ -22,6 +22,10 @@ let Sweeper = function(physics)
     this.physicsEntities = [];
     this.availableIndicesInPhysicalEntitiesArray = [];
 
+    // Height maps are horizontal (up=+Z) by default.
+    this.heightMaps = new Map();
+    // x,y => array of height maps in the current chunk
+
     // Engine internals.
     this.locks = [!1, !1, !1, !1, !1, !1];
 };
@@ -136,11 +140,8 @@ extend(Sweeper.prototype, {
         this.physicsEntities.forEach(entity => {
             const thisId = entity.entityId;
             const neighbors = this.getOverlappingNeighbors(entity);
-            const currentIsStatic = entity.collisionModel.isStatic;
             for (let n = 0; n < neighbors.length; ++n)
             {
-                // Skip static-to-static collision
-                if (currentIsStatic && neighbors[n].collisionModel.isStatic) continue;
                 const otherId = neighbors[n].entityId;
 
                 // Sorted string, ensures unique collision pairs.
@@ -159,13 +160,14 @@ extend(Sweeper.prototype, {
         const ix = entity.indexOnXArray;
         const iy = entity.indexOnYArray;
         const iz = entity.indexOnZArray;
-        const c = entity.collisionModel.boundingSphereCenter;
-        let r2 = entity.collisionModel.boundingSphereRadius;
+        const center = entity.collisionModel.boundingSphereCenter;
+        let radius = entity.collisionModel.boundingSphereRadius;
+        const isStatic = entity.collisionModel.isStatic;
         const nbEntities = axisX.length;
 
         // Take displacement into account
         const dTarget = entity.collisionModel.getDistanceToTarget();
-        r2 += dTarget;
+        radius += dTarget;
 
         // Unlock axes.
         const l = this.locks;
@@ -178,11 +180,11 @@ extend(Sweeper.prototype, {
         do {
             // check x…
             i = ix;
-            if (i-- > 0 && this.distanceAndMarginToEntity(axisX[i], c) < r2)
+            if (i-- > 0 && this.overlaps(axisX[i], center, radius, isStatic))
                 overlapping.push(axisX[i]);
             else l[0] = true;
             i = ix;
-            if (i++ < axisX.length && this.distanceAndMarginToEntity(axisX[i], c) < r2)
+            if (i++ < axisX.length && this.overlaps(axisX[i], center, radius, isStatic))
                 overlapping.push(axisX[i]);
             else l[1] = true;
             // If left and right are out of range, no one else can overlap!
@@ -191,22 +193,22 @@ extend(Sweeper.prototype, {
             // check y…
             // redundancy is handled by the hashset check
             i = iy;
-            if (i-- > 0 && this.distanceAndMarginToEntity(axisY[i], c) < r2)
+            if (i-- > 0 && this.overlaps(axisY[i], center, radius, isStatic))
                 overlapping.push(axisY[i]);
             else l[2] = true;
             i = iy;
-            if (i++ < axisY.length && this.distanceAndMarginToEntity(axisY[i], c) < r2)
+            if (i++ < axisY.length && this.overlaps(axisY[i], center, radius, isStatic))
                 overlapping.push(axisY[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
 
             // check z…
             i = iz;
-            if (i-- > 0 && this.distanceAndMarginToEntity(axisZ[i], c) < r2)
+            if (i-- > 0 && this.overlaps(axisZ[i], center, radius, isStatic))
                 overlapping.push(axisZ[i]);
             else l[2] = true;
             i = iz;
-            if (i++ < axisZ.length && this.distanceAndMarginToEntity(axisZ[i], c) < r2)
+            if (i++ < axisZ.length && this.overlaps(axisZ[i], center, radius, isStatic))
                 overlapping.push(axisZ[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
@@ -218,14 +220,21 @@ extend(Sweeper.prototype, {
         return overlapping;
     },
 
-    distanceAndMarginToEntity(otherEntity, currentCenter)
+    overlaps(otherEntity, currentCenter, currentRadius, isStatic)
     {
+        if (isStatic && otherEntity.isStatic) return false;
+
         const otherCenter = otherEntity.collisionModel.boundingSphereCenter;
         const dx = otherCenter.x - currentCenter.x;
         const dy = otherCenter.y - currentCenter.y;
         const dz = otherCenter.z - currentCenter.z;
-        return Math.sqrt(dx * dx + dy * dy + dz * dz) +
+        const distanceBetweenCenters = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+        const otherRadius =
+            otherEntity.collisionModel.boundingSphereRadius +
             otherEntity.getDistanceToTarget();
+
+        return distanceBetweenCenters < currentRadius + otherRadius;
     },
 
     // Post-physics update.
@@ -326,7 +335,8 @@ extend(Sweeper.prototype, {
     {
         this.entitiesNeedingToMove.clear();
         this.dynamicEntities.forEach(e => {
-            if (!e.onGround || e.wantsToMove || e.isSubjectToContinuousForce)
+            const cm = e.collisionModel;
+            if (!cm.onGround || cm.wantsToMove || cm.isSubjectToContinuousForce)
                 this.entitiesNeedingToMove.push(e);
         });
     },
@@ -334,7 +344,8 @@ extend(Sweeper.prototype, {
     movePhysicsEntity(entity)
     {
         this.anEntityNeedsToMove(entity);
-        // TODO?
+        // TODO [Physics] notify here when entities should move.
+        //  (force or want movement)
     },
 });
 

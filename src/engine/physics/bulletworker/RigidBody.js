@@ -42,7 +42,7 @@ function RigidBody()
 {
     this.ID = 0;
     this.solids = [];
-    this.bodys = [];
+    this.bodies = [];
 
     this.trans = new Ammo.btTransform();
     this.zero = new Ammo.btVector3();
@@ -57,7 +57,7 @@ Object.assign(RigidBody.prototype, {
         let trans = this.trans;
         let scale = root.scale;
 
-        this.bodys.forEach(function(b, id)
+        this.bodies.forEach(function(b, id)
         {
             n = N + id * 8;
             AR[n] = b.getLinearVelocity().length() * 9.8; // speed km/h
@@ -80,7 +80,7 @@ Object.assign(RigidBody.prototype, {
 
     clear()
     {
-        while (this.bodys.length > 0) this.destroy(this.bodys.pop());
+        while (this.bodies.length > 0) this.destroy(this.bodies.pop());
         while (this.solids.length > 0) this.destroy(this.solids.pop());
         this.ID = 0;
     },
@@ -99,14 +99,14 @@ Object.assign(RigidBody.prototype, {
         var b = map.get(name);
 
         var solid = b.type === 'solid';
-        var n = solid ? this.solids.indexOf(b) : this.bodys.indexOf(b);
+        var n = solid ? this.solids.indexOf(b) : this.bodies.indexOf(b);
 
         if (n !== -1) {
             if (solid) {
                 this.solids.splice(n, 1);
                 this.destroy(b);
             } else {
-                this.bodys.splice(n, 1);
+                this.bodies.splice(n, 1);
                 this.destroy(b);
             }
         }
@@ -404,7 +404,7 @@ Object.assign(RigidBody.prototype, {
             //else body.isBody = true;
             if (!noMesh) {
                 body.type = 'body';
-                this.bodys.push(body);
+                this.bodies.push(body);
             } else {
                 body.type = 'body';
                 this.solids.push(body);

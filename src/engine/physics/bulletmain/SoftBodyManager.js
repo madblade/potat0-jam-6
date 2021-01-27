@@ -206,12 +206,10 @@ Object.assign(SoftBodyManager.prototype, {
                 tmp = softRope(o, material);
                 break;
 
-            case 'softEllips':// tmp = ellipsoid( o )
+            case 'softEllipsoid':// tmp = ellipsoid( o )
                 this.tmpMat = material;
                 root.post('add', o);
-
                 return;
-                break;
         }
 
         mesh = tmp.mesh;

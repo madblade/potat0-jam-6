@@ -52,7 +52,7 @@ var dispatcher;
 var broadphase;
 
 var tmpRemove = [];
-var tmpAdd = [];
+// var tmpAdd = [];
 
 var carName = '';
 var heroName = 'bobby';
@@ -260,7 +260,7 @@ var engine = {
         this.clearFlow();
 
         tmpRemove = [];
-        tmpAdd = [];
+        // tmpAdd = [];
 
         root.matrix = [];
         root.option = [];
@@ -340,14 +340,15 @@ var engine = {
             collision = new Collision();
             raycaster = new RayCaster();
 
+            // eslint-disable-next-line no-unused-vars
             ray = new Ammo.ClosestRayResultCallback();
 
             tmpT = math.transform();
             tmpP = math.vector3();
 
-            root.makeShape = function(o)
+            root.makeShape = function(oo)
             {
-                return rigidBody.add(o, 'isShape');
+                return rigidBody.add(oo, 'isShape');
             };
 
             //vehicles.addExtra = rigidBody.add;
@@ -716,7 +717,7 @@ var engine = {
             return;
         }
 
-        var t = tmpT.identity(); //math.transform();
+        var tt = tmpT.identity(); //math.transform();
         var p1 = tmpP; //math.vector3();
 
         //if ( b.isKinematic ) t = b.getMotionState().getWorldTransform();
@@ -726,9 +727,9 @@ var engine = {
         if (o.rot === undefined && o.quat === undefined) o.quat = [0, 0, 0, 1];//o.keepRot = true;
 
         if (o.keepX || o.keepY || o.keepZ || o.keepRot) { // keep original position
-            b.getMotionState().getWorldTransform(t);
+            b.getMotionState().getWorldTransform(tt);
             var r = [];
-            t.toArray(r);
+            tt.toArray(r);
 
             if (o.keepX !== undefined) o.pos[0] = r[0] - o.pos[0];
             if (o.keepY !== undefined) o.pos[1] = r[1] - o.pos[1];
@@ -745,10 +746,10 @@ var engine = {
 
             o.pos = o.pos.concat(o.quat);
 
-            t.fromArray(o.pos, 0, root.invScale);
+            tt.fromArray(o.pos, 0, root.invScale);
 
-            if (b.isKinematic) b.getMotionState().setWorldTransform(t);
-            else b.setWorldTransform(t);
+            if (b.isKinematic) b.getMotionState().setWorldTransform(tt);
+            else b.setWorldTransform(tt);
         }
 
         //https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=11079

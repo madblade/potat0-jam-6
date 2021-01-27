@@ -637,7 +637,7 @@ extend(AmmoWrapper.prototype, {
 
     getBodies()
     {
-        return this.rigidBody.bodys;
+        return this.rigidBody.bodies;
     },
 
     initObject()

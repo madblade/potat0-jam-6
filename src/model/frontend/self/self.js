@@ -5,7 +5,6 @@
 'use strict';
 
 import extend       from '../../../extend.js';
-import { ItemType } from '../../backend/self/items';
 
 let SelfComponent = function(clientModel)
 {

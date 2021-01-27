@@ -18,7 +18,7 @@ function RayCaster()
 
 Object.assign(RayCaster.prototype, {
 
-    step: function()
+    step()
     {
         var i = this.rays.length;
         var j = root.flow.ray.length;
@@ -31,26 +31,30 @@ Object.assign(RayCaster.prototype, {
 
         root.flow.ray = [];
 
-        this.rays.forEach(function(r, id)
+        this.rays.forEach(function(r)
         {
             r.updateMatrixWorld();
-            root.flow.ray.push({origin: r.origin, dest: r.dest, group: r.group, mask: r.mask, precision: r.precision});
+            root.flow.ray.push({
+                origin: r.origin, dest: r.dest,
+                group: r.group, mask: r.mask,
+                precision: r.precision
+            });
         });
     },
 
-    clear: function()
+    clear()
     {
         while (this.rays.length > 0) this.destroy(this.rays.pop());
         this.ID = 0;
     },
 
-    destroy: function(r)
+    destroy(r)
     {
         if (r.parent) r.parent.remove(r);
         map.delete(r.name);
     },
 
-    remove: function(name)
+    remove(name)
     {
         if (!map.has(name)) return;
         var r = map.get(name);
@@ -62,9 +66,9 @@ Object.assign(RayCaster.prototype, {
         }
     },
 
-    add: function(o)
+    add(o)
     {
-        o.name = o.name !== undefined ? o.name : 'ray' + this.ID++;
+        o.name = o.name !== undefined ? o.name : `ray${this.ID++}`;
         // delete old if same name
         this.remove(o.name);
 
@@ -78,8 +82,8 @@ Object.assign(RayCaster.prototype, {
         map.set(o.name, ray);
 
         // send to worker
-        delete (o.callback);
-        delete (o.parent);
+        delete o.callback;
+        delete o.parent;
         root.post('add', o);
 
         return ray;
@@ -153,27 +157,22 @@ function Ray(o)
 
 Ray.prototype = Object.assign(Object.create(Line.prototype), {
 
-    setFromCamera: function(coords, camera)
+    setFromCamera(coords, camera)
     {
-        if ((camera && camera.isPerspectiveCamera)) {
-
+        if (camera && camera.isPerspectiveCamera) {
             this.start.setFromMatrixPosition(camera.matrixWorld);
             this.tmp.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.start).normalize();
             this.end.copy(this.tmp).multiplyScalar(camera.far).add(this.start);
-
-
-        } else if ((camera && camera.isOrthographicCamera)) {
-
+        } else if (camera && camera.isOrthographicCamera) {
             this.start.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far)).unproject(camera); // set origin in plane of camera
             this.normal.set(0, 0, -1).transformDirection(camera.matrixWorld);
             this.end.addScaledVector(this.normal, camera.far);
-
         } else {
             console.error('Raycaster: Unsupported camera type.');
         }
     },
 
-    updateMatrixWorld: function(force)
+    updateMatrixWorld(force)
     {
         Line.prototype.updateMatrixWorld.call(this, force);
         this.tmp.copy(this.start).applyMatrix4(this.matrixWorld);
@@ -183,15 +182,15 @@ Ray.prototype = Object.assign(Object.create(Line.prototype), {
         this.inv.getInverse(this.matrixWorld);
     },
 
-    upGeo: function(hit)
+    upGeo(hit)
     {
         if (!this.enabled) return;
 
         var v = this.vertices;
         var c = this.colors;
         var l = this.local;
-        var n,
-            d;
+        var n;
+        var d;
 
         if (hit) {
             this.isBase = false;
@@ -231,18 +230,16 @@ Ray.prototype = Object.assign(Object.create(Line.prototype), {
         }
     },
 
-    update: function(o)
+    update(o)
     {
         this.info.hit = o.hit;
         this.info.name = o.name || '';
         this.info.distance = 0;
 
         if (o.hit) {
-
             //this.callback( o );
 
             if (this.enabled) {
-
                 this.tmp.fromArray(o.point).applyMatrix4(this.inv);
                 var d = this.tmp.distanceTo(this.end);
                 o.distance = this.maxDistance - d;

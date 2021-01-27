@@ -34,7 +34,7 @@ let MainMenuState = function(stateManager)
             </div>
         </div>
 
-        <div class="input-group mb-1 center-block" id="play-quick">
+        <div class="input-group mb-1 center-block" id="load">
             <div class="input-group-append flex-fill">
                 <button id="button-load"
                     class="btn btn-outline-light flex-fill" type="button">Load</button>

@@ -173,7 +173,7 @@ Object.assign(SoftBody.prototype, {
 
                 break;
 
-            case 'softEllips':
+            case 'softEllipsoid':
 
                 p1.fromArray(o.center || [0, 0, 0], 0, root.invScale);
                 p2.fromArray(o.radius || [3, 3, 3], 0, root.invScale);

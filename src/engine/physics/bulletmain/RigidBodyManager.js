@@ -9,7 +9,7 @@ function RigidBodyManager()
 {
     this.ID = 0;
     this.solids = [];
-    this.bodys = [];
+    this.bodies = [];
 }
 
 Object.assign(RigidBodyManager.prototype, {
@@ -21,7 +21,7 @@ Object.assign(RigidBodyManager.prototype, {
 
         var n;
 
-        this.bodys.forEach(function(b, id)
+        this.bodies.forEach(function(b, id)
         {
             n = N + id * 8;
 
@@ -49,7 +49,7 @@ Object.assign(RigidBodyManager.prototype, {
 
     clear()
     {
-        while (this.bodys.length > 0) this.destroy(this.bodys.pop());
+        while (this.bodies.length > 0) this.destroy(this.bodies.pop());
         while (this.solids.length > 0) this.destroy(this.solids.pop());
         this.ID = 0;
     },
@@ -65,14 +65,14 @@ Object.assign(RigidBodyManager.prototype, {
         if (!map.has(name)) return;
         var b = map.get(name);
         var solid = b.type === 'solid';
-        var n = solid ? this.solids.indexOf(b) : this.bodys.indexOf(b);
+        var n = solid ? this.solids.indexOf(b) : this.bodies.indexOf(b);
 
         if (n !== -1) {
             if (solid) {
                 this.solids.splice(n, 1);
                 this.destroy(b);
             } else {
-                this.bodys.splice(n, 1);
+                this.bodies.splice(n, 1);
                 this.destroy(b);
             }
         }
@@ -343,7 +343,7 @@ Object.assign(RigidBodyManager.prototype, {
             // push
             if (mesh) {
                 if (o.mass === 0 && !o.kinematic) this.solids.push(mesh);// static
-                else this.bodys.push(mesh);// dynamic
+                else this.bodies.push(mesh);// dynamic
             }
             // send to worker
             root.post('add', o);

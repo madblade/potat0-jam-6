@@ -41,12 +41,13 @@ extend(CharacterCollisionModel.prototype, {
     collideAgainstCharacter(otherCollisionModel)
     {
         // solve character interaction
+        // self character has a special status
     },
 
     collideAgainstDynamic(otherCollisionModel)
     {
-        // 1. bump
-        // 2. apply force to other
+        // 1. bump / slide
+        // 2. apply force to other equal to self acceleration
     }
 
 });

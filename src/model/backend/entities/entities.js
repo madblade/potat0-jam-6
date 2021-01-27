@@ -345,7 +345,7 @@ extend(EntityModel.prototype, {
         this.interpolatePredictEntities();
 
         // Flush buffer.
-        this.entitiesOutdated = new Map();
+        this.entitiesOutdated.clear();
 
         // Unset dirty flag.
         this.needsUpdate = false;

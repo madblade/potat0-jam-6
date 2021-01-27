@@ -24,7 +24,7 @@ let ChunksModule = {
         const widthY = chunk.widthY;
         const px = chunk.x;
         const py = chunk.y;
-        const pz = chunk.z;
+        // const pz = chunk.z;
         const points = chunk.points;
 
         let geometry = new PlaneBufferGeometry(widthX, widthY, dimX, dimY);
@@ -36,18 +36,15 @@ let ChunksModule = {
         {
             for (let x = 0; x < dimY + 1; ++x)
             {
-                // positions[3 * i]     = x * .1;//points[i];
-                // positions[3 * i + 1] = y * .1;//points[i];
-                positions[3 * i + 2] = 0.5 * Math.sin(x / 10 + y / 10);//points[i];
-                // positions[3 * i + 2] = -2 + 0.5 * Math.exp(2 * x / dimY);//points[i];
+                positions[3 * i + 2] = points[i];
                 normals[3 * i + 2] = -1;
                 i++;
             }
         }
         geometry.computeBoundingSphere();
 
-        // const isWater = false;
-        let newMesh = this.createChunkMesh(geometry, true, true, worldId);
+        const isWater = chunk.isWater;
+        let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
         // newMesh.receiveShadow = true;
         // newMesh.rotation.set(0, 0, Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)

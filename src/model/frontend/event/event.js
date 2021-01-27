@@ -70,7 +70,7 @@ extend(EventComponent.prototype, {
         {
             let currentEvent = events[eventId];
             // connectionEngine.send(currentEvent[0], currentEvent[1]);
-            // TODO PHYSICS push events to PhysicsEngine
+            // TODO [CRIT] send proper events to PhysicsEngine, bind controller
             let physics = this.clientModel.app.engine.physics;
             physics.pushEvent(currentEvent);
         }

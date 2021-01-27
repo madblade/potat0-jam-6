@@ -78,6 +78,7 @@ extend(MadEngine.prototype, {
 
         // 5. notify new entities needing to move
         // (this copies p1 to p0 for dynamic entities)
+        // (notice! this also pushes updates to the server model)
         this.integrator.applyIntegration();
     },
 

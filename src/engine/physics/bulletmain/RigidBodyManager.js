@@ -120,8 +120,6 @@ Object.assign(RigidBodyManager.prototype, {
         var mesh = null;
         var noMesh = o.noMesh !== undefined ? o.noMesh : false;
 
-        var isDirectGeometry = false;
-
         if (o.type === 'plane') {
             //this.grid.position.set( o.pos[0], o.pos[1], o.pos[2] )
             root.post('add', o);
@@ -166,10 +164,10 @@ Object.assign(RigidBodyManager.prototype, {
 
             if (!o.geometry || o.debug) {
                 //mesh = new Group();
-                mesh.material = material;// TODO fix
+                mesh.material = material;
 
-                for (var i = 0; i < o.shapes.length; i++) {
-                    g = o.shapes[i];
+                for (let ii = 0; ii < o.shapes.length; ii++) {
+                    g = o.shapes[ii];
 
                     var geom = null;
 
@@ -191,7 +189,6 @@ Object.assign(RigidBodyManager.prototype, {
                 }
             }
         } else if (o.type === 'mesh' || o.type === 'convex') {
-            isDirectGeometry = true;
             customGeo = true;
 
             if (o.shape) {
@@ -304,8 +301,8 @@ Object.assign(RigidBodyManager.prototype, {
                         },
                         set(value)
                         {
-                            var i = this.children.length;
-                            while (i--) this.children[i].receiveShadow = value;
+                            let ii = this.children.length;
+                            while (ii--) this.children[ii].receiveShadow = value;
                         }
                     });
 
@@ -316,8 +313,8 @@ Object.assign(RigidBodyManager.prototype, {
                         },
                         set(value)
                         {
-                            var i = this.children.length;
-                            while (i--) this.children[i].castShadow = value;
+                            let ii = this.children.length;
+                            while (ii--) this.children[ii].castShadow = value;
                         }
                     });
 

@@ -39,8 +39,7 @@ Game.Core = function()
 
     // Engine manages client-side rendering, audio, inputs/outputs
     this.engine = {
-        // TODO loader & splash screen.
-        // TODO remove FPS support.
+        // TODO level transition & splash screen.
         // TODO remove chunks and put heightmaps instead.
         graphics:     new Graphics(this),
         audio:        new Audio(this),
@@ -55,11 +54,11 @@ Game.Core = function()
     // Model buffers server and client objects
     this.model = {
         levels:       new Levels(this),
-        backend:      new BackEnd(this), // TODO use existing model (or spix’s) here instead of loading & buffers
+        backend:      new BackEnd(this),
+        // TODO use existing model (or spix’s) here instead of loading & buffers
         // TODO refactor chunks into heightmaps.
         // TODO remove interpolation.
         // TODO remove consistency loader entirely. Every level will be in memory.
-        // TODO remove x map, Tree, x path.
         frontend:     new FrontEnd(this),
     };
 

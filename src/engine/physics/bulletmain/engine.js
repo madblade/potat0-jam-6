@@ -336,7 +336,7 @@ extend(AmmoWrapper.prototype, {
 
     sendData(stamp)
     {
-        // TODO bench here
+        // XXX [LOW] Graphics
         // console.log(engine.getFps());
         if (this.isInternUpdate) return;
 

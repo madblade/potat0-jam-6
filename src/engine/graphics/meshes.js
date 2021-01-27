@@ -54,7 +54,7 @@ let MeshesModule = {
 
     loadReferenceMeshes()
     {
-        // TODO LOAD here animated meshes (morphed or skinned)
+        // TODO [GRAPHICS] LOAD here animated meshes (morphed or skinned)
         this.referenceMeshes = new Map();
         let meshesToLoad = [
             // 'portal-gun',

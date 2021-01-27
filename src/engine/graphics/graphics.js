@@ -36,7 +36,7 @@ let Graphics = function(app)
     this.app = app;
 
     // User customizable settings.
-    this.settings = {}; // TODO populate settings
+    this.settings = {}; // TODO [HIGH] bind graphics settings
     this.debug = false;
 
     // Properties.

@@ -16,7 +16,7 @@ let TexturesModule = {
     {
         this._nbTexturesToLoad = 1;
 
-        // TODO LOAD here textures.
+        // TODO [GRAPHICS] LOAD here textures.
         // this.textureAtlas = this.loadTextureAtlas('3.jpg');
         // this.textureCoordinates = this.getTextureCoordinates('minecraft>1.5');
 

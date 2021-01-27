@@ -69,14 +69,18 @@ extend(Collider.prototype, {
     collideTerrain()
     {
         const entitiesNeedingToMove = this.sweeper.entitiesNeedingToMove;
-        const heightMaps = this.sweeper.heightMaps;
+        // const heightMaps = this.sweeper.heightMaps;
+        // const heightMapSize = this.sweeper.defaultHeightMapWidth;
         entitiesNeedingToMove.forEach(e => {
             const cm = e.collisionModel;
             // skip entities that are already on ground
             if (cm.onGround) return;
 
-            const p1 = cm.p1;
-            // TODO
+            // const p1 = cm.p1;
+            // const x = p1.x;
+            // const y = p1.y;
+            // const i = x / heightMapWidth;
+            // TODO [CRIT] terrain
             // 1. Find heightmaps by coordinates.
             // 2. Compute heightmap(s) patches.
             // 3. Collide against patch(es).
@@ -101,22 +105,13 @@ extend(Collider.prototype, {
         // (e.g. projectile)
         // (e.g. adversary)
         {
-            // TODO
-            // 1. Intersect sphere to object
-            // 2. if intelligent, compute onGround property.
-            //      if onGround, compute ground normal.
-            // 3. else, if intersects
-
-            // CAREFUL: if any static entity is removed,
-            // all dynamic entities should be reset: onGround = false
-            // to prevent them from floating.
+            dynamicEntityCM.collideAgainstStatic(staticEntityCM);
             return;
         }
         if (dynamicEntityCM.isCharacter)
+        // e.g. sphere, cylinder, trimesh, box, static platform
         {
-            console.log('Collide character against static object.');
             dynamicEntityCM.collideAgainstStatic(staticEntityCM);
-            // e.g. vs sphere, vs cylinder, vs trimesh, vs box, vs static platform
         }
     },
 
@@ -207,8 +202,8 @@ extend(Collider.prototype, {
         }
     },
 
-    // From Christer Ericson’s Handbook, using barycentric coordinates.
-    // Could be optimised by checking center first (as is done in Bullet)
+    // From Christer Ericson’s handbook, using barycentric coordinates.
+    // Could be optimised by checking V1V2V3 region first (as is done in Bullet)
     // if the triangle is big, compared to the sphere radius.
     getClosestPointInTri(c, v1, v2, v3)
     {

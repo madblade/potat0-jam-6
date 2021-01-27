@@ -32,22 +32,40 @@ extend(CharacterCollisionModel.prototype, {
 
     collideAgainstStatic(otherCollisionModel)
     {
-        // TODO
+        console.log('Collide character against static object.');
+        // TODO [CRIT] bumper-lifter
         // 1. bump // to gravity
+        //      (not allowed to move farther up or down than what was
+        //       predicted, including jump.
+        //       check point-sphere collision routine to clamp the projected byproduct)
         // 2. lift |- to gravity
+        //      (not allowed to go sideways,
+        //       only up and down until height collision.
+        //       check and customize point-sphere collision routine)
         // 3. test onGround
+        //      (double raycast + IK)
+        //      if onGround, compute onGround normal
     },
 
     collideAgainstCharacter(otherCollisionModel)
     {
         // solve character interaction
-        // self character has a special status
+        // maybe we can afford a little bit of terrain penetration, test that:
+
+        // 1. self character has a special status: more responsive
+        // 2. if other entity is heavier, push self
+        //    (going back to between p0 and p1 would mean solving a quadratic eqn)
+        // 3. if other entity is lighter, just ignore/apply a force to it.
+        // 4. if other entity is lighter AND main character, don’t move self from
+        //      desired output, move main character away from penetration instead
+        //      (except if coming from up, e.g. skydiving)
     },
 
     collideAgainstDynamic(otherCollisionModel)
     {
         // 1. bump / slide
         // 2. apply force to other equal to self acceleration
+        // Same as collide against character, guessing.
     }
 
 });

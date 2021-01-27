@@ -23,12 +23,12 @@ extend(Checkpoint.prototype, {
 
     copyLevelState()
     {
-        // TODO copy level state
+        // TODO [HIGH] copy level state
     },
 
     copyPlayerState()
     {
-        // TODO copy player state
+        // TODO [HIGH] copy player state
     },
 
 });

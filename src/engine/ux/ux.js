@@ -20,7 +20,7 @@ let UX = function(app)
 };
 
 extend(UX.prototype, {
-    // TODO manage level loading, saves, difficulty here.
+    // TODO [HIGH] manage level loading, saves, difficulty here.
 
     startNewGame()
     {
@@ -73,7 +73,7 @@ extend(UX.prototype, {
 
         const status = this.configureLevel(level);
         if (!status) return;
-        // TODO copy level state from checkpoint.
+        // TODO [HIGH] copy level state from checkpoint.
 
         this.app.runGame();
     },

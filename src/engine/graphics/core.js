@@ -115,7 +115,8 @@ let CoreModule = {
         let clientModel = this.app.model.frontend;
         let serverModel = this.app.model.backend;
         let controlsEngine = this.app.engine.controls;
-        let physicsEngie = this.app.engine.physics;
+        let physicsEngine = this.app.engine.physics;
+        let aiEngine = this.app.engine.ai;
 
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
@@ -130,9 +131,11 @@ let CoreModule = {
         // }
         this.fps.update();
 
+        // Ping AI
+        aiEngine.refresh();
+
         // Force standalone update at animanionframe
-        // TODO ping IA.
-        physicsEngie.refresh();
+        physicsEngine.refresh();
 
         // Bench.
         // this.fps.update();
@@ -163,9 +166,9 @@ let CoreModule = {
         rendererManager.render(sceneManager, cameraManager, portals);
     },
 
+    // Old method to ping bundled server.
     pingStandalone()
     {
-        // TODO PHYSICS update here… ?
         let standalone = this.app.standalone;
         if (!standalone) return;
         let server = standalone.server;

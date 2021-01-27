@@ -124,7 +124,7 @@ let SkyModule = {
         return sunDirection;
     },
 
-    // TODO [SKY] Bind sun to model.
+    // TODO [GAMEPLAY] Bind sun to model.
     updateSunPosition(camera, skyObject, worldId)
     {
         let sky = skyObject.mesh;

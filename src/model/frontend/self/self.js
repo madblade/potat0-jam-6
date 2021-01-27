@@ -174,7 +174,7 @@ extend(SelfComponent.prototype, {
     processInteractionChange(data)
     {
         const allowRoll = false;
-        if (!allowRoll) return; // TODO here process changes
+        if (!allowRoll) return;
         let graphicsEngine = this.clientModel.app.engine.graphics;
         let register = this.clientModel.app.register;
         let actionType = data[0];

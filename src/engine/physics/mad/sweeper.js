@@ -77,9 +77,8 @@ extend(Sweeper.prototype, {
 
     insertObject()//entity)
     {
-        // TODO dichotomy insert
         // 1. dichotomy insert
-        // 2. displacement right
+        // 2. displacement right on all axes
     },
 
     reserveEntityId()
@@ -344,8 +343,7 @@ extend(Sweeper.prototype, {
     movePhysicsEntity(entity)
     {
         this.anEntityNeedsToMove(entity);
-        // TODO [Physics] notify here when entities should move.
-        //  (force or want movement)
+        // TODO [PHYSICS] notify here when entities should move (force or want movement)
     },
 });
 

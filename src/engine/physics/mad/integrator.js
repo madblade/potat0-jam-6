@@ -110,7 +110,7 @@ extend(Integrator.prototype, {
         // Apply to sweeper model.
         this.sweeper.updateOrderedArraysAfterMove(entity.entityId);
 
-        // TODO notify server model.
+        // TODO [PHYSICS] notify server model.
     }
 
 });

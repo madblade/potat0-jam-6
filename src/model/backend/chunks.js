@@ -129,10 +129,14 @@ extend(ChunkModel.prototype, {
         const chunkId = `${chunk.x},${chunk.y},${chunk.z}`;
         let chk = world.get(chunkId);
         if (chk)
+        {
             chk.meshes.push(graphicalChunk);
+            chk.water.push(chunk.isWater); // shouldn’t be needed if water.z === 0 all the time
+        }
         else
-            // world.set(chunkId, { meshes: [graphicalChunk], water: [false] });
-            world.set(chunkId, { meshes: [graphicalChunk], water: [true] });
+        {
+            world.set(chunkId, { meshes: [graphicalChunk], water: [chunk.isWater] });
+        }
 
         // Notify physics engine.
         let physics = this.app.engine.physics;

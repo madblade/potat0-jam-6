@@ -5,8 +5,9 @@
 'use strict';
 
 import {
-    VertexColors, FrontSide,
-    MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, DoubleSide
+    FrontSide,
+    DoubleSide,
+    MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshToonMaterial, LuminanceFormat, NearestFilter, DataTexture,
 } from 'three';
 
 let MaterialsModule = {
@@ -21,12 +22,34 @@ let MaterialsModule = {
                 material = new MeshPhongMaterial({
                     specular: 0xffffff,
                     flatShading: true,
-                    // side: DoubleSide,
-                    vertexColors: VertexColors,
                     color: meta && meta.color ? meta.color : null,
-                    // transparent: true,
-                    // opacity: 1
                 });
+                break;
+            case 'smooth-phong':
+                material = new MeshPhongMaterial({
+                    specular: 0xffffff,
+                    emissive: 0x000000,
+                    side: FrontSide,
+                    color: meta && meta.color ? meta.color : null,
+                });
+                material.receiveShadow = true;
+                break;
+            case 'toon':
+                const nbColors = meta.nbColors;
+                const colors = new Uint8Array(nbColors);
+                for (let c = 0; c <= colors.length; ++c) {
+                    colors[c] = (c / colors.length) * 256;
+                }
+                const gradientMap = new DataTexture(colors, colors.length, 1, LuminanceFormat);
+                gradientMap.minFilter = NearestFilter;
+                gradientMap.magFilter = NearestFilter;
+                gradientMap.generateMipmaps = false;
+                material = new MeshToonMaterial({
+                    side: FrontSide,
+                    color: meta && meta.color ? meta.color : null,
+                    gradientMap
+                });
+                material.receiveShadow = true;
                 break;
 
             case 'textured-phong':
@@ -39,8 +62,6 @@ let MaterialsModule = {
                         map: this.textureAtlas,
                         transparent: false
                     };
-                    // if (this.rendererManager.shadowVolumes)
-                    //     params.transparent = true;
 
                     material = new MeshLambertMaterial(params);
                     let materials = [material]; // 0 -> material for main cam
@@ -87,14 +108,11 @@ let MaterialsModule = {
                 });
                 break;
             case 'grey-phong-double':
-                console.log('grey');
                 material = new MeshPhongMaterial({
                     specular: 0xaaaaaa,
                     flatShading: true,
                     side: DoubleSide,
                     color: meta && meta.color ? meta.color : null,
-                    // transparent: true,
-                    // opacity: 1
                 });
                 break;
 
@@ -102,7 +120,6 @@ let MaterialsModule = {
                 material = new MeshBasicMaterial({
                     color:0xff0000
                 });
-                console.log(meta);
         }
 
         return material;

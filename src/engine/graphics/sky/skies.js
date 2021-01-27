@@ -83,9 +83,11 @@ let SkyModule = {
         {
             sky = this.createFlatSky(worldId);
             this.addToScene(sky.mesh, worldId);
-            this.addToScene(sky.lights.hemisphereLight, worldId);
+            // this.addToScene(sky.lights.hemisphereLight, worldId);
             this.addToScene(sky.lights.directionalLight, worldId);
-            // this.addToScene(sky.lights.ambientLight, worldId);
+            // this.addToScene(sky.lights.directionalLight.target);
+            // this.addToScene(new DirectionalLightHelper(sky.lights.directionalLight));
+            this.addToScene(sky.lights.ambientLight, worldId);
 
             this.updateSky(
                 sky,
@@ -183,11 +185,12 @@ let SkyModule = {
         let hl = skyObject.lights.hemisphereLight;
         let dl = skyObject.lights.directionalLight;
 
-        hl.position.copy(normSunPosition);
+        hl.position.copy(normSunPosition); // I think I can remove this light.
         dl.position.copy(normSunPosition).multiplyScalar(60);
 
         if (isWorldFlat && camPosition && this.hasShadowMap())
         {
+            // re-center the light so that the shadow map does not clip
             let dp = dl.position;
             dp.set(
                 dp.x + camPosition.x,

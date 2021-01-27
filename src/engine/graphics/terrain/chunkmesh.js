@@ -48,8 +48,7 @@ let ChunksMeshModule = {
         {
             // let c = '#3e94d7';
             let material = this.createMaterial(
-                // 'textured-phong', 0xaaaaaa, worldId
-                'grey-phong-double', 0xaaaaaa, worldId
+                'toon', { color: 0x11ee11, nbColors: 10 }, worldId
             );
             return new Mesh(geometry, material);
         }

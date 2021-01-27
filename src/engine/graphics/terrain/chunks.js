@@ -29,7 +29,7 @@ let ChunksModule = {
 
         let geometry = new PlaneBufferGeometry(widthX, widthY, dimX, dimY);
         let positions = geometry.attributes.position.array;
-        let normals = geometry.attributes.normal.array;
+        // let normals = geometry.attributes.normal.array;
 
         let i = 0;
         for (let y = 0; y < dimX + 1; ++y)
@@ -37,11 +37,11 @@ let ChunksModule = {
             for (let x = 0; x < dimY + 1; ++x)
             {
                 positions[3 * i + 2] = points[i];
-                normals[3 * i + 2] = -1;
                 i++;
             }
         }
         geometry.computeBoundingSphere();
+        geometry.computeVertexNormals();
 
         const isWater = chunk.isWater;
         let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);

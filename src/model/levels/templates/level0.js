@@ -10,16 +10,20 @@ let Level0 = function(title)
 
     let chunks = new Map();
     let points = [];
-    for (let j = 0; j < 32 + 1; ++j)
-        for (let i = 0; i < 32 + 1; ++i)
-            // points.push(0.5 * Math.sin(i / 10 + j / 10));
-            points.push(0.);
+    const dimX = 32;
+    const dimY = 32;
+    for (let j = 0; j < dimX + 1; ++j)
+        for (let i = 0; i < dimY + 1; ++i)
+            points.push(
+                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+            );
+            // points.push(0.);
 
     chunks.set('0,0', {
         x: 0, y: 0, z: 0,
-        dimX: 32, dimY: 32,
+        dimX, dimY,
         widthX: 10, widthY: 10,
-        points, isWater: true
+        points, isWater: false
     });
 
     this.terrain = {

@@ -46,26 +46,22 @@ Level0.prototype = Object.assign(Object.create(Level.prototype), {
 
     getTerrain() {
         console.log('[Model/Level0] TODO Get level terrain.');
-        // TODO level design
         return this.terrain;
     },
 
     getObjects() {
         console.log('[Model/Level0] TODO Get level objects.');
-        // TODO game design
         return this.objects;
     },
 
     getPlayer()
     {
         console.log('[Model/Level0] TODO Get player state.');
-        // TODO level design
         return this.player;
     },
 
     getScenario() {
         console.log('[Model/Level0] Scenario.');
-        // TODO writing
     },
 
 });

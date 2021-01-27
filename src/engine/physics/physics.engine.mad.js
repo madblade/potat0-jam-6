@@ -64,6 +64,7 @@ extend(MadEngine.prototype, {
         this.sweeper.refreshEntitiesNeedingMovement();
 
         // 1. integrate objects needing to move
+        // (this sets p1 for all dynamic entities)
         this.integrator.integrateMovement(relativeDt);
 
         // 2. detect collisions
@@ -76,6 +77,7 @@ extend(MadEngine.prototype, {
         this.collider.collideTerrain();
 
         // 5. notify new entities needing to move
+        // (this copies p1 to p0 for dynamic entities)
         this.integrator.applyIntegration();
     },
 

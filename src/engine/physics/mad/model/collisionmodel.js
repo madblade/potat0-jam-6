@@ -17,10 +17,14 @@ let CollisionModel = function(physicsEntity, collisionSettings)
     this.isStatic = collisionSettings.static;
     this.isIntelligent = collisionSettings.intelligent;
 
+    // Collision essentials
     this.position = physicsEntity.center;
+
+    // Dynamic object
     if (!this.isStatic)
     {
         this.onGround = false;
+        this.groundNormal = new Vector3();
         this.wantsToMove = false; // characters and IAs
         this.isSubjectToContinuousForce = false; // non-gravity forces
 
@@ -40,6 +44,14 @@ let CollisionModel = function(physicsEntity, collisionSettings)
         this.maxSpeedInAir = 1.0;
         this.maxSpeedInWater = 0.5;
     }
+
+    // Type
+    this.isSphere = false;
+    this.isCharacter = false;
+    this.isCylinder = false;
+    this.isTrimesh = false;
+    this.isPlatform = false;
+    this.isBox = false;
 };
 
 extend(CollisionModel.prototype, {

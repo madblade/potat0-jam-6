@@ -25,6 +25,15 @@ let Collider = function(sweeper)
 
 extend(Collider.prototype, {
 
+    // Reset onGround property if a static needs to be removed at any time
+    atLeastOneStaticEntityWasMoved()
+    {
+        const dynamicEntities = this.sweeper.dynamicEntities;
+        dynamicEntities.forEach(e => {
+            e.collisionModel.onGround = false;
+        });
+    },
+
     collidePairs()
     {
         let pairs = this.sweeper.potentialCollidingPairs;
@@ -37,7 +46,7 @@ extend(Collider.prototype, {
             const id2 = parseInt(ids[1], 10);
             const entity1 = entities[id1];
             const entity2 = entities[id2];
-            this.collidePairs(entity1, entity2);
+            this.collidePair(entity1, entity2);
         });
     },
 
@@ -59,20 +68,69 @@ extend(Collider.prototype, {
 
     collideTerrain()
     {
+        const entitiesNeedingToMove = this.sweeper.entitiesNeedingToMove;
+        const heightMaps = this.sweeper.heightMaps;
+        entitiesNeedingToMove.forEach(e => {
+            const cm = e.collisionModel;
+            // skip entities that are already on ground
+            if (cm.onGround) return;
+
+            const p1 = cm.p1;
+            // TODO
+            // 1. Find heightmaps by coordinates.
+            // 2. Compute heightmap(s) patches.
+            // 3. Collide against patch(es).
+            // 4. Compute onGround property.
+            //      if on ground, compute terrain normal.
+        });
     },
 
-    collideStaticToDynamic(staticEntity, dynamicEntity)
+    collideStaticToDynamic(staticEntityCM, dynamicEntityCM)
     {
-        // (Only dynamic spheres are supported).
-        // TODO cylinder
-        // TODO sphere
-        // TODO trimesh
-        // TODO box
+        // (Only dynamic spheres/characters are supported).
+        if (!dynamicEntityCM.isSphere && !dynamicEntityCM.isCharacter)
+        {
+            console.warn(
+                `[Mad] Only spheres and characters
+                can interact with statics:
+                ${dynamicEntityCM.isPlatform ? 'platform' : dynamicEntityCM}.`
+            );
+            return;
+        }
+        if (dynamicEntityCM.isSphere)
+        // (e.g. projectile)
+        // (e.g. adversary)
+        {
+            // TODO
+            // 1. Intersect sphere to object
+            // 2. if intelligent, compute onGround property.
+            //      if onGround, compute ground normal.
+            // 3. else, if intersects
+
+            // CAREFUL: if any static entity is removed,
+            // all dynamic entities should be reset: onGround = false
+            // to prevent them from floating.
+            return;
+        }
+        if (dynamicEntityCM.isCharacter)
+        {
+            console.log('Collide character against static object.');
+            dynamicEntityCM.collideAgainstStatic(staticEntityCM);
+            // e.g. vs sphere, vs cylinder, vs trimesh, vs box, vs static platform
+        }
     },
 
-    collideDynamicToDynamic(entity1, entity2)
+    // Gameplay might go here!
+    collideDynamicToDynamic(entity1CM, entity2CM)
     {
-        // TODO gameplay here
+        if (entity1CM.isCharacter && entity2CM.isCharacter)
+            return entity1CM.collideAgainstCharacter(entity2CM);
+        if (entity1CM.isSphere && entity2CM.isSphere)
+            return entity1CM.collideToSphere(entity2CM);
+        if (entity1CM.isCharacter)
+            return entity1CM.collideAgainstDynamic(entity2CM);
+        if (entity2CM.isCharacter)
+            return entity2CM.collideAgainstDynamic(entity1CM);
     },
 
     // Internal routines

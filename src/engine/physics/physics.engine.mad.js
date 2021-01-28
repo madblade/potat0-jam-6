@@ -9,13 +9,14 @@
 
 'use strict';
 
-import extend            from '../../extend';
-import { Sweeper }       from './mad/sweeper';
-import { Collider }      from './mad/collider';
-import { Integrator }    from './mad/integrator';
-import { PhysicsEntity } from './mad/entity';
-import TimeUtils         from './mad/time';
-import { Vector3 }       from 'three';
+import extend             from '../../extend';
+import { Sweeper }        from './mad/sweeper';
+import { Collider }       from './mad/collider';
+import { Integrator }     from './mad/integrator';
+import { PhysicsEntity }  from './mad/entity';
+import TimeUtils          from './mad/time';
+import { Vector3 }        from 'three';
+import { HeightMapModel } from './mad/model/terrain';
 
 let MadEngine = function(physics)
 {
@@ -40,11 +41,36 @@ extend(MadEngine.prototype, {
         this.sweeper.reorderObjects();
     },
 
-    // Only fixed-width height maps supported
+    // Only fixed-width height maps supported.
+    // heightMapOptions format:
+    //      nbSegmentsX, nbSegmentsY
+    //      threeMesh (!!! Z === 0, to change elevation, change attributes!)
+    //      heightBuffer
+    //      analyticExpression
     addHeightMap(i, j, heightMapOptions)
     {
         const heightMaps = this.sweeper.heightMaps;
         const id = `${i},${j}`;
+
+        const nbVerticesX = heightMapOptions.nbSegmentsX + 1;
+        const nbVerticesY = heightMapOptions.nbSegmentsY + 1;
+        const newMap = new HeightMapModel(i, j, nbVerticesX, nbVerticesY);
+
+        if (heightMapOptions.threeMesh)
+        {
+            newMap.isTrimeshMap = true;
+            newMap.setData(heightMapOptions.threeMesh);
+        }
+        else if (heightMapOptions.heightBuffer)
+        {
+            newMap.isHeightBuffer = true;
+            newMap.setData(heightMapOptions.heightBuffer);
+        }
+        else if (heightMapOptions.analyticExpression)
+        {
+            newMap.isAnalytic = true;
+            newMap.setData(heightMapOptions.analyticExpression);
+        }
 
         // push into height maps model
         let hm = heightMaps.get(id);
@@ -53,7 +79,7 @@ extend(MadEngine.prototype, {
             hm = [];
             heightMaps.set(id, hm);
         }
-        hm.push();
+        hm.push(newMap);
     },
 
     // collisionModelSettings:

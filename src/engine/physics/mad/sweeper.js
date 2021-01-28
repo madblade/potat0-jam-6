@@ -26,7 +26,7 @@ let Sweeper = function(physics)
 
     // Height maps are horizontal (up=+Z) by default.
     this.heightMaps = new Map();
-    this.heightMapSideWidth = HeightMapConstants.DEFAULT_WIDTH;
+    this.heightMapSideWidth = HeightMapConstants.DEFAULT_EXTENT;
     // x,y => array of height maps in the current chunk
 
     // Engine internals.

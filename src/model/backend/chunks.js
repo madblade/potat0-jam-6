@@ -123,9 +123,12 @@ extend(ChunkModel.prototype, {
 
     loadChunkFromLevel(chunk, worldId, world)
     {
+        // Add to graphics.
         let graphics = this.app.engine.graphics;
         let graphicalChunk = graphics.createChunkFromLevel(chunk, worldId);
         graphics.addToScene(graphicalChunk, worldId);
+
+        // Add to model.
         const chunkId = `${chunk.x},${chunk.y},${chunk.z}`;
         let chk = world.get(chunkId);
         if (chk)
@@ -138,7 +141,7 @@ extend(ChunkModel.prototype, {
             world.set(chunkId, { meshes: [graphicalChunk], water: [chunk.isWater] });
         }
 
-        // Notify physics engine.
+        // Add to physics.
         let physics = this.app.engine.physics;
         physics.addHeightMap(graphicalChunk);
     },

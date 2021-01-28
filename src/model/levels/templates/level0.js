@@ -11,13 +11,15 @@ let Level0 = function(title)
 
     let chunks = new Map();
     let points = [];
-    const dimX = 32;
-    const dimY = 32;
+    const nbSegmentsX = 32;
+    const nbSegmentsY = 32;
+    const nbVerticesX = nbSegmentsX + 1;
+    const nbVerticesY = nbSegmentsY + 1;
+    const widthX = HeightMapConstants.DEFAULT_EXTENT;
+    const widthY = HeightMapConstants.DEFAULT_EXTENT;
 
-    const widthX = HeightMapConstants.DEFAULT_WIDTH;
-    const widthY = HeightMapConstants.DEFAULT_WIDTH;
-    for (let j = 0; j < dimX + 1; ++j)
-        for (let i = 0; i < dimY + 1; ++i)
+    for (let j = 0; j < nbVerticesX; ++j)
+        for (let i = 0; i < nbVerticesY; ++i)
             points.push(
                 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
@@ -25,7 +27,7 @@ let Level0 = function(title)
 
     chunks.set('0,0', {
         x: 0, y: 0, z: 0,
-        dimX, dimY,
+        nbSegmentsX, nbSegmentsY,
         widthX, widthY,
         points, isWater: false
     });

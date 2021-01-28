@@ -7,7 +7,7 @@
 import extend      from '../../../extend';
 import { Vector3 } from 'three';
 
-const EPS = 0.000001;
+const COLLISION_EPS = 0.000001;
 
 let Collider = function(sweeper)
 {
@@ -96,9 +96,9 @@ extend(Collider.prototype, {
             }
 
             // 2. Collide.
-            const offsetX = x - (i - .5) * heightMapWidth;
-            const offsetY = y - (j - .5) * heightMapWidth;
-            cm.collideAgainstTerrain(offsetX, offsetY, hms, this);
+            const localX = x - (i - .5) * heightMapWidth;
+            const localY = y - (j - .5) * heightMapWidth;
+            cm.collideAgainstTerrain(localX, localY, hms, this);
         });
     },
 
@@ -164,7 +164,7 @@ extend(Collider.prototype, {
         // 2. Check distance
         const displacement = this._w5;
         const distToClosest2 = cToClosest.lengthSq();
-        if (distToClosest2 > radiusSquared + EPS)
+        if (distToClosest2 > radiusSquared + COLLISION_EPS)
         // adding EPS to a squared distance… hopefully this goes well.
         // it saves a bunch of sqrt calls so that can’t be bad
         {
@@ -181,7 +181,7 @@ extend(Collider.prototype, {
             // outside: pull back by the penetration amount.
             displacement.copy(cToClosest)
                 .normalize()
-                .multiplyScalar(distToClosest - radius - EPS);
+                .multiplyScalar(distToClosest - radius - COLLISION_EPS);
             return displacement;
         }
         else // inside face: slide along normal
@@ -191,7 +191,7 @@ extend(Collider.prototype, {
             const v1v3 = this._w2; // allocated by getClosestPointInTri!
             normal.copy(v1v2).cross(v1v3);
             const l2 = normal.length();
-            if (l2 >= EPS) // hmm… I don’t like using the same EPS here.
+            if (l2 >= COLLISION_EPS) // hmm… I don’t like using the same EPS here.
             {
                 normal.multiplyScalar(1. / l2); // normalized
                 let projection1 = normal.dot(cToClosest);
@@ -208,7 +208,7 @@ extend(Collider.prototype, {
 
                 // Move along normal by virtue of the great Thales
                 // (and add EPS for good measure)
-                displacement.copy(normal).multiplyScalar(projection2 - projection1 + EPS);
+                displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
             }
 
             return displacement;
@@ -290,4 +290,4 @@ extend(Collider.prototype, {
 
 });
 
-export { Collider };
+export { Collider, COLLISION_EPS };

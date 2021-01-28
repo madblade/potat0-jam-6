@@ -110,6 +110,9 @@ extend(Integrator.prototype, {
         // Apply to sweeper model.
         this.sweeper.updateOrderedArraysAfterMove(entity.entityId);
 
+        // Update collision model (aabb centers)
+        cm.updateCollisionModelAfterMovement();
+
         // TODO [PHYSICS] notify server model.
     }
 

@@ -18,23 +18,22 @@ let ChunksModule = {
 
     createChunkFromLevel(chunk, worldId)
     {
-        const dimX = chunk.dimX;
-        const dimY = chunk.dimY;
+        const nbSegmentsX = chunk.nbSegmentsX;
+        const nbSegmentsY = chunk.nbSegmentsY;
         const widthX = chunk.widthX;
         const widthY = chunk.widthY;
         const px = chunk.x;
         const py = chunk.y;
-        // const pz = chunk.z;
         const points = chunk.points;
-
-        let geometry = new PlaneBufferGeometry(widthX, widthY, dimX, dimY);
+        let geometry = new PlaneBufferGeometry(widthX, widthY, nbSegmentsX, nbSegmentsY);
         let positions = geometry.attributes.position.array;
-        // let normals = geometry.attributes.normal.array;
 
         let i = 0;
-        for (let y = 0; y < dimX + 1; ++y)
+        const nbVerticesX = nbSegmentsX + 1;
+        const nbVerticesY = nbSegmentsY + 1;
+        for (let y = 0; y < nbVerticesY; ++y)
         {
-            for (let x = 0; x < dimY + 1; ++x)
+            for (let x = 0; x < nbVerticesX; ++x)
             {
                 positions[3 * i + 2] = points[i];
                 i++;
@@ -45,7 +44,7 @@ let ChunksModule = {
 
         const isWater = chunk.isWater;
         let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
-        // newMesh.receiveShadow = true;
+        if (!isWater) newMesh.receiveShadow = true;
         // newMesh.rotation.set(0, 0, Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)
         return newMesh;

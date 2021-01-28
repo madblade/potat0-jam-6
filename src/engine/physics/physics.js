@@ -47,7 +47,9 @@ extend(Physics.prototype, {
         // XXX Uncomment here to bench bullet physics
         console.log(`[Physics] Should add ${graphicalChunk}.`);
         // this.bulletEngine.addHeightMap(graphicalChunk);
-        // this.madEngine.addHeightMap(graphicalChunk);
+        this.madEngine.addHeightMap(0, 0, {
+            threeMesh: graphicalChunk
+        });
     },
 
     pushEvent(e)

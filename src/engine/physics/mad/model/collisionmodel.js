@@ -85,6 +85,11 @@ extend(CollisionModel.prototype, {
         );
     },
 
+    updateCollisionModelAfterMovement()
+    {
+        console.warn('[CollisionModel]: cannot move an abstract model.');
+    },
+
     setGravity(g)
     {
         if (this.isStatic)

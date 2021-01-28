@@ -162,9 +162,25 @@ extend(Sweeper.prototype, {
 
     addPhysicsEntity(entity)
     {
+        assert(typeof entity === 'number', '[Sweeper] entity id typecast failed.');
+
         this.physicsEntities[entity.entityId] = entity;
-        // [PERF] don’t sort again, just insert.
+        // Don’t sort again, just insert.
         this.insertObject(entity);
+
+        if (!entity.collisionModel.isStatic)
+            this.dynamicEntities.add(entity);
+    },
+
+    addPhysicsEntityWithoutSorting(entity)
+    {
+        assert(typeof entity === 'number', '[Sweeper] entity id typecast failed.');
+
+        this.physicsEntities[entity.entityId] = entity;
+        this.orderedObjectsByX.push(entity);
+        this.orderedObjectsByY.push(entity);
+        this.orderedObjectsByZ.push(entity);
+
         if (!entity.collisionModel.isStatic)
             this.dynamicEntities.add(entity);
     },

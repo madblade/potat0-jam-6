@@ -101,6 +101,21 @@ extend(MadEngine.prototype, {
         this.sweeper.movePhysicsEntity(entity);
     },
 
+    loadEntities(entities) // Must be called after the player was loaded
+    {
+        entities.forEach(entity => {
+            this.loadEntityWithoutSorting(entity);
+        });
+
+        // Compute aabbs indices.
+        this.sweeper.reorderObjects();
+    },
+
+    loadEntityWithoutSorting(entity)
+    {
+        this.sweeper.addPhysicsEntityWithoutSorting(entity);
+    },
+
     solve()
     {
         // Compute adaptive time step.

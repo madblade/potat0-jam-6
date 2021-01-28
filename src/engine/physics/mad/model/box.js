@@ -20,10 +20,6 @@ extend(BoxCollisionModel.prototype, {
         this.computeAABBHalf();
     },
 
-    collideTo(otherCollisionModel)
-    {
-    }
-
 });
 
 export { BoxCollisionModel };

@@ -24,10 +24,6 @@ extend(PlatformCollisionModel.prototype, {
         this.computeAABBHalf();
     },
 
-    collideTo(otherCollisionModel)
-    {
-    }
-
 });
 
 export { PlatformCollisionModel };

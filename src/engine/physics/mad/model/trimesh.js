@@ -34,10 +34,6 @@ extend(TrimeshCollisionModel.prototype, {
         this.computeAABBHalf();
     },
 
-    collideTo(otherCollisionModel)
-    {
-    }
-
 });
 
 export { TrimeshCollisionModel };

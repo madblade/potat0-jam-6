@@ -30,10 +30,6 @@ extend(CylinderCollisionModel.prototype, {
         this.computeAABBHalf();
     },
 
-    collideTo(otherCollisionModel)
-    {
-    }
-
 });
 
 export { CylinderCollisionModel };

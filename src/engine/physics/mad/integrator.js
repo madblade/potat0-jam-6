@@ -107,6 +107,12 @@ extend(Integrator.prototype, {
         cm.velocity1.set(0, 0, 0);
         cm.accelera1.set(0, 0, 0);
 
+        if (cm.isCharacter)
+        {
+            cm.wasLifted = false;
+            cm.wasLiftedByAStaticObject = false;
+        }
+
         // Apply to sweeper model.
         this.sweeper.updateOrderedArraysAfterMove(entity.entityId);
 

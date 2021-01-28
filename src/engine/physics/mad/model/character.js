@@ -35,16 +35,25 @@ extend(CharacterCollisionModel.prototype, {
         // if character is crouching, update
     },
 
+    // XXX [LOW] support infinite terrain patches
     collideAgainstTerrain(offsetX, offsetY, heightmaps, collider)
     {
-        // XXX [LOW] support infinite terrain patches
+        for (let i = 0; i < heightmaps.length; ++i)
+            this.collideAgainstHeightMap(offsetX, offsetY, heightmaps[i], collider);
+    },
 
-        // 1. Compute heightmap(s) patches.
+    collideAgainstHeightMap()
+    {
+        // 1. Bump.
+        // Compute heightmap patch.
+        // Compute max and min height.
+        // Collide bump: min / max height opti, collide, clamp correction.
 
-        // 3. Collide against patch(es).
-
-        // 4. Compute onGround property.
-        //      if on ground, compute terrain normal.
+        // 2. Lift.
+        // maxLift = lifter radius
+        // constrain vertical lift
+        // Compute onGround
+        // if onGround, raycast IKs
     },
 
     collideAgainstStatic(otherCollisionModel)
@@ -52,7 +61,7 @@ extend(CharacterCollisionModel.prototype, {
         console.log('Collide character against static object.');
         // TODO [CRIT] bumper-lifter
         // 1. bump // to gravity
-        //      (not allowed to move farther up or down than what was
+        //      (not allowed to move farther X, Y, Z than what was
         //       predicted, including jump.
         //       check point-sphere collision routine to clamp the projected byproduct)
         // 2. lift |- to gravity
@@ -71,6 +80,13 @@ extend(CharacterCollisionModel.prototype, {
 
     collideAgainstCharacter(otherCollisionModel)
     {
+        if (!otherCollisionModel.isCharacter)
+        {
+            console.warn('[Character] expected other character.');
+            return;
+        }
+
+        // TODO [HIGH] code me.
         // solve character interaction
         // maybe we can afford a little bit of terrain penetration, test that:
 
@@ -87,10 +103,11 @@ extend(CharacterCollisionModel.prototype, {
     {
         if (!otherCollisionModel.isSphere)
         {
-            console.warn('[Character] trying to collide against dynamic non-sphere');
+            console.warn('[Character] expected dynamic sphere.');
             return;
         }
 
+        console.log('[Character] C vs DSph not implemented.');
         // 1. bump / slide
         // 2. apply force to other equal to self acceleration
         // Same as collide against character, guessing.

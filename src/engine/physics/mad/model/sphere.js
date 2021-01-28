@@ -11,24 +11,30 @@ let SphereCollisionModel = function(physicsEntity, collisionSettings)
 {
     CollisionModel.call(this, physicsEntity, collisionSettings);
     this.isSphere = true;
+
+    // XXX [LOW]
+    // More flexible than Character.
+    // Might be used for special entities.
 };
 
 extend(SphereCollisionModel.prototype, {
 
     computeAABB()
     {
+        // XXX
         // Must compute extent and place the center at the middle.
-
         this.computeAABBHalf();
     },
 
-    collideAgainstTerrain(offsetX, offsetY, heightmaps, collider)
+    collideAgainstTerrain() // offsetX, offsetY, heightmaps, collider)
     {
         if (this.isStatic)
         {
-            console.warn('[Sphere] cannot collide static against terrain');
+            console.warn('[Sphere] expected self to be dynamic.');
             return;
         }
+
+        console.log('[Sphere] Sph vs Terrain collision not implemented.');
 
         // 1. Compute heightmap(s) patches.
 
@@ -40,18 +46,30 @@ extend(SphereCollisionModel.prototype, {
 
     collideAgainstSphere(otherCollisionModel)
     {
-        // TODO [CRIT] sphere to sphere (none are characters)
+        if (!otherCollisionModel.isSphere)
+        {
+            console.warn('[Sphere] expected another sphere.');
+        }
+
+        console.log('[Sphere] Sph v Sph collision not implemented.');
+
         // 1. compute penetration
         // 2. apply repulsion force according to penetration and entity masses
 
         // NB. don’t try to get a perfect, stable character-to-character
         // collision solver because this is a rabbit hole.
-        console.log('sphere vs sphere');
     },
 
     collideAgainstStatic(otherCollisionModel)
     {
-        // TODO [CRIT] sphere to static
+        if (!otherCollisionModel.isStatic)
+        {
+            console.warn('[Sphere] expected static object.');
+            return;
+        }
+
+        console.log('[Sphere] Sph v Stc collision not implemented.');
+
         // 1. intersect sphere to object
         // 2. move back from penetration.
         // 2. compute onGround property.

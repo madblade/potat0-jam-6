@@ -33,6 +33,11 @@ extend(HeightMapModel.prototype, {
         this.data = data;
     },
 
+    computeNormal(x, y)
+    {
+        // should be used to move characters down.
+    },
+
     collideTo()
     {
     }

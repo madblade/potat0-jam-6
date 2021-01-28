@@ -55,6 +55,7 @@ extend(Physics.prototype, {
     pushEvent(e)
     {
         this.bulletEngine.pushEvent(e);
+        this.madEngine.pushEvent(e);
     },
 
     addCharacterController()

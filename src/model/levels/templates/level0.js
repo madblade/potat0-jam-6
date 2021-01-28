@@ -4,6 +4,7 @@
 
 import { Level }              from '../level';
 import { HeightMapConstants } from '../../../engine/physics/mad/model/terrain';
+import { Vector3 }            from 'three';
 
 let Level0 = function(title)
 {
@@ -48,8 +49,11 @@ let Level0 = function(title)
             }
         ]
     };
+
     this.objects = {};
-    this.player = {};
+    this.player = {
+        position: [0, 0, 0]
+    };
 };
 
 Level0.prototype = Object.assign(Object.create(Level.prototype), {

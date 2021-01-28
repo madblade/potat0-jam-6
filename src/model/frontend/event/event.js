@@ -16,7 +16,13 @@ let EventComponent = function(clientModel)
     this.eventsToPush = [];
     this.activeControls = {};
     this.numberOfEvents = 0;
-    this.maxNumberOfEventsPer16ms = 16;
+
+    this.maxNumberOfEventsPer16ms = 10000;
+    // Unlimited events for solo-mode
+    // (and we know Chrome likes to fire mouse events much faster than animationFrame)
+    // (also likes to generate garbage with every new animationFrame call)
+    // (if you are from the V8 team and read this, please consider fixing
+    //  https://bugs.chromium.org/p/chromium/issues/detail?id=120186)
 };
 
 extend(EventComponent.prototype, {

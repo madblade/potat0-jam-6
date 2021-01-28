@@ -72,8 +72,9 @@ extend(SelfModel.prototype, {
     {
         this.loadSelf();
         let player = level.getPlayer();
+        const positionArray = player.position;
         console.log('[Model/Self] TODO bind player state from level.');
-        this.updateSelf([0, 0, 0], [0, 0, 0, 0], '-1');
+        this.updateSelf(positionArray, [0, 0, 0, 0], '-1'); // -1 === main world
         this.updatePosition(this.avatar, this.avatar.position);
 
         // Notify physics engine.

@@ -9,14 +9,15 @@
 
 'use strict';
 
-import extend             from '../../extend';
-import { Sweeper }        from './mad/sweeper';
-import { Collider }       from './mad/collider';
-import { Integrator }     from './mad/integrator';
-import { PhysicsEntity }  from './mad/entity';
-import TimeUtils          from './mad/time';
-import { Vector3 }        from 'three';
-import { HeightMapModel } from './mad/model/terrain';
+import extend                 from '../../extend';
+import { Sweeper }            from './mad/sweeper';
+import { Collider }           from './mad/collider';
+import { Integrator }         from './mad/integrator';
+import { PhysicsEntity }      from './mad/entity';
+import TimeUtils              from './mad/time';
+import { Vector3 }            from 'three';
+import { HeightMapModel }     from './mad/model/terrain';
+import { PhysicsInputModule } from './mad/input/input';
 
 let MadEngine = function(physics)
 {
@@ -149,5 +150,7 @@ extend(MadEngine.prototype, {
     }
 
 });
+
+extend(MadEngine.prototype, PhysicsInputModule);
 
 export { MadEngine };

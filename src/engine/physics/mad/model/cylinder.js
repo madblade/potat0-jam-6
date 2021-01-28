@@ -25,6 +25,11 @@ let CylinderCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(CylinderCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        this.computeAABBHalf();
+    },
+
     collideTo(otherCollisionModel)
     {
     }

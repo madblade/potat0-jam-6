@@ -15,6 +15,11 @@ let BoxCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(BoxCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        this.computeAABBHalf();
+    },
+
     collideTo(otherCollisionModel)
     {
     }

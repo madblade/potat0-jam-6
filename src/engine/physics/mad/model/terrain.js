@@ -6,6 +6,7 @@
 
 import extend             from '../../../../extend';
 
+// This does not extend CollisionModel.
 let HeightMapModel = function()
 {
     this.isAnalytic = false;

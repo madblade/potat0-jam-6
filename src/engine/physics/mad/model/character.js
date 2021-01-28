@@ -23,6 +23,11 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(CharacterCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        this.computeAABBHalf();
+    },
+
     updateCollisionModelAfterMovement()
     {
         const physicalEntity = this.entity;

@@ -15,6 +15,7 @@ import { Collider }      from './mad/collider';
 import { Integrator }    from './mad/integrator';
 import { PhysicsEntity } from './mad/entity';
 import TimeUtils         from './mad/time';
+import { Vector3 }       from 'three';
 
 let MadEngine = function(physics)
 {
@@ -23,6 +24,9 @@ let MadEngine = function(physics)
     this.sweeper = new Sweeper(this);
     this.collider = new Collider(this.sweeper);
     this.integrator = new Integrator(this.sweeper);
+
+    // Exposed settings
+    this.gravity = new Vector3(0, 0, -9.8);
 
     // Time management
     this._stamp = TimeUtils.getTimeSecNano();

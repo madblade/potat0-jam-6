@@ -22,3 +22,10 @@ export default function(prototype, functions)
         }
     }
 }
+
+let assert = function(expr, msg)
+{
+    if (!expr) console.warn(`[assert failed] ${msg}`);
+};
+
+export { assert };

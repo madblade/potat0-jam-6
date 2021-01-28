@@ -76,6 +76,7 @@ extend(Collider.prototype, {
             // skip entities that are already on ground
             if (cm.onGround) return;
 
+            // Collide at p1.
             // const p1 = cm.p1;
             // const x = p1.x;
             // const y = p1.y;

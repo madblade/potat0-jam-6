@@ -18,6 +18,11 @@ let TrimeshCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(TrimeshCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        this.computeAABBHalf();
+    },
+
     collideTo(otherCollisionModel)
     {
     }

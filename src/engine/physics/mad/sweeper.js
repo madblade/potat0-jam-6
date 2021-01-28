@@ -4,7 +4,8 @@
 
 'use strict';
 
-import extend            from '../../../extend';
+import extend, { assert } from '../../../extend';
+import { PlaceHolder }    from './placeholder';
 
 // Broad phase utility.
 let Sweeper = function(physics)
@@ -40,6 +41,10 @@ extend(Sweeper.prototype, {
         let axisX = this.orderedObjectsByX;
         let axisY = this.orderedObjectsByY;
         let axisZ = this.orderedObjectsByZ;
+        assert(
+            axisX.length === axisY.length &&
+            axisX.length === axisZ.length, 'sweeper length'
+        );
 
         // Init objects order on every axis.
         for (let i = 0; i < objects.length; ++i) {
@@ -49,20 +54,26 @@ extend(Sweeper.prototype, {
         }
 
         axisX.sort((a, b) => {
-            if (objects[a].center.x < objects[b].center.x) return -1;
-            else if (objects[a].center.x > objects[b].center.x) return 1;
+            if (objects[a].collisionModel.aabbCenter.x <
+                objects[b].collisionModel.aabbCenter.x) return -1;
+            else if (objects[a].collisionModel.aabbCenter.x >
+                objects[b].collisionModel.aabbCenter.x) return 1;
             else return 0;
         });
 
         axisY.sort((a, b) => {
-            if (objects[a].center.y < objects[b].center.y) return -1;
-            else if (objects[a].center.y > objects[b].center.y) return 1;
+            if (objects[a].collisionModel.aabbCenter.y <
+                objects[b].collisionModel.aabbCenter.y) return -1;
+            else if (objects[a].collisionModel.aabbCenter.y >
+                objects[b].collisionModel.aabbCenter.y) return 1;
             else return 0;
         });
 
         axisZ.sort((a, b) => {
-            if (objects[a].center.z < objects[b].center.z) return -1;
-            else if (objects[a].center.z > objects[b].center.z) return 1;
+            if (objects[a].collisionModel.aabbCenter.z <
+                objects[b].collisionModel.aabbCenter.z) return -1;
+            else if (objects[a].collisionModel.aabbCenter.z >
+                objects[b].collisionModel.aabbCenter.z) return 1;
             else return 0;
         });
 
@@ -75,10 +86,55 @@ extend(Sweeper.prototype, {
         }
     },
 
-    insertObject()//entity)
+    insertObject(entity)
     {
+        const axisX = this.orderedObjectsByX;
+        const axisY = this.orderedObjectsByY;
+        const axisZ = this.orderedObjectsByZ;
+
+        assert(
+            axisX.length === axisY.length &&
+            axisX.length === axisZ.length, 'sweeper length'
+        );
+
+        if (axisX.length < 1)
+        {
+            axisX.push(entity); entity.indexOnXArray = 0;
+            axisY.push(entity); entity.indexOnYArray = 0;
+            axisZ.push(entity); entity.indexOnZArray = 0;
+            return;
+        }
+
+        const cm = entity.collisionModel;
+        const cx = cm.aabbCenter.x;
+        const cy = cm.aabbCenter.y;
+        const cz = cm.aabbCenter.z;
+
         // 1. dichotomy insert
+        let indexX = this.dichotomyLowerBound(axisX, cx, 'x');
+        let indexY = this.dichotomyLowerBound(axisY, cy, 'y');
+        let indexZ = this.dichotomyLowerBound(axisZ, cz, 'z');
+
         // 2. displacement right on all axes
+        axisX.splice(indexX, 0, entity);
+        while (indexX++ < axisX.length) axisX[indexX].indexOnXArray++;
+        axisY.splice(indexY, 0, entity);
+        while (indexY++ < axisY.length) axisY[indexY].indexOnYArray++;
+        axisZ.splice(indexZ, 0, entity);
+        while (indexZ++ < axisZ.length) axisZ[indexZ].indexOnZArray++;
+    },
+
+    dichotomyLowerBound(a, value, prop)
+    {
+        let lo = 0; let hi = a.length - 1; let mid;
+        while (lo <= hi) {
+            mid = lo + hi >> 1; // floor((lo+hi)/2)
+            // priority '+' > priority '>>'
+            if (a[mid].collisionModel.aabbCenter[prop] > value) hi = mid - 1;
+            else if (a[mid].collisionModel.aabbCenter[prop] < value) lo = mid + 1;
+            else return mid;
+        }
+        return lo;
     },
 
     reserveEntityId()
@@ -104,8 +160,8 @@ extend(Sweeper.prototype, {
     addPhysicsEntity(entity)
     {
         this.physicsEntities[entity.entityId] = entity;
-        // TODO [PERF] don’t sort, just insert.
-        this.reorderObjects();
+        // [PERF] don’t sort again, just insert.
+        this.insertObject(entity);
         if (!entity.collisionModel.isStatic)
             this.dynamicEntities.add(entity);
     },
@@ -116,12 +172,19 @@ extend(Sweeper.prototype, {
         if (!entity)
             throw Error('[Mad/Sweeper] Trying to remove entity that’s not there.');
 
+        // No need to displace any entity: place dummy inside.
+        const axisX = this.orderedObjectsByX; const iX = entity.indexOnXArray;
+        const axisY = this.orderedObjectsByY; const iY = entity.indexOnYArray;
+        const axisZ = this.orderedObjectsByZ; const iZ = entity.indexOnZArray;
+        let ph = new PlaceHolder(iX, iY, iZ, entity.collisionModel.aabbCenter);
+        axisX[iX] = ph;
+        axisY[iY] = ph;
+        axisZ[iZ] = ph;
+
         this.dynamicEntities.remove(entity);
         this.physicsEntities[entityId] = null; // Free object?
         this.availableIndicesInPhysicalEntitiesArray.push(entityId);
         entity.destroy();
-
-        // No need to displace all entities.
     },
 
     // Physics update.
@@ -137,6 +200,7 @@ extend(Sweeper.prototype, {
         // So there’s no need to keep track of boundaries.
         // O(dyn n * average n by extent) -> amortized n, worst case n ^ 2
         this.physicsEntities.forEach(entity => {
+            if (entity.isPlaceHolder) return;
             const thisId = entity.entityId;
             const neighbors = this.getOverlappingNeighbors(entity);
             for (let n = 0; n < neighbors.length; ++n)
@@ -159,14 +223,13 @@ extend(Sweeper.prototype, {
         const ix = entity.indexOnXArray;
         const iy = entity.indexOnYArray;
         const iz = entity.indexOnZArray;
-        const center = entity.collisionModel.boundingSphereCenter;
-        let radius = entity.collisionModel.boundingSphereRadius;
-        const isStatic = entity.collisionModel.isStatic;
+        const cm = entity.collisionModel;
+        const center = cm.aabbCenter;
+        const isStatic = cm.isStatic;
         const nbEntities = axisX.length;
 
-        // Take displacement into account
-        const dTarget = entity.collisionModel.getDistanceToTarget();
-        radius += dTarget;
+        const delta = cm.getP0P1Delta(); // Displacement
+        delta.add(cm.getAABBHalf()); // Add half-bounding box
 
         // Unlock axes.
         const l = this.locks;
@@ -179,11 +242,11 @@ extend(Sweeper.prototype, {
         do {
             // check x…
             i = ix;
-            if (i-- > 0 && this.overlaps(axisX[i], center, radius, isStatic))
+            if (i-- > 0 && this.overlaps(axisX[i], center, delta, isStatic))
                 overlapping.push(axisX[i]);
             else l[0] = true;
             i = ix;
-            if (i++ < axisX.length && this.overlaps(axisX[i], center, radius, isStatic))
+            if (i++ < axisX.length && this.overlaps(axisX[i], center, delta, isStatic))
                 overlapping.push(axisX[i]);
             else l[1] = true;
             // If left and right are out of range, no one else can overlap!
@@ -192,22 +255,22 @@ extend(Sweeper.prototype, {
             // check y…
             // redundancy is handled by the hashset check
             i = iy;
-            if (i-- > 0 && this.overlaps(axisY[i], center, radius, isStatic))
+            if (i-- > 0 && this.overlaps(axisY[i], center, delta, isStatic))
                 overlapping.push(axisY[i]);
             else l[2] = true;
             i = iy;
-            if (i++ < axisY.length && this.overlaps(axisY[i], center, radius, isStatic))
+            if (i++ < axisY.length && this.overlaps(axisY[i], center, delta, isStatic))
                 overlapping.push(axisY[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
 
             // check z…
             i = iz;
-            if (i-- > 0 && this.overlaps(axisZ[i], center, radius, isStatic))
+            if (i-- > 0 && this.overlaps(axisZ[i], center, delta, isStatic))
                 overlapping.push(axisZ[i]);
             else l[2] = true;
             i = iz;
-            if (i++ < axisZ.length && this.overlaps(axisZ[i], center, radius, isStatic))
+            if (i++ < axisZ.length && this.overlaps(axisZ[i], center, delta, isStatic))
                 overlapping.push(axisZ[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
@@ -216,24 +279,29 @@ extend(Sweeper.prototype, {
         }
         while (!b && nbIterations++ < nbEntities / 2); // loop back if no axis is locked!
 
+        assert(nbIterations < 5, '[Sweeper] more than 5 iterations');
         return overlapping;
     },
 
-    overlaps(otherEntity, currentCenter, currentRadius, isStatic)
+    overlaps(otherEntity, currentCenter, delta, isStatic)
     {
+        if (otherEntity.isPlaceHolder) return false;
         if (isStatic && otherEntity.isStatic) return false;
 
-        const otherCenter = otherEntity.collisionModel.boundingSphereCenter;
-        const dx = otherCenter.x - currentCenter.x;
-        const dy = otherCenter.y - currentCenter.y;
-        const dz = otherCenter.z - currentCenter.z;
-        const distanceBetweenCenters = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const otherCM = otherEntity.collisionModel;
+        const otherCenter = otherCM.aabbCenter;
+        const sumOfDeltas = otherCM.getP0P1Delta(); // other displacement
+        sumOfDeltas.add(otherCM.getAABBHalf()); // other bounding box
 
-        const otherRadius =
-            otherEntity.collisionModel.boundingSphereRadius +
-            otherEntity.getDistanceToTarget();
+        sumOfDeltas.add(delta); // other dp + this aabb/2 + this dp + this aabb/2
 
-        return distanceBetweenCenters < currentRadius + otherRadius;
+        // test aabb + dp overlaps
+        const dx = Math.abs(otherCenter.x - currentCenter.x);
+        if (dx > sumOfDeltas.x) return false;
+        const dy = Math.abs(otherCenter.y - currentCenter.y);
+        if (dy > sumOfDeltas.y) return false;
+        const dz = Math.abs(otherCenter.z - currentCenter.z);
+        return dz <= sumOfDeltas.z;
     },
 
     // Post-physics update.
@@ -267,40 +335,46 @@ extend(Sweeper.prototype, {
         // };
 
         // Resort left X.
-        while (iXl > -1 && objects[axisX[iXl].entityId].center.x > x) {
-            // log('x-');
+        while (iXl > -1 &&
+            objects[axisX[iXl].entityId].collisionModel.aabbCenter.x > x)
+        {
             this.swap(axisX, iXl, iXl + 1);
             --iXl;
         }
         // Resort right X.
-        while (iXr < length && objects[axisX[iXr].entityId].center.x < x) {
-            // log('x+');
+        while (iXr < length &&
+            objects[axisX[iXr].entityId].collisionModel.aabbCenter.x < x)
+        {
             this.swap(axisX, iXr, iXr - 1);
             ++iXr;
         }
 
         // Resort left Y.
-        while (iYl > -1 && objects[axisY[iYl].entityId].center.y > y) {
-            // log('y-');
+        while (iYl > -1 &&
+            objects[axisY[iYl].entityId].collisionModel.aabbCenter.y > y)
+        {
             this.swap(axisY, iYl, iYl + 1);
             --iYl;
         }
         // Resort right Y.
-        while (iYr < length && objects[axisY[iYr].entityId].center.y < y) {
-            // log('y+');
+        while (iYr < length &&
+            objects[axisY[iYr].entityId].collisionModel.aabbCenter.y < y)
+        {
             this.swap(axisY, iYr, iYr - 1);
             ++iYr;
         }
 
         // Resort left Z.
-        while (iZl > -1 && objects[axisZ[iZl].entityId].center.z > z) {
-            // log('z-');
+        while (iZl > -1 &&
+            objects[axisZ[iZl].entityId].collisionModel.aabbCenter.z > z)
+        {
             this.swap(axisZ, iZl, iZl + 1);
             --iZl;
         }
         // Resort right Z.
-        while (iZr < length && objects[axisZ[iZr].entityId].center.z < z) {
-            // log('z+');
+        while (iZr < length &&
+            objects[axisZ[iZr].entityId].collisionModel.aabbCenter.z < z)
+        {
             this.swap(axisZ, iZr, iZr - 1);
             ++iZr;
         }

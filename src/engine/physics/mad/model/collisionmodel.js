@@ -4,16 +4,25 @@
 
 'use strict';
 
-import extend      from '../../../../extend';
-import { Vector3 } from 'three';
+import extend               from '../../../../extend';
+import { Vector2, Vector3 } from 'three';
 
-let CollisionModel = function(physicsEntity, collisionSettings)
+const AABB_EPS = 0.00001;
+
+let CollisionModel = function(
+    physicsEntity, collisionSettings, engine
+)
 {
     this.entity = physicsEntity;
 
     // Bounding sphere
-    this.boundingSphereCenter = physicsEntity.center;
-    this.boundingSphereRadius = collisionSettings.radius;
+    this.aabbCenter = new Vector3();
+    this.aabbXExtent = new Vector2();
+    this.aabbYExtent = new Vector2();
+    this.aabbZExtent = new Vector2();
+    this.aabbHalf = new Vector3();
+    this.p0p1Delta = new Vector3();
+
     this.isStatic = collisionSettings.static;
     this.isIntelligent = collisionSettings.intelligent;
 
@@ -35,7 +44,10 @@ let CollisionModel = function(physicsEntity, collisionSettings)
         this.velocity1 = new Vector3();
         this.accelera0 = new Vector3();
         this.accelera1 = new Vector3();
-        this.gravity = new Vector3();
+        if (collisionSettings.variableGravity)
+            this.gravity = new Vector3();
+        else
+            this.gravity = engine.gravity; // will throw if engine wasn’t specified
         this.continuousForces = [];
 
         this.instantaneousAcceleration = 20.0; // used to get up to max velocity
@@ -58,6 +70,21 @@ extend(CollisionModel.prototype, {
 
     computeBoundingSphere() {},
 
+    computeAABB()
+    {
+        console.warn('[CollisionModel]: cannot compute AABB on an abstract.');
+    },
+
+    computeAABBHalf()
+    {
+        // aabbCenter must be at the center.
+        this.aabbHalf.set(
+            Math.abs(this.aabbXExtent.x - this.aabbXExtent.y) / 2 + AABB_EPS,
+            Math.abs(this.aabbYExtent.x - this.aabbYExtent.y) / 2 + AABB_EPS,
+            Math.abs(this.aabbZExtent.x - this.aabbZExtent.y) / 2 + AABB_EPS
+        );
+    },
+
     setGravity(g)
     {
         if (this.isStatic)
@@ -69,6 +96,22 @@ extend(CollisionModel.prototype, {
     {
         if (this.isStatic) return 0;
         return this.position0.distanceTo(this.position1);
+    },
+
+    getP0P1Delta()
+    {
+        // (Internal) Must recompute every time!
+        this.p0p1Delta.set(
+            Math.abs(this.position0.x - this.position1.x),
+            Math.abs(this.position0.y - this.position1.y),
+            Math.abs(this.position0.z - this.position1.z)
+        );
+        return this.p0p1Delta;
+    },
+
+    getAABBHalf()
+    {
+        return this.aabbHalf;
     },
 
     destroy()
@@ -83,6 +126,15 @@ extend(CollisionModel.prototype, {
         this.gravity = null;
         this.wantedVelocity = null;
         this.continuousForces = null;
+
+        this.aabbXExtent = null;
+        this.aabbYExtent = null;
+        this.aabbZExtent = null;
+        this.aabbHalf = null;
+        this.p0p1Delta = null;
+
+        // the actual aabbCenter is swapped to a placeholder
+        this.aabbCenter = null;
     }
 
 });

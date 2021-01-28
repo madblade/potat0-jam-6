@@ -15,6 +15,13 @@ let SphereCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(SphereCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        // Must compute extent and place the center at the middle.
+
+        this.computeAABBHalf();
+    },
+
     collideToSphere(otherCollisionModel)
     {
         // TODO [CRIT] sphere to sphere (none are characters)

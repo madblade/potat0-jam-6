@@ -19,6 +19,11 @@ let PlatformCollisionModel = function(physicsEntity, collisionSettings)
 
 extend(PlatformCollisionModel.prototype, {
 
+    computeAABB()
+    {
+        this.computeAABBHalf();
+    },
+
     collideTo(otherCollisionModel)
     {
     }

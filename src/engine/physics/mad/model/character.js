@@ -35,6 +35,18 @@ extend(CharacterCollisionModel.prototype, {
         // if character is crouching, update
     },
 
+    collideAgainstTerrain(offsetX, offsetY, heightmaps, collider)
+    {
+        // XXX [LOW] support infinite terrain patches
+
+        // 1. Compute heightmap(s) patches.
+
+        // 3. Collide against patch(es).
+
+        // 4. Compute onGround property.
+        //      if on ground, compute terrain normal.
+    },
+
     collideAgainstStatic(otherCollisionModel)
     {
         console.log('Collide character against static object.');
@@ -52,6 +64,11 @@ extend(CharacterCollisionModel.prototype, {
         //      if onGround, compute onGround normal
     },
 
+    // for IK and lifter
+    rayCastDown()
+    {
+    },
+
     collideAgainstCharacter(otherCollisionModel)
     {
         // solve character interaction
@@ -66,8 +83,14 @@ extend(CharacterCollisionModel.prototype, {
         //      (except if coming from up, e.g. skydiving)
     },
 
-    collideAgainstDynamic(otherCollisionModel)
+    collideAgainstDynamicSphere(otherCollisionModel)
     {
+        if (!otherCollisionModel.isSphere)
+        {
+            console.warn('[Character] trying to collide against dynamic non-sphere');
+            return;
+        }
+
         // 1. bump / slide
         // 2. apply force to other equal to self acceleration
         // Same as collide against character, guessing.

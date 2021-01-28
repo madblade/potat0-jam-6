@@ -40,8 +40,25 @@ extend(MadEngine.prototype, {
         this.sweeper.reorderObjects();
     },
 
+    // Only fixed-width height maps supported
+    addHeightMap(i, j, heightMapOptions)
+    {
+        const heightMaps = this.sweeper.heightMaps;
+        const id = `${i},${j}`;
+
+        // push into height maps model
+        let hm = heightMaps.get(id);
+        if (!hm)
+        {
+            hm = [];
+            heightMaps.set(id, hm);
+        }
+        hm.push();
+    },
+
     // collisionModelSettings:
-    //      type: 'sphere', 'cylinder', 'platform', 'box', 'terrain'/analytic/axis-aligned/trimesh, 'character'
+    //      type: 'sphere', 'cylinder', 'platform', 'box',
+    //      'terrain'/analytic/axis-aligned/trimesh, 'character'
     //      static: bool
     //      intelligent: bool
     addPhysicsEntity(center, collisionModelSettigs)
@@ -66,6 +83,7 @@ extend(MadEngine.prototype, {
 
         // 0. detect entities needing a move pass.
         this.sweeper.refreshEntitiesNeedingMovement();
+        if (this.sweeper.entitiesNeedingToMove.length < 1) return;
 
         // 1. integrate objects needing to move
         // (this sets p1 for all dynamic entities)
@@ -96,6 +114,12 @@ extend(MadEngine.prototype, {
     {
         // XXX gameplay specific
         return false;
+    },
+
+    cleanup()
+    {
+        // [XXX] destroy everything here
+        this.sweeper.heightMaps.clear();
     }
 
 });

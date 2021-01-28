@@ -234,6 +234,12 @@ extend(BulletEngine.prototype, {
 
     addCharacterController()
     {
+        // XXX add static capsule
+    },
+
+    cleanup()
+    {
+        // XXX cleanup what needs to be (physics objects, meshes, etc)
     }
 });
 

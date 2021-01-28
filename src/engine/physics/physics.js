@@ -14,6 +14,8 @@ let Physics = function(app)
 
     this.isLoaded = false;
 
+    this.useBullet = false; // faster dev
+
     this.bulletEngine = new BulletEngine(this);
     this.madEngine = new MadEngine(this);
 };
@@ -22,7 +24,10 @@ extend(Physics.prototype, {
 
     preload()
     {
-        this.bulletEngine.preload();
+        if (this.useBullet)
+            this.bulletEngine.preload();
+        else
+            this.isLoaded = true;
     },
 
     init()
@@ -33,7 +38,8 @@ extend(Physics.prototype, {
     refresh()
     {
         this.madEngine.solve(); // gameplay physics
-        this.bulletEngine.refresh(); // cosmetic physics
+        if (this.useBullet)
+            this.bulletEngine.refresh(); // cosmetic physics
     },
 
     addHeightMap(graphicalChunk)
@@ -41,6 +47,7 @@ extend(Physics.prototype, {
         // XXX Uncomment here to bench bullet physics
         console.log(`[Physics] Should add ${graphicalChunk}.`);
         // this.bulletEngine.addHeightMap(graphicalChunk);
+        // this.madEngine.addHeightMap(graphicalChunk);
     },
 
     pushEvent(e)
@@ -51,6 +58,12 @@ extend(Physics.prototype, {
     addCharacterController()
     {
         this.bulletEngine.addCharacterController();
+    },
+
+    cleanupFullPhysics()
+    {
+        this.madEngine.cleanup();
+        this.bulletEngine.cleanup();
     }
 
 });

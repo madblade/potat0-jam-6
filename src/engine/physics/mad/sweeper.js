@@ -4,8 +4,9 @@
 
 'use strict';
 
-import extend, { assert } from '../../../extend';
-import { PlaceHolder }    from './placeholder';
+import extend, { assert }     from '../../../extend';
+import { PlaceHolder }        from './placeholder';
+import { HeightMapConstants } from './model/terrain';
 
 // Broad phase utility.
 let Sweeper = function(physics)
@@ -25,6 +26,7 @@ let Sweeper = function(physics)
 
     // Height maps are horizontal (up=+Z) by default.
     this.heightMaps = new Map();
+    this.heightMapSideWidth = HeightMapConstants.DEFAULT_WIDTH;
     // x,y => array of height maps in the current chunk
 
     // Engine internals.
@@ -154,6 +156,7 @@ extend(Sweeper.prototype, {
 
     anEntityNeedsToMove(entity)
     {
+        assert(!entity.isPlaceHolder, '[Sweeper] trying to move a placeholder?');
         this.entitiesNeedingToMove.add(entity);
     },
 

@@ -6,6 +6,10 @@
 
 import extend             from '../../../../extend';
 
+const HeightMapConstants = {
+    DEFAULT_WIDTH: 10
+};
+
 // This does not extend CollisionModel.
 let HeightMapModel = function()
 {
@@ -35,4 +39,4 @@ extend(HeightMapModel.prototype, {
 
 });
 
-export { HeightMapModel };
+export { HeightMapModel, HeightMapConstants };

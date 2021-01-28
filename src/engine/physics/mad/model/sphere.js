@@ -22,7 +22,23 @@ extend(SphereCollisionModel.prototype, {
         this.computeAABBHalf();
     },
 
-    collideToSphere(otherCollisionModel)
+    collideAgainstTerrain(offsetX, offsetY, heightmaps, collider)
+    {
+        if (this.isStatic)
+        {
+            console.warn('[Sphere] cannot collide static against terrain');
+            return;
+        }
+
+        // 1. Compute heightmap(s) patches.
+
+        // 3. Collide against patch(es).
+
+        // 4. Compute onGround property.
+        //      if on ground, compute terrain normal.
+    },
+
+    collideAgainstSphere(otherCollisionModel)
     {
         // TODO [CRIT] sphere to sphere (none are characters)
         // 1. compute penetration
@@ -33,7 +49,7 @@ extend(SphereCollisionModel.prototype, {
         console.log('sphere vs sphere');
     },
 
-    collideToStatic(otherCollisionModel)
+    collideAgainstStatic(otherCollisionModel)
     {
         // TODO [CRIT] sphere to static
         // 1. intersect sphere to object

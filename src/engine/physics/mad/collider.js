@@ -69,24 +69,36 @@ extend(Collider.prototype, {
     collideTerrain()
     {
         const entitiesNeedingToMove = this.sweeper.entitiesNeedingToMove;
-        // const heightMaps = this.sweeper.heightMaps;
-        // const heightMapSize = this.sweeper.defaultHeightMapWidth;
+        const heightMaps = this.sweeper.heightMaps;
+        const heightMapWidth = this.sweeper.heightMapSideWidth;
         entitiesNeedingToMove.forEach(e => {
             const cm = e.collisionModel;
+            if (!e.isSphere || !e.isCharacter)
+            {
+                console.warn('[Mad/Collider] Trying to terrain-collide a non-sphere.');
+                return;
+            }
             // skip entities that are already on ground
             if (cm.onGround) return;
 
-            // Collide at p1.
-            // const p1 = cm.p1;
-            // const x = p1.x;
-            // const y = p1.y;
-            // const i = x / heightMapWidth;
-            // TODO [CRIT] terrain
             // 1. Find heightmaps by coordinates.
-            // 2. Compute heightmap(s) patches.
-            // 3. Collide against patch(es).
-            // 4. Compute onGround property.
-            //      if on ground, compute terrain normal.
+            const p1 = cm.p1; // Collide at p1.
+            const x = p1.x;
+            const y = p1.y;
+            const i = Math.floor(x / heightMapWidth + .5);
+            const j = Math.floor(y / heightMapWidth + .5);
+            const id = `${i},${j}`;
+            let hms = heightMaps.get(id);
+            if (!hms)
+            {
+                console.warn(`[Mad/Collider] No height map underneath ${e.entityId}??`);
+                return;
+            }
+
+            // 2. Collide.
+            const offsetX = x - (i - .5) * heightMapWidth;
+            const offsetY = y - (j - .5) * heightMapWidth;
+            cm.collideAgainstTerrain(offsetX, offsetY, hms, this);
         });
     },
 
@@ -122,11 +134,11 @@ extend(Collider.prototype, {
         if (entity1CM.isCharacter && entity2CM.isCharacter)
             return entity1CM.collideAgainstCharacter(entity2CM);
         if (entity1CM.isSphere && entity2CM.isSphere)
-            return entity1CM.collideToSphere(entity2CM);
+            return entity1CM.collideAgainstSphere(entity2CM);
         if (entity1CM.isCharacter)
-            return entity1CM.collideAgainstDynamic(entity2CM);
+            return entity1CM.collideAgainstDynamicSphere(entity2CM);
         if (entity2CM.isCharacter)
-            return entity2CM.collideAgainstDynamic(entity1CM);
+            return entity2CM.collideAgainstDynamicSphere(entity1CM);
     },
 
     // Internal routines
@@ -151,7 +163,7 @@ extend(Collider.prototype, {
 
         // 2. Check distance
         const displacement = this._w5;
-        const distToClosest2 = cToClosest.length2();
+        const distToClosest2 = cToClosest.lengthSq();
         if (distToClosest2 > radiusSquared + EPS)
         // adding EPS to a squared distance… hopefully this goes well.
         // it saves a bunch of sqrt calls so that can’t be bad

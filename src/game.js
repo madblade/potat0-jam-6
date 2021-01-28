@@ -150,6 +150,7 @@ extend(Game.Core.prototype, {
         this.model.backend.cleanupFullModel();
         this.model.frontend.cleanupFullModel();
         this.engine.graphics.cleanupFullGraphics();
+        this.engine.physics.cleanupFullPhysics();
         this.state.cleanupDOM();
     },
 

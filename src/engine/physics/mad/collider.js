@@ -20,6 +20,7 @@ let Collider = function(sweeper)
     this._w4 = new Vector3();
     this._w5 = new Vector3();
     this._w6 = new Vector3();
+    this._w7 = new Vector3();
     this._insideFace = false;
 };
 
@@ -155,7 +156,7 @@ extend(Collider.prototype, {
     {
         // 1. Get closest point in triangle
         const closest = this.getClosestPointInTri(c, v1, v2, v3);
-        // careful: closest might allocate _w4
+        // careful: closest allocates _w4
         // careful: v1v2 allocates _w1
         // careful: v1v3 allocates _w2
         const cToClosest = this._w3;
@@ -213,6 +214,63 @@ extend(Collider.prototype, {
 
             return displacement;
         }
+    },
+
+    intersectSphereTriVertical(c, radiusSquared, v1, v2, v3, p1, radius, gravityUp)
+    // for lifter
+    // gravityUp should point to -gravity and be normalized.
+    {
+        // 1. Get closest point in triangle
+        const closest = this.getClosestPointInTri(c, v1, v2, v3);
+        // careful: closest allocates _w4
+        // careful: v1v2 allocates _w1
+        // careful: v1v3 allocates _w2
+        const cToClosest = this._w3;
+        cToClosest.copy(closest).addScaledVector(c, -1);
+        const displacement = this._w5;
+        const distToClosest2 = cToClosest.lengthSq();
+
+        // 2. Check range
+        if (distToClosest2 > radiusSquared + COLLISION_EPS)
+        {
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
+
+        // 3. Compute lifting amount: intersect point & plane
+        // line: p1 + gravity * d
+        // plane: q (v1 + normal * radius), normal
+
+        // d = (q - p1) * normal / (gravity dot normal)
+        // if gravity dot normal ~ 0, abort.
+        const normal = this._w6;
+        const v1v2 = this._w1; // allocated by getClosestPointInTri!
+        const v1v3 = this._w2; // allocated by getClosestPointInTri!
+        normal.copy(v1v2).cross(v1v3);
+        const l2 = normal.lengthSq();
+        if (l2 <= COLLISION_EPS) { // ignore small triangles
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
+
+        let projection1 = normal.dot(cToClosest);
+        if (projection1 < 0) normal.negate();
+        const dotGN = normal.dot(gravityUp);
+        if (dotGN < COLLISION_EPS) {
+            if (dotGN < 0)
+                console.error('[Collider] Flipped triangle (from underneath heightmap?).');
+            else console.warn('[Collider] Very steep lift skipped.');
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
+        const q = this._w7;
+        q.copy(v1).addScaledVector(normal, radius + COLLISION_EPS);
+        q.addScaledVector(p1, -1); // p0 in plane - l0 in line
+        const dotPLN = q.dot(normal);
+        const d = dotPLN / dotGN; // (p0 - l0) . n / (l . n)
+        displacement.copy(gravityUp).multiplyScalar(d);
+        // p = l0 + l * d
+        return displacement;
     },
 
     // From Christer Ericson’s handbook, using barycentric coordinates.

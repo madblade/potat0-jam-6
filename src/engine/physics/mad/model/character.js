@@ -171,7 +171,7 @@ extend(CharacterCollisionModel.prototype, {
 
                 if (heightA > highestPoint && heightB > highestPoint &&
                     heightC > highestPoint && heightD > highestPoint)
-                    throw Error('Went through the ground');
+                    console.error('Went through the ground');
 
                 // Collide bump and clamp correction.
                 // abd
@@ -228,7 +228,10 @@ extend(CharacterCollisionModel.prototype, {
             // console.log('bump oob');
         }
 
-        if (displacement.length() > 0) console.log(displacement);
+        if (displacement.length() > 0)
+        {
+            console.log(displacement);
+        }
         // Apply.
         this.position1.set(nx, ny, nz);
         this.lifterCenter.add(displacement);
@@ -258,7 +261,10 @@ extend(CharacterCollisionModel.prototype, {
             else this.wasLifted = true;
         }
 
-        if (displacement.length() > 0) console.log(displacement);
+        if (displacement.length() > 0)
+        {
+            console.log(displacement);
+        }
         // Apply.
         this.position1.set(nx, ny, nz);
         this.lifterCenter.add(displacement);

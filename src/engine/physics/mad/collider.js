@@ -252,9 +252,10 @@ extend(Collider.prototype, {
             displacement.set(0, 0, 0);
             return displacement;
         }
+        normal.multiplyScalar(Math.sqrt(l2)); // normalize
 
         let projection1 = normal.dot(cToClosest);
-        if (projection1 < 0) normal.negate();
+        if (projection1 > 0) normal.negate();
         const dotGN = normal.dot(gravityUp);
         if (dotGN < COLLISION_EPS) {
             if (dotGN < 0)
@@ -264,7 +265,7 @@ extend(Collider.prototype, {
             return displacement;
         }
         const q = this._w7;
-        q.copy(v1).addScaledVector(normal, radius + COLLISION_EPS);
+        q.copy(closest).addScaledVector(normal, radius + COLLISION_EPS);
         q.addScaledVector(c, -1); // p0 in plane - l0 in line
         const dotPLN = q.dot(normal);
         const d = dotPLN / dotGN; // (p0 - l0) . n / (l . n)

@@ -14,9 +14,9 @@ import { Sweeper }            from './mad/sweeper';
 import { Collider }           from './mad/collider';
 import { Integrator }         from './mad/integrator';
 import { PhysicsEntity }      from './mad/entity';
-import TimeUtils              from './mad/time';
-import { Vector3 }            from 'three';
-import { HeightMapModel }     from './mad/model/terrain';
+import TimeUtils                        from './mad/time';
+import { Quaternion, Vector2, Vector3 } from 'three';
+import { HeightMapModel }               from './mad/model/terrain';
 import { PhysicsInputModule } from './mad/input/input';
 
 let MadEngine = function(physics)
@@ -33,6 +33,12 @@ let MadEngine = function(physics)
     // Time management
     this._stamp = TimeUtils.getTimeSecNano();
     this._variableDt = false;
+
+    // Internals
+    this._f = new Vector3(0, 0, 0);
+    this._ffr = new Vector3(0, 0, 0);
+    this._fto = new Vector3(0, 0, 0);
+    this._q = new Quaternion();
 };
 
 extend(MadEngine.prototype, {

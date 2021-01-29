@@ -299,7 +299,7 @@ extend(Collider.prototype, {
 
         // Check V1V2 edge region
         const det1 = d1 * d4 - d3 * d2;
-        if (det1 <= 0 && d1 >= 0. && d3 <= 0.)
+        if (det1 <= 0. && d1 >= 0. && d3 <= 0.)
         {
             const v = d1 / (d1 - d3);
             const result = this._w4;
@@ -327,7 +327,7 @@ extend(Collider.prototype, {
 
         // Check V2V3 edge region
         const det3 = d3 * d6 - d5 * d4;
-        if (det3 <= 0 && d4 - d3 >= 0. && d5 - d6 >= 0.)
+        if (det3 <= 0. && d4 - d3 >= 0. && d5 - d6 >= 0.)
         {
             const w = (d4 - d3) / (d4 - d3 + d5 - d6);
             const result = this._w4;

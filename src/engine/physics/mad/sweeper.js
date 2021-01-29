@@ -21,16 +21,18 @@ let Sweeper = function(physics)
     this.dynamicEntities = new Set();
     this.potentialCollidingPairs = new Set();
 
+    // Entity id must equal physics entity index in this array
     this.physicsEntities = [];
-    this.availableIndicesInPhysicalEntitiesArray = [];
+
 
     // Height maps are horizontal (up=+Z) by default.
     this.heightMaps = new Map();
     this.heightMapSideWidth = HeightMapConstants.DEFAULT_EXTENT;
     // x,y => array of height maps in the current chunk
 
-    // Engine internals.
+    // Engine internals & optimization.
     this.locks = [!1, !1, !1, !1, !1, !1];
+    this.availableIndicesInPhysicalEntitiesArray = [];
 };
 
 extend(Sweeper.prototype, {

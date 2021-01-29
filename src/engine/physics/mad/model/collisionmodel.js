@@ -55,6 +55,9 @@ let CollisionModel = function(
         this.wantedVelocity = new Vector3(); // accelerate until satisfied
         this.maxSpeedInAir = 1.0;
         this.maxSpeedInWater = 0.5;
+
+        // Intelligent internals
+        this._d = [!1, !1, !1, !1, !1, !1];
     }
 
     // Type
@@ -95,6 +98,12 @@ extend(CollisionModel.prototype, {
         if (this.isStatic)
             throw Error('[CollisionModel]: cannot apply gravity to a static object.');
         this.gravity.copy(g);
+    },
+
+    stop()
+    {
+        this._d[0] = this._d[1] = this._d[2] =
+            this._d[3] = this._d[4] = this._d[5] = !1;
     },
 
     getDistanceToTarget()

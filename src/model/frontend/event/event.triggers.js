@@ -89,7 +89,8 @@ let TriggersModule = {
             // XXX [PERF] compress events
         }
 
-        switch (data) {
+        switch (data)
+        {
             case 'f':
                 if (!ak.forward) addEvent();
                 ak.forward = true;
@@ -113,6 +114,9 @@ let TriggersModule = {
             case 'u':
                 if (!ak.up) addEvent();
                 ak.up = true;
+                break;
+
+            case 'vec': // TODO [CONTROLS] that’s for the mobile / controller api
                 break;
 
             case 'run':

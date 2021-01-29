@@ -173,7 +173,7 @@ extend(Camera.prototype, {
         let rup = this.get3DObject().rotation;
         let theta0 = rup.z + PI;
         let theta1 = rup.x;
-        let f = 0.7999;
+        let f = 0.; // 7999;
         // Formula works for 4 out of 6 faces...
         let upVector = [
             -f * sin(theta1) * sin(theta0),

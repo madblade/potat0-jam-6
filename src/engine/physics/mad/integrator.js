@@ -54,7 +54,10 @@ extend(Integrator.prototype, {
         // console.log(`Integrating ${entity.entityId}.`);
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
-        const dtr = relativeDt * localTimeDilation;
+        let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
+        dtr = 0.016; // TODO variable dt
+        // dtr = 0.1;
+        // dtr = 0.05;
         const inWater = this.physics.isWater(p0);
         const maxSpeed = inWater ?
             cm.maxSpeedInWater : cm.maxSpeedInAir;
@@ -119,9 +122,18 @@ extend(Integrator.prototype, {
         this.sweeper.updateOrderedArraysAfterMove(entity.entityId);
 
         // Update collision model (aabb centers)
+        entity.center.copy(cm.position0);
         cm.updateCollisionModelAfterMovement();
 
-        // TODO [PHYSICS] notify server model.
+        // Notify server model.
+        if (entity.entityId === 0)
+        {
+            const app = this.physics.physics.app;
+            const sm = app.model.backend.selfModel;
+            sm.updateSelf(cm.position0.toArray(), [0, 0, 0, 0], -1);
+            cm.lifterHelper.position.copy(cm.lifterCenter);
+            cm.bumperHelper.position.copy(cm.bumperCenter);
+        }
     }
 
 });

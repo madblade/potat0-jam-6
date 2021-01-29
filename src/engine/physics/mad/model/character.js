@@ -5,9 +5,12 @@
 'use strict';
 
 import { CollisionModel } from './collisionmodel';
-import extend             from '../../../../extend';
-import { Vector3 }        from 'three';
-import { COLLISION_EPS }  from '../collider';
+import extend from '../../../../extend';
+import {
+    Mesh, MeshBasicMaterial,
+    SphereBufferGeometry, Vector3
+} from 'three';
+import { COLLISION_EPS } from '../collider';
 
 let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
 {
@@ -20,6 +23,25 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.lifterRadius = collisionSettings.lifterRadius || 0.5;
     this.bumperCenter = new Vector3();
     this.bumperRadius = collisionSettings.bumperRadius || 1;
+    this.lifterDelta = collisionSettings.lifterDelta || 0.2;
+
+    // Helper
+    this.lifterHelper = new Mesh(
+        new SphereBufferGeometry(this.lifterRadius),
+        new MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true
+        })
+    );
+    this.bumperHelper = new Mesh(
+        new SphereBufferGeometry(this.bumperRadius),
+        new MeshBasicMaterial({
+            color: 0x0000ff,
+            wireframe: true
+        })
+    );
+    e.physics.app.engine.graphics.addToScene(this.lifterHelper, '-1');
+    e.physics.app.engine.graphics.addToScene(this.bumperHelper, '-1');
 
     // Internals
     this._w1 = new Vector3();
@@ -201,6 +223,8 @@ extend(CharacterCollisionModel.prototype, {
 
     bump(displacement)
     {
+        if (displacement.manhattanLength() > 0) { console.log('bump collision'); }
+
         const p1 = this.position1;
         const p1x = p1.x;
         const p1y = p1.y;
@@ -240,6 +264,12 @@ extend(CharacterCollisionModel.prototype, {
 
     lift(displacement, byAStaticObject)
     {
+        if (displacement.manhattanLength() > 0)
+        {
+            console.log('lift collision:');
+            console.log(displacement);
+        }
+
         const l = displacement.length();
         if (l > this.lifterRadius)
         {

@@ -267,7 +267,7 @@ extend(Collider.prototype, {
         const q = this._w7;
         q.copy(closest).addScaledVector(normal, radius + COLLISION_EPS);
         q.addScaledVector(c, -1); // p0 in plane - l0 in line
-        const dotPLN = q.dot(normal);
+        const dotPLN = Math.abs(q.dot(normal));
         const d = dotPLN / dotGN; // (p0 - l0) . n / (l . n)
         displacement.copy(gravityUp).multiplyScalar(d);
         // p = l0 + l * d

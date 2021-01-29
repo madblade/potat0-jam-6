@@ -286,14 +286,15 @@ extend(CharacterCollisionModel.prototype, {
 
         if (l > 0.)
         {
-            this.onGround = true;
-            if (byAStaticObject) this.wasLiftedByAStaticObject = true;
-            else this.wasLifted = true;
+            // TODO activate optim once I’m done debugging
+            // this.onGround = true;
+            // if (byAStaticObject) this.wasLiftedByAStaticObject = true;
+            // else this.wasLifted = true;
         }
 
         if (displacement.length() > 0)
         {
-            console.log(displacement);
+            // console.log(displacement);
         }
         // Apply.
         this.position1.set(nx, ny, nz);

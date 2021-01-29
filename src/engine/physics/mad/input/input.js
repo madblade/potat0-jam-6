@@ -13,7 +13,7 @@ let PhysicsInputModule = {
             intelligent: true,
             static: false,
             character: true,
-            bumperRadius: 0.4,
+            bumperRadius: 0.3,
             lifterDelta: 0.1,
             lifterRadius: 0.5
         };

@@ -51,7 +51,12 @@ let Level0 = function(title)
 
     this.objects = {};
     this.player = {
-        position: [0, 0, 10]
+        position: [
+            0.1157442810225684,
+            0.1157442810225684,
+            10
+            // 0, 0, 10
+        ]
     };
 };
 

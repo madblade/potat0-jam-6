@@ -252,7 +252,7 @@ extend(Collider.prototype, {
             displacement.set(0, 0, 0);
             return displacement;
         }
-        normal.multiplyScalar(Math.sqrt(l2)); // normalize
+        normal.multiplyScalar(1. / Math.sqrt(l2)); // normalize
 
         let projection1 = normal.dot(cToClosest);
         if (projection1 > 0) normal.negate();

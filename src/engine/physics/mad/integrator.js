@@ -72,7 +72,7 @@ extend(Integrator.prototype, {
         const maxSpeedDtr = maxSpeed;// * dtr;
         let l = increment.length();
         if (l > maxSpeedDtr) increment.multiplyScalar(maxSpeedDtr / l);
-        console.log(p0);
+        // console.log(p0);
 
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)

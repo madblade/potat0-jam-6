@@ -216,7 +216,7 @@ extend(Collider.prototype, {
         }
     },
 
-    intersectSphereTriVertical(c, radiusSquared, v1, v2, v3, p1, radius, gravityUp)
+    intersectSphereTriVertical(c, radiusSquared, v1, v2, v3, radius, gravityUp)
     // for lifter
     // gravityUp should point to -gravity and be normalized.
     {
@@ -265,7 +265,7 @@ extend(Collider.prototype, {
         }
         const q = this._w7;
         q.copy(v1).addScaledVector(normal, radius + COLLISION_EPS);
-        q.addScaledVector(p1, -1); // p0 in plane - l0 in line
+        q.addScaledVector(c, -1); // p0 in plane - l0 in line
         const dotPLN = q.dot(normal);
         const d = dotPLN / dotGN; // (p0 - l0) . n / (l . n)
         displacement.copy(gravityUp).multiplyScalar(d);

@@ -147,7 +147,7 @@ extend(MadEngine.prototype, {
 
         // 1. integrate objects needing to move
         // (this sets p1 for all dynamic entities)
-        this.integrator.integrateMovement(relativeDt);
+        this.integrator.integrateMovement(relativeDt / 1e3); // s
 
         // 2. detect collisions
         this.sweeper.sweepDetectOverlappingPairs();

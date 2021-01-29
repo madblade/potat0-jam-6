@@ -60,7 +60,7 @@ extend(Physics.prototype, {
 
     addCharacterController(selfModel)
     {
-        this.bulletEngine.addCharacterController(selfModel);
+        // this.bulletEngine.addCharacterController(selfModel);
         this.madEngine.addCharacterController(selfModel);
     },
 

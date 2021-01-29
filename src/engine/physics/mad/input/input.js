@@ -43,11 +43,11 @@ let PhysicsInputModule = {
             case 'd': if (!d[5]) changed = true; d[5] = !0; break;
 
             case 'fx': if (d[0]) changed = true; d[0] = !1; break;
-            case 'bx': if (d[0]) changed = true; d[1] = !1; break;
-            case 'rx': if (d[0]) changed = true; d[2] = !1; break;
-            case 'lx': if (d[0]) changed = true; d[3] = !1; break;
-            case 'ux': if (d[0]) changed = true; d[4] = !1; break;
-            case 'dx': if (d[0]) changed = true; d[5] = !1; break;
+            case 'bx': if (d[1]) changed = true; d[1] = !1; break;
+            case 'rx': if (d[2]) changed = true; d[2] = !1; break;
+            case 'lx': if (d[3]) changed = true; d[3] = !1; break;
+            case 'ux': if (d[4]) changed = true; d[4] = !1; break;
+            case 'dx': if (d[5]) changed = true; d[5] = !1; break;
             default:
                 return;
         }

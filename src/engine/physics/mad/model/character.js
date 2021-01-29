@@ -90,7 +90,7 @@ extend(CharacterCollisionModel.prototype, {
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
         let bumperCenter = this.bumperCenter; // Should be set to p1!
-        bumperCenter = this.position1;
+        bumperCenter.set(localX, localY, this.position1.z); // translated to local coords!
         let lowestPoint = bumperCenter.z - bumpR - COLLISION_EPS;
         let nbXToCheck = Math.ceil(bumpR / elementSizeX);
         let nbYToCheck = Math.ceil(bumpR / elementSizeY);
@@ -98,7 +98,7 @@ extend(CharacterCollisionModel.prototype, {
         let maxX = Math.min(x + nbXToCheck, nbSegmentsX - 1); // nbv - 2
         let minY = Math.max(y - nbYToCheck, 0);
         let maxY = Math.min(y + nbXToCheck, nbSegmentsY - 1); // nbv - 2
-        console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
+        // console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
         let displacement;
         // Go through heightmap patch.
         for (let iy = minY; iy < maxY; ++iy)
@@ -141,15 +141,16 @@ extend(CharacterCollisionModel.prototype, {
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this.lifterCenter; // Should be set to p1!
-        lifterCenter = this.position1; // minus something
+        lifterCenter.set(localX, localY, this.position1.z); // minus something
         lowestPoint = lifterCenter.z - liftR - COLLISION_EPS;
+        let highestPoint = lifterCenter.z + liftR + COLLISION_EPS;
         nbXToCheck = Math.ceil(liftR / elementSizeX);
         nbYToCheck = Math.ceil(liftR / elementSizeY);
         minX = Math.max(x - nbXToCheck, 0);
         maxX = Math.min(x + nbXToCheck, nbSegmentsX - 1); // nbv - 2
         minY = Math.max(y - nbYToCheck, 0);
         maxY = Math.min(y + nbXToCheck, nbSegmentsY - 1); // nbv - 2
-        console.log(`lift ${minX}->${maxX};${minY}->${maxY}`);
+        // console.log(`lift ${minX}->${maxX};${minY}->${maxY}`);
         // Go through heightmap patch.
         for (let iy = minY; iy < maxY; ++iy)
             for (let ix = minX; ix < maxX; ++ix)
@@ -167,6 +168,10 @@ extend(CharacterCollisionModel.prototype, {
                 if (heightA < lowestPoint && heightB < lowestPoint &&
                     heightC < lowestPoint && heightD < lowestPoint)
                     continue;
+
+                if (heightA > highestPoint && heightB > highestPoint &&
+                    heightC > highestPoint && heightD > highestPoint)
+                    throw Error('Went through the ground');
 
                 // Collide bump and clamp correction.
                 // abd
@@ -196,32 +201,38 @@ extend(CharacterCollisionModel.prototype, {
 
     bump(displacement)
     {
-        const p1x = this.position1.x;
-        const p1y = this.position1.y;
-        const p1z = this.position1.z;
-        const p0x = this.position0.x;
-        const p0y = this.position0.y;
-        const p0z = this.position0.z;
+        const p1 = this.position1;
+        const p1x = p1.x;
+        const p1y = p1.y;
+        const p1z = p1.z;
+        const p0 = this.position0;
+        const p0x = p0.x;
+        const p0y = p0.y;
+        const p0z = p0.z;
         let nx = p1x + displacement.x;
         let ny = p1y + displacement.y;
         let nz = p1z + displacement.z;
         if (nx > p1x && nx > p0x || nx < p1x && nx < p0x)
         {
             nx = p1x;
-            console.log('bump oob');
+            // console.log('bump oob');
         }
         if (ny > p1y && ny > p0y || ny < p1y && ny < p0y)
         {
             ny = p1y;
-            console.log('bump oob');
+            // console.log('bump oob');
         }
         if (nz > p1z && nz > p0z || nz < p1z && nz < p0z)
         {
             nz = p1z;
-            console.log('bump oob');
+            // console.log('bump oob');
         }
+
+        if (displacement.length() > 0) console.log(displacement);
         // Apply.
         this.position1.set(nx, ny, nz);
+        this.lifterCenter.add(displacement);
+        this.bumperCenter.add(displacement);
     },
 
     lift(displacement, byAStaticObject)
@@ -232,9 +243,10 @@ extend(CharacterCollisionModel.prototype, {
             console.warn('big lift');
             displacement.multiplyScalar(this.lifterRadius / l);
         }
-        const p1x = this.position1.x;
-        const p1y = this.position1.y;
-        const p1z = this.position1.z;
+        const p1 = this.position1;
+        const p1x = p1.x;
+        const p1y = p1.y;
+        const p1z = p1.z;
         let nx = p1x + displacement.x;
         let ny = p1y + displacement.y;
         let nz = p1z + displacement.z;
@@ -246,8 +258,11 @@ extend(CharacterCollisionModel.prototype, {
             else this.wasLifted = true;
         }
 
+        if (displacement.length() > 0) console.log(displacement);
         // Apply.
         this.position1.set(nx, ny, nz);
+        this.lifterCenter.add(displacement);
+        this.bumperCenter.add(displacement);
     },
 
     collideAgainstStatic(otherCollisionModel, collider)

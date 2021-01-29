@@ -34,6 +34,8 @@ extend(PhysicsEntity.prototype, {
         this.collisionModel = cm;
         this.isStatic = cm.isStatic;
         this.isIntelligent = cm.isIntelligent;
+        cm.position0.copy(this.center);
+        cm.position1.copy(this.center);
     },
 
     destroy()

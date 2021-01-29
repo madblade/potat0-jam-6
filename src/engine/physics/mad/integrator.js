@@ -51,7 +51,7 @@ extend(Integrator.prototype, {
                 sumOfForces.add(cf[i]);
         }
 
-        console.log(`Integrating ${entity.entityId}.`);
+        // console.log(`Integrating ${entity.entityId}.`);
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         const dtr = relativeDt * localTimeDilation;
@@ -66,9 +66,10 @@ extend(Integrator.prototype, {
             v0.y * dtr + dtr2h * a0.y,
             v0.z * dtr + dtr2h * a0.z,
         );
-        const maxSpeedDtr = maxSpeed * dtr;
+        const maxSpeedDtr = maxSpeed;// * dtr;
         let l = increment.length();
         if (l > maxSpeedDtr) increment.multiplyScalar(maxSpeedDtr / l);
+        console.log(p0);
 
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
@@ -80,6 +81,7 @@ extend(Integrator.prototype, {
         iv = Math.min(iv + ia * dtr, 1.0);
         selfIncrement.copy(wv).multiplyScalar(iv);
         cm.instantaneousVelocity = iv; // Apply Euler integration
+        increment.add(selfIncrement);
 
         // Apply Leapfrog integration
         p1.copy(p0).add(increment);
@@ -104,8 +106,8 @@ extend(Integrator.prototype, {
         cm.position0.copy(cm.position1);
         cm.velocity0.copy(cm.velocity1);
         cm.accelera0.copy(cm.accelera1);
-        cm.velocity1.set(0, 0, 0);
-        cm.accelera1.set(0, 0, 0);
+        // cm.velocity1.set(0, 0, 0);
+        // cm.accelera1.set(0, 0, 0);
 
         if (cm.isCharacter)
         {

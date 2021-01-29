@@ -11,9 +11,9 @@ import { CollisionModel } from './collisionmodel';
 import extend             from '../../../../extend';
 import { Vector3 }        from 'three';
 
-let CylinderCollisionModel = function(physicsEntity, collisionSettings)
+let CylinderCollisionModel = function(physicsEntity, collisionSettings, e)
 {
-    CollisionModel.call(this, physicsEntity, collisionSettings);
+    CollisionModel.call(this, physicsEntity, collisionSettings, e);
 
     this.isCylinder = true;
     // this.radius = collisionSettings.cylinderRadius;

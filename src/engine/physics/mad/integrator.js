@@ -51,7 +51,7 @@ extend(Integrator.prototype, {
                 sumOfForces.add(cf[i]);
         }
 
-        console.log(`Integrating ${entity.id}.`);
+        console.log(`Integrating ${entity.entityId}.`);
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         const dtr = relativeDt * localTimeDilation;

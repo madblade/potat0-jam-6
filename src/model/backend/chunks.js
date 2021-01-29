@@ -143,7 +143,7 @@ extend(ChunkModel.prototype, {
 
         // Add to physics.
         let physics = this.app.engine.physics;
-        physics.addHeightMap(graphicalChunk);
+        physics.addHeightMap(graphicalChunk, chunk.nbSegmentsX, chunk.nbSegmentsY);
     },
 
     refresh()

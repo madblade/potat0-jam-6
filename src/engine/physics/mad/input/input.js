@@ -2,9 +2,22 @@
  * (c) madblade 2021 all rights reserved
  */
 
-import { Object3D } from 'three';
+import { Object3D }       from 'three';
 
 let PhysicsInputModule = {
+
+    addCharacterController(playerSelfModel)
+    {
+        const position = playerSelfModel.position;
+        const options = {
+            intelligent: true,
+            static: false,
+            character: true,
+            bumperRadius: 0.5,
+            lifterRadius: 0.3
+        };
+        this.addPhysicsEntity(position, options);
+    },
 
     pushEvent(e)
     {

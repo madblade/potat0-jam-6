@@ -42,25 +42,26 @@ extend(Physics.prototype, {
             this.bulletEngine.refresh(); // cosmetic physics
     },
 
-    addHeightMap(graphicalChunk)
+    addHeightMap(graphicalChunk, nbSegmentsX, nbSegmentsY)
     {
         // XXX Uncomment here to bench bullet physics
         console.log(`[Physics] Should add ${graphicalChunk}.`);
         // this.bulletEngine.addHeightMap(graphicalChunk);
         this.madEngine.addHeightMap(0, 0, {
-            threeMesh: graphicalChunk
+            threeMesh: graphicalChunk, nbSegmentsX, nbSegmentsY
         });
     },
 
     pushEvent(e)
     {
-        this.bulletEngine.pushEvent(e);
+        // this.bulletEngine.pushEvent(e);
         this.madEngine.pushEvent(e);
     },
 
-    addCharacterController()
+    addCharacterController(selfModel)
     {
-        this.bulletEngine.addCharacterController();
+        this.bulletEngine.addCharacterController(selfModel);
+        this.madEngine.addCharacterController(selfModel);
     },
 
     cleanupFullPhysics()

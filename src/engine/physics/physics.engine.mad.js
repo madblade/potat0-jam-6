@@ -10,14 +10,18 @@
 'use strict';
 
 import extend                 from '../../extend';
-import { Sweeper }            from './mad/sweeper';
-import { Collider }           from './mad/collider';
-import { Integrator }         from './mad/integrator';
-import { PhysicsEntity }      from './mad/entity';
-import TimeUtils                        from './mad/time';
-import { Quaternion, Vector2, Vector3 } from 'three';
-import { HeightMapModel }               from './mad/model/terrain';
-import { PhysicsInputModule } from './mad/input/input';
+import { Sweeper }                 from './mad/sweeper';
+import { Collider }                from './mad/collider';
+import { Integrator }              from './mad/integrator';
+import { PhysicsEntity }           from './mad/entity';
+import TimeUtils                   from './mad/time';
+import { HeightMapModel }          from './mad/model/terrain';
+import { PhysicsInputModule }      from './mad/input/input';
+import {
+    Quaternion, Vector3
+}                                  from 'three';
+import { CollisionModel }          from './mad/model/collisionmodel';
+import { CharacterCollisionModel } from './mad/model/character';
 
 let MadEngine = function(physics)
 {
@@ -94,10 +98,18 @@ extend(MadEngine.prototype, {
     //      'terrain'/analytic/axis-aligned/trimesh, 'character'
     //      static: bool
     //      intelligent: bool
-    addPhysicsEntity(center, collisionModelSettigs)
+    addPhysicsEntity(center, options)
     {
         let entityId = this.sweeper.reserveEntityId(); // from 0 to length
-        let entity = new PhysicsEntity(entityId, this.sweeper, center, collisionModelSettigs);
+        let entity = new PhysicsEntity(entityId, center);
+
+        let collisionModel;
+        if (options.character)
+            collisionModel = new CharacterCollisionModel(entity, options, this);
+        else
+            collisionModel = new CollisionModel(entity, options, this);
+        entity.setCollisionModel(collisionModel);
+
         this.sweeper.addPhysicsEntity(entity);
         return entity;
     },

@@ -7,9 +7,9 @@
 import { CollisionModel } from './collisionmodel';
 import extend             from '../../../../extend';
 
-let BoxCollisionModel = function(physicsEntity, collisionSettings)
+let BoxCollisionModel = function(physicsEntity, collisionSettings, e)
 {
-    CollisionModel.call(this, physicsEntity, collisionSettings);
+    CollisionModel.call(this, physicsEntity, collisionSettings, e);
     this.isBox = true;
 };
 

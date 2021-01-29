@@ -47,7 +47,7 @@ let CollisionModel = function(
         if (collisionSettings.variableGravity)
             this.gravity = new Vector3();
         else
-            this.gravity = engine.gravity; // will throw if engine wasn’t specified
+            this.gravity = engine.gravity; // shared, will throw if engine wasn’t specified
         this.continuousForces = [];
 
         this.instantaneousAcceleration = 20.0; // used to get up to max velocity

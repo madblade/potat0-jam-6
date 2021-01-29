@@ -9,17 +9,17 @@ import extend             from '../../../../extend';
 import { Vector3 }        from 'three';
 import { COLLISION_EPS }  from '../collider';
 
-let CharacterCollisionModel = function(physicsEntity, collisionSettings)
+let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
 {
-    CollisionModel.call(this, physicsEntity, collisionSettings);
+    CollisionModel.call(this, physicsEntity, collisionSettings, e);
 
     this.isCharacter = true;
 
     // Overgrowth-like collision model
     this.lifterCenter = new Vector3();
-    this.lifterRadius = 0;
+    this.lifterRadius = collisionSettings.lifterRadius || 0.5;
     this.bumperCenter = new Vector3();
-    this.bumperRadius = 0;
+    this.bumperRadius = collisionSettings.bumperRadius || 1;
 
     // Internals
     this._w1 = new Vector3();
@@ -31,6 +31,8 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings)
     this.wasLiftedByAStaticObject = false;
     this.wasLifted = false;
 };
+
+CharacterCollisionModel.prototype = Object.create(CollisionModel.prototype);
 
 extend(CharacterCollisionModel.prototype, {
 

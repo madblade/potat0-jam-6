@@ -74,7 +74,7 @@ extend(Collider.prototype, {
         const heightMapWidth = this.sweeper.heightMapSideWidth;
         entitiesNeedingToMove.forEach(e => {
             const cm = e.collisionModel;
-            if (!e.isSphere || !e.isCharacter)
+            if (!cm.isSphere && !cm.isCharacter)
             {
                 console.warn('[Mad/Collider] Trying to terrain-collide a non-sphere.');
                 return;
@@ -83,7 +83,7 @@ extend(Collider.prototype, {
             if (cm.onGround) return;
 
             // 1. Find heightmaps by coordinates.
-            const p1 = cm.p1; // Collide at p1.
+            const p1 = cm.position1; // Collide at p1.
             const x = p1.x;
             const y = p1.y;
             const i = Math.floor(x / heightMapWidth + .5);

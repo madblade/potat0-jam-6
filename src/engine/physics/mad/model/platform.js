@@ -11,9 +11,9 @@
 import { CollisionModel } from './collisionmodel';
 import extend             from '../../../../extend';
 
-let PlatformCollisionModel = function(physicsEntity, collisionSettings)
+let PlatformCollisionModel = function(physicsEntity, collisionSettings, e)
 {
-    CollisionModel.call(this, physicsEntity, collisionSettings);
+    CollisionModel.call(this, physicsEntity, collisionSettings, e);
     this.isPlatform = true;
 };
 

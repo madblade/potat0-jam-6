@@ -10,9 +10,7 @@ import extend             from '../../../extend';
 // Generic entity that can collide.
 let PhysicsEntity = function(
     entityId,
-    sweeper,
-    center,
-    collisionModel
+    center
 )
 {
     this.entityId = entityId;
@@ -21,14 +19,22 @@ let PhysicsEntity = function(
     this.indexOnZArray = 0;
     this.center = new Vector3();
     this.center.copy(center);
-    this.collisionModel = collisionModel;
+
+    this.collisionModel = null;
 
     // Optimization
-    this.isStatic = collisionModel.isStatic;
-    this.isIntelligent = collisionModel.isIntelligent;
+    this.isStatic = true;
+    this.isIntelligent = false;
 };
 
 extend(PhysicsEntity.prototype, {
+
+    setCollisionModel(cm)
+    {
+        this.collisionModel = cm;
+        this.isStatic = cm.isStatic;
+        this.isIntelligent = cm.isIntelligent;
+    },
 
     destroy()
     {

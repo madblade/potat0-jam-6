@@ -9,11 +9,11 @@ import extend             from '../../../../extend';
 import { Matrix4 }        from 'three';
 
 let TrimeshCollisionModel = function(
-    physicsEntity, collisionSettings,
+    physicsEntity, collisionSettings, e,
     trimesh // must be a THREE.Mesh
 )
 {
-    CollisionModel.call(this, physicsEntity, collisionSettings);
+    CollisionModel.call(this, physicsEntity, collisionSettings, e);
     this.isTrimesh = true;
 
     this.positionAttribute = null; // three positions attribute

@@ -263,11 +263,11 @@ extend(Sweeper.prototype, {
         do {
             // check x…
             i = ix;
-            if (i-- > 0 && this.overlaps(axisX[i], center, delta, isStatic))
+            if (--i > 0 && this.overlaps(axisX[i], center, delta, isStatic))
                 overlapping.push(axisX[i]);
             else l[0] = true;
             i = ix;
-            if (i++ < axisX.length && this.overlaps(axisX[i], center, delta, isStatic))
+            if (++i < axisX.length && this.overlaps(axisX[i], center, delta, isStatic))
                 overlapping.push(axisX[i]);
             else l[1] = true;
             // If left and right are out of range, no one else can overlap!
@@ -276,22 +276,22 @@ extend(Sweeper.prototype, {
             // check y…
             // redundancy is handled by the hashset check
             i = iy;
-            if (i-- > 0 && this.overlaps(axisY[i], center, delta, isStatic))
+            if (--i > 0 && this.overlaps(axisY[i], center, delta, isStatic))
                 overlapping.push(axisY[i]);
             else l[2] = true;
             i = iy;
-            if (i++ < axisY.length && this.overlaps(axisY[i], center, delta, isStatic))
+            if (++i < axisY.length && this.overlaps(axisY[i], center, delta, isStatic))
                 overlapping.push(axisY[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
 
             // check z…
             i = iz;
-            if (i-- > 0 && this.overlaps(axisZ[i], center, delta, isStatic))
+            if (--i > 0 && this.overlaps(axisZ[i], center, delta, isStatic))
                 overlapping.push(axisZ[i]);
             else l[2] = true;
             i = iz;
-            if (i++ < axisZ.length && this.overlaps(axisZ[i], center, delta, isStatic))
+            if (++i < axisZ.length && this.overlaps(axisZ[i], center, delta, isStatic))
                 overlapping.push(axisZ[i]);
             else l[3] = true;
             if (l[2] && l[3]) break;
@@ -431,7 +431,7 @@ extend(Sweeper.prototype, {
         this.dynamicEntities.forEach(e => {
             const cm = e.collisionModel;
             if (!cm.onGround || cm.wantsToMove || cm.isSubjectToContinuousForce)
-                this.entitiesNeedingToMove.push(e);
+                this.entitiesNeedingToMove.add(e);
         });
     },
 

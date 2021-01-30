@@ -131,6 +131,7 @@ extend(Integrator.prototype, {
             const app = this.physics.physics.app;
             const sm = app.model.backend.selfModel;
             sm.updateSelf(cm.position0.toArray(), [0, 0, 0, 0], -1);
+            // sm.updateSelf([0, 0, 1], [0, 0, 0, 0], -1);
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
         }

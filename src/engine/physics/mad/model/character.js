@@ -117,9 +117,9 @@ extend(CharacterCollisionModel.prototype, {
         let nbXToCheck = Math.ceil(bumpR / elementSizeX);
         let nbYToCheck = Math.ceil(bumpR / elementSizeY);
         let minX = Math.max(x - nbXToCheck, 0);
-        let maxX = Math.min(x + nbXToCheck, nbSegmentsX - 1); // nbv - 2
+        let maxX = Math.min(x + nbXToCheck, nbSegmentsX); // nbv - 2
         let minY = Math.max(y - nbYToCheck, 0);
-        let maxY = Math.min(y + nbXToCheck, nbSegmentsY - 1); // nbv - 2
+        let maxY = Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
         // console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
         let displacement;
         // Go through heightmap patch.
@@ -165,13 +165,13 @@ extend(CharacterCollisionModel.prototype, {
         let lifterCenter = this.lifterCenter; // Should be set to p1!
         lifterCenter.set(localX, localY, this.position1.z); // minus something
         lowestPoint = lifterCenter.z - liftR - COLLISION_EPS;
-        let highestPoint = lifterCenter.z + liftR + COLLISION_EPS;
+        // let highestPoint = lifterCenter.z + liftR + COLLISION_EPS;
         nbXToCheck = Math.ceil(liftR / elementSizeX);
         nbYToCheck = Math.ceil(liftR / elementSizeY);
         minX = Math.max(x - nbXToCheck, 0);
-        maxX = Math.min(x + nbXToCheck, nbSegmentsX - 1); // nbv - 2
+        maxX = Math.min(x + nbXToCheck, nbSegmentsX); // nbv - 2
         minY = Math.max(y - nbYToCheck, 0);
-        maxY = Math.min(y + nbXToCheck, nbSegmentsY - 1); // nbv - 2
+        maxY = Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
         // console.log(`lift ${minX}->${maxX};${minY}->${maxY}`);
         // Go through heightmap patch.
         for (let iy = minY; iy < maxY; ++iy)
@@ -191,9 +191,10 @@ extend(CharacterCollisionModel.prototype, {
                     heightC < lowestPoint && heightD < lowestPoint)
                     continue;
 
-                if (heightA > highestPoint && heightB > highestPoint &&
-                    heightC > highestPoint && heightD > highestPoint)
-                    console.error('Went through the ground');
+                // if (heightA > highestPoint && heightB > highestPoint &&
+                //     heightC > highestPoint && heightD > highestPoint)
+                //     console.error('Went through the ground');
+                // (this may happen for other tris)
 
                 // Collide bump and clamp correction.
                 // abd
@@ -203,6 +204,10 @@ extend(CharacterCollisionModel.prototype, {
                 displacement = collider.intersectSphereTriVertical(lifterCenter, liftR2, v1, v2, v3,
                     liftR, gravityUp);
                 this.lift(displacement, false);
+                // if (displacement.manhattanLength() > 0)
+                // {
+                //     console.log(`${ix},${iy} (1): ${displacement.z}`);
+                // }
 
                 // bcd
                 v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
@@ -211,6 +216,10 @@ extend(CharacterCollisionModel.prototype, {
                 displacement = collider.intersectSphereTriVertical(lifterCenter, liftR2, v1, v2, v3,
                     liftR, gravityUp);
                 this.lift(displacement, false);
+                // if (displacement.manhattanLength() > 0)
+                // {
+                //     console.log(`${ix},${iy} (2): ${displacement.z}`);
+                // }
             }
 
         if (!this.wasLifted && !this.wasLiftedByAStaticObject)
@@ -266,8 +275,8 @@ extend(CharacterCollisionModel.prototype, {
     {
         if (displacement.manhattanLength() > 0)
         {
-            console.log('lift collision:');
-            console.log(displacement);
+            // console.log('lift collision:');
+            // console.log(displacement);
         }
 
         const l = displacement.length();

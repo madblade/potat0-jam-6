@@ -21,7 +21,9 @@ let Level0 = function(title)
     for (let j = 0; j < nbVerticesX; ++j)
         for (let i = 0; i < nbVerticesY; ++i)
             points.push(
-                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                // 0.
+                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                5.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);
 
@@ -52,10 +54,10 @@ let Level0 = function(title)
     this.objects = {};
     this.player = {
         position: [
-            0.1157442810225684,
-            0.1157442810225684,
-            10
-            // 0, 0, 10
+            // 0.1157442810225684,
+            // 0.1157442810225684,
+            // 2
+            0, 0, 10
         ]
     };
 };

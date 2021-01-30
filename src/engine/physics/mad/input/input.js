@@ -103,6 +103,7 @@ let PhysicsInputModule = {
         }
 
         wv.applyQuaternion(lq);
+        if (!d[4]) wv.multiplyScalar(0.1);
     },
 
 };

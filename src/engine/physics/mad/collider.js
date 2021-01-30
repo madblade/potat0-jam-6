@@ -98,7 +98,7 @@ extend(Collider.prototype, {
 
             // 2. Collide.
             const localX = x - (i - .5) * heightMapWidth;
-            const localY = y - (j - .5) * heightMapWidth;
+            const localY = -y - (j - .5) * heightMapWidth;
             cm.collideAgainstTerrain(localX, localY, hms, this);
         });
     },
@@ -257,20 +257,29 @@ extend(Collider.prototype, {
         let projection1 = normal.dot(cToClosest);
         if (projection1 > 0) normal.negate();
         const dotGN = normal.dot(gravityUp);
-        if (dotGN < COLLISION_EPS) {
-            if (dotGN < 0)
-                console.error('[Collider] Flipped triangle (from underneath heightmap?).');
-            else console.warn('[Collider] Very steep lift skipped.');
+        if (dotGN < COLLISION_EPS)
+        {
+            // Somehow this triggers often with very steep slopes. Investigate later.
+            // if (dotGN < 0)
+            //     console.error('[Collider] Flipped triangle (from underneath heightmap?).');
+            // else console.warn('[Collider] Very steep lift skipped.');
             displacement.set(0, 0, 0);
             return displacement;
         }
         const q = this._w7;
-        q.copy(closest).addScaledVector(normal, radius + COLLISION_EPS);
+
+        // This seems to be a good approximation! But needs more thorough testing.’
+        const disp = Math.abs(cToClosest.normalize().dot(normal));
+
+        q.copy(closest).addScaledVector(normal, disp * radius + COLLISION_EPS);
         q.addScaledVector(c, -1); // p0 in plane - l0 in line
         const dotPLN = Math.abs(q.dot(normal));
         const d = dotPLN / dotGN; // (p0 - l0) . n / (l . n)
         displacement.copy(gravityUp).multiplyScalar(d);
         // p = l0 + l * d
+
+        // if (displacement.manhattanLength() > 0) console.log(displacement);
+
         return displacement;
     },
 
@@ -338,9 +347,9 @@ extend(Collider.prototype, {
         }
 
         // Check V1V2V3 face region
-        const frac = 1. / (det1 + det2 + det3);
+        const frac = 1. / (det3 + det2 + det1);
         const v = det2 * frac;
-        const w = det3 * frac;
+        const w = det1 * frac;
         const result = this._w4;
         result.copy(v1).addScaledVector(v1v2, v).addScaledVector(v1v3, w);
         this._insideFace = true;

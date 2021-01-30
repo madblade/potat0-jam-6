@@ -5,13 +5,15 @@
 'use strict';
 
 import {
+    ArrowHelper,
     AxesHelper,
     BufferAttribute, BufferGeometry,
     Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry,
     Vector3
 } from 'three';
-import { ItemType } from '../../../model/backend/self/items';
+import { ItemType }                                                    from '../../../model/backend/self/items';
 import { createShadowCastingMaterial, getDynamicShadowVolumeGeometry } from './shadow';
+import { VertexNormalsHelper }                                         from 'three/examples/jsm/helpers/VertexNormalsHelper';
 
 const debugChunks = false;
 
@@ -47,7 +49,17 @@ let ChunksModule = {
         let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
         if (!isWater) newMesh.receiveShadow = true;
         newMesh.material = new MeshBasicMaterial({color: 0xff000000, wireframe: true}); // dbg
-        newMesh.add(new AxesHelper(5));
+        // newMesh.add(new AxesHelper(5));
+        let normH = new VertexNormalsHelper(newMesh, 0.5);
+        newMesh.add(normH);
+        const dh = {
+            v: new Vector3(1, 0, 0),
+            o: new Vector3(.1, 0.1, 0.1),
+            h: null};
+        dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
+        window.dh = dh;
+        newMesh.add(dh.h);
+
         // newMesh.rotation.set(0, 0, -Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)
         return newMesh;

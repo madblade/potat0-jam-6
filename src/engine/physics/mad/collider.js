@@ -162,17 +162,17 @@ extend(Collider.prototype, {
 
         // first pass =>
         const displacement = this._w5;
-        if (pass === 0 && !this._insideFace)
-        {
-            displacement.set(0, 0, 0);
-            return displacement;
-        }
-        if (pass === 1 && this._insideFace)
-        {
-            console.warn('Still an inside-face collision? Check first pass…');
-            displacement.set(0, 0, 0);
-            return displacement;
-        }
+        // if (pass === 0 && !this._insideFace)
+        // {
+        //     displacement.set(0, 0, 0);
+        //     return displacement;
+        // }
+        // if (pass === 1 && this._insideFace)
+        // {
+        //     console.warn('Still an inside-face collision? Check first pass…');
+        //     displacement.set(0, 0, 0);
+        //     return displacement;
+        // }
 
         // careful: closest allocates _w4
         // careful: v1v2 allocates _w1
@@ -192,71 +192,78 @@ extend(Collider.prototype, {
         }
 
         // 3. Collide
-        // const distToClosest = Math.sqrt(distToClosest2);
+        const distToClosest = Math.sqrt(distToClosest2);
         // const radius = Math.sqrt(radiusSquared);
 
         const normal = this._w6;
         const v1v2 = this._w1; // allocated by getClosestPointInTri!
         const v1v3 = this._w2; // allocated by getClosestPointInTri!
         normal.copy(v1v2).cross(v1v3);
+        normal.y = -normal.y; // (remember, we work in the flipped world)
         const l2 = normal.length();
 
         if (l2 >= COLLISION_EPS) // hmm… I don’t like using the same EPS here.
         {
-            // normal.multiplyScalar(1. / l2); // normalized
+            normal.multiplyScalar(1. / l2); // normalized
 
-            // if (!this._insideFace)
-            // {
-            //     // outside: pull back by the penetration amount.
-            //     displacement.copy(cToClosest)
-            //         .normalize()
-            //         .multiplyScalar(distToClosest - radius - COLLISION_EPS);
-            //
-            //     // keep coherent with the inside case;
-            //     // can afford a little bit of penetration.
-            //     normal.projectOnPlane(gravityUp);
-            //     displacement.projectOnVector(normal); // OOB risk on edges
-            //
-            //     if (displacement.manhattanLength() > 0) {
-            //         console.log('outside');
-            //         console.log(displacement);
-            //     }
-            //     return displacement;
-            // }
-            //
-            // // inside face: slide along normal
-            // let projection1 = normal.dot(cToClosest);
-            // cToClosest.multiplyScalar(radius / distToClosest);
-            // let projection2 = normal.dot(cToClosest);
-            // if (projection1 === projection2) throw Error('[Mad]: Thales didn’t work :(');
-            //
-            // if (projection1 > 0) // flipped triangle: revert normal
-            //     normal.negate();
-            // else { // okay: make projection positive.
-            //     projection1 *= -1;
-            //     projection2 *= -1;
-            // }
+            normal.negate();
+            window.dh.h.setDirection(normal);
+            normal.negate();
+
+            if (!this._insideFace)
+            {
+                // outside: pull back by the penetration amount.
+                displacement.copy(cToClosest)
+                    .normalize()
+                    .multiplyScalar(distToClosest - radius - COLLISION_EPS);
+
+                // keep coherent with the inside case;
+                // can afford a little bit of penetration.
+                // normal.projectOnPlane(gravityUp);
+                displacement.projectOnVector(normal); // OOB risk on edges
+                // displacement.projectOnPlane(gravityUp);
+
+                // if (displacement.manhattanLength() > 0) {
+                //     console.log('outside');
+                //     console.log(displacement);
+                // }
+                return displacement;
+            }
+
+            // inside face: slide along normal
+            let projection1 = normal.dot(cToClosest);
+            cToClosest.multiplyScalar(radius / distToClosest);
+            let projection2 = normal.dot(cToClosest);
+            if (projection1 === projection2) throw Error('[Mad]: Thales didn’t work :(');
+
+            if (projection1 > 0) // flipped triangle: revert normal
+                normal.negate();
+            else { // okay: make projection positive.
+                projection1 *= -1;
+                projection2 *= -1;
+            }
 
             // Move along normal by virtue of the great Thales
             // (and add EPS for good measure)
             // normal.projectOnPlane(gravityUp);
-            // displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
+            displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
+            // displacement.projectOnPlane(gravityUp);
 
-            const a = this._w6;
-            const b = this._w1;
-            b.copy(cToClosest).normalize().multiplyScalar(radius).projectOnPlane(gravityUp);
-            a.copy(cToClosest).projectOnPlane(gravityUp);
-            const l = Math.abs(b.length() - a.length());
-            a.normalize().multiplyScalar(l).negate();
-            displacement.copy(a);
+            // const a = this._w6;
+            // const b = this._w1;
+            // b.copy(cToClosest).normalize().multiplyScalar(radius).projectOnPlane(gravityUp);
+            // a.copy(cToClosest).projectOnPlane(gravityUp);
+            // const l = Math.abs(b.length() - a.length());
+            // a.normalize().multiplyScalar(l).negate();
+            // displacement.copy(a);
 
             if (displacement.manhattanLength() > 0) {
-                console.log('inside');
-                console.log(v1);
-                console.log(v2);
-                console.log(v3);
+                // console.log('inside');
+                // console.log(v1);
+                // console.log(v2);
+                // console.log(v3);
                 // console.log(normal);
-                console.log(displacement);
+                // console.log(displacement);
             }
         }
         else displacement.set(0, 0, 0);
@@ -295,6 +302,7 @@ extend(Collider.prototype, {
         const v1v2 = this._w1; // allocated by getClosestPointInTri!
         const v1v3 = this._w2; // allocated by getClosestPointInTri!
         normal.copy(v1v2).cross(v1v3);
+        // normal.y = -normal.y; // I DON'T KNOW WHY IT WORKS WITHOUT THAT
         const l2 = normal.lengthSq();
         if (l2 <= COLLISION_EPS) { // ignore small triangles
             displacement.set(0, 0, 0);

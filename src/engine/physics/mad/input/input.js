@@ -13,9 +13,9 @@ let PhysicsInputModule = {
             intelligent: true,
             static: false,
             character: true,
-            bumperRadius: 0.3,
-            lifterDelta: 0.1,
-            lifterRadius: 0.5
+            bumperRadius: 0.5,
+            lifterDelta: 0.01,
+            lifterRadius: 0.4
         };
         this.addPhysicsEntity(position, options);
     },
@@ -70,27 +70,18 @@ let PhysicsInputModule = {
             return;
         }
 
-        const from = this._ffr;
-        const to = this._fto;
-        from.set(0, 1, 0);
-        // forward is +y, right is +x, up is +z
-        to.set(
-            d[2] ? 1 : d[3] ? -1 : 0, // right
-            d[0] ? 1 : d[1] ? -1 : 0, // forward
-            d[4] ? 1 : d[5] ? -1 : 0 // up
-        ).normalize();
         const lq = this._q;
-        lq.setFromUnitVectors(from, to);
 
         // default vector is the camera forward projected on (x,y)
         // or the camera up projected on (x, y)
         const f = this._f;
         f.set(0, 0, -1); // camera looks at -z
         const cam = this.physics.app.engine.graphics.cameraManager.mainCamera;
-        const q = cam.cameraObject.quaternion;
-        f.applyQuaternion(q);
-        if (Math.abs(f.x) + Math.abs(f.y) > 0.0001)
-            wv.set(f.x, f.y, 0);
+        cam.cameraObject.matrixWorld.decompose(this._p, lq, this._s);
+        // const q = cam.cameraObject.quaternion;
+        f.applyQuaternion(lq);
+        if (Math.abs(f.x) + Math.abs(f.y) > 0.01)
+            wv.set(f.x, f.y, 0).normalize();
         else
         {
             console.log('DBG: forward computed from the up vector.');
@@ -98,12 +89,27 @@ let PhysicsInputModule = {
             // retry with up if camera is vertical
             const u = this._f;
             u.copy(Object3D.DefaultUp); // camera up is +y
-            u.applyQuaternion(q); // more efficient
-            wv.set(u.x, u.y, 0);
+            u.applyQuaternion(lq); // more efficient
+            wv.set(u.x, u.y, 0).normalize();
         }
 
-        wv.applyQuaternion(lq);
-        if (!d[4]) wv.multiplyScalar(0.1);
+        const from = this._ffr;
+        const to = this._fto;
+        from.set(0, 1, 0);
+        // forward is +y, right is +x, up is +z
+        to.set(
+            d[2] ? 1 : d[3] ? -1 : 0, // right
+            d[0] ? 1 : d[1] ? -1 : 0, // forward
+            0, // d[4] ? 1 : d[5] ? -1 : 0 // up
+        ).normalize();
+        if (to.manhattanLength() > 0)
+        {
+            lq.setFromUnitVectors(from, to);
+            wv.applyQuaternion(lq);
+        }
+        else wv.set(0, 0, 0);
+        wv.z = d[4] ? 1 : d[5] ? -1 : 0;
+        if (!d[4]) wv.multiplyScalar(0.2);
     },
 
 };

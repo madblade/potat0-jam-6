@@ -5,6 +5,7 @@
 'use strict';
 
 import {
+    AxesHelper,
     BufferAttribute, BufferGeometry,
     Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry,
     Vector3
@@ -46,6 +47,7 @@ let ChunksModule = {
         let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
         if (!isWater) newMesh.receiveShadow = true;
         newMesh.material = new MeshBasicMaterial({color: 0xff000000, wireframe: true}); // dbg
+        newMesh.add(new AxesHelper(5));
         // newMesh.rotation.set(0, 0, -Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)
         return newMesh;

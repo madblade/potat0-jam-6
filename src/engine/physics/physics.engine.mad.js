@@ -32,7 +32,8 @@ let MadEngine = function(physics)
     this.integrator = new Integrator(this.sweeper);
 
     // Exposed settings
-    this.gravity = new Vector3(0, 0, -9.8);
+    // this.gravity = new Vector3(0, 0, -9.8);
+    this.gravity = new Vector3(0, 0, 0);
 
     // Time management
     this._stamp = TimeUtils.getTimeSecNano();
@@ -43,6 +44,8 @@ let MadEngine = function(physics)
     this._ffr = new Vector3(0, 0, 0);
     this._fto = new Vector3(0, 0, 0);
     this._q = new Quaternion();
+    this._p = new Vector3();
+    this._s = new Vector3();
 };
 
 extend(MadEngine.prototype, {

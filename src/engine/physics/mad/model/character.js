@@ -74,6 +74,15 @@ extend(CharacterCollisionModel.prototype, {
 
         // XXX
         this.lifterCenter.copy(physicalEntity.center);
+        this._w1.set(0, 0, -this.lifterDelta);
+        this.lifterCenter.add(this._w1);
+    },
+
+    updateBumperLifterAfterChange(displacement)
+    {
+        // Using displacement because we work in local coordinates.
+        this.bumperCenter.add(displacement);
+        this.lifterCenter.add(displacement);
     },
 
     // XXX [LOW] support infinite terrain patches
@@ -109,6 +118,7 @@ extend(CharacterCollisionModel.prototype, {
 
         // 1. BUMP.
         // local coordinates are in [0, heightMapWidth].
+        console.log('bump pass');
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
         let bumperCenter = this.bumperCenter; // Should be set to p1!
@@ -163,7 +173,7 @@ extend(CharacterCollisionModel.prototype, {
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this.lifterCenter; // Should be set to p1!
-        lifterCenter.set(localX, localY, this.position1.z); // minus something
+        lifterCenter.set(localX, localY, this.position1.z - this.lifterDelta); // minus something
         lowestPoint = lifterCenter.z - liftR - COLLISION_EPS;
         // let highestPoint = lifterCenter.z + liftR + COLLISION_EPS;
         nbXToCheck = Math.ceil(liftR / elementSizeX);
@@ -232,7 +242,7 @@ extend(CharacterCollisionModel.prototype, {
 
     bump(displacement)
     {
-        if (displacement.manhattanLength() > 0) { console.log('bump collision'); }
+        // if (displacement.manhattanLength() > 0) { console.log('bump collision'); }
 
         const p1 = this.position1;
         const p1x = p1.x;
@@ -247,37 +257,40 @@ extend(CharacterCollisionModel.prototype, {
         let nz = p1z + displacement.z;
         if (nx > p1x && nx > p0x || nx < p1x && nx < p0x)
         {
-            nx = p1x;
+            // nx = p1x;
+            // displacement.x = 0;
             // console.log('bump oob');
         }
         if (ny > p1y && ny > p0y || ny < p1y && ny < p0y)
         {
-            ny = p1y;
+            // ny = p1y;
+            // displacement.y = 0;
             // console.log('bump oob');
         }
         if (nz > p1z && nz > p0z || nz < p1z && nz < p0z)
         {
-            nz = p1z;
+            // nz = p1z;
+            // displacement.z = 0;
             // console.log('bump oob');
         }
 
-        if (displacement.length() > 0)
-        {
-            console.log(displacement);
-        }
+        // if (displacement.length() > 0)
+        // {
+        //     console.log(displacement);
+        // }
+
         // Apply.
         this.position1.set(nx, ny, nz);
-        this.lifterCenter.add(displacement);
-        this.bumperCenter.add(displacement);
+        this.updateBumperLifterAfterChange(displacement);
     },
 
     lift(displacement, byAStaticObject)
     {
-        if (displacement.manhattanLength() > 0)
-        {
-            // console.log('lift collision:');
-            // console.log(displacement);
-        }
+        // if (displacement.manhattanLength() > 0)
+        // {
+        //     console.log('lift collision:');
+        //     console.log(displacement);
+        // }
 
         const l = displacement.length();
         if (l > this.lifterRadius)
@@ -305,10 +318,10 @@ extend(CharacterCollisionModel.prototype, {
         {
             // console.log(displacement);
         }
+
         // Apply.
         this.position1.set(nx, ny, nz);
-        this.lifterCenter.add(displacement);
-        this.bumperCenter.add(displacement);
+        this.updateBumperLifterAfterChange(displacement);
     },
 
     collideAgainstStatic(otherCollisionModel, collider)
@@ -405,7 +418,7 @@ extend(CharacterCollisionModel.prototype, {
             return;
         }
 
-        // TODO [HIGH] code me.
+        // TODO [GAMEPLAY] code me.
         // solve character interaction
         // maybe we can afford a little bit of terrain penetration, test that:
 

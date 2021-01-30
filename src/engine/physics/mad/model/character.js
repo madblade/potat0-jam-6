@@ -117,6 +117,7 @@ extend(CharacterCollisionModel.prototype, {
         const y = Math.floor(localY / extentY * nbSegmentsY);
         const gravityUp = this._w4;
         gravityUp.copy(this.gravity).negate().normalize();
+        gravityUp.z = -10;
 
         // 1. BUMP.
         // local coordinates are in [0, heightMapWidth].
@@ -158,7 +159,7 @@ extend(CharacterCollisionModel.prototype, {
                 v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
                 v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
                 displacement = collider.intersectSphereTriOrthogonal(
-                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, 0
+                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, true
                 );
                 this.bump(displacement);
 
@@ -167,7 +168,7 @@ extend(CharacterCollisionModel.prototype, {
                 v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
                 v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
                 displacement = collider.intersectSphereTriOrthogonal(
-                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, 0
+                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, true
                 );
                 this.bump(displacement);
             }

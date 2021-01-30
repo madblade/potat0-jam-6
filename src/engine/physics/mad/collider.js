@@ -150,12 +150,30 @@ extend(Collider.prototype, {
      * @param v1 triangle vertex 1
      * @param v2 triangle vertex 2
      * @param v3 triangle vertex 3
+     * @param radius sphere radius
+     * @param gravityUp
+     * @param pass 0 = only faces, 1 = only borders / points
      * @output displacement vector to go back to a clear state.
      */
-    intersectSphereTri(c, radiusSquared, v1, v2, v3)
+    intersectSphereTriOrthogonal(c, radiusSquared, v1, v2, v3, radius, gravityUp, pass)
     {
         // 1. Get closest point in triangle
         const closest = this.getClosestPointInTri(c, v1, v2, v3);
+
+        // first pass =>
+        const displacement = this._w5;
+        if (pass === 0 && !this._insideFace)
+        {
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
+        if (pass === 1 && this._insideFace)
+        {
+            console.warn('Still an inside-face collision? Check first pass…');
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
+
         // careful: closest allocates _w4
         // careful: v1v2 allocates _w1
         // careful: v1v3 allocates _w2
@@ -163,7 +181,6 @@ extend(Collider.prototype, {
         cToClosest.copy(closest).addScaledVector(c, -1);
 
         // 2. Check distance
-        const displacement = this._w5;
         const distToClosest2 = cToClosest.lengthSq();
         if (distToClosest2 > radiusSquared + COLLISION_EPS)
         // adding EPS to a squared distance… hopefully this goes well.
@@ -175,8 +192,8 @@ extend(Collider.prototype, {
         }
 
         // 3. Collide
-        const distToClosest = Math.sqrt(distToClosest2);
-        const radius = Math.sqrt(radiusSquared);
+        // const distToClosest = Math.sqrt(distToClosest2);
+        // const radius = Math.sqrt(radiusSquared);
 
         const normal = this._w6;
         const v1v2 = this._w1; // allocated by getClosestPointInTri!
@@ -186,49 +203,60 @@ extend(Collider.prototype, {
 
         if (l2 >= COLLISION_EPS) // hmm… I don’t like using the same EPS here.
         {
-            normal.multiplyScalar(1. / l2); // normalized
+            // normal.multiplyScalar(1. / l2); // normalized
 
-            if (!this._insideFace)
-            {
-                // outside: pull back by the penetration amount.
-                displacement.copy(cToClosest)
-                    .normalize()
-                    .multiplyScalar(distToClosest - radius - COLLISION_EPS);
-
-                // keep coherent with the inside case;
-                // can afford a little bit of penetration.
-                displacement.projectOnVector(normal); // OOB risk on edges
-
-                if (displacement.manhattanLength() > 0) {
-                    console.log('outside');
-                    console.log(displacement);
-                }
-                return displacement;
-            }
-
-            // inside face: slide along normal
-            let projection1 = normal.dot(cToClosest);
-            cToClosest.multiplyScalar(radius / distToClosest);
-            let projection2 = normal.dot(cToClosest);
-            if (projection1 === projection2) throw Error('[Mad]: Thales didn’t work :(');
-
-            if (projection1 > 0) // flipped triangle: revert normal
-                normal.negate();
-            else { // okay: make projection positive.
-                projection1 *= -1;
-                projection2 *= -1;
-            }
+            // if (!this._insideFace)
+            // {
+            //     // outside: pull back by the penetration amount.
+            //     displacement.copy(cToClosest)
+            //         .normalize()
+            //         .multiplyScalar(distToClosest - radius - COLLISION_EPS);
+            //
+            //     // keep coherent with the inside case;
+            //     // can afford a little bit of penetration.
+            //     normal.projectOnPlane(gravityUp);
+            //     displacement.projectOnVector(normal); // OOB risk on edges
+            //
+            //     if (displacement.manhattanLength() > 0) {
+            //         console.log('outside');
+            //         console.log(displacement);
+            //     }
+            //     return displacement;
+            // }
+            //
+            // // inside face: slide along normal
+            // let projection1 = normal.dot(cToClosest);
+            // cToClosest.multiplyScalar(radius / distToClosest);
+            // let projection2 = normal.dot(cToClosest);
+            // if (projection1 === projection2) throw Error('[Mad]: Thales didn’t work :(');
+            //
+            // if (projection1 > 0) // flipped triangle: revert normal
+            //     normal.negate();
+            // else { // okay: make projection positive.
+            //     projection1 *= -1;
+            //     projection2 *= -1;
+            // }
 
             // Move along normal by virtue of the great Thales
             // (and add EPS for good measure)
-            displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
+            // normal.projectOnPlane(gravityUp);
+            // displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
+
+            const a = this._w6;
+            const b = this._w1;
+            b.copy(cToClosest).normalize().multiplyScalar(radius).projectOnPlane(gravityUp);
+            a.copy(cToClosest).projectOnPlane(gravityUp);
+            const l = Math.abs(b.length() - a.length());
+            a.normalize().multiplyScalar(l).negate();
+            displacement.copy(a);
 
             if (displacement.manhattanLength() > 0) {
                 console.log('inside');
                 console.log(v1);
                 console.log(v2);
                 console.log(v3);
-                console.log(normal);
+                // console.log(normal);
+                console.log(displacement);
             }
         }
         else displacement.set(0, 0, 0);

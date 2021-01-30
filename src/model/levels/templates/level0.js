@@ -22,7 +22,10 @@ let Level0 = function(title)
         for (let i = 0; i < nbVerticesY; ++i)
             points.push(
                 // 0.
-                (j) * 10
+                5 * (j + i) - 10
+                // 10 * i - 10
+                // 10 * j - 10
+                // i + j
                 // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)

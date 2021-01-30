@@ -219,12 +219,16 @@ extend(Collider.prototype, {
                     .normalize()
                     .multiplyScalar(distToClosest - radius - COLLISION_EPS);
 
+                // possible enhancement?
+                //  1. project c on triangle plane.
+                //  2. compute penetration on plane.
+                //  3. pull back on normal by penetration.
                 // keep coherent with the inside case;
                 // can afford a little bit of penetration.
                 // normal.projectOnPlane(gravityUp);
                 displacement.projectOnVector(normal); // OOB risk on edges
                 // displacement.projectOnPlane(gravityUp);
-
+                // displacement.set(0, 0, 0);
                 // if (displacement.manhattanLength() > 0) {
                 //     console.log('outside');
                 //     console.log(displacement);
@@ -251,11 +255,13 @@ extend(Collider.prototype, {
             // (this is not an analytic solution! just an approx that seems to work well
             // in practice)
             // normal.projectOnPlane(gravityUp);
-            displacement.copy(normal).multiplyScalar(projection2 - projection1 + COLLISION_EPS);
+            const l = Math.abs(projection2 - projection1 + COLLISION_EPS);
+            // if (l > 0) console.log(l);
+            displacement.copy(normal).multiplyScalar(l);
+            displacement.y = -displacement.y;
             // displacement.negate();
             // displacement.projectOnPlane(gravityUp);
             // displacement.set(0, 0, 0);
-            displacement.y = -displacement.y;
             // displacement.multiplyScalar(0.1);
 
             // This used to work but is broken with heightmaps, no time to investigate:
@@ -314,7 +320,7 @@ extend(Collider.prototype, {
         const v1v2 = this._w1; // allocated by getClosestPointInTri!
         const v1v3 = this._w2; // allocated by getClosestPointInTri!
         normal.copy(v1v2).cross(v1v3);
-        // normal.y = -normal.y; // I DON'T KNOW WHY IT WORKS WITHOUT THAT
+        // normal.y = -normal.y;
         const l2 = normal.lengthSq();
         if (l2 <= COLLISION_EPS) { // ignore small triangles
             displacement.set(0, 0, 0);
@@ -324,19 +330,24 @@ extend(Collider.prototype, {
 
         let projection1 = normal.dot(cToClosest);
         if (projection1 > 0) normal.negate();
-        const dotGN = normal.dot(gravityUp);
+        let dotGN = normal.dot(gravityUp);
         if (dotGN < COLLISION_EPS)
         {
             // Somehow this triggers often with very steep slopes. Investigate later.
-            // if (dotGN < 0)
-            //     console.error('[Collider] Flipped triangle (from underneath heightmap?).');
-            // else console.warn('[Collider] Very steep lift skipped.');
-            displacement.set(0, 0, 0);
-            return displacement;
+            if (dotGN < 0)
+            {
+                // console.error('[Collider] Flipped triangle (from underneath heightmap?).');
+            }
+            else
+            {
+                console.warn('[Collider] Very steep lift skipped.');
+                displacement.set(0, 0, 0);
+                return displacement;
+            }
         }
         const q = this._w7;
 
-        // This seems to be a good approximation! But needs more thorough testing.’
+        // This seems to be a good approximation! But needs more thorough testing.
         const disp = Math.abs(cToClosest.normalize().dot(normal));
 
         q.copy(closest).addScaledVector(normal, disp * radius + COLLISION_EPS);

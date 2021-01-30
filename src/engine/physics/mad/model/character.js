@@ -277,9 +277,9 @@ extend(CharacterCollisionModel.prototype, {
         }
         if (nz > p1z && nz > p0z || nz < p1z && nz < p0z)
         {
-            // nz = p1z;
-            // displacement.z = 0;
-            console.log('bump z');
+            nz = p1z;
+            displacement.z = 0;
+            // console.log('bump z');
         }
 
         if (displacement.manhattanLength() > 0)
@@ -325,7 +325,7 @@ extend(CharacterCollisionModel.prototype, {
 
         if (displacement.length() > 0)
         {
-            // console.log(displacement);
+            console.log(displacement);
         }
 
         // Apply.

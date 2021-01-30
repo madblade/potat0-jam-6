@@ -135,43 +135,47 @@ extend(CharacterCollisionModel.prototype, {
         // console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
         let displacement;
         // Go through heightmap patch.
-        for (let iy = minY; iy < maxY; ++iy)
-            for (let ix = minX; ix < maxX; ++ix)
-            {
-                // const offsetY = nbVerticesX * iy;
-                const a = ix + nbVerticesX * iy; // 0, 0
-                const b = ix + nbVerticesX * (iy + 1); // 0, 1
-                const c = ix + 1 + nbVerticesX * (iy + 1); // 1, 1
-                const d = ix + 1 + nbVerticesX * iy; // 1, 0
+        // this._nbBumps = 0;
+        const nbPass = 1;
+        for (let pass = 0; pass < nbPass; ++pass)
+            for (let iy = minY; iy < maxY; ++iy)
+                for (let ix = minX; ix < maxX; ++ix)
+                {
+                    // const offsetY = nbVerticesX * iy;
+                    const a = ix + nbVerticesX * iy; // 0, 0
+                    const b = ix + nbVerticesX * (iy + 1); // 0, 1
+                    const c = ix + 1 + nbVerticesX * (iy + 1); // 1, 1
+                    const d = ix + 1 + nbVerticesX * iy; // 1, 0
 
-                // Compute max and min height.
-                const heightA = pos[3 * a + 2];
-                const heightB = pos[3 * b + 2];
-                const heightC = pos[3 * c + 2];
-                const heightD = pos[3 * d + 2];
-                if (heightA < lowestPoint && heightB < lowestPoint &&
-                    heightC < lowestPoint && heightD < lowestPoint)
-                    continue;
+                    // Compute max and min height.
+                    const heightA = pos[3 * a + 2];
+                    const heightB = pos[3 * b + 2];
+                    const heightC = pos[3 * c + 2];
+                    const heightD = pos[3 * d + 2];
+                    if (heightA < lowestPoint && heightB < lowestPoint &&
+                        heightC < lowestPoint && heightD < lowestPoint)
+                        continue;
 
-                // Collide bump and clamp correction.
-                // abd
-                v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
-                v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                displacement = collider.intersectSphereTriOrthogonal(
-                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, true
-                );
-                this.bump(displacement);
+                    // Collide bump and clamp correction.
+                    // abd
+                    v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
+                    v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                    v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                    displacement = collider.intersectSphereTriOrthogonal(
+                        bumperCenter, bumpR2, v1, v2, v3, bumpR, pass
+                    );
+                    this.bump(displacement);
 
-                // bcd
-                v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                displacement = collider.intersectSphereTriOrthogonal(
-                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, true
-                );
-                this.bump(displacement);
-            }
+                    // bcd
+                    v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                    v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
+                    v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                    displacement = collider.intersectSphereTriOrthogonal(
+                        bumperCenter, bumpR2, v1, v2, v3, bumpR, pass
+                    );
+                    this.bump(displacement);
+                }
+        // console.log(this._nbBumps);
 
         // 2. LIFT.
         const liftR = this.lifterRadius;
@@ -275,13 +279,14 @@ extend(CharacterCollisionModel.prototype, {
         {
             // nz = p1z;
             // displacement.z = 0;
-            // console.log('bump oob');
+            console.log('bump z');
         }
 
-        // if (displacement.length() > 0)
-        // {
-        //     console.log(displacement);
-        // }
+        if (displacement.manhattanLength() > 0)
+        {
+            // this._nbBumps++;
+            // console.log(displacement);
+        }
 
         // Apply.
         this.position1.set(nx, ny, nz);

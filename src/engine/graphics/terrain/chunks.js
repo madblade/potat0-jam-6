@@ -8,7 +8,7 @@ import {
     ArrowHelper,
     AxesHelper,
     BufferAttribute, BufferGeometry,
-    Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry,
+    Color, Mesh, MeshBasicMaterial, PlaneBufferGeometry, SphereBufferGeometry,
     Vector3
 } from 'three';
 import { ItemType }                                                    from '../../../model/backend/self/items';
@@ -56,9 +56,17 @@ let ChunksModule = {
             v: new Vector3(1, 0, 0),
             o: new Vector3(.1, 0.1, 0.1),
             h: null};
+        dh.s = new Mesh(new SphereBufferGeometry(0.1), new MeshBasicMaterial({color:0xffff00}));
+        dh.sg1 = new Mesh(new SphereBufferGeometry(0.1), new MeshBasicMaterial({color:0x0000ff}));
+        dh.sg2 = new Mesh(new SphereBufferGeometry(0.1), new MeshBasicMaterial({color:0x0000ff}));
+        dh.sg3 = new Mesh(new SphereBufferGeometry(0.1), new MeshBasicMaterial({color:0x0000ff}));
         dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
         window.dh = dh;
         newMesh.add(dh.h);
+        newMesh.add(dh.s);
+        newMesh.add(dh.sg1);
+        newMesh.add(dh.sg2);
+        newMesh.add(dh.sg3);
 
         // newMesh.rotation.set(0, 0, -Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)

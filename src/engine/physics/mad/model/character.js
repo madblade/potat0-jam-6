@@ -24,6 +24,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.bumperCenter = new Vector3();
     this.bumperRadius = collisionSettings.bumperRadius || 1;
     this.lifterDelta = collisionSettings.lifterDelta || 0.2;
+    // TODO leg raycast coordinates here + forward orientation
 
     // Helper
     this.lifterHelper = new Mesh(
@@ -129,7 +130,7 @@ extend(CharacterCollisionModel.prototype, {
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
         let bumperCenter = this.bumperCenter; // Should be set to p1!
-        bumperCenter.set(localX, localY, this.position1.z); // translated to local coords!
+        bumperCenter.set(localX, localY, this.position1.z); // (translated to local coords)
         let lowestPoint = bumperCenter.z - bumpR - COLLISION_EPS;
         let nbXToCheck = Math.ceil(bumpR / elementSizeX);
         let nbYToCheck = Math.ceil(bumpR / elementSizeY);
@@ -180,7 +181,12 @@ extend(CharacterCollisionModel.prototype, {
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this.lifterCenter; // Should be set to p1!
-        lifterCenter.set(localX, localY, this.position1.z - this.lifterDelta); // minus something
+        // lifterCenter.set(localX, localY, this.position1.z - this.lifterDelta); // minus something
+        lifterCenter.set(
+            bumperCenter.x,
+            bumperCenter.y,
+            bumperCenter.z - this.lifterDelta
+        );
         lowestPoint = lifterCenter.z - liftR - COLLISION_EPS;
         nbXToCheck = Math.ceil(liftR / elementSizeX);
         nbYToCheck = Math.ceil(liftR / elementSizeY);
@@ -239,30 +245,54 @@ extend(CharacterCollisionModel.prototype, {
         const p1y = p1.y;
         const p1z = p1.z;
         const p0 = this.position0;
+        const p0x = p0.x;
+        const p0y = p0.y;
         const p0z = p0.z;
         let nx = p1x + displacement.x;
         let ny = p1y + displacement.y;
         let nz = p1z + displacement.z;
-        // Bumper may change px and py farther than desired.
-        // if (nx > p1x && nx > p0x || nx < p1x && nx < p0x)
-        // {
-        //     nx = p1x;
-        //     displacement.x = 0;
-        // }
-        // if (ny > p1y && ny > p0y || ny < p1y && ny < p0y)
-        // {
-        //     ny = p1y;
-        //     displacement.y = 0;
-        // }
+        let correct = false;
+
+        // Bumper may change px and py farther than desired, but not too far!
+        if (nx > p1x && nx > p0x || nx < p1x && nx < p0x)
+        {
+            const br = this.bumperRadius;
+            if (displacement.lengthSq() > br * br)
+            {
+                displacement.normalize().multiplyScalar(br / 2);
+                correct = true;
+            }
+        }
+        if (ny > p1y && ny > p0y || ny < p1y && ny < p0y)
+        {
+            const br = this.bumperRadius;
+            if (displacement.lengthSq() > br * br)
+            {
+                displacement.normalize().multiplyScalar(br / 2);
+                correct = true;
+            }
+        }
         if (nz > p1z && nz > p0z || nz < p1z && nz < p0z)
         {
             if (this._debug)
                 console.warn('[Collision/Character] Bumper changed Z.');
             nz = p1z;
             displacement.z = 0;
+            const br = this.bumperRadius;
+            if (displacement.lengthSq() > br * br)
+            {
+                displacement.normalize().multiplyScalar(br / 2);
+                correct = true;
+            }
         }
 
         // Apply.
+        if (correct)
+        {
+            nx = p1x + displacement.x;
+            ny = p1y + displacement.y;
+            nz = p1z + displacement.z;
+        }
         this.position1.set(nx, ny, nz);
         this.updateBumperLifterAfterChange(displacement);
     },
@@ -289,6 +319,7 @@ extend(CharacterCollisionModel.prototype, {
             // this.onGround = true;
             // if (byAStaticObject) this.wasLiftedByAStaticObject = true;
             // else this.wasLifted = true;
+            this.velocity1.z = 0;
         }
 
         // Apply.
@@ -330,6 +361,8 @@ extend(CharacterCollisionModel.prototype, {
         const v1 = this._w1;
         const v2 = this._w2;
         const v3 = this._w3;
+        const gravityUp = this._w4;
+        gravityUp.copy(this.gravity).negate().normalize();
 
         // 1. BUMP.
         const bumpR = this.bumperRadius;
@@ -348,13 +381,13 @@ extend(CharacterCollisionModel.prototype, {
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
             v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
             v1.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
-            displacement = collider.intersectSphereTri(bumperCenter, bumpR2, v1, v2, v3);
+            displacement = collider.intersectSphereTriOrthogonal(
+                bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
+            );
             this.bump(displacement);
         }
 
         // 2. LIFT.
-        const gravityUp = this._w4;
-        gravityUp.copy(this.gravity).negate().normalize();
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this._w5;
@@ -371,8 +404,9 @@ extend(CharacterCollisionModel.prototype, {
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
             v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
             v1.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
-            displacement = collider.intersectSphereTriVertical(lifterCenter, liftR2, v1, v2, v3,
-                liftR, gravityUp);
+            displacement = collider.intersectSphereTriVertical(
+                lifterCenter, liftR2, v1, v2, v3, liftR, gravityUp
+            );
             this.lift(displacement, true);
         }
 

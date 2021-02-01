@@ -37,7 +37,7 @@ let MadEngine = function(physics)
 
     // Time management
     this._stamp = TimeUtils.getTimeSecNano();
-    this._variableDt = false;
+    this._variableDt = true;
 
     // Internals
     this._f = new Vector3(0, 0, 0);
@@ -140,7 +140,10 @@ extend(MadEngine.prototype, {
     solve()
     {
         // Compute adaptive time step.
-        let relativeDt = TimeUtils.getTimeSecNano(this._stamp)[1] / 1e6;
+        let relativeDt; // ms
+        if (this._variableDt) relativeDt = TimeUtils.getTimeSecNano(this._stamp)[1] / 1e6;
+        else relativeDt = 16.7;
+
         // Reset stamp before performing physics update.
         this._stamp = TimeUtils.getTimeSecNano();
 

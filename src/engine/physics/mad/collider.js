@@ -474,6 +474,7 @@ extend(Collider.prototype, {
 
         // ray intersection
         resultingPoint.copy(rayOrigin).addScaledVector(rayVector, tValue);
+        return 1;
     }
 
 });

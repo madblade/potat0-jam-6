@@ -54,6 +54,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     // dbg
     this._debug = false;
 
+    this._hasBumped = false;
     this.wasLiftedByAStaticObject = false;
     this.wasLifted = false;
 };
@@ -114,7 +115,6 @@ extend(CharacterCollisionModel.prototype, {
         const nbSegmentsY = nbVerticesY - 1;
         const elementSizeX = heightMap.elementSizeX;
         const elementSizeY = heightMap.elementSizeY;
-        // const pos = heightMap.getData().geometry.attributes.position.array;
         const pos = heightMap.getData().userData.points;
         const v1 = this._w1;
         const v2 = this._w2;
@@ -127,6 +127,7 @@ extend(CharacterCollisionModel.prototype, {
 
         // 1. BUMP.
         // local coordinates are in [0, heightMapWidth].
+        this._hasBumped = false;
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
         let bumperCenter = this.bumperCenter; // Should be set to p1!
@@ -140,49 +141,46 @@ extend(CharacterCollisionModel.prototype, {
         let maxY = Math.min(y + nbXToCheck + 1, nbSegmentsY); // nbv - 2
         let displacement;
         // Go through heightmap patch.
-        // this._nbBumps = 0;
-        const nbPass = 1;
-        for (let pass = 0; pass < nbPass; ++pass)
-            for (let iy = minY; iy < maxY; ++iy)
-                for (let ix = minX; ix < maxX; ++ix)
-                {
-                    const a = ix + nbVerticesX * iy;
-                    const b = a + nbVerticesX;
-                    const c = b + 1;
-                    const d = a + 1;
+        for (let iy = minY; iy < maxY; ++iy)
+            for (let ix = minX; ix < maxX; ++ix)
+            {
+                const a = ix + nbVerticesX * iy;
+                const b = a + nbVerticesX;
+                const c = b + 1;
+                const d = a + 1;
 
-                    // Compute max and min height.
-                    const heightA = pos[a];
-                    const heightB = pos[b];
-                    const heightC = pos[c];
-                    const heightD = pos[d];
+                // Compute max and min height.
+                const heightA = pos[a];
+                const heightB = pos[b];
+                const heightC = pos[c];
+                const heightD = pos[d];
 
-                    // Collide bump and clamp correction.
-                    // abd
-                    v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
-                    v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                    v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                    displacement = collider.intersectSphereTriOrthogonal(
-                        bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
-                    );
-                    this.bump(displacement);
+                // Collide bump and clamp correction.
+                // abd
+                v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
+                v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                displacement = collider.intersectSphereTriOrthogonal(
+                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
+                );
+                this.bump(displacement);
 
-                    // bcd
-                    v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                    v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
-                    v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                    displacement = collider.intersectSphereTriOrthogonal(
-                        bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
-                    );
-                    this.bump(displacement);
-                }
+                // bcd
+                v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
+                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                displacement = collider.intersectSphereTriOrthogonal(
+                    bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
+                );
+                this.bump(displacement);
+            }
 
         // 2. LIFT.
+        this.wasLifted = false;
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this.lifterCenter; // Should be set to p1!
-        // lifterCenter.set(localX, localY, this.position1.z - this.lifterDelta); // minus something
-        lifterCenter.set(
+        lifterCenter.set( // apply bump to lifter
             bumperCenter.x,
             bumperCenter.y,
             bumperCenter.z - this.lifterDelta
@@ -231,7 +229,13 @@ extend(CharacterCollisionModel.prototype, {
             }
 
         if (!this.wasLifted && !this.wasLiftedByAStaticObject)
-            this.onGround = false; // XXX always move along terrain normals
+            this.onGround = false;
+
+        // TODO vertical check (raycast down)
+        // TODO check distance < height / 2
+        //  if !point in range -> gravity fall
+        //  if point in range, bump THEN lift
+
         // maxLift = lifter radius
         // constrain vertical lift
         // Compute onGround
@@ -293,6 +297,7 @@ extend(CharacterCollisionModel.prototype, {
             ny = p1y + displacement.y;
             nz = p1z + displacement.z;
         }
+        if (displacement.manhattanLength() > 0) this._hasBumped = true;
         this.position1.set(nx, ny, nz);
         this.updateBumperLifterAfterChange(displacement);
     },
@@ -317,8 +322,8 @@ extend(CharacterCollisionModel.prototype, {
         {
             // TODO activate optim once I’m done debugging
             // this.onGround = true;
-            // if (byAStaticObject) this.wasLiftedByAStaticObject = true;
-            // else this.wasLifted = true;
+            if (byAStaticObject) this.wasLiftedByAStaticObject = true;
+            else this.wasLifted = true;
             this.velocity1.z = 0;
         }
 

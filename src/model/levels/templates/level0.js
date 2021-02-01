@@ -27,8 +27,8 @@ let Level0 = function(title)
                 // 10 * i - 10
                 // 10 * j - 10
                 // i + j
-                // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);

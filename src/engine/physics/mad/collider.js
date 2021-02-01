@@ -32,6 +32,7 @@ let Collider = function(sweeper)
     this._w12 = new Vector3();
 
     this._insideFace = false;
+    this._debug = false;
 };
 
 extend(Collider.prototype, {
@@ -223,7 +224,6 @@ extend(Collider.prototype, {
         const sinAlpha = normal.dot(gup);
         if (Math.abs(sinAlpha) < COLLISION_EPS)
         {
-            console.warn('Bumping on very steep manifold.');
             displacement.set(0, 0, 0);
             return displacement;
         }
@@ -247,16 +247,17 @@ extend(Collider.prototype, {
 
                 const foundIntersection = this.intersectSphereLine(
                     newCenter, lineUnitVector,
-                    newClosest, radius, newCCorrected
+                    newClosest, radiusSquared, newCCorrected
                 );
                 if (foundIntersection !== 1)
                 {
-                    console.warn(foundIntersection === -1 ?
-                        '[Collider/H] r’s origin outside s (c > 0) and r pointing away from s (b > 0) ' :
-                        foundIntersection === -2 ?
-                            '[Collider/H] negative discriminant corresponds to ray missing sphere' :
-                            '[Collider/H] unmanaged'
-                    );
+                    if (this._debug)
+                        console.warn(foundIntersection === -1 ?
+                            '[Collider/H] r’s origin outside s (c > 0) and r pointing away from s (b > 0) ' :
+                            foundIntersection === -2 ?
+                                '[Collider/H] negative discriminant corresponds to ray missing sphere' :
+                                '[Collider/H] unmanaged'
+                        );
                 }
                 else
                 {
@@ -414,15 +415,16 @@ extend(Collider.prototype, {
         return result;
     },
 
+    // From Christer Ericson’s handbook
     // Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
     // returns t value of intersection and intersection point q
     // Point p, Vector d, Sphere s, float &t, Point &q
-    intersectSphereLine(linePoint, lineVector, sphereCenter, sphereRadius, resultingPoint)
+    intersectSphereLine(linePoint, lineVector, sphereCenter, sphereRadiusSquared, resultingPoint)
     {
         const m = this._wSL;
         m.copy(linePoint).addScaledVector(sphereCenter, -1);
         const b = m.dot(lineVector);
-        const c = m.dot(m) - sphereRadius * sphereRadius;
+        const c = m.dot(m) - sphereRadiusSquared;
 
         // Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
         if (c > 0.0 && b > 0.0) return -1;
@@ -440,6 +442,38 @@ extend(Collider.prototype, {
         // q = p + t * d;
 
         return 1;
+    },
+
+    // Moller-Trumbore algorithm
+    rayTriangleIntersection(rayOrigin, rayVector, v1, v2, v3, resultingPoint)
+    {
+        const v1v2 = this._w1;
+        const v1v3 = this._w2;
+        v1v2.copy(v2).addScaledVector(v1, -1);
+        v1v3.copy(v3).addScaledVector(v1, -1);
+        const h = this._w3;
+        h.copy(rayVector).cross(v1v3);
+        const a = v1v2.dot(h);
+        if (a > -COLLISION_EPS && a < COLLISION_EPS)
+            return -1; // ray parallel to the triangle
+        const f = 1. / a;
+        const s = this._w4;
+        s.copy(rayOrigin).addScaledVector(v1, -1);
+        const u = f * s.dot(h);
+        if (u < 0. || u > 1.)
+            return -2;
+        const q = this._w5; // not necessary, can work on s instead
+        q.copy(s).cross(v1v2);
+        const v = f * rayVector.dot(q);
+        if (v < 0. || u + v > 1.)
+            return -3;
+        // compute t to find out where the intersection point lies on the line
+        const tValue = f * v1v3.dot(q);
+        if (tValue <= COLLISION_EPS)
+            return -4; // this means there is a line intersection but not a ray intersection (backward)
+
+        // ray intersection
+        resultingPoint.copy(rayOrigin).addScaledVector(rayVector, tValue);
     }
 
 });

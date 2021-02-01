@@ -31,15 +31,18 @@ let ChunksModule = {
         let geometry = new PlaneBufferGeometry(widthX, widthY, nbSegmentsX, nbSegmentsY);
         let positions = geometry.attributes.position.array;
 
-        let i = 0;
+        let j = 0;
         const nbVerticesX = nbSegmentsX + 1;
         const nbVerticesY = nbSegmentsY + 1;
         for (let y = 0; y < nbVerticesY; ++y)
         {
+            const offset = (nbVerticesY - y - 1) * nbVerticesX;
             for (let x = 0; x < nbVerticesX; ++x)
             {
-                positions[3 * i + 2] = points[i];
-                i++;
+                const i = offset + x;
+                // (flipped y)
+                positions[3 * i + 2] = points[j];
+                j++;
             }
         }
         geometry.computeBoundingSphere();

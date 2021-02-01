@@ -115,7 +115,8 @@ extend(CharacterCollisionModel.prototype, {
         const nbSegmentsY = nbVerticesY - 1;
         const elementSizeX = heightMap.elementSizeX;
         const elementSizeY = heightMap.elementSizeY;
-        const pos = heightMap.getData().geometry.attributes.position.array;
+        // const pos = heightMap.getData().geometry.attributes.position.array;
+        const pos = heightMap.getData().userData.points;
         const v1 = this._w1;
         const v2 = this._w2;
         const v3 = this._w3;
@@ -126,7 +127,7 @@ extend(CharacterCollisionModel.prototype, {
         gravityUp.z = -10;
         const p0p1 = this._p0p1;
         p0p1.copy(this.position1).addScaledVector(this.position0, -1);
-        if (p0p1.manhattanLength() === 0) return;
+        //if (p0p1.manhattanLength() === 0) return;
         // console.log(p0p1);
 
         // 1. BUMP.
@@ -138,10 +139,10 @@ extend(CharacterCollisionModel.prototype, {
         let lowestPoint = bumperCenter.z - bumpR - COLLISION_EPS;
         let nbXToCheck = Math.ceil(bumpR / elementSizeX);
         let nbYToCheck = Math.ceil(bumpR / elementSizeY);
-        let minX = 0; Math.max(x - nbXToCheck, 0);
-        let maxX = nbSegmentsX; Math.min(x + nbXToCheck, nbSegmentsX); // nbv - 2
-        let minY = 0; Math.max(y - nbYToCheck, 0);
-        let maxY = nbSegmentsY; Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
+        let minX = Math.max(x - nbXToCheck - 1, 0);
+        let maxX = Math.min(x + nbXToCheck + 1, nbSegmentsX); // nbv - 2
+        let minY = Math.max(y - nbYToCheck - 1, 0);
+        let maxY = Math.min(y + nbXToCheck + 1, nbSegmentsY); // nbv - 2
         // console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
         let displacement;
         // Go through heightmap patch.
@@ -152,16 +153,16 @@ extend(CharacterCollisionModel.prototype, {
                 for (let ix = minX; ix < maxX; ++ix)
                 {
                     // const offsetY = nbVerticesX * iy;
-                    const a = ix + nbVerticesX * iy; // 0, 0
-                    const b = ix + nbVerticesX * (iy + 1); // 0, 1
-                    const c = ix + 1 + nbVerticesX * (iy + 1); // 1, 1
-                    const d = ix + 1 + nbVerticesX * iy; // 1, 0
+                    const a = ix + nbVerticesX * iy; //ix + nbVerticesX * iy; // 0, 0
+                    const b = a + nbVerticesX; //ix + nbVerticesX * (iy + 1); // 0, 1
+                    const c = b + 1; //ix + 1 + nbVerticesX * (iy + 1); // 1, 1
+                    const d = a + 1; //ix + 1 + nbVerticesX * iy; // 1, 0
 
                     // Compute max and min height.
-                    const heightA = pos[3 * a + 2]; // const xA = pos[3 * a]; const yA = pos[3 * a + 1];
-                    const heightB = pos[3 * b + 2]; // const xB = pos[3 * b]; const yB = pos[3 * b + 1];
-                    const heightC = pos[3 * c + 2]; // const xC = pos[3 * c]; const yC = pos[3 * c + 1];
-                    const heightD = pos[3 * d + 2]; // const xD = pos[3 * d]; const yD = pos[3 * d + 1];
+                    const heightA = pos[a]; //pos[3 * a + 2]; // const xA = pos[3 * a]; const yA = pos[3 * a + 1];
+                    const heightB = pos[b]; //pos[3 * b + 2]; // const xB = pos[3 * b]; const yB = pos[3 * b + 1];
+                    const heightC = pos[c]; //pos[3 * c + 2]; // const xC = pos[3 * c]; const yC = pos[3 * c + 1];
+                    const heightD = pos[d]; //pos[3 * d + 2]; // const xD = pos[3 * d]; const yD = pos[3 * d + 1];
                     // if (heightA < lowestPoint && heightB < lowestPoint &&
                     //     heightC < lowestPoint && heightD < lowestPoint)
                     //     continue;
@@ -197,7 +198,9 @@ extend(CharacterCollisionModel.prototype, {
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
         let lifterCenter = this.lifterCenter; // Should be set to p1!
+        // if (isNaN(lifterCenter.z)) debugger;
         lifterCenter.set(localX, localY, this.position1.z - this.lifterDelta); // minus something
+        // if (isNaN(lifterCenter.z)) debugger;
         lowestPoint = lifterCenter.z - liftR - COLLISION_EPS;
         // let highestPoint = lifterCenter.z + liftR + COLLISION_EPS;
         nbXToCheck = Math.ceil(liftR / elementSizeX);
@@ -208,19 +211,19 @@ extend(CharacterCollisionModel.prototype, {
         maxY = Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
         // console.log(`lift ${minX}->${maxX};${minY}->${maxY}`);
         // Go through heightmap patch.
-        for (let iy = minY; iy < maxY; ++iy)
-            for (let ix = minX; ix < maxX; ++ix)
+        for (let ix = minX; ix < maxX; ++ix)
+            for (let iy = minY; iy < maxY; ++iy)
             {
-                const a = ix + nbVerticesX * iy; // 0, 0
-                const b = ix + nbVerticesX * (iy + 1); // 0, 1
-                const c = ix + 1 + nbVerticesX * (iy + 1); // 1, 1
-                const d = ix + 1 + nbVerticesX * iy; // 1, 0
+                const a = ix + nbVerticesX * iy; //ix + nbVerticesX * iy; // 0, 0
+                const b = a + nbVerticesX; //ix + nbVerticesX * (iy + 1); // 0, 1
+                const c = b + 1; //ix + 1 + nbVerticesX * (iy + 1); // 1, 1
+                const d = a + 1; //ix + 1 + nbVerticesX * iy; // 1, 0
 
                 // Compute max and min height.
-                const heightA = pos[3 * a + 2];
-                const heightB = pos[3 * b + 2];
-                const heightC = pos[3 * c + 2];
-                const heightD = pos[3 * d + 2];
+                const heightA = pos[a]; // pos[3 * a + 2];
+                const heightB = pos[b]; // pos[3 * b + 2];
+                const heightC = pos[c]; // pos[3 * c + 2];
+                const heightD = pos[d]; // pos[3 * d + 2];
                 if (heightA < lowestPoint && heightB < lowestPoint &&
                     heightC < lowestPoint && heightD < lowestPoint)
                     continue;
@@ -393,6 +396,7 @@ extend(CharacterCollisionModel.prototype, {
 
     collideTrimesh(trimeshCollisionModel, collider)
     {
+        console.log('COLLIDING TRIMESH');
         const trimesh = trimeshCollisionModel.trimesh;
         const index = trimesh.geometry.index;
         const pos = trimesh.geometry.attributes.position;

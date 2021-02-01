@@ -11,24 +11,24 @@ let Level0 = function(title)
 
     let chunks = new Map();
     let points = [];
-    const nbSegmentsX = 3;
-    const nbSegmentsY = 3;
+    const nbSegmentsX = 32;
+    const nbSegmentsY = 32;
     const nbVerticesX = nbSegmentsX + 1;
     const nbVerticesY = nbSegmentsY + 1;
     const widthX = HeightMapConstants.DEFAULT_EXTENT;
     const widthY = HeightMapConstants.DEFAULT_EXTENT;
 
-    for (let j = 0; j < nbVerticesY; ++j)
-        for (let i = 0; i < nbVerticesX; ++i)
+    for (let i = 0; i < nbVerticesX; ++i)
+        for (let j = 0; j < nbVerticesY; ++j)
             points.push(
                 // 0.
-                j * 10
+                // i + j
                 // 5 * (j + i) - 10
                 // 10 * i - 10
                 // 10 * j - 10
                 // i + j
                 // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);

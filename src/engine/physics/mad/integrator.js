@@ -86,6 +86,8 @@ extend(Integrator.prototype, {
         cm.instantaneousVelocity = iv; // Apply Euler integration
         increment.add(selfIncrement);
 
+        if (isNaN(increment.z)) debugger;
+
         // Apply Leapfrog integration
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);

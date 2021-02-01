@@ -108,7 +108,7 @@ extend(Collider.prototype, {
 
             // 2. Collide.
             const localX = x - (i - .5) * heightMapWidth;
-            const localY = -y - (j - .5) * heightMapWidth;
+            const localY = y - (j - .5) * heightMapWidth;
             cm.collideAgainstTerrain(localX, localY, hms, this);
         });
     },
@@ -221,6 +221,12 @@ extend(Collider.prototype, {
         // const cosAlpha = gravityUp.dot(normal);
         // const sinAlpha = Math.sin(Math.PI / 2 * Math.acos(normal.dot(gup)));
         const sinAlpha = normal.dot(gup);
+        if (Math.abs(sinAlpha) < COLLISION_EPS)
+        {
+            console.warn('Bumping on very steep manifold.');
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
         const delta = radius - distToClosest;
         displacement.copy(gup).multiplyScalar(delta / sinAlpha);
 
@@ -254,14 +260,10 @@ extend(Collider.prototype, {
                 }
                 else
                 {
-                    console.log('correction');
                     displacement.copy(newCCorrected).addScaledVector(c, -1);
                 }
             }
         }
-
-        // negate
-        displacement.y = -displacement.y;
 
         return displacement;
     },

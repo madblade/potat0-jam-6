@@ -137,6 +137,7 @@ extend(Integrator.prototype, {
             // sm.updateSelf([0, 0, 1], [0, 0, 0, 0], -1);
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
+            // cm.wantedVelocity.set(0, 0, 0); // TODO reset for debug
         }
     }
 

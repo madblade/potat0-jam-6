@@ -49,6 +49,10 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this._w3 = new Vector3();
     this._w4 = new Vector3();
     this._w5 = new Vector3();
+    this._p0p1 = new Vector3();
+
+    // dbg
+    this._displacements = [];
 
     this.wasLiftedByAStaticObject = false;
     this.wasLifted = false;
@@ -101,6 +105,8 @@ extend(CharacterCollisionModel.prototype, {
             console.log('[Character] Unsupported heightmap type.');
             return;
         }
+        this._displacements.length = 0;
+
         const extentX = heightMap.extentX;
         const extentY = heightMap.extentY;
         const nbVerticesX = heightMap.nbVerticesX;
@@ -118,6 +124,10 @@ extend(CharacterCollisionModel.prototype, {
         const gravityUp = this._w4;
         gravityUp.copy(this.gravity).negate().normalize();
         gravityUp.z = -10;
+        const p0p1 = this._p0p1;
+        p0p1.copy(this.position1).addScaledVector(this.position0, -1);
+        if (p0p1.manhattanLength() === 0) return;
+        // console.log(p0p1);
 
         // 1. BUMP.
         // local coordinates are in [0, heightMapWidth].
@@ -128,10 +138,10 @@ extend(CharacterCollisionModel.prototype, {
         let lowestPoint = bumperCenter.z - bumpR - COLLISION_EPS;
         let nbXToCheck = Math.ceil(bumpR / elementSizeX);
         let nbYToCheck = Math.ceil(bumpR / elementSizeY);
-        let minX = Math.max(x - nbXToCheck, 0);
-        let maxX = Math.min(x + nbXToCheck, nbSegmentsX); // nbv - 2
-        let minY = Math.max(y - nbYToCheck, 0);
-        let maxY = Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
+        let minX = 0; Math.max(x - nbXToCheck, 0);
+        let maxX = nbSegmentsX; Math.min(x + nbXToCheck, nbSegmentsX); // nbv - 2
+        let minY = 0; Math.max(y - nbYToCheck, 0);
+        let maxY = nbSegmentsY; Math.min(y + nbXToCheck, nbSegmentsY); // nbv - 2
         // console.log(`bump ${minX}->${maxX};${minY}->${maxY}`);
         let displacement;
         // Go through heightmap patch.
@@ -148,21 +158,24 @@ extend(CharacterCollisionModel.prototype, {
                     const d = ix + 1 + nbVerticesX * iy; // 1, 0
 
                     // Compute max and min height.
-                    const heightA = pos[3 * a + 2];
-                    const heightB = pos[3 * b + 2];
-                    const heightC = pos[3 * c + 2];
-                    const heightD = pos[3 * d + 2];
-                    if (heightA < lowestPoint && heightB < lowestPoint &&
-                        heightC < lowestPoint && heightD < lowestPoint)
-                        continue;
+                    const heightA = pos[3 * a + 2]; // const xA = pos[3 * a]; const yA = pos[3 * a + 1];
+                    const heightB = pos[3 * b + 2]; // const xB = pos[3 * b]; const yB = pos[3 * b + 1];
+                    const heightC = pos[3 * c + 2]; // const xC = pos[3 * c]; const yC = pos[3 * c + 1];
+                    const heightD = pos[3 * d + 2]; // const xD = pos[3 * d]; const yD = pos[3 * d + 1];
+                    // if (heightA < lowestPoint && heightB < lowestPoint &&
+                    //     heightC < lowestPoint && heightD < lowestPoint)
+                    //     continue;
 
                     // Collide bump and clamp correction.
                     // abd
                     v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
                     v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
                     v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                    // v1.set(xA, yA, heightA);
+                    // v2.set(xB, yB, heightB);
+                    // v3.set(xD, yD, heightD);
                     displacement = collider.intersectSphereTriOrthogonal(
-                        bumperCenter, bumpR2, v1, v2, v3, bumpR, pass
+                        bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, p0p1
                     );
                     this.bump(displacement);
 
@@ -170,8 +183,11 @@ extend(CharacterCollisionModel.prototype, {
                     v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
                     v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
                     v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                    // v1.set(xB, yB, heightB);
+                    // v2.set(xC, yC, heightC);
+                    // v3.set(xD, yD, heightD);
                     displacement = collider.intersectSphereTriOrthogonal(
-                        bumperCenter, bumpR2, v1, v2, v3, bumpR, pass
+                        bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp, p0p1
                     );
                     this.bump(displacement);
                 }
@@ -240,6 +256,16 @@ extend(CharacterCollisionModel.prototype, {
                 // }
             }
 
+        if (this._displacements.length)
+        {
+            // console.log('########');
+            // this._displacements.forEach(e =>
+            // {
+            //     console.log(`${e.x}, ${e.y}, ${e.z}`);
+            // });
+            // console.log('########');
+        }
+
         if (!this.wasLifted && !this.wasLiftedByAStaticObject)
             this.onGround = false; // XXX always move along terrain normals
         // maxLift = lifter radius
@@ -277,8 +303,8 @@ extend(CharacterCollisionModel.prototype, {
         }
         if (nz > p1z && nz > p0z || nz < p1z && nz < p0z)
         {
-            nz = p1z;
-            displacement.z = 0;
+            // nz = p1z;
+            // displacement.z = 0;
             // console.log('bump z');
         }
 
@@ -288,8 +314,15 @@ extend(CharacterCollisionModel.prototype, {
             // console.log(displacement);
         }
 
+        if (displacement.manhattanLength() > 0)
+        {
+            const _d = new Vector3();
+            _d.copy(displacement);
+            this._displacements.push(_d);
+        }
         // Apply.
         this.position1.set(nx, ny, nz);
+        // this.position1.add(displacement);
         this.updateBumperLifterAfterChange(displacement);
     },
 

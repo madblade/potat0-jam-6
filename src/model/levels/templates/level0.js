@@ -11,18 +11,19 @@ let Level0 = function(title)
 
     let chunks = new Map();
     let points = [];
-    const nbSegmentsX = 2;
-    const nbSegmentsY = 2;
+    const nbSegmentsX = 3;
+    const nbSegmentsY = 3;
     const nbVerticesX = nbSegmentsX + 1;
     const nbVerticesY = nbSegmentsY + 1;
     const widthX = HeightMapConstants.DEFAULT_EXTENT;
     const widthY = HeightMapConstants.DEFAULT_EXTENT;
 
-    for (let j = 0; j < nbVerticesX; ++j)
-        for (let i = 0; i < nbVerticesY; ++i)
+    for (let j = 0; j < nbVerticesY; ++j)
+        for (let i = 0; i < nbVerticesX; ++i)
             points.push(
                 // 0.
-                5 * (j + i) - 10
+                j * 10
+                // 5 * (j + i) - 10
                 // 10 * i - 10
                 // 10 * j - 10
                 // i + j

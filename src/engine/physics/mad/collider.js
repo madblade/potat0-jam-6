@@ -21,6 +21,16 @@ let Collider = function(sweeper)
     this._w5 = new Vector3();
     this._w6 = new Vector3();
     this._w7 = new Vector3();
+
+    // Line/sphere & horizontal routine needs more
+    // (see later if that can be reduced)
+    this._wSL = new Vector3();
+    this._w8 = new Vector3();
+    this._w9 = new Vector3();
+    this._w10 = new Vector3();
+    this._w11 = new Vector3();
+    this._w12 = new Vector3();
+
     this._insideFace = false;
 };
 
@@ -151,22 +161,15 @@ extend(Collider.prototype, {
      * @param v2 triangle vertex 2
      * @param v3 triangle vertex 3
      * @param radius sphere radius
-     * @param pass pass number. 2 pass per iterations (1 inside, 1 outside)
+     * @param gravityUp
      * @output displacement vector to go back to a clear state.
      */
-    intersectSphereTriOrthogonal(c, radiusSquared, v1, v2, v3, radius, pass)
+    intersectSphereTriOrthogonal(c, radiusSquared, v1, v2, v3, radius, gravityUp)
     {
         // 1. Get closest point in triangle
         const closest = this.getClosestPointInTri(c, v1, v2, v3);
 
         const displacement = this._w5;
-
-        // if (pass % 2 === 0 && !this._insideFace)
-        // {
-        //     // wait until next pass
-        //     displacement.set(0, 0, 0);
-        //     return displacement; // return null instead?
-        // }
 
         // careful: closest allocates _w4
         // careful: v1v2 allocates _w1
@@ -191,6 +194,7 @@ extend(Collider.prototype, {
         const v1v3 = this._w2; // allocated by getClosestPointInTri!
         normal.copy(v1v2).cross(v1v3);
         normal.normalize();
+
         // normal.y = -normal.y; // (remember, we work in the flipped world)
         window.dh.h.setDirection(normal);
         // window.dh.s.position.copy(closest);
@@ -200,91 +204,64 @@ extend(Collider.prototype, {
 
         const l2 = normal.length();
 
-        if (l2 >= COLLISION_EPS) // hmm… I don’t like using the same EPS here.
+        if (l2 < COLLISION_EPS) // hmm… I don’t like using the same EPS here.
         {
-            normal.multiplyScalar(1. / l2); // normalized
+            displacement.set(0, 0, 0);
+            return displacement;
+        }
 
-            // This is the regular normal-pushback routine
-            // that can be used somewhere else.
-            // The lifter should manage everything ground-related, so this should be
-            // essentially dead code.
-            // Keeping it for reference.
+        normal.multiplyScalar(1. / l2); // normalized
+        const distToClosest = Math.sqrt(distToClosest2);
 
-            const distToClosest = Math.sqrt(distToClosest2);
+        const gup = this._w12;
+        gup.copy(normal).projectOnPlane(gravityUp).normalize(); // project n onto g’s plane
+        const flipped = cToClosest.dot(normal) > 0;
+        if (flipped) normal.negate();
 
-            if (!this._insideFace)
-            {
-                // outside: pull back by the penetration amount.
-                displacement.copy(cToClosest)
-                    .normalize()
-                    .multiplyScalar(distToClosest - radius - COLLISION_EPS);
+        // const cosAlpha = gravityUp.dot(normal);
+        // const sinAlpha = Math.sin(Math.PI / 2 * Math.acos(normal.dot(gup)));
+        const sinAlpha = normal.dot(gup);
+        const delta = radius - distToClosest;
+        displacement.copy(gup).multiplyScalar(delta / sinAlpha);
 
-                // possible enhancement?
-                //  1. project c on triangle plane.
-                //  2. compute penetration on plane.
-                //  3. pull back on normal by penetration.
-                // keep coherent with the inside case;
-                // can afford a little bit of penetration.
-                // normal.projectOnPlane(gravityUp);
-                displacement.projectOnVector(normal); // OOB risk on edges
-                // displacement.projectOnPlane(gravityUp);
-                // displacement.set(0, 0, 0);
-                // if (displacement.manhattanLength() > 0) {
-                //     console.log('outside');
-                //     console.log(displacement);
-                // }
-                displacement.y = -displacement.y;
-                return displacement;
-            }
+        const newCenter = this._w8;
+        newCenter.copy(c).add(displacement);
+        const newClosest = this.getClosestPointInTri(newCenter, v1, v2, v3);
+        if (!this._insideFace)
+        { // pull back
+            if (flipped) gup.negate();
+            const newCToClosest = this._w9;
+            newCToClosest.copy(closest).addScaledVector(newCenter, -1);
+            const distNew = newCToClosest.length();
+            if (distNew > radius)
+            { // compute sphere and pull back
+                const lineUnitVector = this._w10;
+                lineUnitVector.copy(gup).normalize().negate(); // goes back
+                const newCCorrected = this._w11;
 
-            // inside face: slide along normal
-            let projection1 = normal.dot(cToClosest);
-            cToClosest.multiplyScalar(radius / distToClosest);
-            let projection2 = normal.dot(cToClosest);
-            if (projection1 === projection2) throw Error('[Mad]: Thales didn’t work :(');
-
-            if (projection1 > 0) // flipped triangle: revert normal
-                normal.negate();
-            else { // okay: make projection positive.
-                projection1 *= -1;
-                projection2 *= -1;
-            }
-
-            // Move along normal by virtue of the great Thales
-            // (and add EPS for good measure)
-            // (this is not an analytic solution! just an approx that seems to work well
-            // in practice)
-            // normal.projectOnPlane(gravityUp);
-            const l = Math.abs(projection2 - projection1 + COLLISION_EPS);
-            // if (l > 0) console.log(l);
-            displacement.copy(normal).multiplyScalar(l);
-            displacement.y = -displacement.y;
-            // displacement.negate();
-            // displacement.projectOnPlane(gravityUp);
-            // displacement.set(0, 0, 0);
-            // displacement.multiplyScalar(0.1);
-
-            // This used to work but is broken with heightmaps, no time to investigate:
-            // cToClosest.y = -cToClosest.y;
-            // b.copy(cToClosest);// b.y = -b.y;
-            // b.normalize().multiplyScalar(radius).projectOnPlane(gravityUp);
-            // a.copy(cToClosest);// a.y = -a.y;
-            // a.projectOnPlane(gravityUp);
-            // const l = Math.abs(b.length() - a.length());
-            // a.normalize().multiplyScalar(l).negate();
-            // displacement.copy(a);
-            // displacement.y = -displacement.y; // flipped world
-
-            if (displacement.manhattanLength() > 0) {
-                // console.log('inside');
-                // console.log(v1);
-                // console.log(v2);
-                // console.log(v3);
-                // console.log(normal);
-                // console.log(displacement);
+                const foundIntersection = this.intersectSphereLine(
+                    newCenter, lineUnitVector,
+                    newClosest, radius, newCCorrected
+                );
+                if (foundIntersection !== 1)
+                {
+                    console.warn(foundIntersection === -1 ?
+                        '[Collider/H] r’s origin outside s (c > 0) and r pointing away from s (b > 0) ' :
+                        foundIntersection === -2 ?
+                            '[Collider/H] negative discriminant corresponds to ray missing sphere' :
+                            '[Collider/H] unmanaged'
+                    );
+                }
+                else
+                {
+                    console.log('correction');
+                    displacement.copy(newCCorrected).addScaledVector(c, -1);
+                }
             }
         }
-        else displacement.set(0, 0, 0);
+
+        // negate
+        displacement.y = -displacement.y;
 
         return displacement;
     },
@@ -434,6 +411,34 @@ extend(Collider.prototype, {
         this._insideFace = true;
         return result;
     },
+
+    // Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
+    // returns t value of intersection and intersection point q
+    // Point p, Vector d, Sphere s, float &t, Point &q
+    intersectSphereLine(linePoint, lineVector, sphereCenter, sphereRadius, resultingPoint)
+    {
+        const m = this._wSL;
+        m.copy(linePoint).addScaledVector(sphereCenter, -1);
+        const b = m.dot(lineVector);
+        const c = m.dot(m) - sphereRadius * sphereRadius;
+
+        // Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
+        if (c > 0.0 && b > 0.0) return -1;
+        const discriminant = b * b - c;
+
+        // A negative discriminant corresponds to ray missing sphere
+        if (discriminant < 0.0) return -2;
+
+        // Ray now found to intersect sphere, compute smallest t value of intersection
+        let tValue = -b - Math.sqrt(discriminant);
+
+        // If t is negative, ray started inside sphere so clamp t to zero
+        if (tValue < 0.0) tValue = 0.0;
+        resultingPoint.copy(linePoint).addScaledVector(lineVector, tValue);
+        // q = p + t * d;
+
+        return 1;
+    }
 
 });
 

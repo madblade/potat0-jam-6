@@ -67,6 +67,7 @@ let ChunksModule = {
         newMesh.add(dh.sg1);
         newMesh.add(dh.sg2);
         newMesh.add(dh.sg3);
+        newMesh.userData.points = points;
 
         // newMesh.rotation.set(0, 0, -Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)

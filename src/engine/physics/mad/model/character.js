@@ -69,12 +69,12 @@ extend(CharacterCollisionModel.prototype, {
     {
         // aligned on bumper sphere
         const center = this.aabbCenter;
-        const radius = this.bumperRadius;
+        const radius = Math.max(this.bumperRadius, this.lifterRadius);
         const minX = center.x - radius;
         const maxX = center.x + radius;
         const minY = center.y - radius;
         const maxY = center.y + radius;
-        const minZ = center.z - radius;
+        const minZ = center.z - (this.lifterDelta + this.lifterRadius) * 2;
         const maxZ = center.z + radius;
         this.aabbXExtent.set(minX, maxX);
         this.aabbYExtent.set(minY, maxY);
@@ -390,7 +390,7 @@ extend(CharacterCollisionModel.prototype, {
         bumperCenter.copy(this.position1).applyMatrix4(trimeshCollisionModel.localTransformInverse);
         let displacement;
         const nbTris = index ? index.length / 3 : pos.length / 9;
-        for (let i = 0; i < nbTris; ++i)
+        for (let i = 0; i < 0; ++i)
         {
             const a = index ? index[3 * i] : 3 * i;
             const b = index ? index[3 * i + 1] : 3 * i + 1;
@@ -399,7 +399,7 @@ extend(CharacterCollisionModel.prototype, {
             // Collide bump and clamp correction.
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
             v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
-            v1.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
+            v3.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
             displacement = collider.intersectSphereTriOrthogonal(
                 bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
             );
@@ -413,6 +413,7 @@ extend(CharacterCollisionModel.prototype, {
         // lifterCenter.copy(this.position1).applyMatrix4(trimesh.localTransform);
         // It’s more efficient to copy bumper’s position.
         lifterCenter.copy(this.bumperCenter).addScaledVector(gravityUp, -this.lifterDelta);
+        lifterCenter.applyMatrix4(trimeshCollisionModel.localTransformInverse);
         for (let i = 0; i < nbTris; ++i)
         {
             const a = index ? index[3 * i] : 3 * i;
@@ -422,7 +423,12 @@ extend(CharacterCollisionModel.prototype, {
             // Collide bump and clamp correction.
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
             v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
-            v1.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
+            v3.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
+
+            if (v1.z === 0.5 && v2.z === 0.5 && v3.z === 0.5)
+            {
+                // console.log('aha');
+            }
             displacement = collider.intersectSphereTriVertical(
                 lifterCenter, liftR2, v1, v2, v3, liftR, gravityUp
             );

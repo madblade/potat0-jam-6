@@ -13,9 +13,9 @@ let PhysicsInputModule = {
             intelligent: true,
             static: false,
             character: true,
-            bumperRadius: 0.5,
+            bumperRadius: 0.00005,
             lifterDelta: 0.3,
-            lifterRadius: 0.4
+            lifterRadius: 0.5
         };
         this.addPhysicsEntity(position, options);
     },
@@ -109,7 +109,8 @@ let PhysicsInputModule = {
         }
         else wv.set(0, 0, 0);
         wv.z = d[4] ? 1 : d[5] ? -1 : 0;
-        if (!d[4]) wv.multiplyScalar(0.1);
+        // if (!d[4])
+        wv.multiplyScalar(0.1);
     },
 
 };

@@ -103,7 +103,8 @@ extend(Collider.prototype, {
             let hms = heightMaps.get(id);
             if (!hms)
             {
-                console.warn(`[Mad/Collider] No height map underneath ${e.entityId}??`);
+                if (this._debug)
+                    console.warn(`[Mad/Collider] No height map underneath ${e.entityId}??`);
                 return;
             }
 
@@ -197,7 +198,7 @@ extend(Collider.prototype, {
         normal.normalize();
 
         // normal.y = -normal.y; // (remember, we work in the flipped world)
-        window.dh.h.setDirection(normal);
+        // window.dh.h.setDirection(normal);
         // window.dh.s.position.copy(closest);
         // window.dh.sg1.position.copy(v1);
         // window.dh.sg2.position.copy(v2);
@@ -320,7 +321,7 @@ extend(Collider.prototype, {
             }
             else
             {
-                console.warn('[Collider] Very steep lift skipped.');
+                // console.warn('[Collider] Very steep lift skipped.');
                 displacement.set(0, 0, 0);
                 return displacement;
             }

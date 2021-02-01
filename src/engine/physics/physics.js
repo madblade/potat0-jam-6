@@ -52,6 +52,11 @@ extend(Physics.prototype, {
         });
     },
 
+    addStaticMesh(threeMesh)
+    {
+        this.madEngine.addStaticMesh(threeMesh);
+    },
+
     pushEvent(e)
     {
         // this.bulletEngine.pushEvent(e);

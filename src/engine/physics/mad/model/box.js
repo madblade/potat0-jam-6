@@ -13,6 +13,8 @@ let BoxCollisionModel = function(physicsEntity, collisionSettings, e)
     this.isBox = true;
 };
 
+BoxCollisionModel.prototype = Object.create(CollisionModel.prototype);
+
 extend(BoxCollisionModel.prototype, {
 
     computeAABB()

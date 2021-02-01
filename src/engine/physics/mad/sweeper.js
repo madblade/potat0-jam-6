@@ -121,11 +121,11 @@ extend(Sweeper.prototype, {
 
         // 2. displacement right on all axes
         axisX.splice(indexX, 0, entity);
-        while (indexX++ < axisX.length) axisX[indexX].indexOnXArray++;
+        while (++indexX < axisX.length) axisX[indexX].indexOnXArray++;
         axisY.splice(indexY, 0, entity);
-        while (indexY++ < axisY.length) axisY[indexY].indexOnYArray++;
+        while (++indexY < axisY.length) axisY[indexY].indexOnYArray++;
         axisZ.splice(indexZ, 0, entity);
-        while (indexZ++ < axisZ.length) axisZ[indexZ].indexOnZArray++;
+        while (++indexZ < axisZ.length) axisZ[indexZ].indexOnZArray++;
     },
 
     dichotomyLowerBound(a, value, prop)
@@ -263,7 +263,7 @@ extend(Sweeper.prototype, {
         do {
             // check x…
             i = ix;
-            if (--i > 0 && this.overlaps(axisX[i], center, delta, isStatic))
+            if (--i >= 0 && this.overlaps(axisX[i], center, delta, isStatic))
                 overlapping.push(axisX[i]);
             else l[0] = true;
             i = ix;
@@ -276,7 +276,7 @@ extend(Sweeper.prototype, {
             // check y…
             // redundancy is handled by the hashset check
             i = iy;
-            if (--i > 0 && this.overlaps(axisY[i], center, delta, isStatic))
+            if (--i >= 0 && this.overlaps(axisY[i], center, delta, isStatic))
                 overlapping.push(axisY[i]);
             else l[2] = true;
             i = iy;
@@ -287,7 +287,7 @@ extend(Sweeper.prototype, {
 
             // check z…
             i = iz;
-            if (--i > 0 && this.overlaps(axisZ[i], center, delta, isStatic))
+            if (--i >= 0 && this.overlaps(axisZ[i], center, delta, isStatic))
                 overlapping.push(axisZ[i]);
             else l[2] = true;
             i = iz;
@@ -314,7 +314,7 @@ extend(Sweeper.prototype, {
         const sumOfDeltas = otherCM.getP0P1Delta(); // other displacement
         sumOfDeltas.add(otherCM.getAABBHalf()); // other bounding box
 
-        sumOfDeltas.add(delta); // other dp + this aabb/2 + this dp + this aabb/2
+        sumOfDeltas.add(delta); // other dp + other aabb/2 + this dp + this aabb/2
 
         // test aabb + dp overlaps
         const dx = Math.abs(otherCenter.x - currentCenter.x);

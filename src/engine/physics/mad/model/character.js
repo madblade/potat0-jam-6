@@ -7,6 +7,7 @@
 import { CollisionModel } from './collisionmodel';
 import extend from '../../../../extend';
 import {
+    Matrix4,
     Mesh, MeshBasicMaterial,
     SphereBufferGeometry, Vector3
 } from 'three';
@@ -50,6 +51,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this._w3 = new Vector3();
     this._w4 = new Vector3();
     this._w5 = new Vector3();
+    this._mi = new Matrix4();
 
     // dbg
     this._debug = false;
@@ -65,6 +67,19 @@ extend(CharacterCollisionModel.prototype, {
 
     computeAABB()
     {
+        // aligned on bumper sphere
+        const center = this.aabbCenter;
+        const radius = this.bumperRadius;
+        const minX = center.x - radius;
+        const maxX = center.x + radius;
+        const minY = center.y - radius;
+        const maxY = center.y + radius;
+        const minZ = center.z - radius;
+        const maxZ = center.z + radius;
+        this.aabbXExtent.set(minX, maxX);
+        this.aabbYExtent.set(minY, maxY);
+        this.aabbZExtent.set(minZ, maxZ);
+
         this.computeAABBHalf();
     },
 
@@ -359,10 +374,9 @@ extend(CharacterCollisionModel.prototype, {
 
     collideTrimesh(trimeshCollisionModel, collider)
     {
-        console.log('COLLIDING TRIMESH');
         const trimesh = trimeshCollisionModel.trimesh;
-        const index = trimesh.geometry.index;
-        const pos = trimesh.geometry.attributes.position;
+        const index = trimesh.geometry.index.array;
+        const pos = trimesh.geometry.attributes.position.array;
         const v1 = this._w1;
         const v2 = this._w2;
         const v3 = this._w3;
@@ -373,14 +387,14 @@ extend(CharacterCollisionModel.prototype, {
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
         let bumperCenter = this._w5;
-        bumperCenter.copy(this.position1).applyMatrix4(trimesh.localTransform);
+        bumperCenter.copy(this.position1).applyMatrix4(trimeshCollisionModel.localTransformInverse);
         let displacement;
-        const nbTris = index ? index.length : pos.length / 3;
+        const nbTris = index ? index.length / 3 : pos.length / 9;
         for (let i = 0; i < nbTris; ++i)
         {
-            const a = index ? index[i] : 3 * i;
-            const b = index ? index[i + 1] : 3 * i + 1;
-            const c = index ? index[i + 2] : 3 * i + 2;
+            const a = index ? index[3 * i] : 3 * i;
+            const b = index ? index[3 * i + 1] : 3 * i + 1;
+            const c = index ? index[3 * i + 2] : 3 * i + 2;
 
             // Collide bump and clamp correction.
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
@@ -401,9 +415,9 @@ extend(CharacterCollisionModel.prototype, {
         lifterCenter.copy(this.bumperCenter).addScaledVector(gravityUp, -this.lifterDelta);
         for (let i = 0; i < nbTris; ++i)
         {
-            const a = index ? index[i] : 3 * i;
-            const b = index ? index[i + 1] : 3 * i + 1;
-            const c = index ? index[i + 2] : 3 * i + 2;
+            const a = index ? index[3 * i] : 3 * i;
+            const b = index ? index[3 * i + 1] : 3 * i + 1;
+            const c = index ? index[3 * i + 2] : 3 * i + 2;
 
             // Collide bump and clamp correction.
             v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);

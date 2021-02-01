@@ -17,6 +17,8 @@ let PlatformCollisionModel = function(physicsEntity, collisionSettings, e)
     this.isPlatform = true;
 };
 
+PlatformCollisionModel.prototype = Object.create(CollisionModel.prototype);
+
 extend(PlatformCollisionModel.prototype, {
 
     computeAABB()

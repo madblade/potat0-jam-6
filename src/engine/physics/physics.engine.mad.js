@@ -22,6 +22,7 @@ import {
 }                                  from 'three';
 import { CollisionModel }          from './mad/model/collisionmodel';
 import { CharacterCollisionModel } from './mad/model/character';
+import { TrimeshCollisionModel }   from './mad/model/trimesh';
 
 let MadEngine = function(physics)
 {
@@ -96,6 +97,17 @@ extend(MadEngine.prototype, {
         hm.push(newMap);
     },
 
+    addStaticMesh(threeMesh)
+    {
+        let p = threeMesh.position;
+        this.addPhysicsEntity(p, {
+            trimesh: true,
+            mesh: threeMesh,
+            static: true,
+            intelligent: false
+        });
+    },
+
     // collisionModelSettings:
     //      type: 'sphere', 'cylinder', 'platform', 'box',
     //      'terrain'/analytic/axis-aligned/trimesh, 'character'
@@ -109,9 +121,13 @@ extend(MadEngine.prototype, {
         let collisionModel;
         if (options.character)
             collisionModel = new CharacterCollisionModel(entity, options, this);
+        else if (options.trimesh)
+            collisionModel = new TrimeshCollisionModel(entity, options, this, options.mesh);
         else
             collisionModel = new CollisionModel(entity, options, this);
+
         entity.setCollisionModel(collisionModel);
+        collisionModel.computeAABB();
 
         this.sweeper.addPhysicsEntity(entity);
         return entity;

@@ -28,9 +28,9 @@ let Level0 = function(title)
                 // 10 * j - 10
                 // i + j
 
-                Math.exp((i + j / 10) * 0.5) / 1000
+                // Math.exp((i + j / 10) * 0.5) / 1000
                 // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);
@@ -59,13 +59,23 @@ let Level0 = function(title)
         ]
     };
 
-    this.objects = {};
+    this.objects = [
+        {
+            type: 'box',
+            position: [0, 2, 1],
+            rotation: [0, 0, Math.PI / 4],
+            w: 1,
+            h: 2,
+            d: 1
+        }
+    ];
+
     this.player = {
         position: [
             // 0.1157442810225684,
             // 0.1157442810225684,
             // 2
-            0, 0, 10
+            0, 0, 3
         ]
     };
 };

@@ -130,13 +130,13 @@ extend(Collider.prototype, {
         // (e.g. projectile)
         // (e.g. adversary)
         {
-            dynamicEntityCM.collideAgainstStatic(staticEntityCM);
+            dynamicEntityCM.collideAgainstStatic(staticEntityCM, this);
             return;
         }
         if (dynamicEntityCM.isCharacter)
         // e.g. sphere, cylinder, trimesh, box, static platform
         {
-            dynamicEntityCM.collideAgainstStatic(staticEntityCM);
+            dynamicEntityCM.collideAgainstStatic(staticEntityCM, this);
         }
     },
 

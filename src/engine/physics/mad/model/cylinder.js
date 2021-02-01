@@ -23,6 +23,8 @@ let CylinderCollisionModel = function(physicsEntity, collisionSettings, e)
     this.basePoint = new Vector3();
 };
 
+CylinderCollisionModel.prototype = Object.create(CollisionModel.prototype);
+
 extend(CylinderCollisionModel.prototype, {
 
     computeAABB()

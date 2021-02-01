@@ -6,8 +6,8 @@
 
 import extend           from '../../../extend.js';
 
-import { PlayerModule } from './player.js';
-import { Vector3 } from 'three';
+import { PlayerModule }                                  from './player.js';
+import { BoxBufferGeometry, MeshBasicMaterial, Vector3 } from 'three';
 
 let EntityModel = function(app)
 {
@@ -17,6 +17,8 @@ let EntityModel = function(app)
     this.entitiesIngame = new Map();
     this.entitiesOutdated = new Map();
     this.entitiesLoading = new Set();
+
+    this.staticEntities = new Map();
 
     // Graphical component
     this.needsUpdate = false;
@@ -33,7 +35,26 @@ extend(EntityModel.prototype, {
 
     init(level)
     {
+        let graphics = this.app.engine.graphics;
+        let physics = this.app.engine.physics;
         let objects = level.getObjects();
+        objects.forEach(o => {
+            switch (o.type)
+            {
+                case 'box':
+                    const geo = new BoxBufferGeometry(o.w, o.h, o.d);
+                    const mat = new MeshBasicMaterial({ wireframe: true, color: 0x000000 });
+                    const m = graphics.createMesh(geo, mat);
+                    const p = o.position;
+                    const r = o.rotation;
+                    m.position.set(p[0], p[1], p[2]);
+                    m.rotation.set(r[0], r[1], r[2]);
+                    m.updateMatrixWorld();
+                    graphics.addToScene(m, '-1');
+                    physics.addStaticMesh(m);
+                    break;
+            }
+        });
         console.log('[Model/Entities] TODO bind entities to graphics and physics.');
     },
 

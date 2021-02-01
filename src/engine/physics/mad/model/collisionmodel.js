@@ -21,7 +21,7 @@ let CollisionModel = function(
     this.aabbYExtent = new Vector2();
     this.aabbZExtent = new Vector2();
     this.aabbHalf = new Vector3();
-    this.p0p1Delta = new Vector3();
+    this.p0p1Delta = new Vector3(0, 0, 0);
 
     this.isStatic = collisionSettings.static;
     this.isIntelligent = collisionSettings.intelligent;
@@ -114,6 +114,12 @@ extend(CollisionModel.prototype, {
 
     getP0P1Delta()
     {
+        if (this.isStatic)
+        {
+            this.p0p1Delta.set(0, 0, 0);
+            return this.p0p1Delta;
+        }
+
         // (Internal) Must recompute every time!
         this.p0p1Delta.set(
             Math.abs(this.position0.x - this.position1.x),

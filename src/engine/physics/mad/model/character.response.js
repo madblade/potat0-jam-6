@@ -11,7 +11,7 @@ let CharacterResponseModule = {
         bumperCenter,
         gravityUp,
         heightMap,
-        collider,
+        collider
     )
     {
         const v1 = this._w1;
@@ -24,6 +24,8 @@ let CharacterResponseModule = {
         const elementSizeX = heightMap.elementSizeX;
         const elementSizeY = heightMap.elementSizeY;
         const pos = heightMap.getData().userData.points;
+        const bumpR = this.bumperRadius;
+        const bumpR2 = bumpR * bumpR;
 
         const nbXToCheck = Math.ceil(bumpR / elementSizeX);
         const nbYToCheck = Math.ceil(bumpR / elementSizeY);
@@ -31,8 +33,6 @@ let CharacterResponseModule = {
         const maxX = Math.min(x + nbXToCheck + 1, nbSegmentsX); // nbv - 2
         const minY = Math.max(y - nbYToCheck - 1, 0);
         const maxY = Math.min(y + nbXToCheck + 1, nbSegmentsY); // nbv - 2
-        const bumpR = this.bumperRadius;
-        const bumpR2 = bumpR * bumpR;
 
         let displacement;
         // Go through heightmap patch.
@@ -51,10 +51,11 @@ let CharacterResponseModule = {
                 const heightD = pos[d];
 
                 // Collide bump and clamp correction.
+                // Caution! v1v3v2 (and not v1v2v3) to revert normals!
                 // abd
                 v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
-                v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                v3.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                v2.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
                 displacement = collider.intersectSphereTriOrthogonal(
                     bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
                 );
@@ -62,8 +63,8 @@ let CharacterResponseModule = {
 
                 // bcd
                 v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                v3.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
+                v2.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
                 displacement = collider.intersectSphereTriOrthogonal(
                     bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
                 );
@@ -76,7 +77,8 @@ let CharacterResponseModule = {
         bumperCenter,
         gravityUp,
         heightMap,
-        collider
+        collider,
+        readOnly // used to test without setting position1 or bumper / lifter
     )
     {
         const v1 = this._w1;
@@ -128,21 +130,25 @@ let CharacterResponseModule = {
                     continue;
 
                 // Collide lift and clamp correction.
+                // v1v3v2 for good measure (normals are set implicitly!)
                 // abd
                 v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
-                v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                displacement = collider.intersectSphereTriVertical(lifterCenter, liftR2, v1, v2, v3,
-                    liftR, gravityUp);
-                this.lift(displacement, false);
+                v3.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
+                v2.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                displacement = collider.intersectSphereTriVertical(
+                    lifterCenter, liftR2, v1, v2, v3,
+                    liftR, gravityUp
+                );
+                this.lift(displacement, false, readOnly);
 
                 // bcd
                 v1.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
-                v2.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
-                v3.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
-                displacement = collider.intersectSphereTriVertical(lifterCenter, liftR2, v1, v2, v3,
+                v3.set((ix + 1) * elementSizeX, (iy + 1) * elementSizeY, heightC);
+                v2.set((ix + 1) * elementSizeX, iy * elementSizeY, heightD);
+                displacement = collider.intersectSphereTriVertical(
+                    lifterCenter, liftR2, v1, v2, v3,
                     liftR, gravityUp);
-                this.lift(displacement, false);
+                this.lift(displacement, false, readOnly);
             }
     },
 
@@ -187,7 +193,8 @@ let CharacterResponseModule = {
         bumperCenter,
         trimeshCollisionModel,
         gravityUp,
-        collider
+        collider,
+        readOnly // test-only: don’t affect p1 or bumper / lifter position
     )
     {
         const tris = trimeshCollisionModel.tris; // working on already transformed tris
@@ -225,7 +232,7 @@ let CharacterResponseModule = {
             displacement = collider.intersectSphereTriVertical(
                 lifterCenter, liftR2, v1, v2, v3, liftR, gravityUp
             );
-            this.lift(displacement, true);
+            this.lift(displacement, true, readOnly);
         }
     },
 
@@ -289,7 +296,7 @@ let CharacterResponseModule = {
         this.updateBumperLifterAfterChange(displacement);
     },
 
-    lift(displacement, byAStaticObject)
+    lift(displacement, byAStaticObject, readOnly)
     {
         const l = displacement.length();
         if (l > this.lifterRadius)
@@ -315,27 +322,149 @@ let CharacterResponseModule = {
         }
 
         // Apply.
-        this.position1.set(nx, ny, nz);
-        this.updateBumperLifterAfterChange(displacement);
+        if (!readOnly)
+        {
+            this.position1.set(nx, ny, nz);
+            this.updateBumperLifterAfterChange(displacement);
+        }
     },
 
-    stepDown()
+    stepDown(collider)
     {
         // 1. go down by h / 2
-        let bumperCenter = this.bumperCenter; // Should be set to p1!
-        // bumperCenter.copy(this.position1);
-        // TODO
+        let bumperCenter = this.bumperCenterTest; // Should be set to p1!
+        let bumperCenterLocal = this.bumperCenterTestTranslated;
+        bumperCenter.copy(this.position1);
+        // ^ was possibly already bumped (but not lifted)
+        const gravityUp = this._w4;
+        gravityUp.copy(this.gravity).negate().normalize();
+        if (gravityUp.manhattanLength() === 0)
+            gravityUp.z = -10; // needed to orient bumper and lifter even when g = 0
+
+        // Step down by half lifter radius.
+        bumperCenter.z -= this.stepDownHeight;
 
         // 2. check lift on all entities + heightmaps
-        // check on all trimeshes first
+        // TEST ONLY
+        // should check on all trimeshes first
         // translate coordinates again for heightmaps
+        const cd = this.stepDownCollisionData;
+        for (let i = 0; i < cd.length; ++i)
+        {
+            const model = cd[i];
+            if (model[0] === 'hm')
+            {
+                // (translation to local coords should be done after)
+                const heightMap = model[1];
+                const extentX = heightMap.extentX;
+                const extentY = heightMap.extentY;
+                const nbVerticesX = heightMap.nbVerticesX;
+                const nbVerticesY = heightMap.nbVerticesY;
+                const nbSegmentsX = nbVerticesX - 1;
+                const nbSegmentsY = nbVerticesY - 1;
+                bumperCenterLocal.copy(bumperCenter);
+                const p1x = bumperCenterLocal.x; const hi = heightMap.x;
+                const p1y = bumperCenterLocal.y; const hj = heightMap.y;
+                const localX = p1x - (hi - .5) * extentX;
+                const localY = p1y - (hj - .5) * extentY;
+                // ^ extentX and extentY should be the same as sweeper.heightMapSideWidth
+                const x = Math.floor(localX / extentX * nbSegmentsX);
+                const y = Math.floor(localY / extentY * nbSegmentsY);
+                bumperCenterLocal.x = localX;
+                bumperCenterLocal.y = localY;
+
+                // only testing
+                this.liftAgainstHeightMap(
+                    x, y, bumperCenterLocal, gravityUp,
+                    heightMap, collider, true
+                );
+                if (this.wasLifted) break;
+            }
+            else if (model[0] === 's')
+            {
+                const trimeshCollisionModel = model[1];
+
+                this.liftAgainstTrimesh(
+                    bumperCenter, trimeshCollisionModel, gravityUp,
+                    collider, true
+                );
+                if (this.wasLiftedByAStaticObject) break;
+            }
+        }
 
         // if !lift set onGround = false
-        // if lift greater than step down, error
-        // if lift smaller, then apply lift then bump.
+        if (!this.wasLiftedByAStaticObject && !this.wasLifted)
+        {
+            this.onGround = false;
+            this.wasOnGround = false;
+            return;
+        }
+
+        // console.log('apply step down');
+        this.position1.z -= this.stepDownHeight;
+        bumperCenter.copy(this.position1);
+        // (possible debug assert: re-lift should not be greater than step down)
+        // if there is a (smaller) lift, then apply lift then bump.
+        for (let i = 0; i < cd.length; ++i)
+        {
+            bumperCenter.copy(this.position1); // update after other bump / lifts
+            const model = cd[i];
+            if (model[0] === 'hm')
+            {
+                bumperCenterLocal = this.bumperCenter;
+                // ^ so that it is affected by lift / bump routines.
+
+                const heightMap = model[1];
+                // (translated to local coords)
+                const extentX = heightMap.extentX;
+                const extentY = heightMap.extentY;
+                const nbVerticesX = heightMap.nbVerticesX;
+                const nbVerticesY = heightMap.nbVerticesY;
+                const nbSegmentsX = nbVerticesX - 1;
+                const nbSegmentsY = nbVerticesY - 1;
+                bumperCenterLocal.copy(bumperCenter);
+                const p1x = bumperCenterLocal.x; const hi = heightMap.x;
+                const p1y = bumperCenterLocal.y; const hj = heightMap.y;
+                const localX = p1x - (hi - .5) * extentX;
+                const localY = p1y - (hj - .5) * extentY;
+                let x = Math.floor(localX / extentX * nbSegmentsX);
+                let y = Math.floor(localY / extentY * nbSegmentsY);
+                bumperCenterLocal.x = localX;
+                bumperCenterLocal.y = localY;
+
+                // read and write
+                this.liftAgainstHeightMap(
+                    x, y, bumperCenterLocal, gravityUp,
+                    heightMap, collider
+                );
+
+                // apply change (bumperCenterLocal === this.bumperCenter!)
+                x = Math.floor(bumperCenterLocal.x / extentX * nbSegmentsX);
+                y = Math.floor(bumperCenterLocal.y / extentY * nbSegmentsY);
+                this.bumpAgainstHeightMap(
+                    x, y, bumperCenterLocal, gravityUp,
+                    heightMap, collider
+                );
+            }
+            else if (model[0] === 's')
+            {
+                const trimeshCollisionModel = model[1];
+
+                this.liftAgainstTrimesh(
+                    bumperCenter, trimeshCollisionModel, gravityUp,
+                    collider
+                );
+                bumperCenter.copy(this.position1); // apply change
+                this.bumpAgainstTrimesh(
+                    bumperCenter, trimeshCollisionModel, gravityUp,
+                    collider
+                );
+            }
+        }
 
         // Compute wasOnGround for next iteration.
-        this.wasOnGround = false;
+        this.onGround = true;
+        this.wasOnGround = true;
     }
 
 };

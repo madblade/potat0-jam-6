@@ -42,7 +42,7 @@ extend(EntityModel.prototype, {
             switch (o.type)
             {
                 case 'box':
-                    const geo = new BoxBufferGeometry(o.w, o.h, o.d);
+                    const geo = new BoxBufferGeometry(o.w, o.h, o.d, 2, 2, 2);
                     const mat = new MeshBasicMaterial({ wireframe: true, color: 0x000000 });
                     const m = graphics.createMesh(geo, mat);
                     const p = o.position;

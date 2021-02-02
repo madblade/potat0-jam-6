@@ -15,7 +15,8 @@ let PhysicsInputModule = {
             character: true,
             bumperRadius: 0.5,
             lifterDelta: 0.3,
-            lifterRadius: 0.5
+            lifterRadius: 0.4
+            // lifterRadius: 0.00004
         };
         this.addPhysicsEntity(position, options);
     },

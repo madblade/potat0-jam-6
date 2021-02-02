@@ -30,8 +30,8 @@ let Level0 = function(title)
 
                 // Math.exp((i + j / 10) * 0.5) / 1000
                 // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);
 
@@ -63,9 +63,10 @@ let Level0 = function(title)
         {
             type: 'box',
             position: [0, 2, 1],
-            rotation: [0, 0, 0], // Math.PI / 4],
-            w: 1,
-            h: 2,
+            rotation: [0, Math.PI / 4, Math.PI / 4], // Math.PI / 4],
+            // rotation: [0, 0, 0], // Math.PI / 4],
+            w: 4,
+            h: 4,
             d: 1
         }
     ];

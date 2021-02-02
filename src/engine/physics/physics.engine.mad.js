@@ -133,6 +133,10 @@ extend(MadEngine.prototype, {
         return entity;
     },
 
+    // This might be called to enforce entity movement.
+    // (but it is not necessary as all dynamic entities are checked again by the sweeper
+    // if they are not on the ground, if they want to move, or if they are subject to forces)
+    /** @deprecated */
     movePhysicsEntity(entity)
     {
         this.sweeper.movePhysicsEntity(entity);

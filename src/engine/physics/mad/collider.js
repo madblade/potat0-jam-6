@@ -162,8 +162,8 @@ extend(Collider.prototype, {
     {
         this.collisionModelsNeedingStepDown.forEach(cm =>
         {
-            if (!cm.onGround) // flag was set in between different object tests
-                cm.stepDown(); // perform actual checks and possibly step down
+            if (!cm.onGround && cm.wasOnGround) // flag was set in between different object tests
+                cm.stepDown(this); // perform actual checks and possibly step down
 
             // Reset collision data again just to be sure.
             cm.stepDownCollisionData.length = 0;
@@ -221,13 +221,6 @@ extend(Collider.prototype, {
         normal.copy(v1v2).cross(v1v3);
         normal.normalize();
 
-        // normal.y = -normal.y; // (remember, we work in the flipped world)
-        // window.dh.h.setDirection(normal);
-        // window.dh.s.position.copy(closest);
-        // window.dh.sg1.position.copy(v1);
-        // window.dh.sg2.position.copy(v2);
-        // window.dh.sg3.position.copy(v3);
-
         const l2 = normal.length();
 
         if (l2 < COLLISION_EPS) // hmm… I don’t like using the same EPS here.
@@ -241,7 +234,9 @@ extend(Collider.prototype, {
 
         const gup = this._w12;
         gup.copy(normal).projectOnPlane(gravityUp).normalize(); // project n onto g’s plane
-        const flipped = cToClosest.dot(normal) > 0;
+
+        // The collision model must be such that faces are correctly oriented.
+        const flipped = false;// cToClosest.dot(normal) > 0;
         if (flipped) normal.negate();
 
         // const cosAlpha = gravityUp.dot(normal);

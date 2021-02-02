@@ -155,7 +155,7 @@ extend(Sweeper.prototype, {
     },
 
     // Pre-physics update.
-
+    /** @deprecated */
     anEntityNeedsToMove(entity)
     {
         assert(!entity.isPlaceHolder, '[Sweeper] trying to move a placeholder?');
@@ -453,10 +453,10 @@ extend(Sweeper.prototype, {
         });
     },
 
+    /** @deprecated */
     movePhysicsEntity(entity)
     {
         this.anEntityNeedsToMove(entity);
-        // TODO [PHYSICS] notify here when entities should move (force or want movement)
     },
 });
 

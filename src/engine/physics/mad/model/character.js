@@ -26,6 +26,11 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.lifterDelta = collisionSettings.lifterDelta || 0.2;
     // TODO leg raycast coordinates here + forward orientation
 
+    // Step down test
+    this.bumperCenterTest = new Vector3();
+    this.bumperCenterTestTranslated = new Vector3();
+    this.stepDownHeight = this.lifterRadius / 2;
+
     // Helper
     this.lifterHelper = new Mesh(
         new SphereBufferGeometry(this.lifterRadius),
@@ -166,11 +171,7 @@ extend(CharacterCollisionModel.prototype, {
                 collider.pushCollisionModelForStepDown(this);
             }
         }
-
-        // TODO vertical check (raycast down)
-        // TODO check distance < height / 2
-        //  if !point in range -> gravity fall
-        //  if point in range, bump THEN lift
+        else this.wasOnGround = this.onGround;
 
         // maxLift = lifter radius
         // constrain vertical lift
@@ -180,7 +181,7 @@ extend(CharacterCollisionModel.prototype, {
 
     collideAgainstStatic(otherCollisionModel, collider)
     {
-        console.log('Collide character against static object.');
+        // console.log('Collide character against static object.');
         if (!otherCollisionModel.isTrimesh)
             throw Error('[Character] Only trimeshes can be static.');
 
@@ -219,7 +220,7 @@ extend(CharacterCollisionModel.prototype, {
         this.liftAgainstTrimesh(bumperCenter, trimeshCollisionModel, gravityUp, collider);
 
         // Statics are tested before heightmaps.
-        this.onGround = !this.wasLiftedByAStaticObject;
+        this.onGround = this.wasLiftedByAStaticObject;
         if (!this.onGround)
         {
             if (this.wasOnGround)
@@ -229,6 +230,7 @@ extend(CharacterCollisionModel.prototype, {
                 // ^ This is mandatory here because there might be no heightmap down.
             }
         }
+        else this.wasOnGround = this.onGround;
     },
 
     // for IK and lifter

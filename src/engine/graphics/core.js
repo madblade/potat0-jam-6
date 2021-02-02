@@ -121,6 +121,11 @@ let CoreModule = {
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
 
+        this.fps.update();
+
+        // Ping AI
+        aiEngine.refresh();
+
         // Emulate lower framerate
         this.now = Date.now();
         this.elapsed = this.now - (this.then || 0);
@@ -129,15 +134,9 @@ let CoreModule = {
         if (this.elapsed > fpsInterval)
         {
             this.then = this.now - (this.elapsed % fpsInterval);
-        } else return;
-
-        this.fps.update();
-
-        // Ping AI
-        aiEngine.refresh();
-
-        // Force standalone update at animanionframe
-        physicsEngine.refresh();
+            // Force standalone update at animanionframe
+            physicsEngine.refresh();
+        }
 
         // Bench.
         // this.fps.update();

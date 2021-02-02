@@ -141,6 +141,12 @@ extend(Collider.prototype, {
         if (dynamicEntityCM.isCharacter)
         // e.g. sphere, cylinder, trimesh, box, static platform
         {
+            if (
+                dynamicEntityCM.onGround && !dynamicEntityCM.wantsToMove &&
+                !dynamicEntityCM.isSubjectToContinuousForce
+            )
+                return; // does not need movement
+
             dynamicEntityCM.collideAgainstStatic(staticEntityCM, this);
         }
     },

@@ -287,6 +287,7 @@ let CharacterResponseModule = {
         // Apply.
         if (correct)
         {
+            console.log('Correcting bump');
             nx = p1x + displacement.x;
             ny = p1y + displacement.y;
             nz = p1z + displacement.z;
@@ -349,6 +350,9 @@ let CharacterResponseModule = {
         // should check on all trimeshes first
         // translate coordinates again for heightmaps
         const cd = this.stepDownCollisionData;
+        this.wasLifted = false;
+        this.wasLiftedByAStaticObject = false;
+        console.log(this.stepDownHeight);
         for (let i = 0; i < cd.length; ++i)
         {
             const model = cd[i];

@@ -443,7 +443,7 @@ extend(Sweeper.prototype, {
                     cm.wasOnGround = cm.onGround; // remember where cm started from
                     cm.canJumpFromGround = cm.onGround;
 
-                    cm.onGround = false;
+                    // cm.onGround = false;
                     // ^ when a movement is initiated, we always need to check again
                     // if the entity is on the ground (this is necessary for the stepDown routine)
                 }

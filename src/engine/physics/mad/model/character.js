@@ -29,7 +29,11 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     // Step down test
     this.bumperCenterTest = new Vector3();
     this.bumperCenterTestTranslated = new Vector3();
-    this.stepDownHeight = this.lifterRadius / 2;
+    this.stepDownHeight = this.lifterRadius / 2 - 0.05;
+    // Math.min(
+    //     this.lifterRadius / 2,
+    //     this.lifterRadius - (this.bumperRadius - this.lifterDelta)
+    // );
 
     // Helper
     this.lifterHelper = new Mesh(
@@ -162,16 +166,12 @@ extend(CharacterCollisionModel.prototype, {
         // Heightmaps are checked after statics.
         this.onGround = this.wasLifted || this.wasLiftedByAStaticObject;
 
-        if (!this.onGround)
+        if (!this.onGround && this.wasOnGround)
         {
-            if (this.wasOnGround)
-            {
-                this.stepDownCollisionData.push(['hm', heightMap]);
-                // ^ heightMap contains all the data necessary for the coordinate transform.
-                collider.pushCollisionModelForStepDown(this);
-            }
+            this.stepDownCollisionData.push(['hm', heightMap]);
+            // ^ heightMap contains all the data necessary for the coordinate transform.
+            collider.pushCollisionModelForStepDown(this);
         }
-        else this.wasOnGround = this.onGround;
 
         // maxLift = lifter radius
         // constrain vertical lift
@@ -221,16 +221,12 @@ extend(CharacterCollisionModel.prototype, {
 
         // Statics are tested before heightmaps.
         this.onGround = this.wasLiftedByAStaticObject;
-        if (!this.onGround)
+        if (!this.onGround && this.wasOnGround)
         {
-            if (this.wasOnGround)
-            {
-                this.stepDownCollisionData.push(['s', trimeshCollisionModel]);
-                collider.pushCollisionModelForStepDown(this);
-                // ^ This is mandatory here because there might be no heightmap down.
-            }
+            this.stepDownCollisionData.push(['s', trimeshCollisionModel]);
+            collider.pushCollisionModelForStepDown(this);
+            // ^ This is mandatory here because there might be no heightmap down.
         }
-        else this.wasOnGround = this.onGround;
     },
 
     // for IK and lifter

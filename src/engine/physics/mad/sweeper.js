@@ -431,7 +431,25 @@ extend(Sweeper.prototype, {
         this.dynamicEntities.forEach(e => {
             const cm = e.collisionModel;
             if (!cm.onGround || cm.wantsToMove || cm.isSubjectToContinuousForce)
+            {
+                if (cm.isCharacter)
+                {
+                    cm.wasLifted = false;
+                    cm.wasLiftedByAStaticObject = false;
+                    cm.stepDownCollisionData.length = 0; // reset step down data
+                }
+                if (cm.wantsToMove)
+                {
+                    cm.wasOnGround = cm.onGround; // remember where cm started from
+                    cm.canJumpFromGround = cm.onGround;
+
+                    cm.onGround = false;
+                    // ^ when a movement is initiated, we always need to check again
+                    // if the entity is on the ground (this is necessary for the stepDown routine)
+                }
+
                 this.entitiesNeedingToMove.add(e);
+            }
         });
     },
 

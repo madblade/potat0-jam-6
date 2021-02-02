@@ -13,6 +13,8 @@ let Collider = function(sweeper)
 {
     this.sweeper = sweeper;
 
+    this.collisionModelsNeedingStepDown = new Set();
+
     // Internals tri/sphere
     this._w1 = new Vector3();
     this._w2 = new Vector3();
@@ -91,7 +93,9 @@ extend(Collider.prototype, {
                 return;
             }
             // skip entities that are already on ground
-            if (cm.onGround) return;
+            // if (cm.onGround) return;
+            // ^ This isn’t done here because the onGround flag is only set by the lift routine.
+            // Lifted statuses are reset at the sweeper stage.
 
             // 1. Find heightmaps by coordinates.
             const p1 = cm.position1; // Collide at p1.
@@ -152,6 +156,26 @@ extend(Collider.prototype, {
             return entity1CM.collideAgainstDynamicSphere(entity2CM);
         if (entity2CM.isCharacter)
             return entity2CM.collideAgainstDynamicSphere(entity1CM);
+    },
+
+    stepDownEntities()
+    {
+        this.collisionModelsNeedingStepDown.forEach(cm =>
+        {
+            if (!cm.onGround) // flag was set in between different object tests
+                cm.stepDown(); // perform actual checks and possibly step down
+
+            // Reset collision data again just to be sure.
+            cm.stepDownCollisionData.length = 0;
+        });
+
+        // Reset.
+        this.collisionModelsNeedingStepDown.clear();
+    },
+
+    pushCollisionModelForStepDown(cm)
+    {
+        this.collisionModelsNeedingStepDown.add(cm);
     },
 
     // Internal routines

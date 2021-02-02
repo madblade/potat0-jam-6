@@ -294,7 +294,8 @@ let CharacterResponseModule = {
         const l = displacement.length();
         if (l > this.lifterRadius)
         {
-            console.warn('big lift');
+            if (this._debug)
+                console.warn('[Character/Response] Big lift clamped.');
             displacement.multiplyScalar(this.lifterRadius / l);
         }
         const p1 = this.position1;
@@ -307,17 +308,35 @@ let CharacterResponseModule = {
 
         if (l > 0.)
         {
-            // TODO activate optim once I’m done debugging
-            // this.onGround = true;
             if (byAStaticObject) this.wasLiftedByAStaticObject = true;
             else this.wasLifted = true;
             this.velocity1.z = 0;
+            // ^ Reset velocity orthogonal to gravity
         }
 
         // Apply.
         this.position1.set(nx, ny, nz);
         this.updateBumperLifterAfterChange(displacement);
     },
+
+    stepDown()
+    {
+        // 1. go down by h / 2
+        let bumperCenter = this.bumperCenter; // Should be set to p1!
+        // bumperCenter.copy(this.position1);
+        // TODO
+
+        // 2. check lift on all entities + heightmaps
+        // check on all trimeshes first
+        // translate coordinates again for heightmaps
+
+        // if !lift set onGround = false
+        // if lift greater than step down, error
+        // if lift smaller, then apply lift then bump.
+
+        // Compute wasOnGround for next iteration.
+        this.wasOnGround = false;
+    }
 
 };
 

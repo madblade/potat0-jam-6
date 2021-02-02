@@ -66,6 +66,7 @@ let PhysicsInputModule = {
         const isUd = d[4] !== d[5];
         if (!isFw && !isRg && !isUd)
         {
+            collisionModel.wantsToMove = false;
             wv.set(0, 0, 0);
             return;
         }
@@ -111,6 +112,8 @@ let PhysicsInputModule = {
         wv.z = d[4] ? 1 : d[5] ? -1 : 0;
         // if (!d[4])
         wv.multiplyScalar(0.1);
+
+        if (wv.manhattanLength() > 0) collisionModel.wantsToMove = true;
     },
 
 };

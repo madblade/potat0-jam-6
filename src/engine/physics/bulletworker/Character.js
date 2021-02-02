@@ -107,7 +107,6 @@ Object.assign(Hero.prototype, {
     step(Ar, n)
     {
         Ar[n] = this.speed;
-        //Hr[n] = b.onGround ? 1 : 0;
 
         // var t = this.body.getWorldTransform();
         // var pos = t.getOrigin();
@@ -156,7 +155,7 @@ Object.assign(Hero.prototype, {
 
         // if (key[4] === 1) this.controller.canJump();
 
-        /*if ( key[ 4 ] == 1 && this.controller.onGround() ) { //h.canJump() ){
+        /*if ( key[ 4 ] == 1 ) { //h.canJump() ){
             this.wasJumping = true;
             this.verticalVelocity = 0;
         }
@@ -169,7 +168,6 @@ Object.assign(Hero.prototype, {
             }
         }*/
 
-        //  if( hero.onGround() ){
         z = walkSpeed * -key[2];
         y = walkSpeed * -key[1];
         x = walkSpeed * -key[0];

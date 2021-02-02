@@ -179,6 +179,10 @@ extend(MadEngine.prototype, {
         // 4. collide with heightmaps in a separate pass,
         // compute entities not on ground
         this.collider.collideTerrain();
+        // 4.1. for entities not on ground,
+        // step down if there is just a little bit of delta with the ground
+        // to avoid obnoxiously floaty behaviour.
+        this.collider.stepDownEntities();
 
         // 5. notify new entities needing to move
         // (this copies p1 to p0 for dynamic entities)

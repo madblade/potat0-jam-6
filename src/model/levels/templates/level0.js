@@ -21,7 +21,7 @@ let Level0 = function(title)
     for (let i = 0; i < nbVerticesX; ++i)
         for (let j = 0; j < nbVerticesY; ++j)
             points.push(
-                0.
+                // 0.
                 // i + j
                 // 5 * (j + i) - 10
                 // 10 * i - 10
@@ -30,7 +30,7 @@ let Level0 = function(title)
 
                 // Math.exp((i + j / 10) * 0.5) / 1000
                 // 2.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
-                // 0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
+                0.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
                 // 20.5 * Math.sin(i / 4 - j / 4) + 0.2 * Math.cos(i * j / 40)
             );
             // points.push(0.);
@@ -50,12 +50,12 @@ let Level0 = function(title)
             }
         ],
         heightmaps: [
-            // {
-            //     world: '-1',
-            //     nbChunksX: 1,
-            //     nbChunksY: 1,
-            //     chunks
-            // }
+            {
+                world: '-1',
+                nbChunksX: 1,
+                nbChunksY: 1,
+                chunks
+            }
         ]
     };
 

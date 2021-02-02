@@ -74,8 +74,9 @@ extend(CharacterCollisionModel.prototype, {
         const maxX = center.x + radius;
         const minY = center.y - radius;
         const maxY = center.y + radius;
-        const minZ = center.z - (this.lifterDelta + this.lifterRadius) * 2;
-        const maxZ = center.z + radius;
+        const zDelta = Math.max(this.lifterDelta + this.lifterRadius, radius);
+        const minZ = center.z - zDelta;
+        const maxZ = center.z + zDelta;
         this.aabbXExtent.set(minX, maxX);
         this.aabbYExtent.set(minY, maxY);
         this.aabbZExtent.set(minZ, maxZ);
@@ -138,7 +139,8 @@ extend(CharacterCollisionModel.prototype, {
         const y = Math.floor(localY / extentY * nbSegmentsY);
         const gravityUp = this._w4;
         gravityUp.copy(this.gravity).negate().normalize();
-        gravityUp.z = -10;
+        if (gravityUp.manhattanLength() === 0)
+            gravityUp.z = -10; // needed to orient bumper and lifter
 
         // 1. BUMP.
         // local coordinates are in [0, heightMapWidth].
@@ -225,7 +227,7 @@ extend(CharacterCollisionModel.prototype, {
                     heightC < lowestPoint && heightD < lowestPoint)
                     continue;
 
-                // Collide bump and clamp correction.
+                // Collide lift and clamp correction.
                 // abd
                 v1.set(ix * elementSizeX, iy * elementSizeY, heightA);
                 v2.set(ix * elementSizeX, (iy + 1) * elementSizeY, heightB);
@@ -374,32 +376,40 @@ extend(CharacterCollisionModel.prototype, {
 
     collideTrimesh(trimeshCollisionModel, collider)
     {
-        const trimesh = trimeshCollisionModel.trimesh;
-        const index = trimesh.geometry.index.array;
-        const pos = trimesh.geometry.attributes.position.array;
+        // const trimesh = trimeshCollisionModel.trimesh;
+        // const index = trimesh.geometry.index.array;
+        // const pos = trimesh.geometry.attributes.position.array;
+        const tris = trimeshCollisionModel.tris;
+        // working on already transformed tris
         const v1 = this._w1;
         const v2 = this._w2;
         const v3 = this._w3;
+        let displacement;
+
         const gravityUp = this._w4;
         gravityUp.copy(this.gravity).negate().normalize();
+        if (gravityUp.manhattanLength() === 0)
+            gravityUp.z = -10; // needed to orient bumper and lifter
+
 
         // 1. BUMP.
         const bumpR = this.bumperRadius;
         const bumpR2 = bumpR * bumpR;
-        let bumperCenter = this._w5;
-        bumperCenter.copy(this.position1).applyMatrix4(trimeshCollisionModel.localTransformInverse);
-        let displacement;
-        const nbTris = index ? index.length / 3 : pos.length / 9;
-        for (let i = 0; i < 0; ++i)
+        let bumperCenter = this.bumperCenter; // Should be set to p1!
+        bumperCenter.copy(this.position1);
+        // bumperCenter.copy(this.position1).applyMatrix4(trimeshCollisionModel.localTransformInverse);
+        // const nbTris = index ? index.length / 3 : pos.length / 9;
+        const nbTris = tris.length / 9;
+        for (let i = 0; i < nbTris; ++i)
         {
-            const a = index ? index[3 * i] : 3 * i;
-            const b = index ? index[3 * i + 1] : 3 * i + 1;
-            const c = index ? index[3 * i + 2] : 3 * i + 2;
+            const a = 3 * i;
+            const b = 3 * i + 1;
+            const c = 3 * i + 2;
+            v1.set(tris[3 * a], tris[3 * a + 1], tris[3 * a + 2]);
+            v2.set(tris[3 * b], tris[3 * b + 1], tris[3 * b + 2]);
+            v3.set(tris[3 * c], tris[3 * c + 1], tris[3 * c + 2]);
 
             // Collide bump and clamp correction.
-            v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
-            v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
-            v3.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
             displacement = collider.intersectSphereTriOrthogonal(
                 bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp
             );
@@ -409,26 +419,27 @@ extend(CharacterCollisionModel.prototype, {
         // 2. LIFT.
         const liftR = this.lifterRadius;
         const liftR2 = liftR * liftR;
-        let lifterCenter = this._w5;
-        // lifterCenter.copy(this.position1).applyMatrix4(trimesh.localTransform);
+        let lifterCenter = this.lifterCenter;
         // It’s more efficient to copy bumper’s position.
-        lifterCenter.copy(this.bumperCenter).addScaledVector(gravityUp, -this.lifterDelta);
-        lifterCenter.applyMatrix4(trimeshCollisionModel.localTransformInverse);
+        lifterCenter.set(
+            bumperCenter.x,
+            bumperCenter.y,
+            bumperCenter.z - this.lifterDelta
+        );
+        // lifterCenter.copy(this.bumperCenter).addScaledVector(gravityUp, -this.lifterDelta);
+        // lifterCenter.copy(this.position1).applyMatrix4(trimesh.localTransform);
+        // lifterCenter.applyMatrix4(trimeshCollisionModel.localTransformInverse);
         for (let i = 0; i < nbTris; ++i)
         {
-            const a = index ? index[3 * i] : 3 * i;
-            const b = index ? index[3 * i + 1] : 3 * i + 1;
-            const c = index ? index[3 * i + 2] : 3 * i + 2;
+            const a = 3 * i;
+            const b = 3 * i + 1;
+            const c = 3 * i + 2;
 
-            // Collide bump and clamp correction.
-            v1.set(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2]);
-            v2.set(pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
-            v3.set(pos[3 * c], pos[3 * c + 1], pos[3 * c + 2]);
+            v1.set(tris[3 * a], tris[3 * a + 1], tris[3 * a + 2]);
+            v2.set(tris[3 * b], tris[3 * b + 1], tris[3 * b + 2]);
+            v3.set(tris[3 * c], tris[3 * c + 1], tris[3 * c + 2]);
 
-            if (v1.z === 0.5 && v2.z === 0.5 && v3.z === 0.5)
-            {
-                // console.log('aha');
-            }
+            // Collide lift and clamp correction.
             displacement = collider.intersectSphereTriVertical(
                 lifterCenter, liftR2, v1, v2, v3, liftR, gravityUp
             );

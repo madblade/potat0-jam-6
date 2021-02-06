@@ -30,6 +30,32 @@ let RendererUpdates = {
         });
     },
 
+    updateWaterReflection(
+        cameraManager, renderer, mainScene, mainCamera, renderRegister
+    )
+    {
+        // get main
+        let currentWid = this.graphics.app.model.backend.selfModel.worldId.toString();
+        if (currentWid === '-1')
+            this.updateWaters(cameraManager, renderer, mainScene, mainCamera);
+        else
+        {
+            for (let j = 0, m = renderRegister.length; j < m; ++j)
+            {
+                const pass = renderRegister[j];
+                const sc = pass.scene;
+                if (!sc) continue;
+                const sceneId = pass.sceneId.toString();
+                if (sceneId === '-1')
+                {
+                    let cm = pass.camera.cameraObject;
+                    this.updateWaters(cameraManager, renderer, sc, cm);
+                    break;
+                }
+            }
+        }
+    },
+
     updateWaters(cameraManager, renderer, mainScene, mainCam)
     {
         // Update uniforms

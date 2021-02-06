@@ -85,6 +85,18 @@ extend(UX.prototype, {
         this.app.runGame();
     },
 
+    informPlayer(text)
+    {
+        // display text to player.
+        console.log('UX got a message…');
+        console.log(text);
+    },
+
+    validateLevel()
+    {
+        // Level was completed.
+    }
+
 });
 
 extend(UX.prototype, UXIngameModule);

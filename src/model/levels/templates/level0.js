@@ -84,10 +84,14 @@ let Level0 = function(title, id)
             titles: [
                 'Rad Yarns', // main
                 '—madengine—', // after, sub
-                'a long time away',
-                'in a place far ago'
+                'A long time away, in a place far ago…',
             ],
-            spawn: 'player'
+            timeBetweenTitles: 1, // in seconds
+            performWhenConditionMet: function(backend, ux)
+            {
+                ux.informPlayer('Go to checkpoint!');
+                // backend.addObject(); // static sphere to indicate objective
+            }
         },
         {
             type: 'event',
@@ -99,9 +103,27 @@ let Level0 = function(title, id)
                 const destination = new Vector3(5, 5, 1);
                 return player.distanceTo(destination) < 1;
             },
-            // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
             {
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                // backend.addObject(); static sphere
+                // backend.removeObject();
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            condition: function(backend, ux)
+            {
+                // console.log(ux);
+                const player = backend.selfModel.position;
+                const destination = new Vector3(10, 10, 1);
+                return player.distanceTo(destination) < 1;
+            },
+            performWhenConditionMet: function(backend, ux)
+            {
+                ux.informPlayer('Checkpoint passed! Go to the next level…');
+                ux.validateLevel();
             }
         }
     ];
@@ -129,6 +151,7 @@ Level0.prototype = Object.assign(Object.create(Level.prototype), {
 
     getScenario() {
         console.log('[Model/Level0] Scenario.');
+        return this.scenario;
     },
 
 });

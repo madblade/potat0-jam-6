@@ -4,8 +4,8 @@
 
 'use strict';
 
-import extend               from '../../../../extend';
-import { Vector2, Vector3 } from 'three';
+import extend                        from '../../../../extend';
+import { Vector2, Vector3, Vector4 } from 'three';
 
 const AABB_EPS = 0.00001;
 
@@ -44,6 +44,7 @@ let CollisionModel = function(
         this.velocity1 = new Vector3();
         this.accelera0 = new Vector3();
         this.accelera1 = new Vector3();
+        this.rotation0 = new Vector4(0, 0, 0, 0);
         if (collisionSettings.variableGravity)
             this.gravity = new Vector3();
         else

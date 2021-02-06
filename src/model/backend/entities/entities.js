@@ -6,25 +6,27 @@
 
 import extend           from '../../../extend.js';
 
-import { PlayerModule }                                  from './player.js';
-import { BoxBufferGeometry, MeshBasicMaterial, Vector3 } from 'three';
+import { PlayerModule }                        from './player.js';
+import { BoxBufferGeometry, MeshBasicMaterial} from 'three';
+import { EntitiesInterpolationModule }         from './entities.interpolate';
 
 let EntityModel = function(app)
 {
     this.app = app;
 
     // Model component
-    this.entitiesIngame = new Map();
     this.entitiesOutdated = new Map();
     this.entitiesLoading = new Set();
-
-    this.staticEntities = new Map();
+    this.entitiesIngame = new Map();
+    this.entitiesNeedingInterpolation = new Map(); // (Could be used by Bullet)
+    // (We might want to put physical entities in a separate array)
 
     // Graphical component
     this.needsUpdate = false;
 
     // Interpolation-prediction
     // -> Moved per-entity.
+    this.useInterpolation = false;
     // this.lastServerUpdateTime = this.getTime();
     // this.averageDeltaT = -1;
 };
@@ -58,80 +60,20 @@ extend(EntityModel.prototype, {
         console.log('[Model/Entities] TODO bind entities to graphics and physics.');
     },
 
-    interpolatePredictEntities()
+    directUpdateEntities()
     {
-        const updateTime = this.getTime();
         let entities = this.entitiesIngame;
         entities.forEach(entity => {
             if (!entity.needsUpdate) return;
-            this.interpolatePredictEntity(entity, updateTime);
+            this.directUpdateEntity(entity);
         });
     },
 
-    interpolatePredictEntity(entity, updateTime)
+    directUpdateEntity(entity)
     {
         let upToDatePosition = entity.position;
         let upToDateRotation = entity.rotation;
-        let currentP = entity.currentPFromServer;
-        let currentR = entity.currentRFromServer;
-        let lastP = entity.lastPFromServer;
-        let lastR = entity.lastRFromServer;
-        if (currentP.distanceTo(upToDatePosition) > 0 ||
-            currentR.distanceTo(upToDateRotation) > 0)
-        {
-            lastP.copy(currentP);
-            currentP.copy(upToDatePosition);
-            lastR.copy(currentR);
-            currentR.copy(upToDateRotation);
-            entity.lastUpdateTime = updateTime;
-
-            // if (this.averageDeltaT < 16 || this.averageDeltaT > 100) {
-            entity.averageDeltaT = updateTime - entity.lastServerUpdateTime;
-            // }
-            entity.lastServerUpdateTime = updateTime;
-        }
-        const deltaServer = entity.averageDeltaT;
-
-        const t = updateTime - entity.lastUpdateTime;
-        if (t < deltaServer)
-        {
-            // interpolate
-            const tdt = t / deltaServer;
-            const dpx = currentP.x - lastP.x;
-            let drx = currentR.x - lastR.x;
-            if (drx > Math.PI) drx = 2 * Math.PI - drx;
-            if (drx < -Math.PI) drx += 2 * Math.PI;
-            const dpy = currentP.y - lastP.y;
-            const dry = currentR.y - lastR.y;
-            const dpz = currentP.z - lastP.z;
-            const drz = currentR.z - lastR.z;
-            this.setLerp(
-                entity,
-                lastP.x + tdt * dpx, lastP.y + tdt * dpy, lastP.z + tdt * dpz,
-                lastR.x + tdt * drx, lastR.y + tdt * dry, lastR.z + tdt * drz,
-            );
-        }
-        else if (
-            entity.interpolatingP.distanceTo(currentP) > 0 ||
-            entity.interpolatingR.distanceTo(currentR) > 0)
-        {
-            this.setLerp(
-                entity,
-                currentP.x, currentP.y, currentP.z,
-                currentR.x, currentR.y, currentR.z
-            );
-            entity.needsUpdate = false;
-        }
-    },
-
-    setLerp(
-        entity, px, py, pz, rx, ry, rz
-    )
-    {
-        let v = new Vector3();
-        entity.interpolatingP.set(px, py, pz);
-        entity.interpolatingR.set(rx, ry, rz);
-        this.updateGraphicalEntity(entity, entity.interpolatingP, entity.interpolatingR, v);
+        this.updateGraphicalEntity(entity, upToDatePosition, upToDateRotation);
     },
 
     updateGraphicalEntity(currentEntity, newP, newR) //, oldP)
@@ -339,10 +281,13 @@ extend(EntityModel.prototype, {
 
     refresh()
     {
-        if (!this.needsUpdate) {
-            this.interpolatePredictEntities();
+        if (!this.needsUpdate)
+        {
+            if (this.useInterpolation)
+                this.interpolatePredictEntities();
             return;
         }
+
         let graphics = this.app.engine.graphics;
 
         let entities = this.entitiesIngame;
@@ -363,7 +308,10 @@ extend(EntityModel.prototype, {
             }
         );
 
-        this.interpolatePredictEntities();
+        if (this.useInterpolation)
+            this.interpolatePredictEntities();
+        else // XXX we may use both if entities from Bullet are slower
+            this.directUpdateEntities();
 
         // Flush buffer.
         this.entitiesOutdated.clear();
@@ -390,28 +338,6 @@ extend(EntityModel.prototype, {
         this.needsUpdate = true;
     },
 
-    // Catmull interpolation, could come in handy
-    cerp(a, b, c, d, t)
-    {
-        const m0 = a ? [c[0] - a[0], c[1] - a[1], c[2] - a[2]] : [c[0] - b[0], c[1] - b[1], c[2] - b[2]];
-        const m1 = d ? [d[0] - b[0], d[1] - b[1], d[2] - b[2]] : [c[0] - b[0], c[1] - b[1], c[2] - b[2]];
-        return this.catmull(b, c, m0, m1, t);
-    },
-
-    catmull(p0, p1, m0, m1, t)
-    {
-        const t2 = t * t;
-        const a = 1 + t2 * (2 * t - 3);
-        const b = t * (1 + t2 * (t - 2));
-        const c = t2 * (3 - 2 * t);
-        const d = t2 * (t - 1);
-        return [
-            a * p0[0] + b * m0[0] + c * p1[0] + d * m1[0],
-            a * p0[1] + b * m0[1] + c * p1[1] + d * m1[1],
-            a * p0[2] + b * m0[2] + c * p1[2] + d * m1[2],
-        ];
-    },
-
     getTime()
     {
         return window.performance.now();
@@ -427,5 +353,7 @@ extend(EntityModel.prototype, {
     }
 
 });
+
+extend(EntityModel.prototype, EntitiesInterpolationModule);
 
 export { EntityModel };

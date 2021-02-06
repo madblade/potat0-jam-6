@@ -24,7 +24,7 @@ let SelfModel = function(app)
 
     // Model component.
     this.position = new Vector3(0, 0, 0);
-    this.rotation = [0, 0, 0, 0];
+    this.rotation = new Vector4(0, 0, 0, 0);
     this.inventoryModel = new InventoryModel();
 
     // Graphical component.
@@ -50,20 +50,9 @@ let SelfModel = function(app)
     this.needsStopLoadingBow = false;
 
     // Interpolation-prediction
-    this.lastPositionFromServer = new Vector3(0, 0, 0);
-    this.currentPositionFromServer = new Vector3(0, 0, 0);
-    this.interpolatingPosition = new Vector3(0, 0, 0);
-    this.lastRotationFromServer = new Vector4(0, 0, 0, 0);
-    this.currentRotationFromServer = new Vector4(0, 0, 0, 0);
-    this.interpolatingRotation = new Vector4(0, 0, 0, 0);
-    this.lastServerUpdateTime = this.getTime();
-    this.averageDeltaT = -1;
-    this.interpolationUpToDate = false;
-    this.needsWorldSwitchRetry = false;
-    // this.lastInterpolatingPosition = new Vector3(0, 0, 0);
-    // this.maxDelta = 500; // ms
-    // this.predictedVelocity = new Vector3(0, 0, 0);
-    // this.lastClientUpdateTime = this.getTime();
+    this.useInterpolation = false;
+    if (this.useInterpolation)
+        this.initInterpolation();
 };
 
 extend(SelfModel.prototype, {
@@ -72,9 +61,10 @@ extend(SelfModel.prototype, {
     {
         this.loadSelf();
         let player = level.getPlayer();
-        const positionArray = player.position;
+        const positionVector = new Vector3().fromArray(player.position);
+        const rotationVector = new Vector4().fromArray([0, 0, 0, 0]); // player.rotation
         console.log('[Model/Self] TODO bind player state from level.');
-        this.updateSelf(positionArray, [0, 0, 0, 0], '-1'); // -1 === main world
+        this.updateSelf(positionVector, rotationVector, '-1'); // -1 === main world
         this.updatePosition(this.avatar, this.avatar.position);
 
         // Notify physics engine.
@@ -87,53 +77,46 @@ extend(SelfModel.prototype, {
     {
         if (!this.needsUpdate)
         {
-            if (!this.interpolationUpToDate) this.interpolatePredictSelfPosition();
-            if (this.isHittingMelee) this.updateMelee();
+            if (this.useInterpolation && !this.interpolationUpToDate)
+                this.interpolatePredictSelfPosition();
+
+            if (this.isHittingMelee)
+                this.updateMelee();
+
             this.updateBow();
             return;
         }
 
         let avatar = this.avatar;
-        // let r = this.rotation;
 
         if (!avatar) return;
 
-        // This could be made more fluid with
-        // a more involved interpolation routine
-        // (might need more data from the server)
-        // if (this.worldNeedsUpdate && this.oldWorldId)
-        // {
-        //     this.updateWorld();
-        //     let p = this.position;
-        //     let last = this.lastPositionFromServer;
-        //     let current = this.currentPositionFromServer;
-        //     last.copy(current);
-        //     current.copy(p);
-        //     this.interpolatingPosition.copy(p);
-        //     this.updatePosition(this.avatar, this.interpolatingPosition);
-        //     this.interpolationUpToDate = true;
-        // } else
-        if (!this.interpolationUpToDate)
-        {
+        if (this.useInterpolation && !this.interpolationUpToDate)
             this.interpolatePredictSelfPosition();
-        }
-
-        // if (r !== null) {
-        //     this.updateRotation(avatar, r);
-        // }
+        else
+            this.directUpdateSelfPosition();
 
         if (this.needsStartMelee)
         {
             this.needsStartMelee = false;
             this.initMelee();
         }
+
         if (this.isHittingMelee)
-        {
             this.updateMelee();
-        }
+
         this.updateBow();
 
         this.needsUpdate = false;
+    },
+
+    directUpdateSelfPosition()
+    {
+        let p = this.position;
+        let r = this.rotation;
+
+        this.updateRotation(this.avatar, r);
+        this.updatePosition(this.avatar, p);
     },
 
     // Called every time a server update was received.
@@ -145,16 +128,18 @@ extend(SelfModel.prototype, {
         let rot = this.rotation;
         let wid = this.worldId;
         if (!pos || !rot ||
-            pos[0] !== p[0] || pos[1] !== p[1] || pos[2] !== p[2] ||
-            rot[0] !== r[0] || rot[1] !== r[1])
+            pos.x !== p.x || pos.y !== p.y || pos.z !== p.z ||
+            rot.x !== r.x || rot.y !== r.y)
         {
-            this.position.set(p[0], p[1], p[2]);
-            this.rotation = r;
+            this.position.copy(p);
+            this.rotation.copy(r);
             this.needsUpdate = true;
-            this.interpolationUpToDate = false;
+            if (this.useInterpolation)
+                this.interpolationUpToDate = false;
         }
 
-        if (!wid || wid !== w) {
+        if (!wid || wid !== w)
+        {
             this.needsUpdate = true;
             this.worldNeedsUpdate = true;
             this.oldWorldId = this.worldId;
@@ -227,8 +212,8 @@ extend(SelfModel.prototype, {
         this.oldWorldId = null;
 
         // Model component.
-        this.position = new Vector3(0, 0, 0);
-        this.rotation = [0, 0, 0, 0];
+        this.position.set(0, 0, 0);
+        this.rotation.set(0, 0, 0, 0);
         this.inventoryModel.reset();
 
         // Graphical component.

@@ -86,8 +86,6 @@ extend(Integrator.prototype, {
         cm.instantaneousVelocity = iv; // Apply Euler integration
         increment.add(selfIncrement);
 
-        if (isNaN(increment.z)) debugger;
-
         // Apply Leapfrog integration
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);
@@ -132,14 +130,13 @@ extend(Integrator.prototype, {
         {
             const app = this.physics.physics.app;
             const sm = app.model.backend.selfModel;
-            sm.updateSelf(cm.position0.toArray(), [0, 0, 0, 0], -1);
+            sm.updateSelf(cm.position0.toArray(), cm.rotation0, -1);
             // window.dh.h.position.set(
             //     cm.position0.x, cm.position0.y, cm.position0.z + 0.5);
 
             // sm.updateSelf([0, 0, 1], [0, 0, 0, 0], -1);
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
-            // cm.wantedVelocity.set(0, 0, 0); // TODO reset for debug
         }
     }
 

@@ -8,6 +8,24 @@ import { Vector3, Vector4 } from 'three';
 
 let SelfInterpolationModule = {
 
+    initInterpolation()
+    {
+        this.lastPositionFromServer = new Vector3(0, 0, 0);
+        this.currentPositionFromServer = new Vector3(0, 0, 0);
+        this.interpolatingPosition = new Vector3(0, 0, 0);
+        this.lastRotationFromServer = new Vector4(0, 0, 0, 0);
+        this.currentRotationFromServer = new Vector4(0, 0, 0, 0);
+        this.interpolatingRotation = new Vector4(0, 0, 0, 0);
+        this.lastServerUpdateTime = this.getTime();
+        this.averageDeltaT = -1;
+        this.interpolationUpToDate = false;
+        this.needsWorldSwitchRetry = false;
+        // this.lastInterpolatingPosition = new Vector3(0, 0, 0);
+        // this.maxDelta = 500; // ms
+        // this.predictedVelocity = new Vector3(0, 0, 0);
+        // this.lastClientUpdateTime = this.getTime();
+    },
+
     _d42(v41, v42)
     {
         const dx = v41.x - v42.x;
@@ -17,6 +35,9 @@ let SelfInterpolationModule = {
         return dx * dx + dy * dy + dz * dz + dw * dw;
     },
 
+    // This could be made more fluid with
+    // a more involved interpolation routine
+    // (might need more data from the server)
     interpolatePredictSelfPosition()
     {
         let lastP = this.lastPositionFromServer;
@@ -33,7 +54,8 @@ let SelfInterpolationModule = {
 
         if (
             currentP.distanceTo(upToDatePosition) > 0 ||
-            this._d42(currentR, upToDateRotation) > 0)
+            this._d42(currentR, upToDateRotation) > 0
+        )
         {
             // changed!
             lastP.copy(currentP);

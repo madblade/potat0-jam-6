@@ -9,19 +9,10 @@ let Entity = function(id, graphicalComponent, worldId)
     this.graphicalComponent = graphicalComponent;
     this.worldId = worldId;
 
-    // Interpolation routines
     this.position = new Vector3(0, 0, 0);
     this.rotation = new Vector3(0, 0, 0);
-    this.lastUpdateTime = this.getTime();
-    this.averageDeltaT = this.lastUpdateTime;
-    this.lastServerUpdateTime = this.lastUpdateTime;
-    this.lastPFromServer = new Vector3(0, 0, 0);
-    this.currentPFromServer = new Vector3(0, 0, 0);
-    this.interpolatingP = new Vector3(0, 0, 0);
-    this.lastRFromServer = new Vector3(0, 0, 0);
-    this.currentRFromServer = new Vector3(0, 0, 0);
-    this.interpolatingR = new Vector3(0, 0, 0);
     this.needsUpdate = true;
+    this.useInterpolation = false; // this would be used for multiplayer
 
     this.isProjectile = false;
     this.inScene = false;
@@ -58,6 +49,21 @@ extend(Entity.prototype, {
     getTime()
     {
         return window.performance.now();
+    },
+
+    initInterpolation()
+    {
+        this.useInterpolation = true;
+        // Setup interpolation routines
+        this.lastUpdateTime = this.getTime();
+        this.averageDeltaT = this.lastUpdateTime;
+        this.lastServerUpdateTime = this.lastUpdateTime;
+        this.lastPFromServer = new Vector3(0, 0, 0);
+        this.currentPFromServer = new Vector3(0, 0, 0);
+        this.interpolatingP = new Vector3(0, 0, 0);
+        this.lastRFromServer = new Vector3(0, 0, 0);
+        this.currentRFromServer = new Vector3(0, 0, 0);
+        this.interpolatingR = new Vector3(0, 0, 0);
     }
 
 });

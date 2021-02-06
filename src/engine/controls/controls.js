@@ -8,10 +8,11 @@ import { $ }                from '../../modules/polyfills/dom';
 
 import extend               from '../../extend.js';
 
-import { KeyboardModule }   from './keyboard/keyboard.js';
-import { MouseModule }      from './mouse/mouse.js';
-import { TouchModule }      from './touch/touch.js';
-import { WindowModule }     from './window/window.js';
+import { KeyboardModule } from './keyboard/keyboard.js';
+import { MouseModule }    from './mouse/mouse.js';
+import { TouchModule }    from './touch/touch.js';
+import { WindowModule }   from './window/window.js';
+import { GamepadModule }  from './gamepad/gamepad';
 
 let UI = function(app)
 {
@@ -92,11 +93,18 @@ extend(UI.prototype, {
         else
             this.requestPointerLock();
     },
+
+    updateControlsDevice()
+    {
+        this.updateControlsGamepadDevice();
+        this.updateControlsTouchDevice();
+    }
 });
 
 extend(UI.prototype, KeyboardModule);
 extend(UI.prototype, MouseModule);
 extend(UI.prototype, TouchModule);
+extend(UI.prototype, GamepadModule);
 extend(UI.prototype, WindowModule);
 
 export { UI };

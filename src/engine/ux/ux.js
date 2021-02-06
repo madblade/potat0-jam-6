@@ -5,8 +5,10 @@
 
 'use strict';
 
-import extend         from '../../extend.js';
-import { Checkpoint } from './checkpoint';
+import extend             from '../../extend.js';
+import { Checkpoint }     from './checkpoint';
+import { UXIngameModule } from './ux.ingame';
+import { PlayerState }    from './player.state';
 
 let UX = function(app)
 {
@@ -17,6 +19,9 @@ let UX = function(app)
 
     // Save state
     this.lastCheckpoint = null;
+
+    // Progress
+    this.playerState = new PlayerState();
 };
 
 extend(UX.prototype, {
@@ -24,14 +29,16 @@ extend(UX.prototype, {
 
     startNewGame()
     {
-        let app = this.app;
-        let firstLevel = app.model.levels.getLevel(0);
+        const state = this.playerState;
+        const app = this.app;
+        const firstLevel = app.model.levels.getLevel(0);
+        state.setLevel(firstLevel);
         this.joinLevel(firstLevel);
     },
 
     configureLevel(level)
     {
-        let app = this.app;
+        const app = this.app;
         if (app.getState() === 'ingame' || app.getState() === 'preingame')
         {
             console.warn('[UX] A game is already running. Cleaning up!');
@@ -79,5 +86,7 @@ extend(UX.prototype, {
     },
 
 });
+
+extend(UX.prototype, UXIngameModule);
 
 export { UX };

@@ -4,7 +4,7 @@
 
 'use strict';
 
-let ListenerModule = {
+let TouchListenerModule = {
 
     onLeftStickMove(x, y)
     {
@@ -56,7 +56,7 @@ let ListenerModule = {
         }
     },
 
-    rotateCameraFromRightStick()
+    rotateCameraFromRightStickTouch()
     {
         let graphics = this.app.engine.graphics;
         let movementX = this.touch.rightX * 12;
@@ -67,7 +67,7 @@ let ListenerModule = {
             );
     },
 
-    movePlayerFromLeftStick()
+    movePlayerFromLeftStickTouch()
     {
         let clientModel = this.app.model.frontend;
         let lx = this.touch.leftX;
@@ -125,4 +125,4 @@ let ListenerModule = {
 
 };
 
-export { ListenerModule };
+export { TouchListenerModule };

@@ -117,26 +117,31 @@ let CoreModule = {
         let controlsEngine = this.app.engine.controls;
         let physicsEngine = this.app.engine.physics;
         let aiEngine = this.app.engine.ai;
+        let ux = this.app.engine.ux;
 
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
 
         this.fps.update();
 
+        // Ping UX.
+        ux.refresh();
+
         // Ping AI
         aiEngine.refresh();
 
         // Emulate lower framerate
-        this.now = Date.now();
-        this.elapsed = this.now - (this.then || 0);
-        const fps = 60;
-        const fpsInterval = 1000 / fps;
-        if (this.elapsed > fpsInterval)
-        {
-            this.then = this.now - (this.elapsed % fpsInterval);
-            // Force standalone update at animanionframe
-            physicsEngine.refresh();
-        }
+        // this.now = Date.now();
+        // this.elapsed = this.now - (this.then || 0);
+        // const fps = 60;
+        // const fpsInterval = 1000 / fps;
+        // if (this.elapsed > fpsInterval)
+        // {
+        //     this.then = this.now - (this.elapsed % fpsInterval);
+        // }
+
+        // Ping physics engines.
+        physicsEngine.refresh();
 
         // Bench.
         // this.fps.update();

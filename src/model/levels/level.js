@@ -7,9 +7,10 @@
 
 import extend       from '../../extend.js';
 
-let Level = function(title)
+let Level = function(title, id)
 {
     this.title = title;
+    this.levelID = id;
 };
 
 extend(Level.prototype, {
@@ -17,6 +18,11 @@ extend(Level.prototype, {
     getTitle()
     {
         return this.title;
+    },
+
+    getID()
+    {
+        return this.levelID;
     },
 
     getTerrain()

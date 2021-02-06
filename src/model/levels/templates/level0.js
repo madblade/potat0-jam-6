@@ -4,10 +4,11 @@
 
 import { Level }              from '../level';
 import { HeightMapConstants } from '../../../engine/physics/mad/model/terrain';
+import { Vector3 }            from 'three';
 
-let Level0 = function(title)
+let Level0 = function(title, id)
 {
-    Level.call(this, title);
+    Level.call(this, title, id);
 
     let chunks = new Map();
     let points = [];
@@ -73,12 +74,37 @@ let Level0 = function(title)
 
     this.player = {
         position: [
-            // 0.1157442810225684,
-            // 0.1157442810225684,
-            // 2
             0, 0, 3
         ]
     };
+
+    this.scenario = [
+        {
+            type: 'splash',
+            titles: [
+                'Rad Yarns', // main
+                '—madengine—', // after, sub
+                'a long time away',
+                'in a place far ago'
+            ],
+            spawn: 'player'
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            condition: function(backend, ux)
+            {
+                // console.log(ux);
+                const player = backend.selfModel.position;
+                const destination = new Vector3(5, 5, 1);
+                return player.distanceTo(destination) < 1;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+            }
+        }
+    ];
 };
 
 Level0.prototype = Object.assign(Object.create(Level.prototype), {

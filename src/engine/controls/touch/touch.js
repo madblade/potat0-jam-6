@@ -1,12 +1,12 @@
 /**
- *
+ * Handles mobile user interface.
  */
 
 'use strict';
 
 import extend from '../../../extend.js';
 
-import { ListenerModule } from './listeners.js';
+import { TouchListenerModule }  from './listeners.js';
 import { MobileWidgetControls } from './MobileWidgetControls';
 
 let TouchModule = {
@@ -79,7 +79,7 @@ let TouchModule = {
         }
     },
 
-    updateControlsDevice()
+    updateControlsTouchDevice()
     {
         if (!this.isTouch) return;
         if (!this.touchControlsEnabled) return;
@@ -88,13 +88,13 @@ let TouchModule = {
         this.touchWidgetControls.animate();
 
         // Right stick: camera movement
-        this.rotateCameraFromRightStick();
+        this.rotateCameraFromRightStickTouch();
 
         // Left stick: player movement
-        this.movePlayerFromLeftStick();
+        this.movePlayerFromLeftStickTouch();
     },
 };
 
-extend(TouchModule, ListenerModule);
+extend(TouchModule, TouchListenerModule);
 
 export { TouchModule };

@@ -130,7 +130,7 @@ extend(Integrator.prototype, {
         {
             const app = this.physics.physics.app;
             const sm = app.model.backend.selfModel;
-            sm.updateSelf(cm.position0.toArray(), cm.rotation0, -1);
+            sm.updateSelf(cm.position0, cm.rotation0, -1);
             // window.dh.h.position.set(
             //     cm.position0.x, cm.position0.y, cm.position0.z + 0.5);
 

@@ -88,13 +88,26 @@ extend(UX.prototype, {
     informPlayer(text)
     {
         // display text to player.
-        console.log('UX got a message…');
-        console.log(text);
+        console.log('[UX] Got a message…');
+        console.log(`[UX] Message: '${text}'`);
     },
 
     validateLevel()
     {
-        // Level was completed.
+        // Current level was completed.
+        const levels = this.app.model.levels.getLevels();
+        const currentLevel = this.playerState.getLevel();
+        const levelID = currentLevel.getID();
+        const nextLevelID = levelID + 1;
+        const nextLevel = levels[nextLevelID];
+        if (!nextLevel)
+        {
+            this.informPlayer('You won!');
+        }
+        else
+        {
+            this.playerState.setLevel(nextLevel);
+        }
     }
 
 });

@@ -6,7 +6,7 @@
 
 import extend           from '../../extend.js';
 
-import { ChunkModel }   from './chunks.js';
+import { ChunkModel }   from './terrain/chunks.js';
 import { EntityModel }  from './entities/entities.js';
 import { SelfModel }    from './self/self.js';
 import { XModel }       from './x/x.js';

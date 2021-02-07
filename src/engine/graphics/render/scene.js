@@ -10,6 +10,8 @@ import { Scene } from 'three';
 let SceneManager = function()
 {
     this.mainScene = this.createScene(-1);
+    this.transitionScene = this.createScene(-2);
+
     this.subScenes  = new Map();
     this.screens = new Map();
 };

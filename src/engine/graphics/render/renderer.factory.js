@@ -25,14 +25,14 @@ import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass';
 
 let RendererFactory = {
 
-    createPortalComposer(rendrr, sc, cam, target, maskScene, maskCamera)
+    createPortalComposer(renderer, sc, cam, target, maskScene, maskCamera)
     {
         let maskPass = new MaskPass(maskScene, maskCamera);
         let clearPass = new ClearPass();
         let clearMaskPass = new ClearMaskPass();
         let copy = new ShaderPass(CopyShader);
 
-        let composer = new EffectComposer(rendrr, target);
+        let composer = new EffectComposer(renderer, target);
         composer.renderTarget1.stencilBuffer = true;
         composer.renderTarget2.stencilBuffer = true;
         let scenePass = new RenderPass(sc, cam);
@@ -63,7 +63,7 @@ let RendererFactory = {
         bloomPass.threshold = 0.3;
         bloomPass.strength = 1.0;
         bloomPass.radius = 0;
-        let bloomComposer = new EffectComposer(rendrr, target);
+        let bloomComposer = new EffectComposer(renderer, target);
         bloomComposer.renderToScreen = false;
         bloomComposer.renderTarget1.stencilBuffer = true;
         bloomComposer.renderTarget2.stencilBuffer = true;
@@ -85,7 +85,7 @@ let RendererFactory = {
             }), 'baseTexture'
         );
         bloomMergePass.needsSwap = true;
-        let finalComposer = new EffectComposer(rendrr, target);
+        let finalComposer = new EffectComposer(renderer, target);
         finalComposer.renderTarget1.stencilBuffer = true;
         finalComposer.renderTarget2.stencilBuffer = true;
         finalComposer.addPass(clearPass);
@@ -99,21 +99,20 @@ let RendererFactory = {
         return [bloomComposer, finalComposer, composer];
     },
 
-    createMainComposer(rendrr, sc, cam, lights)
+    createMainComposer(renderer, sc, cam, lights)
     {
         // Anti-alias
-        let resolutionX = 1 / window.innerWidth;
-        let resolutionY = 1 / window.innerHeight;
-        let fxaa = new ShaderPass(FXAAShader);
-        let u = 'resolution';
+        const resolutionX = 1 / window.innerWidth;
+        const resolutionY = 1 / window.innerHeight;
+        const fxaa = new ShaderPass(FXAAShader);
+        const u = 'resolution';
         fxaa.uniforms[u].value.set(resolutionX, resolutionY);
 
-        // let copy = new ShaderPass(CopyShader);
-
-        let composer = new EffectComposer(rendrr);
+        // Basic composer.
+        const composer = new EffectComposer(renderer);
         composer.renderTarget1.stencilBuffer = true;
         composer.renderTarget2.stencilBuffer = true;
-        let scenePass = new RenderPass(sc, cam);
+        const scenePass = new RenderPass(sc, cam);
         let shadowPass;
         if (this.shadowVolumes)
         {
@@ -126,7 +125,7 @@ let RendererFactory = {
         }
         composer.addPass(fxaa);
 
-        // Bloom
+        // Bloom pass.
         let bloomPass = new UnrealBloomPass(
             new Vector2(window.innerWidth, window.innerHeight),
             1.5, 0.4, 0.85);
@@ -134,7 +133,7 @@ let RendererFactory = {
         bloomPass.threshold = 0.3;
         bloomPass.strength = 1.0;
         bloomPass.radius = 0;
-        let bloomComposer = new EffectComposer(rendrr);
+        let bloomComposer = new EffectComposer(renderer);
         bloomComposer.renderTarget1.stencilBuffer = true;
         bloomComposer.renderTarget2.stencilBuffer = true;
         bloomComposer.renderToScreen = false;
@@ -148,6 +147,7 @@ let RendererFactory = {
         }
         bloomComposer.addPass(bloomPass); // no fxaa on the bloom pass
 
+        // Merge bloom pass (selective bloom).
         let bloomMergePass = new ShaderPass(
             new ShaderMaterial({
                 uniforms: {
@@ -160,14 +160,15 @@ let RendererFactory = {
             }), 'baseTexture'
         );
         bloomMergePass.needsSwap = true;
-        let finalComposer = new EffectComposer(rendrr);
+        let finalComposer = new EffectComposer(renderer);
         finalComposer.addPass(scenePass);
-        finalComposer.addPass(bloomMergePass);
         finalComposer.addPass(fxaa);
+        finalComposer.addPass(bloomMergePass);
 
         // Ambient occlusion
-        let ambientOcclusion = this.ambientOcclusion;
-        if (ambientOcclusion) {
+        const useAO = this.ambientOcclusion;
+        if (useAO)
+        {
             let sao = new SAOPass(sc, cam, false, false);
             sao.params.output = SAOPass.OUTPUT.Default;
             sao.params.saoBias = 0.1;

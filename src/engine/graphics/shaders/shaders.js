@@ -29,7 +29,22 @@ import BloomSelectiveVertex     from './postprocessing/bloom.selective.vertex.gl
 import ShadowVertex             from './shadow/shadow.vertex.glsl';
 import ShadowFragment           from './shadow/shadow.fragment.glsl';
 
+// Scene transitions
+import CrossFadeVertex          from './crossfade/crossfade.vertex.glsl';
+import CrossFadeFragment        from './crossfade/crossfade.fragment.glsl';
+
 let ShadersModule = {
+
+    // Scene crossfade
+    getCrossFadeVertex()
+    {
+        return CrossFadeVertex;
+    },
+
+    getCrossFadeFragment()
+    {
+        return CrossFadeFragment;
+    },
 
     // Portal
     getPortalVertexShader()

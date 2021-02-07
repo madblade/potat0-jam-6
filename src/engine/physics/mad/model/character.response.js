@@ -352,7 +352,7 @@ let CharacterResponseModule = {
         const cd = this.stepDownCollisionData;
         this.wasLifted = false;
         this.wasLiftedByAStaticObject = false;
-        console.log(this.stepDownHeight);
+        // console.log(this.stepDownHeight);
         for (let i = 0; i < cd.length; ++i)
         {
             const model = cd[i];

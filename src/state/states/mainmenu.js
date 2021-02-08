@@ -38,7 +38,7 @@ let MainMenuState = function(stateManager)
         <div class="input-group mb-1 center-block" id="load">
             <div class="input-group-append flex-fill">
                 <button id="button-load"
-                    class="btn btn-outline-light flex-fill" type="button">Load</button>
+                    class="btn btn-outline-secondary flex-fill" type="button">Load</button>
             </div>
         </div>
 

@@ -68,10 +68,6 @@ canvas {
     z-index: 2;
 }
 
-hr {
-    /*border-color: white;*/
-}
-
 .small-title {
     position: relative;
     display: block;

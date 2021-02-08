@@ -31,7 +31,7 @@ let LevelSelectState = function(stateManager)
             <div class="input-group-append mb-1">
                 <button class="btn btn-outline-light"
                     id="button-resume" style="float:none">
-                    Play
+                    Load
                 </button>
             </div>
         </div>
@@ -49,8 +49,6 @@ let LevelSelectState = function(stateManager)
                 </button>
             </div>
         </div>
-
-        <hr />
 
         <div class="input-group">
             <button class="btn btn-outline-light btn-block" id="button-return-main">
@@ -80,31 +78,44 @@ extend(LevelSelectState.prototype, {
     getInstancesHTMLTable()
     {
         let content = `
-            <table class="table table border rounded noselect"
-            style="width:100%">`;
+            <hr/>
+            <div class="noselect"
+            style="width:100%"><div class="row">`;
 
-        let levels = this.stateManager.app.model.levels.getLevels();
+        const app = this.stateManager.app;
+        const levels = app.model.levels.getLevels();
 
         if (levels)
-            for (let l = 0; l < levels.length; ++l)
+        {
+            const nbLevels = levels.length;
+            const ux = app.engine.ux;
+            const maxLevel = ux.playerState.getFarthestLevel();
+
+            for (let l = 0; l < nbLevels; ++l)
             {
                 const level = levels[l];
+                const enabled = level.getID() <= maxLevel;
+                const levelTitle = enabled ? level.getTitle() : '???';
+
                 content += `
-                    <div class="input-group">
-                        <div class="input-group-prepend mb-1 flex-fill">
-                            <span class="input-group-text flex-fill">${level.getTitle()}</span>
-                        </div>
-                        <div class="input-group-append mb-1">
-                            <button class="btn btn-outline-light level-join"
-                                id="button-join-level-${l}" style="float:none">
-                                Play
-                            </button>
+                    <div class="col col-4">
+                        <div class="input-group">
+                            <div class="input-group-prepend mb-1 flex-fill">
+                                <span class="input-group-text flex-fill">${levelTitle}</span>
+                            </div>
+                            <div class="input-group-append mb-1">
+                                <button class="btn btn-outline-light level-join"
+                                    id="button-join-level-${l}" style="float:none"  ${enabled ? '' : 'disabled'}>
+                                    Load
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
             }
+        }
 
-        content += '</table>';
+        content += '</div></div>';
         return content;
     },
 

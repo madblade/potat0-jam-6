@@ -15,10 +15,11 @@
     /*border: 1px solid #495057;*/
     /*border: 1px solid orange;*/
 }
+
 #announce .table th, #announce .table td {
-    /*border: 1px solid black;*/
     border: none;
 }
+
 .table {
     border: 1px solid #2b2356 !important;
     background: rgba(43, 35, 86, 0.8);

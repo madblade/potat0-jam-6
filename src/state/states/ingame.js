@@ -31,8 +31,11 @@ extend(IngameState.prototype, {
 
     end()
     {
-        const controlsEngine = this.stateManager.app.engine.controls;
-        const ux = this.stateManager.app.engine.ux;
+        const app = this.stateManager.app;
+        const controlsEngine = app.engine.controls;
+        const ux = app.engine.ux;
+        const rendererManager = app.engine.graphics.rendererManager;
+        rendererManager.setInTitleScene(false);
         controlsEngine.stopListeners();
         ux.setGamePaused(true);
 

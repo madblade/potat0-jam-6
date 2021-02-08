@@ -34,6 +34,11 @@ extend(PlayerState.prototype, {
         return this.level;
     },
 
+    getFarthestLevel()
+    {
+        return this.unlockedLevels;
+    },
+
     getProgressInLevel()
     {
         return this.progressInLevel;

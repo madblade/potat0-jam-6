@@ -38,7 +38,6 @@ extend(UX.prototype, {
 
     startNewGame()
     {
-        console.log('STARTING NEW GAME');
         const state = this.playerState;
         const app = this.app;
         const firstLevel = app.model.levels.getLevel(0);

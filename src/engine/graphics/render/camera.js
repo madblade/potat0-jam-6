@@ -206,6 +206,7 @@ extend(Camera.prototype, {
         return this.cameraTransform;
     },
 
+    /** @deprecated */
     setFirstPerson()
     {
         this.cameraObject.position.z = 0;
@@ -214,9 +215,7 @@ extend(Camera.prototype, {
     setThirdPerson()
     {
         let p = this.cameraObject.position;
-        p.x = 0;
-        p.y = 0;
-        p.z = 2;
+        p.set(0, 0, 2);
     },
 
     getCameraForwardVector()

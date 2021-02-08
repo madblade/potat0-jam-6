@@ -280,6 +280,10 @@ extend(RendererManager.prototype, {
         this.composers = new Map();
         this.renderRegister.length = 0;
         this.renderer.renderLists.dispose();
+
+        // flush screen buffer
+        this.renderer.setRenderTarget(null);
+        this.renderer.clear();
     }
 
 });

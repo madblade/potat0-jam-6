@@ -72,7 +72,7 @@ extend(SelfComponent.prototype, {
     {
         // this.quickBar = this.defaultQuickBar.slice();
         this.currentItemSlot = 0;
-        this._cameraInteraction = 'first-person';
+        this._cameraInteraction = 'third-person';
     },
 
     getCurrentItemID()
@@ -144,6 +144,7 @@ extend(SelfComponent.prototype, {
         graphicsEngine.cameraManager.moveCameraFromMouse(0, 0, 0, 0);
     },
 
+    /** @deprecated */ // we only use third person
     processCameraModeChange(data)
     {
         let serverSelfModel = this.clientModel.app.model.backend.selfModel;

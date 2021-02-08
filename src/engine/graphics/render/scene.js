@@ -126,6 +126,17 @@ extend(SceneManager.prototype, {
 
     cleanup()
     {
+        this.mainScene.traverse(o => {
+            if (o.isObject3D && o.isMesh)
+            {
+                o.geometry.dispose();
+                o.material.dispose();
+            }
+            if (o.isCamera)
+            {
+                this.mainScene.remove(o);
+            }
+        });
         this.mainScene = this.createScene(-1);
         this.subScenes.clear();
         this.screens.forEach(s => {

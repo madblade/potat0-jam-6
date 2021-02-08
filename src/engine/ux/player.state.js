@@ -9,9 +9,13 @@ let PlayerState = function()
     this.unlockedLevels = 0;
 
     this.progressInLevel = 0;
+    this.progressInCurrentTask = 0;
 };
 
 extend(PlayerState.prototype, {
+
+    // Levels
+    // 1 level = 1 transition screen
 
     setLevel(newLevel)
     {
@@ -38,6 +42,29 @@ extend(PlayerState.prototype, {
     incrementProgressInLevel()
     {
         this.progressInLevel++;
+    },
+
+    resetProgressInLevel()
+    {
+        this.progressInLevel = 0;
+    },
+
+    // Tasks
+    // (e.g. transition title number, level subtasks)
+
+    getProgressInCurrentTask()
+    {
+        return this.progressInCurrentTask;
+    },
+
+    incrementProgressInCurrentTask()
+    {
+        this.progressInCurrentTask++;
+    },
+
+    resetProgressInCurrentTask()
+    {
+        this.progressInCurrentTask = 0;
     }
 
 });

@@ -13,6 +13,9 @@ let UXTimeModule = {
         // this.elapsedSinceAppStarted = this.timeAppStarted;
         this.timeOfLastIngameFrame = 0;
         this.elapsedSinceLastIngameFrame = 0;
+
+        this.totalIngameTime = 0;
+        this.ingameTimeSinceLastEvent = 0;
     },
 
     refreshClocks()
@@ -26,7 +29,11 @@ let UXTimeModule = {
                     this.timeOfLastIngameFrame;
             else
                 this.timeOfLastIngameFrame = 0;
+
             this.timeOfLastIngameFrame = this.timeNow;
+            const elapsed = this.elapsedSinceLastIngameFrame;
+            this.totalIngameTime += elapsed;
+            this.ingameTimeSinceLastEvent += elapsed;
             this.refreshIngame();
         }
     },

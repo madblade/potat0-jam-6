@@ -93,6 +93,7 @@ let RendererTitles = {
             if (mixRatio.value >= 1)
             {
                 this.endSceneTransition();
+                this.isInTitleScene = true;
                 mixRatio.value = 1.;
             }
         }
@@ -102,6 +103,7 @@ let RendererTitles = {
             if (mixRatio.value <= 0.)
             {
                 this.endSceneTransition();
+                this.isInTitleScene = false;
                 mixRatio.value = 0.;
             }
         }
@@ -130,6 +132,16 @@ let RendererTitles = {
         renderer.setRenderTarget(null);
         renderer.clear();
         renderer.render(this.titleScene, this.titleCamera);
+    },
+
+    setTitleSceneText(text)
+    {
+        console.log(text);
+    },
+
+    setTitleOpacity(value)
+    {
+        console.log(value);
     }
 
 };

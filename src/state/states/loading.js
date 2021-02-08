@@ -4,8 +4,9 @@
 
 'use strict';
 
-import extend               from '../../extend.js';
-import { $ }                from '../../modules/polyfills/dom.js';
+import extend        from '../../extend.js';
+import { $ }         from '../../modules/polyfills/dom.js';
+import { GameTitle } from './mainmenu';
 
 let LoadingState = function(stateManager)
 {
@@ -13,7 +14,7 @@ let LoadingState = function(stateManager)
     this.stateName = 'loading';
     this.html = `
         <div style="" class="title noselect">
-        <p>Potat0 Jam No. 6<br/>engineering version</p>
+        <p>${GameTitle}</p>
         </div>
         <div id="cube" class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>

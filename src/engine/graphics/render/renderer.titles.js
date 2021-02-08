@@ -20,6 +20,7 @@ let RendererTitles = {
     startSceneTransition(toTitle)
     {
         this.isTransitioning = true;
+        this.isInTitleScene = false;
         this.toTitle = toTitle;
 
         const mixRatio = this.materialCrossFade.uniforms.mixRatio;
@@ -37,12 +38,23 @@ let RendererTitles = {
         this.transitionDuration = duration;
     },
 
+    setInTitleScene(isInTitleScene)
+    {
+        this.isInTitleScene = isInTitleScene;
+        if (!isInTitleScene)
+            this.titleGraphics.hide();
+        else
+            this.titleGraphics.center();
+    },
+
     setupTitles()
     {
-        this.isInTitleScene = true;
+        this.isInTitleScene = false;
         this.isTransitioning = false;
         this.toTitle = false;
         this.transitionDuration = 1000; // seconds
+        this.titleGraphics = this.graphics.createTitleLabel();
+        this.setInTitleScene(false);
 
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -93,7 +105,7 @@ let RendererTitles = {
             if (mixRatio.value >= 1)
             {
                 this.endSceneTransition();
-                this.isInTitleScene = true;
+                this.setInTitleScene(true);
                 mixRatio.value = 1.;
             }
         }
@@ -103,7 +115,7 @@ let RendererTitles = {
             if (mixRatio.value <= 0.)
             {
                 this.endSceneTransition();
-                this.isInTitleScene = false;
+                this.setInTitleScene(false);
                 mixRatio.value = 0.;
             }
         }
@@ -136,12 +148,14 @@ let RendererTitles = {
 
     setTitleSceneText(text)
     {
-        console.log(text);
+        this.titleGraphics.setText(text);
+        // console.log(text);
     },
 
     setTitleOpacity(value)
     {
-        console.log(value);
+        this.titleGraphics.setOpacity(value);
+        // console.log(value);
     }
 
 };

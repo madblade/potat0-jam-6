@@ -4,12 +4,13 @@
 
 'use strict';
 
-import extend from '../../extend';
-import { $ } from '../../modules/polyfills/dom.js';
+import extend        from '../../extend';
+import { $ }         from '../../modules/polyfills/dom.js';
 
+const GameTitle = 'Rad Yarns';
 const GameHeader = `
 <div class="container small-title">
-    <h2>Potat0 Jam No. 6 / alpha-0.0</h2>
+    <h2>${GameTitle}</h2>
 </div>
 `;
 
@@ -25,7 +26,7 @@ let MainMenuState = function(stateManager)
 
     this.htmlQuick =
         `
-        <div class="row col-12"><div class="col-12">
+        <div class="col-12"><div class="col-12">
 
         <div class="input-group mb-1 center-block" id="play-quick">
             <div class="input-group-append flex-fill">
@@ -95,4 +96,4 @@ extend(MainMenuState.prototype, {
 
 });
 
-export { MainMenuState, GameHeader };
+export { MainMenuState, GameHeader, GameTitle };

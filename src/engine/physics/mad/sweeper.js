@@ -163,7 +163,7 @@ extend(Sweeper.prototype, {
 
     addPhysicsEntity(entity)
     {
-        assert(typeof entity === 'number', '[Sweeper] entity id typecast failed.');
+        assert(typeof entity.entityId === 'number', '[Sweeper] entity id typecast failed.');
 
         this.physicsEntities[entity.entityId] = entity;
         // Don’t sort again, just insert.

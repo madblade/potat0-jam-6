@@ -1,4 +1,5 @@
-import { Label }   from './label';
+import { Label } from './label';
+import { Title } from './Title';
 
 let TextModule = {
 
@@ -6,6 +7,13 @@ let TextModule = {
     {
         if (!text) text = 'hi there!';
         return new Label(text);
+    },
+
+    createTitleLabel(text)
+    {
+        const t = new Title(text);
+        t.center();
+        return t;
     },
 
 };

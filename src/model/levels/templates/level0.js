@@ -82,14 +82,14 @@ let Level0 = function(title, id)
         {
             type: 'splash',
             titles: [
-                'Rad Yarns', // main
-                '—madengine—', // after, sub
-                'A long time away, in a place far ago…',
+                '<h3>madblade presents</h3>', // after, sub
+                '<h3>made for the <b>Potat0 Game Jam</b> No.6</h3>with m&alpha;dengine',
+                '<h1>Rad Yarns</h1>', // main
             ],
-            fadeInTitle: 1,   // for each title, time in milliseconds
-            fadeOutTitle: 1,  // time fade out each title
-            keepTitle: 1,    // time to keep each title full brightness
-            fadeOutSplash: 1, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,    // time to keep each title full brightness
+            fadeOutSplash: 3000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

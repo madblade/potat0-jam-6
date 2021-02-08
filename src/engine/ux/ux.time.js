@@ -16,6 +16,7 @@ let UXTimeModule = {
 
         this.totalIngameTime = 0;
         this.ingameTimeSinceLastEvent = 0;
+        this.resetTimeSinceLastEvent();
     },
 
     refreshClocks()
@@ -36,6 +37,11 @@ let UXTimeModule = {
             this.ingameTimeSinceLastEvent += elapsed;
             this.refreshIngame();
         }
+    },
+
+    resetTimeSinceLastEvent()
+    {
+        this.ingameTimeSinceLastEvent = 0;
     },
 
     setGamePaused(paused)

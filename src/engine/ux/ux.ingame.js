@@ -49,19 +49,22 @@ let UXIngameModule = {
                 const fadeOutTime = currentTask.fadeOutTitle;
                 if (timeIn < fadeInTime)
                 {
+                    rendererManager.setInTitleScene(true);
                     rendererManager.setTitleSceneText(currentTitle);
                     rendererManager.setTitleOpacity(timeIn / fadeInTime);
                 }
                 else if (timeIn < fadeInTime + keepTime)
                 {
+                    rendererManager.setInTitleScene(true);
                     rendererManager.setTitleSceneText(currentTitle);
                     rendererManager.setTitleOpacity(1.);
                 }
                 else if (timeIn < fadeInTime + fadeOutTime + keepTime)
                 {
+                    rendererManager.setInTitleScene(true);
                     rendererManager.setTitleSceneText(currentTitle);
                     rendererManager.setTitleOpacity(
-                        (timeIn - fadeInTime - keepTime) / fadeOutTime
+                        1. - (timeIn - fadeInTime - keepTime) / fadeOutTime
                     );
                 }
                 else
@@ -83,7 +86,7 @@ let UXIngameModule = {
                     }
                 }
 
-                console.log('[UX] Splash progress.');
+                // console.log('[UX] Splash progress.');
                 break;
             case 'event':
                 // TODO check task progress

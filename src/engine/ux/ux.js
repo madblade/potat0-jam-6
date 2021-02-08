@@ -42,6 +42,9 @@ extend(UX.prototype, {
         const app = this.app;
         const firstLevel = app.model.levels.getLevel(0);
         state.setLevel(firstLevel);
+        state.resetProgressInLevel();
+        state.resetProgressInCurrentTask();
+        this.resetTimeSinceLastEvent();
         this.joinLevel(firstLevel);
     },
 
@@ -69,7 +72,13 @@ extend(UX.prototype, {
     {
         const status = this.configureLevel(level);
         if (status)
+        {
+            const state = this.playerState;
+            state.resetProgressInLevel();
+            state.resetProgressInCurrentTask();
+            this.resetTimeSinceLastEvent();
             this.app.runGame();
+        }
     },
 
     saveCheckpoint()

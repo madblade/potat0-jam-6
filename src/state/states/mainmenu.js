@@ -52,12 +52,21 @@ extend(MainMenuState.prototype, {
 
     startListeners()
     {
-        $('#button-play').click(() => {
-            this.stateManager.app.engine.ux.startNewGame();
+        const app = this.stateManager.app;
+        const buttonPlay = $('#button-play');
+        buttonPlay.click(() => {
+            app.engine.ux.startNewGame();
+        });
+        buttonPlay.mouseenter(() => {
+            app.engine.audio.playMenuSound();
         });
 
-        $('#button-load').click(() => {
+        const buttonLoad = $('#button-load');
+        buttonLoad.click(() => {
             this.stateManager.setState('level-select');
+        });
+        buttonLoad.mouseenter(() => {
+            app.engine.audio.playMenuSound();
         });
     },
 
@@ -79,8 +88,12 @@ extend(MainMenuState.prototype, {
 
     stopListeners()
     {
-        $('#button-play').off('click');
-        $('#button-load').off('click');
+        const bp = $('#button-play');
+        bp.off('click');
+        bp.off('mouseenter');
+        const bl = $('#button-load');
+        bl.off('click');
+        bl.off('mouseenter');
     },
 
     end()

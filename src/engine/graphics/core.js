@@ -26,6 +26,9 @@ let CoreModule = {
         // Animations
         this.initializeAnimations();
 
+        // Audio
+        this.initAudio();
+
         // Lazy loading: checks if everything is correctly loaded, every few frames.
         return new Promise(resolve => {
             setTimeout(() =>
@@ -37,6 +40,11 @@ let CoreModule = {
     initPhysics()
     {
         this.app.engine.physics.preload();
+    },
+
+    initAudio()
+    {
+        this.app.engine.audio.preload(this.loadingManager);
     },
 
     initLoadingManager()
@@ -68,7 +76,8 @@ let CoreModule = {
     {
         if (this._nbTexturesLoaded === this._nbTexturesToLoad &&
             this._nbMeshesToLoad === this._nbMeshesLoadedOrError &&
-            this.app.engine.physics.isLoaded)
+            this.app.engine.physics.isLoaded && this.app.engine.audio.isDoneLoadingSounds()
+        )
         {
             console.log('[Graphics/Core] Everything loaded.');
             resolve();

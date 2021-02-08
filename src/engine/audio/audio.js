@@ -1,64 +1,115 @@
 /**
- * Audio.
+ * Manages SFX, music, volume.
  */
 
 'use strict';
 
-import extend from '../../extend.js';
-import { Sound } from './sound.js';
+import extend          from '../../extend.js';
+import {
+    Audio,
+    AudioListener,
+    AudioLoader,
+} from 'three';
 
-let Audio = function(app)
+
+// Sounds
+import SelectSound     from '../../assets/audio/menu.select.wav';
+
+let AudioEngine = function(app)
 {
     this.app = app;
 
     // User customizable settings.
     this.settings = {};
 
-    this.audioContext = null;
+    // Three audio engine.
+    // A global listener, to be attached to a camera.
+    this.listener = new AudioListener();
+    // A number of audio sources.
+    this.audioSources = [];
+
+    // Audio library.
     this.source = null;
-    this.sounds = {all: [
-        //'sound01',
-        //'sound02'
-    ]};
+    this.sounds = {
+        sfx: [SelectSound],
+        music: []
+    };
+    // Sound name -> index of sound in audioSources array
+    this.soundMap = new Map([
+        ['menu', 0]
+    ]);
+
+    // Loading.
+    this.nbSoundsToLoad = this.sounds.sfx.length + this.sounds.music.length;
+    this.nbSoundsLoadedOrError = 0;
 };
 
-extend(Audio.prototype, {
+extend(AudioEngine.prototype, {
+
+    preload(loadingManager)
+    {
+        // Load audio objects.
+        this.audioLoader = new AudioLoader(loadingManager);
+
+        const sfxs = this.sounds.sfx;
+        const tunes = this.sounds.music;
+
+        const globalListener = this.listener;
+        sfxs.forEach(sfx =>
+        {
+            this.audioLoader.load(sfx,  buffer =>
+            {
+                const audio = new Audio(globalListener);
+                audio.setBuffer(buffer);
+                audio.setVolume(0.5);
+                this.audioSources.push(audio);
+                this.nbSoundsLoadedOrError++;
+            }, null, error => {
+                console.error(error);
+                this.nbSoundsLoadedOrError++;
+            });
+        });
+        tunes.forEach(sfx =>
+        {
+            this.audioLoader.load(sfx,  buffer =>
+            {
+                const audio = new Audio(globalListener);
+                audio.setBuffer(buffer);
+                audio.setVolume(0.5);
+                this.audioSources.push(audio);
+            }, null, error => {
+                console.error(error);
+                this.nbSoundsLoadedOrError++;
+            });
+        });
+    },
+
+    _resume()
+    {
+        this.listener.context.resume();
+    },
+
+    isDoneLoadingSounds()
+    {
+        return this.nbSoundsLoadedOrError >= this.nbSoundsToLoad;
+    },
+
+    setVolume(volume) // volume should be in [0, 1]
+    {
+        console.log(`Setting volume ${volume}.`);
+    },
+
+    playMenuSound()
+    {
+        this._resume();
+        const audioIndex = this.soundMap.get('menu');
+        const menuAudio = this.audioSources[audioIndex];
+        menuAudio.play();
+    },
 
     run()
     {
-        let audioContext;
-        function loadSound(name, callback)
-        {
-            let xObj = new XMLHttpRequest();
-            xObj.open('GET', `audio/${name}.mp3`, true);
-            xObj.responseType = 'arraybuffer';
-            xObj.onreadystatechange = function() {
-                if (parseInt(xObj.readyState, 10) === 4 && parseInt(xObj.status, 10) === 200) {
-                    audioContext.decodeAudioData(xObj.response, function(buffer) {
-                        callback(buffer);
-                    });
-                }
-            };
-            xObj.send(null);
-        }
-
-        try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.audioContext = new AudioContext();
-
-            let sounds = this.sounds;
-            sounds.all.forEach(function(sound) {
-                loadSound(sound, function(buffer) {
-                    sounds[sound] = new Sound(sound, buffer);
-                });
-            });
-        } catch (e) {
-            /*
-             $("#content").fadeOut(function() {
-             $(this).html($("#contentNoAudio").html(),'fast').fadeIn('fast');
-             });
-             */
-        }
+        // TODO bind audio of object to camera.
     },
 
     stop()
@@ -79,4 +130,4 @@ extend(Audio.prototype, {
 
 });
 
-export { Audio };
+export { AudioEngine };

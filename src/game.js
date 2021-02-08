@@ -11,7 +11,7 @@ import { StateManager } from './state/states.js';
 
 // Engine
 import { Graphics }     from './engine/graphics/graphics.js';
-import { Audio }        from './engine/audio/audio.js';
+import { AudioEngine }  from './engine/audio/audio.js';
 import { UI }           from './engine/controls/controls.js';
 import { Settings }     from './engine/settings/settings.js';
 import { UX }           from './engine/ux/ux';
@@ -42,7 +42,7 @@ Game.Core = function()
         // TODO level transition & splash screen.
         // TODO remove chunks and put heightmaps instead.
         graphics:     new Graphics(this),
-        audio:        new Audio(this),
+        audio:        new AudioEngine(this),
         ai:           new AI(this),
         physics:      new Physics(this),
         // TODO put AI, Physics. Wire to server model.

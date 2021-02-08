@@ -206,7 +206,8 @@ let RendererFactory = {
         renderer.outputEncoding = sRGBEncoding;
         renderer.toneMapping = ACESFilmicToneMapping;
         renderer.toneMappingExposure = 0.8;
-        renderer.setClearColor(this.cssToHex('#362c6b'), 1);
+        // renderer.setClearColor(this.cssToHex('#362c6b'), 1);
+        renderer.setClearColor(this.cssToHex('#000000'), 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         renderer.info.autoReset = false;

@@ -8,14 +8,14 @@ import extend                      from '../../../extend.js';
 import {
     DoubleSide,
     MeshBasicMaterial,
-    Scene, PlaneBufferGeometry, Mesh, WebGLRenderTarget, LinearFilter, RGBFormat,
-    PerspectiveCamera, OrthographicCamera, ShaderMaterial,
-} from 'three';
+    Scene, PlaneBufferGeometry, Mesh
+}                                  from 'three';
 import { ShaderPass }              from 'three/examples/jsm/postprocessing/ShaderPass';
 import { RendererFactory }         from './renderer.factory';
 import { RendererUpdates }         from './renderer.updates';
 import { LightDefaultIntensities } from '../light';
 import { RendererPortals }         from './renderer.portals';
+import { RendererTitles }          from './renderer.titles';
 
 let RendererManager = function(graphicsEngine)
 {
@@ -74,36 +74,7 @@ let RendererManager = function(graphicsEngine)
     this.composers = new Map();
 
     // Scene transitions.
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    this.mainSceneRenderTarget = new WebGLRenderTarget(width, height, {
-        minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat
-    });
-    this.transitionSceneRenderTarget = new WebGLRenderTarget(width, height, {
-        minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat
-    });
-    this.isTransitioning = true;
-    this.transitionScene = new Scene();
-    this.transitionCamera = new PerspectiveCamera();
-    this.sceneCrossFade = new Scene();
-    this.cameraCrossFade = new OrthographicCamera(
-        width / -2, width / 2, height / 2, height / -2,
-        -10, 10
-    );
-    this.materialCrossFade = new ShaderMaterial({
-        uniforms: {
-            tDiffuse1: { value: null },
-            tDiffuse2: { value: null },
-            mixRatio: { value: 0.0 }
-        },
-        vertexShader: this.graphics.getCrossFadeVertex(),
-        fragmentShader: this.graphics.getCrossFadeFragment(),
-    });
-    this.geometryCrossFade = new PlaneBufferGeometry(width, height);
-    this.quadCrossFade = new Mesh(this.geometryCrossFade, this.materialCrossFade);
-    this.sceneCrossFade.add(this.quadCrossFade);
-    this.materialCrossFade.uniforms.tDiffuse1.value = this.transitionSceneRenderTarget.texture;
-    this.materialCrossFade.uniforms.tDiffuse2.value = this.mainSceneRenderTarget.texture;
+    this.setupTitles();
 
     // Lightweight screen, camera and scene manager for portals.
     this.renderRegister = [];
@@ -198,6 +169,7 @@ extend(RendererManager.prototype, {
             this.renderPortals(renderer, cameraManager, sceneManager, materials, renderRegister);
 
         // Lazy composer creation.
+        // XXX refactor
         const id = this.graphics.app.model.backend.selfModel.worldId.toString();
         let composer;
         if (this.composers.has(id)) {
@@ -216,37 +188,46 @@ extend(RendererManager.prototype, {
         // MAIN RENDER
         if (this.selectiveBloom)
         {
-            mainScene.traverse(obj => this.darkenNonBloomed(obj, materials));
-            const bloomComposer = composer[0];
-            bloomComposer.render();
-            mainScene.traverse(obj => this.restoreMaterial(obj, materials));
-            const bloomMergeFXAAComposer = composer[1];
             if (this.isTransitioning)
             {
-                // update transition
-                const mixRatio = this.materialCrossFade.uniforms.mixRatio;
-                mixRatio.value += 0.01; mixRatio.value %= 1;
-                // render to bloom merge writeBuffer
-                bloomMergeFXAAComposer.renderToScreen = false;
-                bloomMergeFXAAComposer.writeBuffer = this.mainSceneRenderTarget;
+                mainScene.traverse(obj => this.darkenNonBloomed(obj, materials));
+                const bloomComposer = composer[0];
+                bloomComposer.render();
+                mainScene.traverse(obj => this.restoreMaterial(obj, materials));
+                const bloomMergeFXAAComposer = composer[1];
+                this.renderCrossFadeScene(renderer, bloomMergeFXAAComposer);
+            }
+            else if (!this.isInTitleScene)
+            {
+                mainScene.traverse(obj => this.darkenNonBloomed(obj, materials));
+                const bloomComposer = composer[0];
+                bloomComposer.render();
+                mainScene.traverse(obj => this.restoreMaterial(obj, materials));
+                const bloomMergeFXAAComposer = composer[1];
+                bloomMergeFXAAComposer.renderToScreen = true;
                 bloomMergeFXAAComposer.render();
-                // render transition scene
-                renderer.setRenderTarget(this.transitionSceneRenderTarget);
-                renderer.render(this.transitionScene, this.transitionCamera);
-                renderer.setRenderTarget(null);
-                renderer.clear();
-                renderer.render(this.sceneCrossFade, this.cameraCrossFade);
             }
             else
             {
-                bloomMergeFXAAComposer.renderToScreen = true;
-                bloomMergeFXAAComposer.render();
+                this.renderTitleScene(renderer);
             }
         }
         else
         {
             const defaultComposer = composer[2];
-            defaultComposer.render();
+            if (this.isTransitioning)
+            {
+                this.renderCrossFadeScene(renderer, defaultComposer);
+            }
+            else if (!this.isInTitleScene)
+            {
+                defaultComposer.renderToScreen = true;
+                defaultComposer.render();
+            }
+            else
+            {
+                this.renderTitleScene(renderer);
+            }
         }
 
         // Compute draw calls
@@ -263,8 +244,7 @@ extend(RendererManager.prototype, {
         this.renderer.setSize(width, height);
 
         // Scene transition
-        this.mainSceneRenderTarget.setSize(width, height);
-        this.transitionSceneRenderTarget.setSize(width, height);
+        this.setupTitlesAfterWindowResize(width, height);
 
         // All composers
         this.composers.forEach(cs => {
@@ -272,7 +252,7 @@ extend(RendererManager.prototype, {
                 let c = cs[i];
                 c.setSize(width, height);
                 let pixelRatio = this.renderer.getPixelRatio();
-                let r = 'resolution';
+                let r = 'resolution'; // property of FXAA passes (among others)
                 let passes = c.passes;
                 passes.forEach(p => {
                     if (!p || !(p instanceof ShaderPass)) return;
@@ -307,6 +287,7 @@ extend(RendererManager.prototype, {
 extend(RendererManager.prototype, RendererFactory);
 extend(RendererManager.prototype, RendererUpdates);
 extend(RendererManager.prototype, RendererPortals);
+extend(RendererManager.prototype, RendererTitles);
 
 /** Interface with graphics engine. **/
 

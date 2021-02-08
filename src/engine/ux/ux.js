@@ -9,6 +9,7 @@ import extend             from '../../extend.js';
 import { Checkpoint }     from './checkpoint';
 import { UXIngameModule } from './ux.ingame';
 import { PlayerState }    from './player.state';
+import { UXTimeModule }   from './ux.time';
 
 let UX = function(app)
 {
@@ -22,13 +23,22 @@ let UX = function(app)
 
     // Progress
     this.playerState = new PlayerState();
+
+    // Time counters.
+    this.setupClocks();
 };
 
 extend(UX.prototype, {
     // TODO [HIGH] manage level loading, saves, difficulty here.
 
+    refresh()
+    {
+        this.refreshClocks();
+    },
+
     startNewGame()
     {
+        console.log('STARTING NEW GAME');
         const state = this.playerState;
         const app = this.app;
         const firstLevel = app.model.levels.getLevel(0);
@@ -113,5 +123,6 @@ extend(UX.prototype, {
 });
 
 extend(UX.prototype, UXIngameModule);
+extend(UX.prototype, UXTimeModule);
 
 export { UX };

@@ -126,6 +126,8 @@ let CoreModule = {
 
         // Ping UX.
         ux.refresh();
+        const paused = ux.isGamePaused();
+        if (paused) return;
 
         // Ping AI
         aiEngine.refresh();

@@ -24,11 +24,17 @@ extend(IngameState.prototype, {
             .append('<div class="reticle"></div>')
             .center()
             .show();
+
+        const ux = this.stateManager.app.engine.ux;
+        ux.setGamePaused(false);
     },
 
     end()
     {
-        this.stateManager.app.engine.controls.stopListeners();
+        const controlsEngine = this.stateManager.app.engine.controls;
+        const ux = this.stateManager.app.engine.ux;
+        controlsEngine.stopListeners();
+        ux.setGamePaused(true);
 
         return new Promise(function(resolve) {
             $('#announce')

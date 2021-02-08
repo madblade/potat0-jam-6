@@ -4,7 +4,7 @@
 
 let UXIngameModule = {
 
-    refresh()
+    refreshIngame()
     {
         const playerState = this.playerState;
         const level = playerState.getLevel();

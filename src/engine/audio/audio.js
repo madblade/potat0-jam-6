@@ -119,13 +119,6 @@ extend(AudioEngine.prototype, {
 
     stopAllSounds()
     {
-        let sounds = this.sounds;
-        sounds.all.forEach(function(sound) {
-            if (sounds[sound].source !== null && sounds[sound].playing) {
-                sounds[sound].source.stop();
-                sounds[sound].playing = false;
-            }
-        });
     }
 
 });

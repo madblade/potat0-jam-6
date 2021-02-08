@@ -80,7 +80,7 @@ extend(LevelSelectState.prototype, {
     getInstancesHTMLTable()
     {
         let content = `
-            <table class="table table-bordered noselect"
+            <table class="table table border rounded noselect"
             style="width:100%">`;
 
         let levels = this.stateManager.app.model.levels.getLevels();

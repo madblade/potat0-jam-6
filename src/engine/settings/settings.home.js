@@ -12,7 +12,7 @@ let HomeModule = {
     {
         return `
             <div class="container">
-                <table class="table table-bordered noselect" style="width:100%">
+                <table class="table border rounded noselect" style="width:100%">
                 <tr id="graphics"><td>Graphics</td></tr>
                 <tr id="gameplay"><td>Gameplay</td></tr>
                 <tr id="audio"><td>Audio</td></tr>

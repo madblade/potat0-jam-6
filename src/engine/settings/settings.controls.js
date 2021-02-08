@@ -12,7 +12,7 @@ let ControlsModule = {
     {
         let content = `
             <div class="container">
-            <table class="table table-bordered noselect" style="width:100%">
+            <table class="table table border rounded noselect" style="width:100%">
         `;
 
         if (controlsSettings.hasOwnProperty('language')) {

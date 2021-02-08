@@ -83,7 +83,7 @@ let Level0 = function(title, id)
             type: 'splash',
             titles: [
                 '<h3>madblade presents</h3>', // after, sub
-                '<h3>made for the <b>Potat0 Game Jam</b> No.6</h3>with m&alpha;dengine',
+                '<h3>made for <b>Potat0 Game Jam</b> No.6</h3>with m&alpha;dengine',
                 '<h1>Rad Yarns</h1>', // main
             ],
             fadeInTitle: 1000,   // for each title, time in milliseconds

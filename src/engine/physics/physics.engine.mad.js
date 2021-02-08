@@ -33,8 +33,8 @@ let MadEngine = function(physics)
     this.integrator = new Integrator(this.sweeper);
 
     // Exposed settings
-    this.gravity = new Vector3(0, 0, -9.8);
-    // this.gravity = new Vector3(0, 0, 0);
+    this.gravity = new Vector3(0, 0, 0);
+    this.resetGravity();
 
     // Time management
     this._stamp = TimeUtils.getTimeSecNano();
@@ -50,6 +50,11 @@ let MadEngine = function(physics)
 };
 
 extend(MadEngine.prototype, {
+
+    resetGravity()
+    {
+        this.gravity.set(0, 0, -9.8);
+    },
 
     initObject()
     {
@@ -208,8 +213,10 @@ extend(MadEngine.prototype, {
 
     cleanup()
     {
-        // [XXX] destroy everything here
-        this.sweeper.heightMaps.clear();
+        this.resetGravity();
+        this.sweeper.cleanup();
+        this.collider.cleanup();
+        this.integrator.cleanup();
     }
 
 });

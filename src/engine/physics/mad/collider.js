@@ -501,6 +501,27 @@ extend(Collider.prototype, {
         // ray intersection
         resultingPoint.copy(rayOrigin).addScaledVector(rayVector, tValue);
         return 1;
+    },
+
+    // Util.
+
+    cleanup()
+    {
+        this.collisionModelsNeedingStepDown.clear();
+        this._w1.set(0, 0, 0);
+        this._w2.set(0, 0, 0);
+        this._w3.set(0, 0, 0);
+        this._w4.set(0, 0, 0);
+        this._w5.set(0, 0, 0);
+        this._w6.set(0, 0, 0);
+        this._w7.set(0, 0, 0);
+        this._wSL.set(0, 0, 0);
+        this._w8.set(0, 0, 0);
+        this._w9.set(0, 0, 0);
+        this._w10.set(0, 0, 0);
+        this._w11.set(0, 0, 0);
+        this._w12.set(0, 0, 0);
+        this._insideFace = false;
     }
 
 });

@@ -24,7 +24,6 @@ let Sweeper = function(mad)
     // Entity id must equal physics entity index in this array
     this.physicsEntities = [];
 
-
     // Height maps are horizontal (up=+Z) by default.
     this.heightMaps = new Map();
     this.heightMapSideWidth = HeightMapConstants.DEFAULT_EXTENT;
@@ -451,6 +450,28 @@ extend(Sweeper.prototype, {
                 this.entitiesNeedingToMove.add(e);
             }
         });
+    },
+
+    // Util.
+
+    cleanup()
+    {
+        // [XXX] Should gc all entity collision models too?
+        this.orderedObjectsByX = [];
+        this.orderedObjectsByY = [];
+        this.orderedObjectsByZ = [];
+
+        this.entitiesNeedingToMove.clear();
+        this.dynamicEntities.clear();
+        this.potentialCollidingPairs.clear();
+
+        this.physicsEntities = [];
+
+        this.heightMaps.clear();
+        this.heightMapSideWidth = HeightMapConstants.DEFAULT_EXTENT;
+
+        this.locks = [!1, !1, !1, !1, !1, !1];
+        this.availableIndicesInPhysicalEntitiesArray = [];
     },
 
     /** @deprecated */

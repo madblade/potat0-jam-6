@@ -4,9 +4,6 @@
 
 'use strict';
 
-// import * as Ammo from '../../libs/ammo.wasm';
-// import '../../libs/ammo.wasm.wasm';
-
 import { LoadingManager } from 'three';
 import Stats              from 'three/examples/jsm/libs/stats.module';
 
@@ -175,6 +172,7 @@ let CoreModule = {
     },
 
     // Old method to ping bundled server.
+    /** @deprecated */
     pingStandalone()
     {
         let standalone = this.app.standalone;
@@ -231,9 +229,7 @@ let CoreModule = {
         // this.addToScene(this.cameraManager.waterCameraHelper, worldId);
     },
 
-    /**
-     * @deprecated
-     */
+    /** @deprecated */
     getCameraInteraction()
     {
         return this.app.model.frontend.getCameraInteraction();

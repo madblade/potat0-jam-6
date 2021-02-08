@@ -138,6 +138,13 @@ extend(Integrator.prototype, {
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
         }
+    },
+
+    cleanup()
+    {
+        this._w0.set(0, 0, 0);
+        this._w1.set(0, 0, 0);
+        this._w2.set(0, 0, 0);
     }
 
 });

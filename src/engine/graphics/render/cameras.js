@@ -55,7 +55,9 @@ let CameraManager = function(graphicsEngine)
     this.incomingRotationEvents = [];
     this.oldTheta0 = 0;
     this.oldTheta1 = 0;
-    this.correctSpikes = 0;
+    this.correctSpikes = false;
+    this._rotation = [0, 0, 0, 0];
+    this._acc = [0, 0, 0, 0];
 };
 
 // Factory.
@@ -236,13 +238,27 @@ extend(CameraManager.prototype, {
         this.incomingRotationEvents.push([relX, relY, absX, absY]);
     },
 
+    accumulateRotationEvents(incoming, accumulator)
+    {
+        for (let i = 0, l = incoming.length; i < l; ++i)
+        {
+            let inc = incoming[i];
+            accumulator[0] += inc[0];
+            accumulator[1] += inc[1];
+            accumulator[2] += inc[2];
+            accumulator[3] += inc[3];
+        }
+    },
+
     refresh()
     {
         let incoming = this.incomingRotationEvents;
         if (incoming.length < 1) return;
 
-        let rotation = [0, 0, 0, 0];
-        let acc = [0, 0, 0, 0];
+        const rotation = this._rotation;
+        rotation.fill(0);
+        const acc = this._acc;
+        acc.fill(0);
 
         // FF, as anyone with sanity would do.
         if (incoming.length === 1)
@@ -257,14 +273,7 @@ extend(CameraManager.prototype, {
         else if (incoming.length > 1)
         {
             let spikeDetected = false;
-            for (let i = 0, l = incoming.length; i < l; ++i)
-            {
-                let inc = incoming[i];
-                acc[0] += inc[0];
-                acc[1] += inc[1];
-                acc[2] += inc[2];
-                acc[3] += inc[3];
-            }
+            this.accumulateRotationEvents(incoming, acc);
 
             if (this.correctSpikes)
             {
@@ -297,15 +306,8 @@ extend(CameraManager.prototype, {
 
                 if (spikeDetected)
                 {
-                    acc = [0, 0, 0, 0];
-                    for (let i = 0, l = incoming.length; i < l; ++i)
-                    {
-                        let inc = incoming[i];
-                        acc[0] += inc[0];
-                        acc[1] += inc[1];
-                        acc[2] += inc[2];
-                        acc[3] += inc[3];
-                    }
+                    acc.fill(0);
+                    this.accumulateRotationEvents(incoming, acc);
                 }
             }
         }
@@ -423,6 +425,7 @@ extend(CameraManager.prototype, {
         projectionMatrix.elements[14] = c.w;
     },
 
+    /** @deprecated */
     setAbsRotationFromServer(theta0, theta1)
     {
         if (this.oldTheta1 === theta1 && this.oldTheta0 === theta0) return false;
@@ -581,6 +584,7 @@ extend(CameraManager.prototype, {
     {
         this.mainCamera = this.createCamera(false, -1);
         this.mainCamera.setCameraId(-1);
+        this.mainCamera.setThirdPerson();
         this.subCameras.clear();
         this.mainRaycasterCamera = this.createCamera(true, -1);
         this.raycaster = this.createRaycaster();

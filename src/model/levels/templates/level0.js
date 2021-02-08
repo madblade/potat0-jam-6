@@ -86,10 +86,10 @@ let Level0 = function(title, id)
                 '—madengine—', // after, sub
                 'A long time away, in a place far ago…',
             ],
-            fadeInTitle: 200,   // for each title, time in milliseconds
-            fadeOutTitle: 200,  // time fade out each title
-            keepTitle: 1000,    // time to keep each title full brightness
-            fadeOutSplash: 2000, // time to fade out the title screen
+            fadeInTitle: 1,   // for each title, time in milliseconds
+            fadeOutTitle: 1,  // time fade out each title
+            keepTitle: 1,    // time to keep each title full brightness
+            fadeOutSplash: 1, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

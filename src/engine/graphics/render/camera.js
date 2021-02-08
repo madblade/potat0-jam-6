@@ -237,6 +237,7 @@ extend(Camera.prototype, {
         nv.applyQuaternion(camQ);
         return nv;
     }
+
 });
 
 export { Camera };

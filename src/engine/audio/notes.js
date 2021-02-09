@@ -39,9 +39,16 @@ extend(Notes.prototype, {
     {
         assert(this.frequencies.size > 0, '[Audio/Notes] Could not find notes.');
         const alphabet = this.alphabet;
-        this.frequencies.forEach((frequency, letterName) => {
-            const note = this.generateNote(frequency, listener);
-            alphabet.set(letterName, note);
+        this.frequencies.forEach((howToSingIt, letterName) => {
+            const frequency = howToSingIt[0];
+            const sustainTime = howToSingIt[1];
+            const note1 = this.generateNote(frequency, listener);
+            const note2 = this.generateNote(frequency, listener);
+            const note3 = this.generateNote(frequency, listener);
+            const note4 = this.generateNote(frequency, listener);
+            const note5 = this.generateNote(frequency, listener);
+            const lastNoteIndex = 0;
+            alphabet.set(letterName, [sustainTime, note1, note2, note3, note4, note5, lastNoteIndex]);
         });
     },
 
@@ -55,24 +62,41 @@ extend(Notes.prototype, {
         return oscillator;
     },
 
-    singLetter(letter, threeAudio, listener)
+    singLetter(letter, threeAudio, listener,
+        textRemainder // CAUTION this argument should not be set except for the menu test.
+    )
     {
-        const note = this.alphabet.get(letter);
-        if (!note)
+        const howToSing = this.alphabet.get(letter);
+        if (!howToSing)
         {
             console.error(`[Audio] ${letter} not found.`);
             return;
         }
 
+        const sustain = howToSing[0];
+        let lastNoteIndex = howToSing[6];
+        const note1 = howToSing[1 + lastNoteIndex];
+        lastNoteIndex += 1; lastNoteIndex %= 5;
+        howToSing[6] = lastNoteIndex;
+
         const audioContext = listener.context;
         const gain = audioContext.createGain();
-        note.connect(gain);
+        note1.connect(gain);
         const currentTime = audioContext.currentTime; // should this be 0?
-        gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + 1.); // 0.04
+        gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain); // 0.04
         gain.connect(audioContext.destination);
 
-        threeAudio.setNodeSource(gain);
-        note.start(0);
+        try {
+            note1.start(0);
+        } catch (e) {
+            return;
+        }
+        // note.stop(currentTime + sustain);
+
+        if (textRemainder && textRemainder.length)
+            setTimeout(() =>
+                this.singRemainingText(textRemainder, threeAudio, listener), sustain * 1e3 / 2
+            );
     },
 
     singText(text, threeAudio, listener)
@@ -88,7 +112,44 @@ extend(Notes.prototype, {
         const wsw = this.whoSingsWhat;
         wsw.set(threeAudio, cleanedText); // remainder of the text
 
-        this.singLetter(firstLetter, threeAudio, listener);
+        this.singLetter(firstLetter, threeAudio, listener,
+            // CAUTION this last argument is passed only
+            // to setup a chain in the menu (where animationFrame is not available)
+            cleanedText);
+    },
+
+    singRemainingText(text, threeAudio, listener)
+    {
+        const letter = text[0];
+        const remainder = text.substring(1);
+
+        const howToSing = this.alphabet.get(letter);
+        const sustain = howToSing[0];
+        let lastNoteIndex = howToSing[6];
+        const note1 = howToSing[1 + lastNoteIndex];
+        lastNoteIndex += 1; lastNoteIndex %= 5;
+        howToSing[6] = lastNoteIndex;
+
+        const audioContext = listener.context;
+        const gain = audioContext.createGain();
+        note1.connect(gain);
+        const currentTime = audioContext.currentTime; // should this be 0?
+        gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain);
+        gain.connect(audioContext.destination);
+
+        try {
+            note1.start(0);
+        } catch (e) {
+            return;
+        }
+
+        if (remainder && remainder.length)
+        {
+            this.whoSingsWhat.set(threeAudio, remainder);
+            setTimeout(() =>
+                this.singRemainingText(remainder, threeAudio, listener), sustain * 1e3 / 2
+            );
+        }
     }
 
 });

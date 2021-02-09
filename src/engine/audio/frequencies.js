@@ -143,32 +143,43 @@ const NoteFrequencies = {
 };
 
 const AlphabetFrequencies = new Map([
-    ['a', NoteFrequencies.E2],
-    ['b', NoteFrequencies.F2],
-    ['c', NoteFrequencies.G2],
-    ['d', NoteFrequencies.A3],
-    ['e', NoteFrequencies.B3],
-    ['f', NoteFrequencies.C3],
-    ['g', NoteFrequencies.D3],
-    ['h', NoteFrequencies.E3],
-    ['i', NoteFrequencies.F3],
-    ['j', NoteFrequencies.G3],
-    ['k', NoteFrequencies.A4],
-    ['l', NoteFrequencies.B4],
-    ['m', NoteFrequencies.C4],
-    ['n', NoteFrequencies.D4],
-    ['o', NoteFrequencies.E4],
-    ['p', NoteFrequencies.F4],
-    ['q', NoteFrequencies.G4],
-    ['r', NoteFrequencies.A5],
-    ['s', NoteFrequencies.B5],
-    ['t', NoteFrequencies.C5],
-    ['u', NoteFrequencies.D5],
-    ['v', NoteFrequencies.E5],
-    ['w', NoteFrequencies.F5],
-    ['x', NoteFrequencies.G5],
-    ['y', NoteFrequencies.A6],
-    ['z', NoteFrequencies.B6],
+    [' ', [NoteFrequencies.E2, .1]],
+
+    ['a', [NoteFrequencies.E2, .4]],
+
+    ['b', [NoteFrequencies.F2, .3]],
+    ['c', [NoteFrequencies.G2, .3]],
+    ['d', [NoteFrequencies.A3, .3]],
+
+    ['e', [NoteFrequencies.B3, .4]],
+
+    ['f', [NoteFrequencies.C3, .3]],
+    ['g', [NoteFrequencies.D3, .3]],
+    ['h', [NoteFrequencies.E3, .3]],
+
+    ['i', [NoteFrequencies.F3, .4]],
+
+    ['j', [NoteFrequencies.G3, .3]],
+    ['k', [NoteFrequencies.A4, .3]],
+    ['l', [NoteFrequencies.B4, .3]],
+    ['m', [NoteFrequencies.C4, .3]],
+    ['n', [NoteFrequencies.D4, .3]],
+
+    ['o', [NoteFrequencies.E4, .4]],
+
+    ['p', [NoteFrequencies.F4, .3]],
+    ['q', [NoteFrequencies.G4, .3]],
+    ['r', [NoteFrequencies.A5, .3]],
+    ['s', [NoteFrequencies.B5, .3]],
+    ['t', [NoteFrequencies.C5, .3]],
+
+    ['u', [NoteFrequencies.D5, .4]],
+
+    ['v', [NoteFrequencies.E5, .3]],
+    ['w', [NoteFrequencies.F5, .3]],
+    ['x', [NoteFrequencies.G5, .3]],
+    ['y', [NoteFrequencies.A6, .3]],
+    ['z', [NoteFrequencies.B6, .3]],
 ]);
 
 export { AlphabetFrequencies };

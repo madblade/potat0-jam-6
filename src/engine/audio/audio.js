@@ -213,7 +213,6 @@ extend(AudioEngine.prototype, {
 
     run()
     {
-        // TODO bind audio of object to camera.
     },
 
     stop()

@@ -4,27 +4,15 @@
 
 'use strict';
 
-import LegacyJSONLoader from './LegacyJSONLoader';
 import {
     AnimationMixer, AnimationClip,
     Object3D, Mesh,
     MeshLambertMaterial,
-    FaceColors, BufferGeometry, Geometry,
-} from 'three';
+    BufferGeometry,
+}                       from 'three';
+import { Geometry }     from 'three/examples/jsm/deprecated/Geometry';
 
 let EntitiesModule = {
-
-    loadMeshFromJSON(model, callback, errorCallback)
-    {
-        let loader = new LegacyJSONLoader(this.loadingManager);
-        loader.load(`app/assets/models/${model}.json`, geometry => {
-            callback(geometry);
-        }, undefined, error =>
-        {
-            console.warn(error);
-            errorCallback();
-        });
-    },
 
     loadReferenceGeometryFromMemory(id)
     {
@@ -53,7 +41,7 @@ let EntitiesModule = {
 
         let mesh = new Mesh(bufferGeometry, new MeshLambertMaterial({
             color,
-            vertexColors: FaceColors,
+            vertexColors: true,
             morphTargets: true
         }));
 

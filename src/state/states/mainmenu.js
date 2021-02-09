@@ -42,8 +42,10 @@ let MainMenuState = function(stateManager)
             </div>
         </div>
 
-        <div class="input-group mb-1 center-block" id="main-volume-controller">
-            <div class="input-group-append flex-fill"></div>
+        <div class="input-group mb-1 center-block">
+            <div class="input-group-append flex-fill">
+                <input type="range" min="0" max="100" value="50" class="slider" id="main-volume-controller">
+            </div>
         </div>
 
         </div></div>

@@ -1,8 +1,10 @@
 
 import { Capsule, geometryInfo }  from './Geometry.js';
 import { map, root }              from './root.js';
-import { BoxBufferGeometry, CylinderBufferGeometry, Euler, Group,
-    Matrix4, Mesh, Quaternion, SphereBufferGeometry } from 'three';
+import {
+    BoxBufferGeometry, CylinderBufferGeometry, Euler, Group,
+    Matrix4, Mesh, Quaternion, SphereBufferGeometry
+} from 'three';
 import { ChamferBox, ChamferCyl } from './Chamfer';
 
 function RigidBodyManager()

@@ -1,6 +1,9 @@
-import { ConvexHull }                                                                                                   from './ConvexHull.js';
-import { BufferAttribute, BufferGeometry, CylinderGeometry,
-    Float32BufferAttribute, Geometry, Matrix4, SphereGeometry } from 'three';
+import { ConvexHull } from './ConvexHull.js';
+import {
+    BufferAttribute, BufferGeometry, CylinderGeometry,
+    Float32BufferAttribute, Matrix4, SphereGeometry
+}                     from 'three';
+import { Geometry }   from 'three/examples/jsm/deprecated/Geometry';
 
 export function geometryInfo(g, type)
 {
@@ -91,7 +94,7 @@ export function geometryInfo(g, type)
         j = totalVertices;
         while (j--) {
             n2 = j * 3;
-            if (pos[n2] == g.realVertices[n] && pos[n2 + 1] == g.realVertices[n + 1] && pos[n2 + 2] == g.realVertices[n + 2])
+            if (pos[n2] === g.realVertices[n] && pos[n2 + 1] === g.realVertices[n + 1] && pos[n2 + 2] === g.realVertices[n + 2])
                 ar[i].push(j);
         }
     }

@@ -122,10 +122,10 @@ extend(LevelSelectState.prototype, {
     start()
     {
         // Add content then fade in.
-        let hub = $('#announce');
-        hub.empty()
+        let announce = $('#announce');
+        announce.empty()
             .removeClass()
-            .addClass('hub')
+            .addClass('announce')
             .append(
                 this.htmlHead +
                 this.getInstancesHTMLContainer() +

@@ -1,9 +1,10 @@
 
 import {
     BufferGeometry, CatmullRomCurve3, Float32BufferAttribute,
-    Geometry, Line, LineBasicMaterial, Matrix4, Quaternion, Uint16BufferAttribute,
+    Line, LineBasicMaterial, Matrix4, Quaternion, Uint16BufferAttribute,
     Uint32BufferAttribute, Vector2, Vector3
-} from 'three';
+}                   from 'three';
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry';
 
 let Tubular = function(a, c, d, e, f, h)//, m)
 {

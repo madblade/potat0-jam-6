@@ -1,8 +1,9 @@
 import {
     BufferGeometry, CircleGeometry, CylinderGeometry,
-    Geometry, Matrix4, PlaneGeometry, SphereGeometry,
+    Matrix4, PlaneGeometry, SphereGeometry,
     TorusGeometry
-} from 'three';
+}                   from 'three';
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry';
 
 let ChamferBox = function(a, c, d, e, f, h, m, k)
 {

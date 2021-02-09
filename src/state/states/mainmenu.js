@@ -42,6 +42,10 @@ let MainMenuState = function(stateManager)
             </div>
         </div>
 
+        <div class="input-group mb-1 center-block" id="main-volume-controller">
+            <div class="input-group-append flex-fill"></div>
+        </div>
+
         </div></div>
         `;
 

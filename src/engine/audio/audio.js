@@ -13,7 +13,8 @@ import {
 
 
 // Sounds
-import SelectSound     from '../../assets/audio/menu.select.wav';
+import SelectSound from '../../assets/audio/menu.select.wav';
+import { Notes }   from './notes';
 
 let AudioEngine = function(app)
 {
@@ -53,9 +54,18 @@ let AudioEngine = function(app)
         this.sounds.music.length +
         this.sounds.positionalSfx.length;
     this.nbSoundsLoadedOrError = 0;
+
+    // Notes generator
+    this.notesEngine = new Notes();
+    this.mainSinger = null;
 };
 
 extend(AudioEngine.prototype, {
+
+    refresh()
+    {
+        this.notesEngine.refresh();
+    },
 
     preload(loadingManager)
     {
@@ -101,7 +111,6 @@ extend(AudioEngine.prototype, {
             this.audioLoader.load(sfx,  buffer =>
             {
                 const audio = new PositionalAudio(globalListener);
-                // TODO positional listener.
                 audio.setBuffer(buffer);
                 audio.setVolume(defaultVolume);
                 this.positionalAudioSources.push(audio);
@@ -168,9 +177,9 @@ extend(AudioEngine.prototype, {
 
     playValidateSound()
     {
-        this._resume();
-        const audioIndex = this.soundMap.get('validate');
-        const validateAudio = this.audioSources[audioIndex];
+        // this._resume();
+        // const audioIndex = this.soundMap.get('validate');
+        // const validateAudio = this.audioSources[audioIndex];
         // validateAudio.play();
     },
 
@@ -180,6 +189,26 @@ extend(AudioEngine.prototype, {
         const audioIndex = this.soundMap.get('menu');
         const menuAudio = this.audioSources[audioIndex];
         menuAudio.play();
+    },
+
+    playText(text, audioSource)
+    {
+        assert(typeof text === 'string' && text.length < 3000, '[Audio] Text too long.');
+
+        const listener = this.listener;
+        const notesEngine = this.notesEngine;
+
+        if (!notesEngine.isReady())
+            notesEngine.generateAllNotes(listener);
+
+        if (!audioSource)
+        {
+            if (!this.mainSinger)
+                this.mainSinger = new Audio(listener);
+            audioSource = this.mainSinger;
+        }
+
+        notesEngine.singText(text, audioSource, listener);
     },
 
     run()

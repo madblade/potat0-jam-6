@@ -102,7 +102,8 @@ extend(MainMenuState.prototype, {
                 iconVolume.html('<i class="fas fa-volume-up fa-2x">');
         });
         volumeControl.change(() => {
-            audio.playValidateSound();
+            // audio.playValidateSound();
+            audio.playText('bui');
         });
         iconVolume.click(() => {
             const isMute = audio.isMute();

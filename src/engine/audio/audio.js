@@ -149,7 +149,7 @@ extend(AudioEngine.prototype, {
 
     setVolume(volume) // volume should be in [0, 1]
     {
-        console.log(`Setting volume ${volume}.`);
+        // console.log(`Setting volume ${volume}.`);
         assert(typeof volume === 'number' && volume <= 1. && volume >= 0.,
             '[Audio] Invalid volume.');
 
@@ -164,6 +164,14 @@ extend(AudioEngine.prototype, {
     getVolume()
     {
         return this.settings.globalVolume;
+    },
+
+    playValidateSound()
+    {
+        this._resume();
+        const audioIndex = this.soundMap.get('validate');
+        const validateAudio = this.audioSources[audioIndex];
+        // validateAudio.play();
     },
 
     playMenuSound()

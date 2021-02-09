@@ -66,6 +66,7 @@ extend(MainMenuState.prototype, {
         const app = this.stateManager.app;
         const audio = app.engine.audio;
 
+        // Listen to buttons.
         const buttonPlay = $('#button-play');
         buttonPlay.click(() => {
             app.engine.ux.startNewGame();
@@ -73,7 +74,6 @@ extend(MainMenuState.prototype, {
         buttonPlay.mouseenter(() => {
             audio.playMenuSound();
         });
-
         const buttonLoad = $('#button-load');
         buttonLoad.click(() => {
             this.stateManager.setState('level-select');
@@ -82,8 +82,17 @@ extend(MainMenuState.prototype, {
             audio.playMenuSound();
         });
 
+        // Init control graphics from model.
         const iconVolume = $('#volume-status');
         const volumeControl = $('#main-volume-controller');
+        const v = Math.floor(audio.getVolume() * 100);
+        volumeControl.val(v);
+        if (v === 0 || audio.isMute())
+            iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
+        else
+            iconVolume.html('<i class="fas fa-volume-up fa-2x">');
+
+        // Listen to volume control.
         volumeControl.on('input change', i => {
             const newVolume = parseInt(i.target.value, 10);
             audio.setVolume(newVolume / 100);
@@ -92,10 +101,15 @@ extend(MainMenuState.prototype, {
             else
                 iconVolume.html('<i class="fas fa-volume-up fa-2x">');
         });
+        volumeControl.change(() => {
+            audio.playValidateSound();
+        });
         iconVolume.click(() => {
             const isMute = audio.isMute();
             if (isMute)
             {
+                const v = Math.floor(audio.getVolume() * 100);
+                volumeControl.val(v);
                 iconVolume.html('<i class="fas fa-volume-up fa-2x">');
                 audio.unMute();
             }
@@ -131,6 +145,11 @@ extend(MainMenuState.prototype, {
         const bl = $('#button-load');
         bl.off('click');
         bl.off('mouseenter');
+
+        const iconVolume = $('#volume-status');
+        iconVolume.off('click');
+        const volumeControl = $('#main-volume-controller');
+        volumeControl.off('input change');
     },
 
     end()

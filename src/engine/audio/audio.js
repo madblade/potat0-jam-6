@@ -21,7 +21,8 @@ let AudioEngine = function(app)
 
     // User customizable settings.
     this.settings = {
-        volume: 0.5
+        globalVolume: 0.,
+        mute: true,
     };
 
     // Three audio engine.
@@ -65,7 +66,7 @@ extend(AudioEngine.prototype, {
         const psfxs = this.sounds.positionalSfx;
         const tunes = this.sounds.music;
 
-        const defaultVolume = this.settings.volume;
+        const defaultVolume = this.settings.globalVolume;
         const globalListener = this.listener;
         sfxs.forEach(sfx =>
         {
@@ -122,16 +123,47 @@ extend(AudioEngine.prototype, {
         return this.nbSoundsLoadedOrError >= this.nbSoundsToLoad;
     },
 
+    isMute()
+    {
+        return this.settings.mute;
+    },
+
+    mute()
+    {
+        this.settings.mute = true;
+        const p = this.positionalAudioSources;
+        const a = this.audioSources;
+        a.forEach(s => s.setVolume(0));
+        p.forEach(s => s.setVolume(0));
+    },
+
+    unMute()
+    {
+        this.settings.mute = false;
+        const p = this.positionalAudioSources;
+        const a = this.audioSources;
+        const volume = this.settings.globalVolume;
+        a.forEach(s => s.setVolume(volume));
+        p.forEach(s => s.setVolume(volume));
+    },
+
     setVolume(volume) // volume should be in [0, 1]
     {
         console.log(`Setting volume ${volume}.`);
         assert(typeof volume === 'number' && volume <= 1. && volume >= 0.,
             '[Audio] Invalid volume.');
+
+        this.settings.mute = volume === 0;
         this.settings.globalVolume = volume;
         const p = this.positionalAudioSources;
         const a = this.audioSources;
         a.forEach(s => s.setVolume(volume));
         p.forEach(s => s.setVolume(volume));
+    },
+
+    getVolume()
+    {
+        return this.settings.globalVolume;
     },
 
     playMenuSound()

@@ -42,9 +42,14 @@ let MainMenuState = function(stateManager)
             </div>
         </div>
 
-        <div class="input-group mb-1 center-block">
-            <div class="input-group-append flex-fill">
-                <input type="range" min="0" max="100" value="50" class="slider" id="main-volume-controller">
+        <div class="row mt-3">
+            <div class="col-4"></div>
+            <div class="input-group mb-1 center-block col-4 slider-container">
+                <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
+                <div class="col-10 input-group-append flex-fill">
+                    <input type="range" min="0" max="100" value="0" class="slider"
+                        id="main-volume-controller">
+                </div>
             </div>
         </div>
 
@@ -59,12 +64,14 @@ extend(MainMenuState.prototype, {
     startListeners()
     {
         const app = this.stateManager.app;
+        const audio = app.engine.audio;
+
         const buttonPlay = $('#button-play');
         buttonPlay.click(() => {
             app.engine.ux.startNewGame();
         });
         buttonPlay.mouseenter(() => {
-            app.engine.audio.playMenuSound();
+            audio.playMenuSound();
         });
 
         const buttonLoad = $('#button-load');
@@ -72,7 +79,31 @@ extend(MainMenuState.prototype, {
             this.stateManager.setState('level-select');
         });
         buttonLoad.mouseenter(() => {
-            app.engine.audio.playMenuSound();
+            audio.playMenuSound();
+        });
+
+        const iconVolume = $('#volume-status');
+        const volumeControl = $('#main-volume-controller');
+        volumeControl.on('input change', i => {
+            const newVolume = parseInt(i.target.value, 10);
+            audio.setVolume(newVolume / 100);
+            if (newVolume === 0)
+                iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
+            else
+                iconVolume.html('<i class="fas fa-volume-up fa-2x">');
+        });
+        iconVolume.click(() => {
+            const isMute = audio.isMute();
+            if (isMute)
+            {
+                iconVolume.html('<i class="fas fa-volume-up fa-2x">');
+                audio.unMute();
+            }
+            else
+            {
+                iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
+                audio.mute();
+            }
         });
     },
 

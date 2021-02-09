@@ -16,12 +16,14 @@ extend(SettingsState.prototype, {
 
     start()
     {
-        this.stateManager.app.engine.settings.run();
+        const app = this.stateManager.app;
+        app.engine.settings.run();
     },
 
     end()
     {
-        return this.stateManager.app.engine.settings.stop();
+        const app = this.stateManager.app;
+        return app.engine.settings.stop();
     }
 
 });

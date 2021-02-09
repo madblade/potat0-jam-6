@@ -35,26 +35,44 @@ let HomeModule = {
 
     listenHome()
     {
-        $('#graphics').click(function() { this.goGraphics(); }.bind(this));
-        $('#gameplay').click(function() { this.goControls(); }.bind(this));
-        $('#audio').click(function() { this.goAudio(); }.bind(this));
-        $('#home').click(function() { this.goHome(); }.bind(this));
-        $('#return').click(function() {
+        const app = this.app;
+        const audio = app.engine.audio;
+
+        const gx = $('#graphics');
+        gx.click(() => this.goGraphics());
+        gx.mouseenter(() => audio.playMenuSound());
+        const gp = $('#gameplay');
+        gp.click(() => this.goControls());
+        gp.mouseenter(() => audio.playMenuSound());
+        const au = $('#audio');
+        au.click(() => this.goAudio());
+        au.mouseenter(() => audio.playMenuSound());
+        const hm = $('#home');
+        hm.click(() => this.goHome());
+        hm.mouseenter(() => audio.playMenuSound());
+        const rn = $('#return');
+        rn.click(() => {
             this.unlistenSettingsMenu();
             this.stateManager.setState('ingame');
             this.controlsEngine.requestLock();
             this.app.setFocused(true);
-        }.bind(this));
+        });
+        rn.mouseenter(() => audio.playMenuSound());
     },
 
     unlistenSettingsMenu()
     {
+        const gx = $('#graphics');
+        const gp = $('#gameplay');
+        const au = $('#audio');
+        const hm = $('#home');
+        const rn = $('#return');
         $(window).off('keydown');
-        $('#graphics').off('click');
-        $('#gameplay').off('click');
-        $('#audio').off('click');
-        $('#home').off('click');
-        $('#return').off('click');
+        gx.off('click'); gx.off('mouseenter');
+        gp.off('click'); gp.off('mouseenter');
+        au.off('click'); au.off('mouseenter');
+        hm.off('click'); hm.off('mouseenter');
+        rn.off('click'); rn.off('mouseenter');
     },
 
     listenReturn()

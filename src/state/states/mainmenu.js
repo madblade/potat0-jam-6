@@ -108,8 +108,8 @@ extend(MainMenuState.prototype, {
             const isMute = audio.isMute();
             if (isMute)
             {
-                const v = Math.floor(audio.getVolume() * 100);
-                volumeControl.val(v);
+                const newV = Math.floor(audio.getVolume() * 100);
+                volumeControl.val(newV);
                 iconVolume.html('<i class="fas fa-volume-up fa-2x">');
                 audio.unMute();
             }

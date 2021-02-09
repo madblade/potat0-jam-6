@@ -56,7 +56,7 @@ let AudioEngine = function(app)
     this.nbSoundsLoadedOrError = 0;
 
     // Notes generator
-    this.notesEngine = new Notes();
+    this.notesEngine = new Notes(this);
     this.mainSinger = null;
 };
 

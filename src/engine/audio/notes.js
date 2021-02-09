@@ -5,8 +5,10 @@
 import extend, { assert }      from '../../extend';
 import { AlphabetFrequencies } from './frequencies';
 
-let Notes = function()
+let Notes = function(audio)
 {
+    this.audioEngine = audio;
+
     // oscillators array
     this.notes = [];
     this.currentlyPlayinNotes = [];
@@ -21,6 +23,8 @@ let Notes = function()
     this.whoSingsWhat = new Map();
 
     this.notesReady = false;
+    this.isSingingInMenu = false;
+    this.singingHandle = null;
 };
 
 extend(Notes.prototype, {
@@ -73,6 +77,8 @@ extend(Notes.prototype, {
             return;
         }
 
+        this.isSingingInMenu = true;
+
         const sustain = howToSing[0];
         let lastNoteIndex = howToSing[6];
         const note1 = howToSing[1 + lastNoteIndex];
@@ -83,9 +89,14 @@ extend(Notes.prototype, {
         const gain = audioContext.createGain();
         note1.connect(gain);
         const currentTime = audioContext.currentTime; // should this be 0?
+
+        let gv = this.audioEngine.settings.globalVolume;
+        if (this.audioEngine.settings.mute) gv = 0;
+        gain.gain.setValueAtTime(gv, 0);
         gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain); // 0.04
         gain.connect(audioContext.destination);
 
+        // threeAudio.setNodeSource(gain);
         try {
             note1.start(0);
         } catch (e) {
@@ -94,9 +105,13 @@ extend(Notes.prototype, {
         // note.stop(currentTime + sustain);
 
         if (textRemainder && textRemainder.length)
+        {
+            const singingHandle = Math.random();
+            this.singingHandle = singingHandle;
             setTimeout(() =>
-                this.singRemainingText(textRemainder, threeAudio, listener), sustain * 1e3 / 2
+                this.singRemainingText(textRemainder, threeAudio, listener, singingHandle), sustain * 1e3 / 2
             );
+        } else this.isSingingInMenu = false;
     },
 
     singText(text, threeAudio, listener)
@@ -118,8 +133,11 @@ extend(Notes.prototype, {
             cleanedText);
     },
 
-    singRemainingText(text, threeAudio, listener)
+    // this is for R&D
+    singRemainingText(text, threeAudio, listener, singingHandle)
     {
+        if (this.singingHandle !== singingHandle) return;
+
         const letter = text[0];
         const remainder = text.substring(1);
 
@@ -134,6 +152,10 @@ extend(Notes.prototype, {
         const gain = audioContext.createGain();
         note1.connect(gain);
         const currentTime = audioContext.currentTime; // should this be 0?
+
+        let gv = this.audioEngine.settings.globalVolume;
+        if (this.audioEngine.settings.mute) gv = 0;
+        gain.gain.setValueAtTime(gv, 0);
         gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain);
         gain.connect(audioContext.destination);
 
@@ -147,9 +169,10 @@ extend(Notes.prototype, {
         {
             this.whoSingsWhat.set(threeAudio, remainder);
             setTimeout(() =>
-                this.singRemainingText(remainder, threeAudio, listener), sustain * 1e3 / 2
+                this.singRemainingText(remainder, threeAudio, listener, singingHandle), sustain * 1e3 / 2
             );
         }
+        else this.isSingingInMenu = false;
     }
 
 });

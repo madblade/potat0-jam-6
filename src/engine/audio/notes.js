@@ -4,6 +4,7 @@
 
 import extend, { assert }      from '../../extend';
 import { AlphabetFrequencies } from './frequencies';
+import { Audio }               from 'three';
 
 let Notes = function(audio)
 {
@@ -16,18 +17,23 @@ let Notes = function(audio)
     // note name to note frequency
     this.frequencies = AlphabetFrequencies;
 
-    // letter to index of note in oscillators array
-    this.alphabet = new Map();
-
     // (positional) audio -> text (cut to the current singing position)
     this.whoSingsWhat = new Map();
 
-    this.notesReady = false;
-    this.isSingingInMenu = false;
-    this.singingHandle = null;
+    // main singer
+    this.singingHandle = 0;
+
+    this.mainVoiceMaxVolume = 0.5;
+    this.mainVoice = null;
+    this.mainOscillator = null;
 };
 
 extend(Notes.prototype, {
+
+    generateHandle()
+    {
+        return this.singingHandle + 1;
+    },
 
     refresh()
     {
@@ -36,24 +42,29 @@ extend(Notes.prototype, {
 
     isReady()
     {
-        return this.notesReady;
+        return this.mainVoice !== null;
     },
 
-    generateAllNotes(listener)
+    getMainVoice()
+    {
+        return this.mainVoice;
+    },
+
+    generateMainVoice(listener)
     {
         assert(this.frequencies.size > 0, '[Audio/Notes] Could not find notes.');
-        const alphabet = this.alphabet;
-        this.frequencies.forEach((howToSingIt, letterName) => {
-            const frequency = howToSingIt[0];
-            const sustainTime = howToSingIt[1];
-            const note1 = this.generateNote(frequency, listener);
-            const note2 = this.generateNote(frequency, listener);
-            const note3 = this.generateNote(frequency, listener);
-            const note4 = this.generateNote(frequency, listener);
-            const note5 = this.generateNote(frequency, listener);
-            const lastNoteIndex = 0;
-            alphabet.set(letterName, [sustainTime, note1, note2, note3, note4, note5, lastNoteIndex]);
-        });
+
+        const voice = new Audio(listener);
+        const audioContext = listener.context;
+        const oscillator = audioContext.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(144, voice.context.currentTime);
+        oscillator.start(0);
+        voice.setNodeSource(oscillator);
+        voice.setVolume(this.mainVoiceMaxVolume);
+
+        this.mainVoice = voice;
+        this.mainOscillator = oscillator;
     },
 
     generateNote(frequency, listener)
@@ -70,7 +81,7 @@ extend(Notes.prototype, {
         textRemainder // CAUTION this argument should not be set except for the menu test.
     )
     {
-        const howToSing = this.alphabet.get(letter);
+        const howToSing = this.frequencies.get(letter);
         if (!howToSing)
         {
             console.error(`[Audio] ${letter} not found.`);
@@ -79,39 +90,32 @@ extend(Notes.prototype, {
 
         this.isSingingInMenu = true;
 
-        const sustain = howToSing[0];
-        let lastNoteIndex = howToSing[6];
-        const note1 = howToSing[1 + lastNoteIndex];
-        lastNoteIndex += 1; lastNoteIndex %= 5;
-        howToSing[6] = lastNoteIndex;
+        const frequency = howToSing[0];
+        const sustain = howToSing[1];
 
         const audioContext = listener.context;
-        const gain = audioContext.createGain();
-        note1.connect(gain);
-        const currentTime = audioContext.currentTime; // should this be 0?
-
-        let gv = this.audioEngine.settings.globalVolume;
-        if (this.audioEngine.settings.mute) gv = 0;
-        gain.gain.setValueAtTime(gv, 0);
-        gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain); // 0.04
-        gain.connect(audioContext.destination);
-
-        // threeAudio.setNodeSource(gain);
-        try {
-            note1.start(0);
-        } catch (e) {
-            return;
-        }
-        // note.stop(currentTime + sustain);
+        const currentTime = audioContext.currentTime;
+        this.mainOscillator.frequency.setValueAtTime(frequency, currentTime);
 
         if (textRemainder && textRemainder.length)
         {
-            const singingHandle = Math.random();
+            const singingHandle = this.generateHandle();
             this.singingHandle = singingHandle;
             setTimeout(() =>
-                this.singRemainingText(textRemainder, threeAudio, listener, singingHandle), sustain * 1e3 / 2
+            {
+                this.mainVoice.setVolume(this.mainVoiceMaxVolume);
+                this.singRemainingText(textRemainder, threeAudio, listener, singingHandle);
+            }, sustain * 1e3
             );
-        } else this.isSingingInMenu = false;
+        }
+        else
+        {
+            setTimeout(() =>
+            {
+                this.mainVoice.setVolume(0.);
+                this.isSingingInMenu = false;
+            }, sustain * 1e3);
+        }
     },
 
     singText(text, threeAudio, listener)
@@ -127,6 +131,7 @@ extend(Notes.prototype, {
         const wsw = this.whoSingsWhat;
         wsw.set(threeAudio, cleanedText); // remainder of the text
 
+        this.mainVoice.setVolume(this.mainVoiceMaxVolume);
         this.singLetter(firstLetter, threeAudio, listener,
             // CAUTION this last argument is passed only
             // to setup a chain in the menu (where animationFrame is not available)
@@ -141,38 +146,33 @@ extend(Notes.prototype, {
         const letter = text[0];
         const remainder = text.substring(1);
 
-        const howToSing = this.alphabet.get(letter);
-        const sustain = howToSing[0];
-        let lastNoteIndex = howToSing[6];
-        const note1 = howToSing[1 + lastNoteIndex];
-        lastNoteIndex += 1; lastNoteIndex %= 5;
-        howToSing[6] = lastNoteIndex;
+        const howToSing = this.frequencies.get(letter);
+        const frequency = howToSing[0];
+        const sustain = howToSing[1];
 
         const audioContext = listener.context;
-        const gain = audioContext.createGain();
-        note1.connect(gain);
-        const currentTime = audioContext.currentTime; // should this be 0?
+        const currentTime = audioContext.currentTime;
 
-        let gv = this.audioEngine.settings.globalVolume;
-        if (this.audioEngine.settings.mute) gv = 0;
-        gain.gain.setValueAtTime(gv, 0);
-        gain.gain.exponentialRampToValueAtTime(0.00001, currentTime + sustain);
-        gain.connect(audioContext.destination);
-
-        try {
-            note1.start(0);
-        } catch (e) {
-            return;
-        }
+        this.mainOscillator.frequency.setValueAtTime(frequency, currentTime);
 
         if (remainder && remainder.length)
         {
             this.whoSingsWhat.set(threeAudio, remainder);
             setTimeout(() =>
-                this.singRemainingText(remainder, threeAudio, listener, singingHandle), sustain * 1e3 / 2
+            {
+                this.mainVoice.setVolume(this.mainVoiceMaxVolume);
+                this.singRemainingText(remainder, threeAudio, listener, singingHandle);
+            }, sustain * 1e3
             );
         }
-        else this.isSingingInMenu = false;
+        else
+        {
+            setTimeout(() =>
+            {
+                this.mainVoice.setVolume(0.);
+                this.isSingingInMenu = false;
+            }, sustain * 1e3);
+        }
     }
 
 });

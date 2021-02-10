@@ -57,7 +57,6 @@ let AudioEngine = function(app)
 
     // Notes generator
     this.notesEngine = new Notes(this);
-    this.mainSinger = null;
 };
 
 extend(AudioEngine.prototype, {
@@ -144,6 +143,8 @@ extend(AudioEngine.prototype, {
         const a = this.audioSources;
         a.forEach(s => s.setVolume(0));
         p.forEach(s => s.setVolume(0));
+        this.notesEngine.mainVoiceMaxVolume = 0;
+        this.notesEngine.mainVoice.setVolume(0);
     },
 
     unMute()
@@ -168,6 +169,7 @@ extend(AudioEngine.prototype, {
         const a = this.audioSources;
         a.forEach(s => s.setVolume(volume));
         p.forEach(s => s.setVolume(volume));
+        this.notesEngine.mainVoiceMaxVolume = volume;
     },
 
     getVolume()
@@ -199,13 +201,11 @@ extend(AudioEngine.prototype, {
         const notesEngine = this.notesEngine;
 
         if (!notesEngine.isReady())
-            notesEngine.generateAllNotes(listener);
+            notesEngine.generateMainVoice(listener);
 
         if (!audioSource)
         {
-            if (!this.mainSinger)
-                this.mainSinger = new Audio(listener);
-            audioSource = this.mainSinger;
+            audioSource = notesEngine.getMainVoice();
         }
 
         notesEngine.singText(text, audioSource, listener);

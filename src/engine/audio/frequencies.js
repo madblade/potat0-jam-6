@@ -142,44 +142,42 @@ const NoteFrequencies = {
     C8: 4186.01
 };
 
+const spaceSustain = .2;
+const vowelSustain = .1;
+const shortConsonantSustain = .03;
+const longConsonantSustain = .05;
+
 const AlphabetFrequencies = new Map([
-    [' ', [NoteFrequencies.E2, .1]],
+    [' ', [NoteFrequencies.E2, spaceSustain]],
 
-    ['a', [NoteFrequencies.E2, .4]],
+    ['a', [NoteFrequencies.E2, vowelSustain]],
+    ['e', [NoteFrequencies.B3, vowelSustain]],
+    ['o', [NoteFrequencies.E4, vowelSustain]],
+    ['u', [NoteFrequencies.D5, vowelSustain]],
+    ['i', [NoteFrequencies.F3, vowelSustain]],
+    ['y', [NoteFrequencies.A6, vowelSustain]],
 
-    ['b', [NoteFrequencies.F2, .3]],
-    ['c', [NoteFrequencies.G2, .3]],
-    ['d', [NoteFrequencies.A3, .3]],
+    ['b', [NoteFrequencies.F2, shortConsonantSustain]],
+    ['c', [NoteFrequencies.G2, shortConsonantSustain]],
+    ['d', [NoteFrequencies.A3, shortConsonantSustain]],
+    ['g', [NoteFrequencies.D3, shortConsonantSustain]],
+    ['h', [NoteFrequencies.E3, shortConsonantSustain]],
+    ['j', [NoteFrequencies.G3, shortConsonantSustain]],
+    ['k', [NoteFrequencies.A4, shortConsonantSustain]],
+    ['p', [NoteFrequencies.F4, shortConsonantSustain]],
+    ['q', [NoteFrequencies.G4, shortConsonantSustain]],
+    ['t', [NoteFrequencies.C5, shortConsonantSustain]],
+    ['x', [NoteFrequencies.G5, shortConsonantSustain]],
 
-    ['e', [NoteFrequencies.B3, .4]],
-
-    ['f', [NoteFrequencies.C3, .3]],
-    ['g', [NoteFrequencies.D3, .3]],
-    ['h', [NoteFrequencies.E3, .3]],
-
-    ['i', [NoteFrequencies.F3, .4]],
-
-    ['j', [NoteFrequencies.G3, .3]],
-    ['k', [NoteFrequencies.A4, .3]],
-    ['l', [NoteFrequencies.B4, .3]],
-    ['m', [NoteFrequencies.C4, .3]],
-    ['n', [NoteFrequencies.D4, .3]],
-
-    ['o', [NoteFrequencies.E4, .4]],
-
-    ['p', [NoteFrequencies.F4, .3]],
-    ['q', [NoteFrequencies.G4, .3]],
-    ['r', [NoteFrequencies.A5, .3]],
-    ['s', [NoteFrequencies.B5, .3]],
-    ['t', [NoteFrequencies.C5, .3]],
-
-    ['u', [NoteFrequencies.D5, .4]],
-
-    ['v', [NoteFrequencies.E5, .3]],
-    ['w', [NoteFrequencies.F5, .3]],
-    ['x', [NoteFrequencies.G5, .3]],
-    ['y', [NoteFrequencies.A6, .3]],
-    ['z', [NoteFrequencies.B6, .3]],
+    ['l', [NoteFrequencies.B4, longConsonantSustain]],
+    ['r', [NoteFrequencies.A5, longConsonantSustain]],
+    ['w', [NoteFrequencies.F5, longConsonantSustain]],
+    ['f', [NoteFrequencies.C3, longConsonantSustain]],
+    ['m', [NoteFrequencies.C4, longConsonantSustain]],
+    ['n', [NoteFrequencies.D4, longConsonantSustain]],
+    ['s', [NoteFrequencies.B5, longConsonantSustain]],
+    ['v', [NoteFrequencies.E5, longConsonantSustain]],
+    ['z', [NoteFrequencies.B6, longConsonantSustain]],
 ]);
 
 export { AlphabetFrequencies };

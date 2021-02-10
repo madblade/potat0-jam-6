@@ -1,7 +1,7 @@
 
 'use strict';
 
-let GamepadListenerModule = {
+let GamepadActionModule = {
 
     rotateCameraFromRightStickGamepad()
     {
@@ -35,4 +35,4 @@ let GamepadListenerModule = {
 
 };
 
-export { GamepadListenerModule };
+export { GamepadActionModule };

@@ -4,11 +4,11 @@
 
 'use strict';
 
-import extend from '../../../extend.js';
+import extend                   from '../../../extend.js';
 
-import { FirstPersonModule } from './first-person.js';
-import { ListenerModule } from './listeners.js';
-import { PointerLockModule } from './pointerlockcontrols.js';
+import { FirstPersonModule }    from './first-person.js';
+import { ListenerModule }       from './listeners.js';
+import { PointerLockModule }    from './pointerlockedcontrols.js';
 
 let MouseModule = {
 

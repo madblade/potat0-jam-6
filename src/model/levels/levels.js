@@ -36,31 +36,6 @@ extend(Levels.prototype, {
         return level;
     },
 
-    // TODO remove that (used to be server-bound)
-    update(data)
-    {
-        data = JSON.parse(data);
-
-        let map = this.games;
-        map.clear();
-
-        // For all kinds.
-        for (let property in data) {
-            if (!data.hasOwnProperty(property)) continue;
-            let games = data[property];
-            map.set(property, games);
-        }
-
-        this.enterLevels();
-    },
-
-    enterLevels()
-    {
-        let app = this.app;
-        let map = this.games;
-        app.setState('level-select', map);
-    }
-
 });
 
 export { Levels };

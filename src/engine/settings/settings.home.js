@@ -13,11 +13,11 @@ let HomeModule = {
         return `
             <div class="container">
                 <table class="table border rounded noselect" style="width:100%">
+                <tr id="home"><td>Back to Main Menu</td></tr>
                 <tr id="graphics"><td>Graphics</td></tr>
                 <tr id="gameplay"><td>Gameplay</td></tr>
                 <tr id="audio"><td>Audio</td></tr>
                 <tr id="return"><td>Resume Game</td></tr>
-                <tr id="home"><td>Main Menu</td></tr>
                 </table>
             </div>
         `;
@@ -54,7 +54,7 @@ let HomeModule = {
         rn.click(() => {
             this.unlistenSettingsMenu();
             this.stateManager.setState('ingame');
-            this.controlsEngine.requestLock();
+            this.controlsEngine.requestStartControls();
             this.app.setFocused(true);
         });
         rn.mouseenter(() => audio.playMenuSound());

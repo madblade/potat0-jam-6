@@ -34,9 +34,10 @@ extend(PreIngameState.prototype, {
             .fadeIn();
 
         $('#request-pl').click(() => {
-            this.stateManager.setState('ingame');
-            this.stateManager.app.engine.controls.requestLock();
-            this.stateManager.app.setFocused(true);
+            const state = this.stateManager;
+            state.setState('ingame');
+            state.app.engine.controls.requestStartControls();
+            state.app.setFocused(true);
         });
     },
 

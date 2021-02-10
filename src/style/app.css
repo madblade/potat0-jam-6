@@ -14,6 +14,15 @@
 @import 'settings.css';
 /* endinject */
 
+/* This removes the resizing glitch (no scrolling) */
+body, html {
+    overflow: hidden !important;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
 .browserupgrade {
     margin: 0.2em 0;
     background: #ccc;

@@ -51,7 +51,7 @@ let TouchListenerModule = {
                     clientModel.triggerChange('camera', ['toggle']);
                 break;
             case 'home': // Only on press
-                if (isHeld) this.touchLockChanged(false);
+                if (isHeld) this.touchControlsStatusChanged(false);
                 break;
         }
     },

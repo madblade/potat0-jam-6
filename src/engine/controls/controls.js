@@ -29,6 +29,9 @@ let UI = function(app)
     // and a list of keys actually pressed.
     this.keyControls = {};
 
+    // Gamepad controller.
+    this.setupGamepad();
+
     // Other input methods.
     this.touchControlsEnabled = false;
     this.isTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints > 0;
@@ -62,6 +65,7 @@ extend(UI.prototype, {
             this.setupTouch();
         } else {
             this.setupKeyboard();
+            this.setupGamepad();
             this.setupMouse();
         }
         this.setupWindowListeners();
@@ -81,17 +85,18 @@ extend(UI.prototype, {
             this.stopTouchListeners();
         } else {
             this.stopKeyboardListeners();
+            this.stopGamepadListeners();
             this.stopMouseListeners();
         }
         this.stopWindowListeners();
     },
 
-    requestLock()
+    requestStartControls()
     {
         if (this.isTouch)
-            this.requestTouchLock();
+            this.startTouchControls();
         else
-            this.requestPointerLock();
+            this.startPointerLockedControls();
     },
 
     updateControlsDevice()

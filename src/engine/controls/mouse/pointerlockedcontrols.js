@@ -72,13 +72,14 @@ let PointerLockModule = {
         b.requestPointerLock();
     },
 
-    requestPointerLock()
+    startPointerLockedControls()
     {
         let controlsEngine = this.app.engine.controls;
         let b = document.body;
         b.requestPointerLock();
 
         controlsEngine.startKeyboardListeners();
+        controlsEngine.startGamepadListeners();
         controlsEngine.startMouseListeners();
         controlsEngine.startWindowListeners();
     },

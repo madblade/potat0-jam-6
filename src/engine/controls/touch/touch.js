@@ -59,7 +59,8 @@ let TouchModule = {
         widget.element.style.visibility = 'hidden';
     },
 
-    requestTouchLock()
+    // v This is the entrypoint.
+    startTouchControls()
     {
         this.touchControlsEnabled = true;
         let controlsEngine = this.app.engine.controls;
@@ -67,13 +68,13 @@ let TouchModule = {
         controlsEngine.startWindowListeners();
     },
 
-    touchLockChanged(isTouchLocked)
+    touchControlsStatusChanged(isTouchEnabled)
     {
         // Exits from lock status.
         let app = this.app;
-        app.engine.controls.touchControlsEnabled = isTouchLocked;
+        app.engine.controls.touchControlsEnabled = isTouchEnabled;
 
-        if (!isTouchLocked) {
+        if (!isTouchEnabled) {
             app.setState('settings');
             app.setFocused(false);
         }

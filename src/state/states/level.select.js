@@ -36,7 +36,6 @@ let LevelSelectState = function(stateManager)
             </div>
         </div>
 
-        <!-- TODO LOAD from save state -->
         <div class="input-group">
             <div class="custom-file">
                 <input type="file" class="custom-file-input" id="load-game-path" disabled>

@@ -14,7 +14,7 @@ let ListenerModule = {
     {
         let app = this.app;
 
-        $(window).keydown(function(event) {
+        $(window).keydown(event => {
             event.preventDefault();
             if (!event.keyCode) { return; }
             if (app.getState() !== 'ingame') return;
@@ -95,7 +95,7 @@ let ListenerModule = {
                 default:
                 // this.stopKeyboardInteraction();
             }
-        }.bind(this));
+        });
     },
 
     // Manage alt-tab like border effects
@@ -112,7 +112,7 @@ let ListenerModule = {
     {
         let app = this.app;
 
-        $(window).keyup(function(event)
+        $(window).keyup(event =>
         {
             event.preventDefault();
             if (!event.keyCode) return;
@@ -149,7 +149,7 @@ let ListenerModule = {
                     break;
                 default:
             }
-        }.bind(this));
+        });
     },
 
     unregisterKeyDown()

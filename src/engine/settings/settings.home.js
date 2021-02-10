@@ -77,13 +77,13 @@ let HomeModule = {
 
     listenReturn()
     {
-        $('#return').click(function() {
+        $('#return').click(() => {
             $('#return').off('click');
             $('#announce')
                 .empty()
                 .append(this.getHomeHTML());
             this.listenHome();
-        }.bind(this));
+        });
     }
 
 };

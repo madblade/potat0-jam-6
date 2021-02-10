@@ -83,43 +83,8 @@ extend(MainMenuState.prototype, {
             audio.playMenuSound();
         });
 
-        // Init control graphics from model.
-        const iconVolume = $('#volume-status');
-        const volumeControl = $('#main-volume-controller');
-        const v = Math.floor(audio.getVolume() * 100);
-        volumeControl.val(v);
-        if (v === 0 || audio.isMute())
-            iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
-        else
-            iconVolume.html('<i class="fas fa-volume-up fa-2x">');
-
-        // Listen to volume control.
-        volumeControl.on('input change', i => {
-            const newVolume = parseInt(i.target.value, 10);
-            audio.setVolume(newVolume / 100);
-            if (newVolume === 0)
-                iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
-            else
-                iconVolume.html('<i class="fas fa-volume-up fa-2x">');
-        });
-        volumeControl.change(() => {
-            audio.playText('Cxy');
-        });
-        iconVolume.click(() => {
-            const isMute = audio.isMute();
-            if (isMute)
-            {
-                const newV = Math.floor(audio.getVolume() * 100);
-                volumeControl.val(newV);
-                iconVolume.html('<i class="fas fa-volume-up fa-2x">');
-                audio.unMute();
-            }
-            else
-            {
-                iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
-                audio.mute();
-            }
-        });
+        const settings = app.engine.settings;
+        settings.startVolumeController();
     },
 
     start()
@@ -147,10 +112,8 @@ extend(MainMenuState.prototype, {
         bl.off('click');
         bl.off('mouseenter');
 
-        const iconVolume = $('#volume-status');
-        iconVolume.off('click');
-        const volumeControl = $('#main-volume-controller');
-        volumeControl.off('input change');
+        const settings = this.stateManager.app.engine.settings;
+        settings.stopVolumeController();
     },
 
     end()

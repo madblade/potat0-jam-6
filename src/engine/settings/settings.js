@@ -49,9 +49,9 @@ extend(Settings.prototype, {
     {
         // Fade out settings menu.
         this.unlistenSettingsMenu();
-        return new Promise(function(resolve) {
+        return new Promise(resolve => {
             let settings = $('#announce');
-            settings.fadeOut(200, function() {
+            settings.fadeOut(200, () => {
                 settings.empty().removeClass('settings');
                 resolve();
             });
@@ -60,7 +60,7 @@ extend(Settings.prototype, {
 
     unlisten()
     {
-        this.listeners.forEach(function(listener) {
+        this.listeners.forEach(listener => {
             let element = $(`#${listener}`);
             element.off('click');
             element.off('keydown');

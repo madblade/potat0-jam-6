@@ -26,6 +26,10 @@ let Notes = function(audio)
     this.mainVoiceMaxVolume = 0.0;
     this.mainVoice = null;
     this.mainOscillator = null;
+
+    // hack to fix an extremely annoying FF bug
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1171438
+    this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 };
 
 extend(Notes.prototype, {
@@ -107,7 +111,7 @@ extend(Notes.prototype, {
             setTimeout(() =>
             {
                 this.mainVoice.setVolume(0.);
-                this.isSingingInMenu = false;
+                this.fadeOutVolumeIfFirefox(audioContext);
             }, sustain * 1e3);
         }
     },
@@ -116,7 +120,7 @@ extend(Notes.prototype, {
     {
         let cleanedText = text
             .replace(/[^a-zA-Z\s]/gi, '') // remove non alphabetic
-            .trim() // remove trailing spaces
+            // .trim() // remove trailing spaces
             .toLowerCase()
             .replace(/\s+/g, ' '); // reduce spaces
 
@@ -125,7 +129,10 @@ extend(Notes.prototype, {
         const wsw = this.whoSingsWhat;
         wsw.set(threeAudio, cleanedText); // remainder of the text
 
-        this.mainVoice.setVolume(this.mainVoiceMaxVolume);
+        this.fadeInVolumeIfFirefox(this.mainVoiceMaxVolume, listener.context);
+        if (!this.isFirefox)
+            this.mainVoice.setVolume(this.mainVoiceMaxVolume);
+
         this.singLetter(firstLetter, threeAudio, listener,
             // CAUTION this last argument is passed only
             // to setup a chain in the menu (where animationFrame is not available)
@@ -164,8 +171,30 @@ extend(Notes.prototype, {
             setTimeout(() =>
             {
                 this.mainVoice.setVolume(0.);
+                this.fadeOutVolumeIfFirefox(audioContext);
             }, sustain * 1e3);
         }
+    },
+
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1171438
+    fadeInVolumeIfFirefox(volume, audioContext)
+    {
+        if (!this.isFirefox) return;
+        const gain = this.mainVoice.gain;
+        const ct = audioContext.currentTime;
+        const maxV = this.audioEngine.settings.globalVolume;
+        gain.gain.setValueAtTime(0, ct);
+        gain.gain.linearRampToValueAtTime(maxV, ct + .05);
+    },
+
+    fadeOutVolumeIfFirefox(audioContext)
+    {
+        if (!this.isFirefox) return;
+        const gain = this.mainVoice.gain;
+        const ct = audioContext.currentTime;
+        const maxV = this.audioEngine.settings.globalVolume;
+        gain.gain.setValueAtTime(maxV, ct);
+        gain.gain.linearRampToValueAtTime(0, ct + .05);
     }
 
 });

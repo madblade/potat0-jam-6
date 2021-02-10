@@ -23,7 +23,7 @@ let Notes = function(audio)
     // main singer
     this.singingHandle = 0;
 
-    this.mainVoiceMaxVolume = 0.5;
+    this.mainVoiceMaxVolume = 0.0;
     this.mainVoice = null;
     this.mainOscillator = null;
 };
@@ -58,23 +58,19 @@ extend(Notes.prototype, {
         const audioContext = listener.context;
         const oscillator = audioContext.createOscillator();
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(144, voice.context.currentTime);
+        const currentTime = voice.context.currentTime;
+        oscillator.frequency.setValueAtTime(144, currentTime);
         oscillator.start(0);
         voice.setNodeSource(oscillator);
-        voice.setVolume(this.mainVoiceMaxVolume);
+
+        const volume = this.mainVoiceMaxVolume;
+        voice.setVolume(volume);
+        // ^ this uses gain.setTargetAtTime() with a delta, which does render a sound
+        voice.gain.gain.setValueAtTime(volume, currentTime);
+        // ^ so we need to enforce the initial volume this way
 
         this.mainVoice = voice;
         this.mainOscillator = oscillator;
-    },
-
-    generateNote(frequency, listener)
-    {
-        assert(typeof frequency === 'number', '[Audio/Notes] Invalid frequency.');
-        const audioContext = listener.context;
-        const oscillator = audioContext.createOscillator();
-        oscillator.type = 'sine';
-        oscillator.frequency.value = frequency;
-        return oscillator;
     },
 
     singLetter(letter, threeAudio, listener,
@@ -87,8 +83,6 @@ extend(Notes.prototype, {
             console.error(`[Audio] ${letter} not found.`);
             return;
         }
-
-        this.isSingingInMenu = true;
 
         const frequency = howToSing[0];
         const sustain = howToSing[1];
@@ -170,7 +164,6 @@ extend(Notes.prototype, {
             setTimeout(() =>
             {
                 this.mainVoice.setVolume(0.);
-                this.isSingingInMenu = false;
             }, sustain * 1e3);
         }
     }

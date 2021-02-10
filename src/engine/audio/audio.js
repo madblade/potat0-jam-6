@@ -11,10 +11,9 @@ import {
     AudioLoader, PositionalAudio,
 }                         from 'three';
 
-
 // Sounds
-import SelectSound from '../../assets/audio/menu.select.wav';
-import { Notes }   from './notes';
+import { Notes }      from './notes';
+import { SFXLibrary } from './library';
 
 let AudioEngine = function(app)
 {
@@ -35,19 +34,24 @@ let AudioEngine = function(app)
     this.positionalAudioSources = [];
 
     // Audio library.
+    const library = SFXLibrary;
     this.source = null;
     this.sounds = {
-        sfx: [SelectSound],
-        positionalSfx: [],
+        sfx: library.global.map(i => i[1]), // [1] === urls
+        positionalSfx: library.positional.map(i => i[1]),
         music: []
     };
     // Sound name -> index of sound in audioSources array
-    this.soundMap = new Map([
-        ['menu', 0]
-    ]);
-    this.positionalSoundMap = new Map([
-        ['footstep', 0]
-    ]);
+    this.soundMap = new Map(
+        library.global.map((i, index) =>
+            [i[0], index] // [0] === name, index === in sources array
+        )
+    );
+    this.positionalSoundMap = new Map(
+        library.positional.map((i, index) =>
+            [i[0], index]
+        )
+    );
 
     // Loading.
     this.nbSoundsToLoad = this.sounds.sfx.length +

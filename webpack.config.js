@@ -66,7 +66,7 @@ module.exports = function(env) {
                     type: 'javascript/auto'
                 },
                 {
-                    test: /\.(png|svg|jpg|gif|fbx|glb|wav)$/,
+                    test: /\.(png|svg|jpg|gif|fbx|glb|wav|mp3)$/,
                     use: ['file-loader'],
                 },
                 {

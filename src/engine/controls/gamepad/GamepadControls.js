@@ -148,7 +148,9 @@ extend(GamepadControls.prototype, {
 
     aButtonWasUpdated(b, state, pressed, touched)
     {
-        console.log(`${b}, ${state}, ${pressed}, ${touched}`);
+        const controlsEngine = this.controlsEngine;
+        // console.log(`${b}, ${state}, ${pressed}, ${touched}`);
+
         switch (b)
         {
             case 0: // x
@@ -170,6 +172,7 @@ extend(GamepadControls.prototype, {
             case 8: // share
                 break;
             case 9: // option / select
+                controlsEngine.goToHomeMenu();
                 break;
             case 10: // L3 (stick)
                 break;
@@ -184,8 +187,10 @@ extend(GamepadControls.prototype, {
             case 15: // d-pad right
                 break;
             case 16: // ps button
+                controlsEngine.goToHomeMenu();
                 break;
             case 17: // big haptic square
+                // controlsEngine.goToHomeMenu();
                 // this.doVibration();
                 break;
         }

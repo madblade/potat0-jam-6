@@ -66,6 +66,13 @@ let PointerLockModule = {
         });
     },
 
+    exitPointerLock()
+    {
+        const d = document;
+        if ('mozExitPointerLock' in d) d.mozExitPointerLock();
+        else if ('exitPointerLock' in d) d.exitPointerLock();
+    },
+
     requestPointerLockAgain()
     {
         let b = document.body;

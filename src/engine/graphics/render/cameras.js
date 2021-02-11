@@ -56,6 +56,7 @@ let CameraManager = function(graphicsEngine)
     this.oldTheta0 = 0;
     this.oldTheta1 = 0;
     this.correctSpikes = false;
+    this._r = new Vector4(0, 0, 0, 0);
     this._rotation = [0, 0, 0, 0];
     this._acc = [0, 0, 0, 0];
 };
@@ -255,8 +256,6 @@ extend(CameraManager.prototype, {
         let incoming = this.incomingRotationEvents;
         if (incoming.length < 1) return;
 
-        const rotation = this._rotation;
-        rotation.fill(0);
         const acc = this._acc;
         acc.fill(0);
 
@@ -269,6 +268,7 @@ extend(CameraManager.prototype, {
             acc[2] = inc[2];
             acc[3] = inc[3];
         }
+
         // Chrome (there is a bug in Chrome for that! insane.)
         else if (incoming.length > 1)
         {
@@ -312,25 +312,16 @@ extend(CameraManager.prototype, {
             }
         }
 
-        let rot = [0, 0, 0, 0];
-        rotation[0] = rot[0];
-        rotation[1] = rot[1];
-        rotation[2] = rot[2];
-        rotation[3] = rot[3];
-
+        // Flush.
         this.incomingRotationEvents.length = 0;
-        rot = this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3]);
+
+        const rotation = this._rotation;
+        rotation.fill(0);
+        this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3], rotation);
 
         // Here we could perform additional filtering
         if (rotation)
         {
-            // console.log(`
-            //     ${rotation[0].toFixed(4)},
-            //     ${rotation[1].toFixed(4)};
-            //     ${rotation[2].toFixed(4)},
-            //     ${rotation[3].toFixed(4)}
-            // `);
-
             let clientModel = this.graphicsEngine.app.model.frontend;
             clientModel.triggerEvent('r', rotation);
         }
@@ -465,7 +456,7 @@ extend(CameraManager.prototype, {
         camera.setXRotation(theta1);
     },
 
-    moveCameraFromMouse(relX, relY, absX, absY)
+    moveCameraFromMouse(relX, relY, absX, absY, result)
     {
         // Rotate main camera.
         let camera = this.mainCamera;
@@ -503,7 +494,11 @@ extend(CameraManager.prototype, {
         // drunken controls: tmpQuaternion.set(- movementY * 0.002, - movementX * 0.002, 0, 1).normalize();
         // camera.quaternion.multiply(tmpQuaternion);
         // camera.rotation.setFromQuaternion(camera.quaternion, camera.rotation.order);
-        return [rotationZ, rotationX, theta0, theta1];
+        if (!result) return;
+        result[0] = rotationZ;
+        result[1] = rotationX;
+        result[2] = theta0;
+        result[3] = theta1;
     },
 
     updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0)

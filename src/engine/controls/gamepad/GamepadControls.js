@@ -21,7 +21,7 @@ let GamepadControls = function(controlsEngine)
     // main gamepad
     this.mainGamepad = null;
     this.mainGamepadState = {
-        buttons: new Array(17),
+        buttons: new Array(18),
         axes: new Array(4)
     };
     this.initMainGamepadState();
@@ -100,7 +100,7 @@ extend(GamepadControls.prototype, {
         const lastButtonStates = this.mainGamepadState.buttons;
         const newButtonStates = gamepad.buttons;
         const nbButtons = lastButtonStates.length;
-        assert(nbButtons === 17, `[Gamepad] Did not expect ${nbButtons} buttons.`);
+        assert(nbButtons === 18, `[Gamepad] Did not expect ${nbButtons} buttons.`);
         for (let b = 0; b < nbButtons; ++b)
         {
             let newState = newButtonStates[b];
@@ -127,15 +127,20 @@ extend(GamepadControls.prototype, {
         const lastStickStates = this.mainGamepadState.axes;
         const newStickStates = gamepad.axes;
         const nbStickAxes = newStickStates.length;
-        assert(nbStickAxes === 4,`[Gamepad] Did not expect ${nbStickAxes} axes.`);
-        for (let s = 0; s < nbStickAxes; ++s)
+        assert(nbStickAxes === 4, `[Gamepad] Did not expect ${nbStickAxes} axes.`);
+        for (let s = 0; s < nbStickAxes / 2; ++s)
         {
-            let a = newStickStates[s];
-            if (Math.abs(a) < 0.1) a = 0.;
-            if (a !== lastStickStates[s])
+            const s1 = 2 * s;
+            const s2 = s1 + 1;
+            let a1 = newStickStates[s1];
+            let a2 = newStickStates[s2];
+            if (Math.abs(a1) < 0.1) a1 = 0.;
+            if (Math.abs(a2) < 0.1) a2 = 0.;
+            if (a1 !== lastStickStates[s1] || a2 !== lastStickStates[s2])
             {
-                lastStickStates[s] = a;
-                this.aStickWasUpdated(s, a);
+                lastStickStates[s1] = a1;
+                lastStickStates[s2] = a2;
+                this.aStickWasUpdated(s1, s2, a1, a2);
             }
         }
     },
@@ -143,12 +148,66 @@ extend(GamepadControls.prototype, {
     aButtonWasUpdated(b, state, pressed, touched)
     {
         console.log(`${b}, ${state}, ${pressed}, ${touched}`);
-        this.doVibration();
+        switch (b)
+        {
+            case 0: // x
+                break;
+            case 1: // o
+                break;
+            case 2: // square
+                break;
+            case 3: // triangle
+                break;
+            case 4: // L1
+                break;
+            case 5: // R1
+                break;
+            case 6: // L2 (progressive on DS4)
+                break;
+            case 7: // R2 (ditto)
+                break;
+            case 8: // share
+                break;
+            case 9: // option / select
+                break;
+            case 10: // L3 (stick)
+                break;
+            case 11: // R3 (stick)
+                break;
+            case 12: // d-pad up
+                break;
+            case 13: // d-pad down
+                break;
+            case 14: // d-pad left
+                break;
+            case 15: // d-pad right
+                break;
+            case 16: // ps button
+                break;
+            case 17: // big haptic square
+                // this.doVibration();
+                break;
+        }
     },
 
-    aStickWasUpdated(s, value)
+    aStickWasUpdated(axis1, axis2, val1, val2)
     {
-        console.log(`${s}, ${value}`);
+        // console.log(`${s}, ${value}`);
+        assert(
+            axis2 === axis1 + 1 && (axis1 === 0 || axis1 === 2),
+            '[Controls] Unexpected stick state.'
+        );
+
+        if (axis1 === 0) // left stick
+        {
+            // val1 x // left -
+            // val2 y // up -
+        }
+        else if (axis1 === 2) // right stick
+        {
+            // val1 x // left -
+            // val2 y // up -
+        }
     },
 
     doVibration()
@@ -159,7 +218,7 @@ extend(GamepadControls.prototype, {
         a.playEffect('dual-rumble', {
             startDelay: 0,
             duration: 100,
-            weakMagnitude: 0.4,
+            weakMagnitude: 1.0,
             strongMagnitude: 1.0
         });
     },

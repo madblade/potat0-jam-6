@@ -37,6 +37,7 @@ let UI = function(app)
     this.isTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints > 0;
     if (this.isTouch)
     {
+        console.log('[Controls] Touch device detected.');
         this.touch = {
             // Stick states
             leftX: 0, leftY: 0,

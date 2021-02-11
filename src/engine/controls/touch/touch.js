@@ -38,6 +38,7 @@ let TouchModule = {
             console.error('[Touch] Trying to initialize touch on non-touch device.');
             return;
         }
+        console.log('[Touch] Starting touch listeners.');
 
         // Reset sticks
         let touch = this.touch;

@@ -857,7 +857,8 @@ MobileWidgetControls.prototype.resize = function()
         window.scrollTo(0, document.body.scrollHeight);
 
         // Recompute everything.
-        this.init();
+        if (this) // (when using debugger)
+            this.init();
     }, 100 // Don’t resize every frame.
     );
 };

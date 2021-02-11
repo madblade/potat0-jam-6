@@ -15,7 +15,9 @@ let ActiveControlsModule = {
             left: false,
             up: false,
             down: false,
-            run: false
+            run: false,
+
+            vec: false, // for continuous input
         };
     }
 

@@ -117,6 +117,12 @@ let TriggersModule = {
                 break;
 
             case 'vec': // TODO [CONTROLS] that’s for the mobile / controller api
+                ak.vec = true;
+                addEvent(); // continuous input
+                break;
+            case 'vecx':
+                ak.vec = false;
+                addEvent();
                 break;
 
             case 'run':

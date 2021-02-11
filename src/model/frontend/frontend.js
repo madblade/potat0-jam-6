@@ -41,9 +41,9 @@ extend(FrontEnd.prototype, {
         this.selfComponent.triggerChange('camera-update', position);
     },
 
-    triggerEvent(type, data)
+    triggerEvent(type, action, data)
     {
-        this.eventComponent.triggerEvent(type, data);
+        this.eventComponent.triggerEvent(type, action, data);
     },
 
     triggerChange(type, data)

@@ -33,24 +33,24 @@ extend(EventComponent.prototype, {
         this.activeControls = this.getActiveControls();
     },
 
-    triggerEvent(type, data)
+    triggerEvent(type, action, data)
     {
         switch (type)
         {
             case 'm':
-                this.triggerMovement(type, data);
+                this.triggerMovement(type, action, data);
                 break;
             case 'a':
-                this.triggerAction(type, data);
+                this.triggerAction(type, action);
                 break;
             case 'r':
-                this.triggerRotation(type, data);
+                this.triggerRotation(type, action);
                 break;
             case 'u': // use item
-                this.triggerUse(type, data);
+                this.triggerUse(type, action);
                 break;
             case 'ray': // Ray casted.
-                this.triggerRayAction(type, data);
+                this.triggerRayAction(type, action);
                 break;
             default:
                 break;

@@ -86,10 +86,10 @@ let Level0 = function(title, id)
                 '<h3>made for <b>Potat0 Game Jam</b> No.6</h3>with m&alpha;dengine',
                 '<h1>Rad Yarns</h1>', // main
             ],
-            fadeInTitle: 1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1000,  // time fade out each title
-            keepTitle: 2000,    // time to keep each title full brightness
-            fadeOutSplash: 3000, // time to fade out the title screen
+            fadeInTitle: 0, //1000,   // for each title, time in milliseconds
+            fadeOutTitle: 0, //1000,  // time fade out each title
+            keepTitle: 0, //2000,    // time to keep each title full brightness
+            fadeOutSplash: 0, //3000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

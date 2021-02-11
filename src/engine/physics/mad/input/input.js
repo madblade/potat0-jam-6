@@ -43,6 +43,7 @@ let PhysicsInputModule = {
                 case 'l': if (!d[3]) changed = true; d[3] = !0; break;
                 case 'u': if (!d[4]) changed = true; d[4] = !0; break;
                 case 'd': if (!d[5]) changed = true; d[5] = !0; break;
+                case 'vec': cm._ww = e[2]; changed = true; break;
 
                 case 'fx': if (d[0]) changed = true; d[0] = !1; break;
                 case 'bx': if (d[1]) changed = true; d[1] = !1; break;
@@ -50,6 +51,7 @@ let PhysicsInputModule = {
                 case 'lx': if (d[3]) changed = true; d[3] = !1; break;
                 case 'ux': if (d[4]) changed = true; d[4] = !1; break;
                 case 'dx': if (d[5]) changed = true; d[5] = !1; break;
+                case 'vecx': cm._ww = null; changed = true; break;
                 default:
                     return;
             }
@@ -61,11 +63,13 @@ let PhysicsInputModule = {
     computeWantedVelocity(collisionModel)
     {
         const wv = collisionModel.wantedVelocity;
+        const ww = collisionModel._ww;
+
         const d = collisionModel._d;
         const isFw = d[0] !== d[1];
         const isRg = d[2] !== d[3];
         const isUd = d[4] !== d[5];
-        if (!isFw && !isRg && !isUd)
+        if (!isFw && !isRg && !isUd && !ww)
         {
             collisionModel.wantsToMove = false;
             wv.set(0, 0, 0);
@@ -99,11 +103,22 @@ let PhysicsInputModule = {
         const to = this._fto;
         from.set(0, 1, 0);
         // forward is +y, right is +x, up is +z
-        to.set(
-            d[2] ? 1 : d[3] ? -1 : 0, // right
-            d[0] ? 1 : d[1] ? -1 : 0, // forward
-            0, // d[4] ? 1 : d[5] ? -1 : 0 // up
-        ).normalize();
+
+        let norm = 1.0;
+        if (ww) // from sticks
+        {
+            to.set(ww[0], ww[1], 0);
+            norm = to.length();
+            to.multiplyScalar(1 / norm);
+            norm *= 10.;
+        }
+        else
+            to.set(
+                d[2] ? 1 : d[3] ? -1 : 0, // right
+                d[0] ? 1 : d[1] ? -1 : 0, // forward
+                0, // d[4] ? 1 : d[5] ? -1 : 0 // up
+            ).normalize();
+
         if (to.manhattanLength() > 0)
         {
             lq.setFromUnitVectors(from, to);
@@ -111,8 +126,8 @@ let PhysicsInputModule = {
         }
         else wv.set(0, 0, 0);
         wv.z = d[4] ? 1 : d[5] ? -1 : 0;
-        // if (!d[4])
-        wv.multiplyScalar(0.1);
+
+        wv.multiplyScalar(norm * 0.1);
 
         if (wv.manhattanLength() > 0) collisionModel.wantsToMove = true;
     },

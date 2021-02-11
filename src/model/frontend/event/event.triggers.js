@@ -78,18 +78,18 @@ let TriggersModule = {
         }
     },
 
-    triggerMovement(type, data)
+    triggerMovement(type, action, data)
     {
         let ak = this.activeControls;
         let events = this.eventsToPush;
-        let addEvent = function() { events.push([type, data]); };
+        let addEvent = function() { events.push([type, action, data]); };
 
         let sameTypeEvents = this.getEventsOfType(type);
         if (sameTypeEvents.length > 0) {
             // XXX [PERF] compress events
         }
 
-        switch (data)
+        switch (action)
         {
             case 'f':
                 if (!ak.forward) addEvent();

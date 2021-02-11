@@ -27,7 +27,7 @@ let GamepadControls = function(controlsEngine)
     this.initMainGamepadState();
 
     // Flags.
-    this.hasAtLeastOneGamepad = false;
+    // this.hasAtLeastOneGamepad = false;
     this.started = false;
 };
 
@@ -46,7 +46,7 @@ extend(GamepadControls.prototype, {
             '[GamepadControls] Only one gamepad at a time is supported.'
         );
 
-        this.hasAtLeastOneGamepad = true;
+        // this.hasAtLeastOneGamepad = true;
         this.numberOfGamepadsConnected++;
         this.gamepads[gamepad.index] = gamepad;
         this.mainGamepad = gamepad;
@@ -59,7 +59,7 @@ extend(GamepadControls.prototype, {
         // Switch to next detected gamepad if necessary.
         if (this.numberOfGamepadsConnected < 1)
         {
-            this.hasAtLeastOneGamepad = false;
+            // this.hasAtLeastOneGamepad = false;
         }
         else
         {
@@ -86,7 +86,7 @@ extend(GamepadControls.prototype, {
 
     refreshGamepads()
     {
-        if (!this.started || !this.hasAtLeastOneGamepad) return;
+        if (!this.started) return; // || !this.hasAtLeastOneGamepad) return;
 
         // const gamepad = this.mainGamepad;
         // On Chrome we have to constantly keep polling the gamepads :(
@@ -94,6 +94,7 @@ extend(GamepadControls.prototype, {
             navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : [];
         if (gamepads.length < 1) return;
         const gamepad = gamepads[0];
+        if (!gamepad) return;
         this.mainGamepad = gamepad;
 
         // Refresh buttons
@@ -136,11 +137,11 @@ extend(GamepadControls.prototype, {
             let a2 = newStickStates[s2];
             if (Math.abs(a1) < 0.1) a1 = 0.;
             if (Math.abs(a2) < 0.1) a2 = 0.;
-            if (a1 !== lastStickStates[s1] || a2 !== lastStickStates[s2])
+            if (a1 !== lastStickStates[s1] || a2 !== lastStickStates[s2] || a1 !== 0 || a2 !== 0)
             {
                 lastStickStates[s1] = a1;
                 lastStickStates[s2] = a2;
-                this.aStickWasUpdated(s1, s2, a1, a2);
+                this.aStickWasHeldOrReleased(s1, s2, a1, a2);
             }
         }
     },
@@ -190,23 +191,32 @@ extend(GamepadControls.prototype, {
         }
     },
 
-    aStickWasUpdated(axis1, axis2, val1, val2)
+    aStickWasHeldOrReleased(axis1, axis2, val1, val2)
     {
         // console.log(`${s}, ${value}`);
         assert(
             axis2 === axis1 + 1 && (axis1 === 0 || axis1 === 2),
             '[Controls] Unexpected stick state.'
         );
+        const controlsEngine = this.controlsEngine;
 
         if (axis1 === 0) // left stick
         {
-            // val1 x // left -
-            // val2 y // up -
+            if (val1 === 0 && val2 === 0)
+                controlsEngine.stopMovePlayerFromLeftStickGamepad();
+            else
+            {
+                controlsEngine.movePlayerFromLeftStickGamepad(val1, val2);
+                // val1 x // left -
+                // val2 y // up -
+            }
         }
         else if (axis1 === 2) // right stick
         {
             // val1 x // left -
             // val2 y // up -
+            if (val1 !== 0 || val2 !== 0)
+                controlsEngine.rotateCameraFromRightStickGamepad(val1, val2);
         }
     },
 

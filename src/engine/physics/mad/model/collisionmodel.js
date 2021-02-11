@@ -59,6 +59,7 @@ let CollisionModel = function(
 
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];
+        this._ww = null;
     }
 
     // Type

@@ -37,9 +37,11 @@ extend(Physics.prototype, {
 
     refresh()
     {
-        this.madEngine.solve(); // gameplay physics
+        const dt = this.madEngine.solve(); // gameplay physics
         if (this.useBullet)
             this.bulletEngine.refresh(); // cosmetic physics
+
+        return dt;
     },
 
     addHeightMap(graphicalChunk, nbSegmentsX, nbSegmentsY)

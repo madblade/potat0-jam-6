@@ -100,10 +100,10 @@ extend(UI.prototype, {
             this.startPointerLockedControls();
     },
 
-    updateControlsDevice()
+    updateControlsDevice(dt)
     {
-        this.updateControlsGamepadDevice();
-        this.updateControlsTouchDevice();
+        this.updateControlsGamepadDevice(dt);
+        this.updateControlsTouchDevice(dt);
     }
 });
 

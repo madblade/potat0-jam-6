@@ -197,6 +197,8 @@ extend(MadEngine.prototype, {
         // (this copies p1 to p0 for dynamic entities)
         // (notice! this also pushes updates to the server model)
         this.integrator.applyIntegration();
+
+        return relativeDt;
     },
 
     getTimeDilation()

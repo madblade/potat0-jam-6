@@ -85,7 +85,7 @@ extend(GamepadControls.prototype, {
         this.initMainGamepadState();
     },
 
-    refreshGamepads()
+    refreshGamepads(dt)
     {
         if (!this.started) return; // || !this.hasAtLeastOneGamepad) return;
 
@@ -142,7 +142,7 @@ extend(GamepadControls.prototype, {
             {
                 lastStickStates[s1] = a1;
                 lastStickStates[s2] = a2;
-                this.aStickWasHeldOrReleased(s1, s2, a1, a2);
+                this.aStickWasHeldOrReleased(s1, s2, a1, a2, dt);
             }
         }
     },
@@ -155,8 +155,10 @@ extend(GamepadControls.prototype, {
         switch (b)
         {
             case 0: // x
+                controlsEngine.crossButton(pressed);
                 break;
             case 1: // o
+                controlsEngine.circleButton(pressed);
                 break;
             case 2: // square
                 break;
@@ -181,15 +183,19 @@ extend(GamepadControls.prototype, {
             case 11: // R3 (stick)
                 break;
             case 12: // d-pad up
+                if (pressed) controlsEngine.dPadUp();
                 break;
             case 13: // d-pad down
+                if (pressed) controlsEngine.dPadDown();
                 break;
             case 14: // d-pad left
+                if (pressed) controlsEngine.dPadLeft();
                 break;
             case 15: // d-pad right
+                if (pressed) controlsEngine.dPadRight();
                 break;
             case 16: // ps button
-                if (pressed) // only once
+                if (pressed)
                     controlsEngine.goToHomeMenu();
                 break;
             case 17: // big haptic square
@@ -199,7 +205,7 @@ extend(GamepadControls.prototype, {
         }
     },
 
-    aStickWasHeldOrReleased(axis1, axis2, val1, val2)
+    aStickWasHeldOrReleased(axis1, axis2, val1, val2, dt)
     {
         // console.log(`${s}, ${value}`);
         assert(
@@ -210,13 +216,14 @@ extend(GamepadControls.prototype, {
 
         if (axis1 === 0) // left stick
         {
+            // val1 x // left -
+            // val2 y // up -
             if (val1 === 0 && val2 === 0)
                 controlsEngine.stopMovePlayerFromLeftStickGamepad();
             else
             {
                 controlsEngine.movePlayerFromLeftStickGamepad(val1, val2);
-                // val1 x // left -
-                // val2 y // up -
+                // ^ physics input should manage moving quotas without needing dt
             }
         }
         else if (axis1 === 2) // right stick
@@ -224,7 +231,8 @@ extend(GamepadControls.prototype, {
             // val1 x // left -
             // val2 y // up -
             if (val1 !== 0 || val2 !== 0)
-                controlsEngine.rotateCameraFromRightStickGamepad(val1, val2);
+                controlsEngine.rotateCameraFromRightStickGamepad(val1, val2, dt);
+                // ^ dt needed for managing different device refresh rates
         }
     },
 

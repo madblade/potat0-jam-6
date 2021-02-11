@@ -50,7 +50,7 @@ let LevelSelectState = function(stateManager)
         </div>
 
         <div class="input-group">
-            <button class="btn btn-outline-light btn-block" id="button-return-main">
+            <button class="btn btn-outline-secondary btn-block" id="button-return-main">
                 Back
             </button>
         </div>

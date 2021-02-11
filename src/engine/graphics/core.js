@@ -149,13 +149,13 @@ let CoreModule = {
         // }
 
         // Ping physics engines.
-        physicsEngine.refresh();
+        const deltaT = physicsEngine.refresh();
 
         // Bench.
         // this.fps.update();
 
         // Update controls for Touch/Gamepad devices.
-        controlsEngine.updateControlsDevice();
+        controlsEngine.updateControlsDevice(deltaT);
 
         // Render.
         serverModel.refresh();

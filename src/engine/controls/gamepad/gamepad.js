@@ -45,10 +45,10 @@ let GamepadModule = {
         this.gamepadControls.stop();
     },
 
-    updateControlsGamepadDevice()
+    updateControlsGamepadDevice(dt)
     {
         // Ping gamepad models.
-        this.gamepadControls.refreshGamepads();
+        this.gamepadControls.refreshGamepads(dt);
     }
 
 };

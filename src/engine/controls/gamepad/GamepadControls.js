@@ -94,11 +94,13 @@ extend(GamepadControls.prototype, {
             navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : [];
         if (gamepads.length < 1) return;
         const gamepad = gamepads[0];
+        this.mainGamepad = gamepad;
 
         // Refresh buttons
         const lastButtonStates = this.mainGamepadState.buttons;
         const newButtonStates = gamepad.buttons;
         const nbButtons = lastButtonStates.length;
+        assert(nbButtons === 17, `[Gamepad] Did not expect ${nbButtons} buttons.`);
         for (let b = 0; b < nbButtons; ++b)
         {
             let newState = newButtonStates[b];
@@ -122,13 +124,45 @@ extend(GamepadControls.prototype, {
         }
 
         // Refresh sticks
-        // const sticks = this.mainGamepadState.axes;
+        const lastStickStates = this.mainGamepadState.axes;
+        const newStickStates = gamepad.axes;
+        const nbStickAxes = newStickStates.length;
+        assert(nbStickAxes === 4,`[Gamepad] Did not expect ${nbStickAxes} axes.`);
+        for (let s = 0; s < nbStickAxes; ++s)
+        {
+            let a = newStickStates[s];
+            if (Math.abs(a) < 0.1) a = 0.;
+            if (a !== lastStickStates[s])
+            {
+                lastStickStates[s] = a;
+                this.aStickWasUpdated(s, a);
+            }
+        }
     },
 
     aButtonWasUpdated(b, state, pressed, touched)
     {
         console.log(`${b}, ${state}, ${pressed}, ${touched}`);
-    }
+        this.doVibration();
+    },
+
+    aStickWasUpdated(s, value)
+    {
+        console.log(`${s}, ${value}`);
+    },
+
+    doVibration()
+    {
+        const a = this.mainGamepad.vibrationActuator;
+        assert(!!a, '[Gamepad] Vibration actuator not found.');
+        if (!a) return;
+        a.playEffect('dual-rumble', {
+            startDelay: 0,
+            duration: 100,
+            weakMagnitude: 0.4,
+            strongMagnitude: 1.0
+        });
+    },
 
 });
 

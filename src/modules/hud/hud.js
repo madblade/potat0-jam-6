@@ -13,7 +13,6 @@ let Hud = function(register)
     this.register = register;
     this.orangeColor = '#c96530';
 
-    // TODO [HUD] Here go HUD thingies.
     this.html = `
         <div id="hud" class="noselect">
             <div id="position"></div>

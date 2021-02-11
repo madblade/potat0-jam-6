@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { GamepadActionModule }   from './listeners';
+import { GamepadActionModule }   from './actions';
 import extend                    from '../../../extend';
 import { GamepadControls }       from './GamepadControls';
 

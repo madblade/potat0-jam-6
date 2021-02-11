@@ -4,10 +4,10 @@
 
 'use strict';
 
-import extend                   from '../../../extend.js';
+import extend                   from '../../../extend';
 
-import { TriggersModule }       from './event.triggers.js';
-import { ActiveControlsModule } from './event.activecontrols.js';
+import { TriggersModule }       from './event.triggers';
+import { ActiveControlsModule } from './event.activecontrols';
 
 let EventComponent = function(clientModel)
 {
@@ -76,7 +76,7 @@ extend(EventComponent.prototype, {
         {
             let currentEvent = events[eventId];
             // connectionEngine.send(currentEvent[0], currentEvent[1]);
-            // TODO [CRIT] send proper events to PhysicsEngine, bind controller
+            // TODO [CRIT] send proper events to PhysicsEngine
             let physics = this.clientModel.app.engine.physics;
             physics.pushEvent(currentEvent);
         }

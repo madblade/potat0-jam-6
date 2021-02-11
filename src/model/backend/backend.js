@@ -4,14 +4,14 @@
 
 'use strict';
 
-import extend           from '../../extend.js';
+import extend           from '../../extend';
 
-import { ChunkModel }   from './terrain/chunks.js';
-import { EntityModel }  from './entities/entities.js';
-import { SelfModel }    from './self/self.js';
-import { XModel }       from './x/x.js';
+import { ChunkModel }   from './terrain/chunks';
+import { EntityModel }  from './entities/entities';
+import { SelfModel }    from './self/self';
+import { XModel }       from './x/x';
 
-import { UpdateModule } from './updates.js';
+import { UpdateModule } from './updates';
 
 let BackEnd = function(app)
 {

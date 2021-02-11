@@ -4,9 +4,9 @@
 
 'use strict';
 
-import extend           from '../../extend.js';
-import { Chat }         from '../chat/chat.js';
-import { Hud }          from '../hud/hud.js';
+import extend           from '../../extend';
+import { Chat }         from '../chat/chat';
+import { Hud }          from '../hud/hud';
 
 let Register = function() //, app
 {

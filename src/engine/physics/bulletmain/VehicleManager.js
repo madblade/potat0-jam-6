@@ -1,6 +1,6 @@
 
-import { geometryInfo }                             from './Geometry.js';
-import { map, root }                                from './root.js';
+import { geometryInfo }                             from './Geometry';
+import { map, root }                                from './root';
 import { BoxGeometry, BufferGeometry, Group, Mesh } from 'three';
 import { CarHelper }                                from './CarHelper';
 

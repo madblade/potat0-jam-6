@@ -1,4 +1,4 @@
-import { map, root }                                   from './root.js';
+import { map, root }                                   from './root';
 import {
     BufferAttribute, BufferGeometry, Line, Mesh
 } from 'three';

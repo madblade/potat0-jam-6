@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { $ }                from '../../../modules/polyfills/dom.js';
+import { $ }                from '../../../modules/polyfills/dom';
 import { ItemsModelModule } from '../../../model/backend/self/items';
 
 let ListenerModule = {

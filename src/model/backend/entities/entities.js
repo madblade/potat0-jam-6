@@ -4,9 +4,9 @@
 
 'use strict';
 
-import extend           from '../../../extend.js';
+import extend           from '../../../extend';
 
-import { PlayerModule }                        from './player.js';
+import { PlayerModule }                        from './player';
 import { BoxBufferGeometry, MeshBasicMaterial} from 'three';
 import { EntitiesInterpolationModule }         from './entities.interpolate';
 import { EntitiesUpdateModule }                from './entities.update';

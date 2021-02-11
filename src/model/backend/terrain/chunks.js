@@ -6,7 +6,7 @@
 
 /** Model **/
 
-import extend                from '../../../extend.js';
+import extend                from '../../../extend';
 import { ChunkUpdateModule } from './chunks.update';
 
 const WorldType = Object.freeze({

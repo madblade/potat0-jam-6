@@ -9,10 +9,11 @@ let GamepadControls = function(controlsEngine)
 {
     this.controlsEngine = controlsEngine;
     // ^ this handles the following:
-    // Right stick: camera movement
-    // this.rotateCameraFromRightStickGamepad();
-    // Left stick: player movement
-    // this.movePlayerFromLeftStickGamepad();
+    // rotateCameraFromRightStickGamepad
+    // movePlayerFromLeftStickGamepad
+    // stopMovePlayerFromLeftStickGamepad
+    // goToHomeMenu
+    // etc.
 
     // keep all gamepads in a map
     this.gamepads = {};
@@ -172,7 +173,8 @@ extend(GamepadControls.prototype, {
             case 8: // share
                 break;
             case 9: // option / select
-                controlsEngine.goToHomeMenu();
+                if (pressed) // only do it once
+                    controlsEngine.goToHomeMenu();
                 break;
             case 10: // L3 (stick)
                 break;
@@ -187,7 +189,8 @@ extend(GamepadControls.prototype, {
             case 15: // d-pad right
                 break;
             case 16: // ps button
-                controlsEngine.goToHomeMenu();
+                if (pressed) // only once
+                    controlsEngine.goToHomeMenu();
                 break;
             case 17: // big haptic square
                 // controlsEngine.goToHomeMenu();

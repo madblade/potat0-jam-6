@@ -1,4 +1,4 @@
-import { ConvexHull } from './ConvexHull.js';
+import { ConvexHull } from './ConvexHull';
 import {
     BufferAttribute, BufferGeometry, CylinderGeometry,
     Float32BufferAttribute, Matrix4, SphereGeometry

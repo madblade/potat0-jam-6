@@ -4,9 +4,9 @@
 
 'use strict';
 
-import extend from '../../../extend.js';
+import extend from '../../../extend';
 
-import { TouchListenerModule }  from './listeners.js';
+import { TouchListenerModule }  from './listeners';
 import { MobileWidgetControls } from './MobileWidgetControls';
 
 let TouchModule = {

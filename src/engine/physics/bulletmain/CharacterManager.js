@@ -1,5 +1,5 @@
-import { map, root } from './root.js';
-import { Capsule }                        from './Geometry.js';
+import { map, root }                      from './root';
+import { Capsule }                        from './Geometry';
 import { Euler, Group, Mesh, Quaternion } from 'three';
 
 function CharacterManager()

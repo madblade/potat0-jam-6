@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { Portal }       from './portal.js';
+import { Portal }       from './portal';
 
 let UpdateModule = {
 

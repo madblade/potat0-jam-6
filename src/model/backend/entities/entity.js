@@ -1,6 +1,6 @@
 'use strict';
 
-import extend           from '../../../extend.js';
+import extend           from '../../../extend';
 import { Vector3 } from 'three';
 
 let Entity = function(id, graphicalComponent, worldId)

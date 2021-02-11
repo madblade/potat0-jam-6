@@ -4,8 +4,8 @@
 
 'use strict';
 
-import extend from '../../../extend.js';
-import { Camera } from './camera.js';
+import extend from '../../../extend';
+import { Camera } from './camera';
 import {
     Matrix4, PerspectiveCamera,
     Plane, Raycaster,

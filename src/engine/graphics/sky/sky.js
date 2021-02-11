@@ -9,7 +9,6 @@ import {
     UniformsUtils, DoubleSide,
     BoxBufferGeometry, Mesh, ShaderMaterial, Vector3
 } from 'three';
-// import extend from '../../../extend.js';
 
 // turbidity, 1.0, 20.0, 0.1
 // rayleigh, 0.0, 4, 0.001

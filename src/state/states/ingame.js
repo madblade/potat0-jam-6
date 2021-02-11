@@ -4,8 +4,8 @@
 
 'use strict';
 
-import extend               from '../../extend.js';
-import { $ }                from '../../modules/polyfills/dom.js';
+import extend               from '../../extend';
+import { $ }                from '../../modules/polyfills/dom';
 
 let IngameState = function(stateManager)
 {

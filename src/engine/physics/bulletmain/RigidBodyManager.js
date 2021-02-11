@@ -1,6 +1,6 @@
 
-import { Capsule, geometryInfo }  from './Geometry.js';
-import { map, root }              from './root.js';
+import { Capsule, geometryInfo }  from './Geometry';
+import { map, root }              from './root';
 import {
     BoxBufferGeometry, CylinderBufferGeometry, Euler, Group,
     Matrix4, Mesh, Quaternion, SphereBufferGeometry

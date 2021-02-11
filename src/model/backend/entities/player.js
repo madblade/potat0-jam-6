@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { Entity } from './entity.js';
+import { Entity } from './entity';
 import {
     BufferAttribute, BufferGeometry, DoubleSide, Line,
     LineDashedMaterial, Mesh, Object3D, RingBufferGeometry, ShaderMaterial

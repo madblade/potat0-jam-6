@@ -10,7 +10,7 @@ let EntitiesUpdateModule = {
     {
         if (!entities)
         {
-            console.log('Empty update @ server.sub.entities.js');
+            console.log('Empty update @ server.sub.entities');
             return;
         }
 

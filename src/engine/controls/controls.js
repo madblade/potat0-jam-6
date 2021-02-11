@@ -6,12 +6,12 @@
 
 import { $ }                from '../../modules/polyfills/dom';
 
-import extend               from '../../extend.js';
+import extend               from '../../extend';
 
-import { KeyboardModule } from './keyboard/keyboard.js';
-import { MouseModule }    from './mouse/mouse.js';
-import { TouchModule }    from './touch/touch.js';
-import { WindowModule }   from './window/window.js';
+import { KeyboardModule } from './keyboard/keyboard';
+import { MouseModule }    from './mouse/mouse';
+import { TouchModule }    from './touch/touch';
+import { WindowModule }   from './window/window';
 import { GamepadModule }  from './gamepad/gamepad';
 
 let UI = function(app)

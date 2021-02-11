@@ -4,10 +4,14 @@
 
 'use strict';
 
-import extend from '../../../extend.js';
-import { Object3D, PerspectiveCamera, Quaternion, Vector3 } from 'three';
+import extend from '../../../extend';
+import {
+    Object3D, PerspectiveCamera, Quaternion, Vector3
+} from 'three';
 
-let Camera = function(fov, aspect, nearPlane, farPlane, worldId)
+let Camera = function(
+    fov, aspect, nearPlane, farPlane, worldId
+)
 {
     // Wrap for primitive manipulation simplicity.
     let camera = new PerspectiveCamera(fov, aspect, nearPlane, farPlane);

@@ -4,13 +4,13 @@
 
 'use strict';
 
-import extend               from '../extend.js';
+import extend               from '../extend';
 import { $ }                from '../modules/polyfills/dom';
 
-import { IngameState }      from './states/ingame.js';
-import { LoadingState }     from './states/loading.js';
-import { SettingsState }    from './states/settings.js';
-import { LevelSelectState } from './states/level.select.js';
+import { IngameState }      from './states/ingame';
+import { LoadingState }     from './states/loading';
+import { SettingsState }    from './states/settings';
+import { LevelSelectState } from './states/level.select';
 import { MainMenuState }    from './states/mainmenu';
 import { PreIngameState }   from './states/pre.ingame';
 

@@ -116,7 +116,7 @@ let TriggersModule = {
                 ak.up = true;
                 break;
 
-            case 'vec': // TODO [CONTROLS] that’s for the mobile / controller api
+            case 'vec': // Gamepad movement
                 ak.vec = true;
                 addEvent(); // continuous input
                 break;

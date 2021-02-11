@@ -5,7 +5,7 @@
 
 'use strict';
 
-import extend       from '../../extend.js';
+import extend       from '../../extend';
 
 let Level = function(title, id)
 {

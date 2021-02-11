@@ -1,5 +1,5 @@
-import { ConvexGeometry, geometryInfo }               from './Geometry.js';
-import { map, root }                                  from './root.js';
+import { ConvexGeometry, geometryInfo }               from './Geometry';
+import { map, root }                                  from './root';
 import { BufferAttribute, BufferGeometry,
     Mesh, PlaneBufferGeometry, Vector3
 } from 'three';

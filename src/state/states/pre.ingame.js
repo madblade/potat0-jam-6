@@ -6,7 +6,7 @@
 
 import { $ } from '../../modules/polyfills/dom';
 
-import extend from '../../extend.js';
+import extend from '../../extend';
 
 let PreIngameState = function(stateManager)
 {

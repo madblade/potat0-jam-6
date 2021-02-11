@@ -1,14 +1,5 @@
-import { map, root }                                                    from './root.js';
+import { map, root }                                                    from './root';
 import { Float32BufferAttribute, Line, Matrix4, Vector3, VertexColors } from 'three';
-
-/**   _   _____ _   _
- *    | | |_   _| |_| |
- *    | |_ _| | |  _  |
- *    |___|_|_| |_| |_|
- *    @author lo.th / https://github.com/lo-th
- *
- *    SHOT - RAY
- */
 
 function RayCaster()
 {

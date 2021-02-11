@@ -4,7 +4,7 @@
 
 'use strict';
 
-import extend     from '../../extend.js';
+import extend     from '../../extend';
 import { Level }  from './level';
 import { Level0 } from './templates/level0';
 

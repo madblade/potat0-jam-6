@@ -6,10 +6,10 @@
 
 'use strict';
 
-import extend               from '../../extend.js';
+import extend               from '../../extend';
 
-import { SelfComponent }    from './self/self.js';
-import { EventComponent }   from './event/event.js';
+import { SelfComponent }    from './self/self';
+import { EventComponent }   from './event/event';
 
 let FrontEnd = function(app)
 {

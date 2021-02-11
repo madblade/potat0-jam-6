@@ -4,28 +4,28 @@
 
 'use strict';
 
-import extend           from './extend.js';
+import extend           from './extend';
 
 // State
-import { StateManager } from './state/states.js';
+import { StateManager } from './state/states';
 
 // Engine
-import { Graphics }     from './engine/graphics/graphics.js';
-import { AudioEngine }  from './engine/audio/audio.js';
-import { UI }           from './engine/controls/controls.js';
-import { Settings }     from './engine/settings/settings.js';
+import { Graphics }     from './engine/graphics/graphics';
+import { AudioEngine }  from './engine/audio/audio';
+import { UI }           from './engine/controls/controls';
+import { Settings }     from './engine/settings/settings';
 import { UX }           from './engine/ux/ux';
 
 // Model
-import { Levels }       from './model/levels/levels.js';
-import { BackEnd }      from './model/backend/backend.js';
-import { FrontEnd }     from './model/frontend/frontend.js';
+import { Levels }       from './model/levels/levels';
+import { BackEnd }      from './model/backend/backend';
+import { FrontEnd }     from './model/frontend/frontend';
 
 // Modules
-import { Register } from './modules/register/register.js';
+import { Register } from './modules/register/register';
 import { AI }       from './engine/ai/ai';
 import { Physics }  from './engine/physics/physics';
-// import { Polyfills }    from 'modules/polyfills/polyfills.js';
+// import { Polyfills }    from 'modules/polyfills/polyfills';
 
 // Global application structure.
 let Game = Game || { Core : {} };

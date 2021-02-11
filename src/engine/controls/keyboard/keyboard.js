@@ -4,12 +4,12 @@
 
 'use strict';
 
-import extend               from '../../../extend.js';
-import { ListenerModule }   from './listeners.js';
-import { KeysModule }       from './keys.js';
-import { LayoutAZERTY }     from './layout.azerty.js';
-import { LayoutQWERTY }     from './layout.qwerty.js';
-import { LayoutCustom }     from './layout.custom.js';
+import extend               from '../../../extend';
+import { ListenerModule }   from './listeners';
+import { KeysModule }       from './keys';
+import { LayoutAZERTY }     from './layout.azerty';
+import { LayoutQWERTY }     from './layout.qwerty';
+import { LayoutCustom }     from './layout.custom';
 
 let KeyboardModule = {
 

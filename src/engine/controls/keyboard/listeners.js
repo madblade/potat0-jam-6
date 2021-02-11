@@ -24,7 +24,6 @@ let ListenerModule = {
             let graphics = app.engine.graphics;
 
             // XXX [GAMEPLAY] numpad / num shortcuts
-            // TODO [GAMEPLAY] wire in controller continuous input
             switch (event.keyCode) {
                 case k.arrowUp:
                 case k.leftHandUp:

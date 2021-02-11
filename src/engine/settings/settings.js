@@ -4,14 +4,14 @@
 
 'use strict';
 
-import { $ }                from '../../modules/polyfills/dom.js';
+import { $ }                from '../../modules/polyfills/dom';
 
-import extend               from '../../extend.js';
+import extend               from '../../extend';
 
-import { AudioModule }      from './settings.audio.js';
-import { ControlsModule }   from './settings.controls.js';
-import { GraphicsModule }   from './settings.graphics.js';
-import { HomeModule }       from './settings.home.js';
+import { AudioModule }      from './settings.audio';
+import { ControlsModule }   from './settings.controls';
+import { GraphicsModule }   from './settings.graphics';
+import { HomeModule }       from './settings.home';
 
 let Settings = function(app)
 {

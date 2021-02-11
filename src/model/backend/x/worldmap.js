@@ -24,9 +24,9 @@
  *
  */
 
-import extend           from '../../../extend.js';
+import extend           from '../../../extend';
 
-import { XGraph }       from './tree.js';
+import { XGraph }       from './tree';
 
 let WorldMap = function(xModel) {
     this.xModel = xModel;

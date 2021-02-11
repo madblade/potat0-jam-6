@@ -7,16 +7,16 @@
 'use strict';
 
 import Worker                  from '../bulletworker/engine.worker';
-import { RigidBodyManager }    from './RigidBodyManager.js';
-import { ConstraintManager }   from './ConstraintManager.js';
-import { SoftBodyManager }     from './SoftBodyManager.js';
-import { TerrainManager }      from './TerrainManager.js';
-import { VehicleManager }      from './VehicleManager.js';
-import { CharacterManager }    from './CharacterManager.js';
-import { CollisionManager }    from './CollisionManager.js';
-import { RayCaster }           from './RayCaster.js';
-import { ConvexObjectBreaker } from './ConvexObjectBreaker.js';
-import { map, REVISION, root } from './root.js';
+import { RigidBodyManager }    from './RigidBodyManager';
+import { ConstraintManager }   from './ConstraintManager';
+import { SoftBodyManager }     from './SoftBodyManager';
+import { TerrainManager }      from './TerrainManager';
+import { VehicleManager }      from './VehicleManager';
+import { CharacterManager }    from './CharacterManager';
+import { CollisionManager }    from './CollisionManager';
+import { RayCaster }           from './RayCaster';
+import { ConvexObjectBreaker } from './ConvexObjectBreaker';
+import { map, REVISION, root } from './root';
 import {
     BoxBufferGeometry,
     CircleBufferGeometry, ConeBufferGeometry,

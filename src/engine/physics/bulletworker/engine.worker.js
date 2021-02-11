@@ -2,16 +2,16 @@
 import * as Ammo from '../../../libs/ammo3.wasm';
 import                '../../../libs/ammo3.wasm.wasm';
 
-import { math, mathExtend } from './math.js';
-import { RigidBody }        from './RigidBody.js';
-import { Constraint }       from './Constraint.js';
-import { SoftBody }         from './SoftBody.js';
-import { Terrain }          from './Terrain.js';
-import { Vehicle }          from './Vehicle.js';
-import { Character }        from './Character.js';
-import { Collision }        from './Collision.js';
-import { RayCaster }        from './RayCaster.js';
-import { map, root }        from './root.js';
+import { math, mathExtend } from './math';
+import { RigidBody }        from './RigidBody';
+import { Constraint }       from './Constraint';
+import { SoftBody }         from './SoftBody';
+import { Terrain }          from './Terrain';
+import { Vehicle }          from './Vehicle';
+import { Character }        from './Character';
+import { Collision }        from './Collision';
+import { RayCaster }        from './RayCaster';
+import { map, root }        from './root';
 
 self.onmessage = function(e)
 {

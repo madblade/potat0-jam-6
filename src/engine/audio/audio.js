@@ -4,7 +4,7 @@
 
 'use strict';
 
-import extend, { assert } from '../../extend.js';
+import extend, { assert } from '../../extend';
 import {
     Audio,
     AudioListener,

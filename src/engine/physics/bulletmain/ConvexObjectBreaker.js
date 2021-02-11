@@ -1,4 +1,4 @@
-import { ConvexBufferGeometry }        from './Geometry.js';
+import { ConvexBufferGeometry }        from './Geometry';
 import { Line3, Mesh, Plane, Vector3 } from 'three';
 
 /**

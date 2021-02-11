@@ -1,8 +1,8 @@
 
 /* global Ammo */
 
-import { math }      from './math.js';
-import { map, root } from './root.js';
+import { math }      from './math';
+import { map, root } from './root';
 
 function Constraint()
 {

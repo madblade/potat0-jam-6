@@ -5,10 +5,10 @@
 
 'use strict';
 
-import extend               from '../../../extend.js';
+import extend               from '../../../extend';
 
-import { WorldMap }         from './worldmap.js';
-import { UpdateModule }     from './update.js';
+import { WorldMap }         from './worldmap';
+import { UpdateModule }     from './update';
 
 let XModel = function(app, selfModel)
 {

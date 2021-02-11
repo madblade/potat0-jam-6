@@ -5,7 +5,7 @@
 'use strict';
 
 import extend        from '../../extend';
-import { $ }         from '../../modules/polyfills/dom.js';
+import { $ }         from '../../modules/polyfills/dom';
 
 const GameTitle = 'Rad Yarns';
 const GameHeader = `

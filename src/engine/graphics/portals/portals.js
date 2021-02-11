@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { Screen } from './screen.js';
+import { Screen } from './screen';
 import {
     DoubleSide, LinearFilter, NearestFilter, RGBFormat,
     Mesh, PlaneBufferGeometry, ShaderMaterial, WebGLRenderTarget

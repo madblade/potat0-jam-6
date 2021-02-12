@@ -150,7 +150,11 @@ extend(MainMenuState.prototype, {
 
     selectItems()
     {
-        return [];
+        return [
+            $('#button-play'),
+            $('#button-load'),
+            $('#main-volume-controller')
+        ];
     }
 
 });

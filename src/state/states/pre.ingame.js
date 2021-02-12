@@ -51,8 +51,13 @@ extend(PreIngameState.prototype, {
         });
     },
 
-    navigate() {
+    navigate(option)
+    {
         // only validate.
+        if (option === 'enter')
+        {
+            $('#request-pl').trigger('click');
+        }
     },
 
 });

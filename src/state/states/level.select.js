@@ -4,9 +4,10 @@
 
 'use strict';
 
-import extend         from '../../extend';
-import { $ }          from '../../modules/polyfills/dom';
-import { GameHeader } from './mainmenu';
+import extend, { inherit }  from '../../extend';
+import { $ }                from '../../modules/polyfills/dom';
+import { GameHeader }       from './mainmenu';
+import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let LevelSelectState = function(stateManager)
 {
@@ -56,7 +57,13 @@ let LevelSelectState = function(stateManager)
         </div>
     </div>
       `;
+
+    // This is a menu, we need navigable functionality.
+    const nbNavigableObjects = 2; // farthest and back
+    GamepadNavigable.call(this, nbNavigableObjects);
 };
+
+inherit(LevelSelectState, GamepadNavigable);
 
 extend(LevelSelectState.prototype, {
 
@@ -202,12 +209,17 @@ extend(LevelSelectState.prototype, {
         });
     },
 
+    // Gamepad navigation
+
     navigate(navigationOptions)
     {
-        // Only cross is valid here.
-        if (navigationOptions === 'enter')
-        {
-        }
+        this.super.navigate.call(this, navigationOptions);
+    },
+
+    selectItems()
+    {
+        // TODO get all loadable levels.
+        return [];
     }
 
 });

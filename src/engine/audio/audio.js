@@ -98,6 +98,8 @@ extend(AudioEngine.prototype, {
                     new PositionalAudio(globalListener);
                 audio.setBuffer(buffer);
                 audio.setVolume(defaultVolume);
+                // force volume to 0
+                audio.gain.gain.setValueAtTime(0.00001, globalListener.context.currentTime);
                 isGlobal ?
                     this.audioSources.push(audio) :
                     this.positionalAudioSources.push(audio);

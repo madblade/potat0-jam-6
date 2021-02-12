@@ -101,7 +101,9 @@ canvas {
     border-color: #9e4f25;
 }
 
-.btn-outline-secondary:hover {
+.btn-outline-secondary:hover,
+.btn-outline-secondary.gamepad-selected
+{
     background-color: #423685;
     border-color: #4e409c;
 }

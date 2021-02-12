@@ -25,7 +25,8 @@ let TexturesModule = {
 
     loadTextureNormals()
     {
-        let loader = new TextureLoader(this.loadingManager);
+        const loader = new TextureLoader(this.loadingManager);
+        const loadingState = this.app.state.getState('loading');
         loader.load(waterNormals,
             t => {
                 // console.log('[Graphics/Textures] Water normals loaded.');
@@ -34,7 +35,7 @@ let TexturesModule = {
                 this._nbTexturesLoaded++;
             },
             () => {
-                // console.log('Progress');
+                loadingState.notifyTaskName('texture');
             },
             () => {
                 console.error('[Graphics/Textures] Failed to load water normals.');

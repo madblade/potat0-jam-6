@@ -68,6 +68,16 @@ extend(StateManager.prototype, {
         }
     },
 
+    getState(state)
+    {
+        if (!this.states.hasOwnProperty(state)) {
+            console.error(`[StateManager] State "${state} does not exist."`);
+            return;
+        }
+
+        return this.states[state];
+    },
+
     cleanupDOM()
     {
         $('#announce').empty();

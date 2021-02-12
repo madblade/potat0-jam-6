@@ -6,6 +6,18 @@
     <base href="<%= htmlWebpackPlugin.options.baseUrl %>" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        /* Preload essential styles for slow connections. */
+        .ie10-11 { display: none; }
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+            .ie10-11 { display: block; }
+            body { color: black; background: white; }
+            .smartphones { display: none !important; }
+            .not-done-loading { display: none; }
+        }
+        @media (min-width: 560px) { .smartphones { display: none; } }
+        @media (max-width: 560px) { .not-done-loading { display: none; } }
+    </style>
 </head>
 <body>
 <!--[if IE]>
@@ -17,6 +29,9 @@
 <p class="ie10-11">You are using an <strong>outdated</strong>
     browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>
     to improve your experience.
+</p>
+<p class="not-done-loading">
+    Loading in progress. Entrypoint size: ~4MiB.
 </p>
 
 <!-- Content -->

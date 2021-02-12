@@ -176,3 +176,7 @@ canvas {
         display: none;
     }
 }
+
+.not-done-loading {
+    display: none;
+}

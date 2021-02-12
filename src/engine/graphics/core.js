@@ -32,7 +32,7 @@ let CoreModule = {
         // Lazy loading: checks if everything is correctly loaded, every few frames.
         return new Promise(resolve => {
             setTimeout(() =>
-                this.resolveIfLoaded(resolve), 500
+                this.resolveIfLoaded(resolve), 100
             );
         });
     },
@@ -49,25 +49,29 @@ let CoreModule = {
 
     initLoadingManager()
     {
+        const loadingState = this.app.state.getState('loading');
         this.loadingManager = new LoadingManager();
         this.loadingManager.onProgress =
-            function(url, itemsLoaded, itemsTotal)
+            (url, itemsLoaded, itemsTotal) =>
             {
+                if (loadingState) loadingState.notifyProgress(url, itemsLoaded, itemsTotal);
                 console.log(`[Graphics/Loader] Loading file ${url} (${itemsLoaded} of ${itemsTotal}).`);
             };
         this.loadingManager.onStart =
-            function(url, itemsLoaded, itemsTotal)
+            (url, itemsLoaded, itemsTotal) =>
             {
+                if (loadingState) loadingState.notifyProgress(url, itemsLoaded, itemsTotal);
                 console.log(`[Graphics/Loader] Started loading ${url} (${itemsLoaded} of ${itemsTotal}).`);
             };
         this.loadingManager.onLoad =
-            function()
+            () =>
             {
                 console.log('[Graphics/Loader] Loading complete!');
             };
         this.loadingManager.onError =
-            function(url)
+            url =>
             {
+                if (loadingState) loadingState.notifyError(url);
                 console.log(`[Graphics/Loader] There was an error loading ${url}.`);
             };
     },
@@ -83,7 +87,7 @@ let CoreModule = {
             resolve();
         }
         else
-            setTimeout(() => this.resolveIfLoaded(resolve), 500);
+            setTimeout(() => this.resolveIfLoaded(resolve), 100);
     },
 
     run()

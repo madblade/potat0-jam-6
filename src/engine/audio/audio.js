@@ -79,46 +79,32 @@ extend(AudioEngine.prototype, {
         const psfxs = this.sounds.positionalSfx;
         const tunes = this.sounds.music;
 
-        const defaultVolume = this.settings.globalVolume;
+        this.loadAudios(sfxs, true);
+        this.loadAudios(tunes, true);
+        this.loadAudios(psfxs, false);
+    },
+
+    loadAudios(lib, isGlobal)
+    {
         const globalListener = this.listener;
-        sfxs.forEach(sfx =>
+        const defaultVolume = this.settings.globalVolume;
+        const loadingState = this.app.state.getState('loading');
+        lib.forEach(sfx =>
         {
             this.audioLoader.load(sfx,  buffer =>
             {
-                const audio = new Audio(globalListener);
+                const audio = isGlobal ?
+                    new Audio(globalListener) :
+                    new PositionalAudio(globalListener);
                 audio.setBuffer(buffer);
                 audio.setVolume(defaultVolume);
-                this.audioSources.push(audio);
+                isGlobal ?
+                    this.audioSources.push(audio) :
+                    this.positionalAudioSources.push(audio);
                 this.nbSoundsLoadedOrError++;
-            }, null, error => {
-                console.error(error);
-                this.nbSoundsLoadedOrError++;
-            });
-        });
-        tunes.forEach(sfx =>
-        {
-            this.audioLoader.load(sfx,  buffer =>
-            {
-                const audio = new Audio(globalListener);
-                audio.setBuffer(buffer);
-                audio.setVolume(defaultVolume);
-                this.audioSources.push(audio);
-                this.nbSoundsLoadedOrError++;
-            }, null, error => {
-                console.error(error);
-                this.nbSoundsLoadedOrError++;
-            });
-        });
-        psfxs.forEach(sfx =>
-        {
-            this.audioLoader.load(sfx,  buffer =>
-            {
-                const audio = new PositionalAudio(globalListener);
-                audio.setBuffer(buffer);
-                audio.setVolume(defaultVolume);
-                this.positionalAudioSources.push(audio);
-                this.nbSoundsLoadedOrError++;
-            }, null, error => {
+            }, () => {
+                loadingState.notifyTaskName('audio');
+            }, error => {
                 console.error(error);
                 this.nbSoundsLoadedOrError++;
             });

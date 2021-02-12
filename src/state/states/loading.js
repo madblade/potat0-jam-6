@@ -6,22 +6,31 @@
 
 import extend        from '../../extend';
 import { $ }         from '../../modules/polyfills/dom';
-import { GameTitle } from './mainmenu';
 
 let LoadingState = function(stateManager)
 {
     this.stateManager = stateManager;
     this.stateName = 'loading';
     this.html = `
-        <div style="" class="title noselect">
-        <p>${GameTitle}</p>
-        </div>
-        <div id="cube" class="sk-folding-cube">
-        <div class="sk-cube1 sk-cube"></div>
-        <div class="sk-cube2 sk-cube"></div>
-        <div class="sk-cube4 sk-cube"></div>
-        <div class="sk-cube3 sk-cube"></div>
-        </div>`;
+        <div class="container"> <div class="col-12">
+
+            <div class="flex-fill title noselect loading-menu">
+                <p>Loading…</p>
+            </div>
+            <div class="flex-fill loading-menu" id="loading-task"></div>
+            <div class="flex-fill progress">
+                <div id="loading-progress" class="progress-bar progress-bar-striped"
+                    role="progressbar"
+                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            <div class="loading-menu" id="loading-file"></div>
+
+        </div> </div>
+        `;
+
+    this.progressElement = null;
+    this.taskElement = null;
 };
 
 extend(LoadingState.prototype, {
@@ -31,19 +40,51 @@ extend(LoadingState.prototype, {
         $('#announce')
             .empty()
             .removeClass()
+            .addClass('main-menu')
             .append(this.html)
-            .center();
+            .css('position', '')
+            .show();
+
+        this.progressElement = $('#loading-progress');
+        this.taskElement = $('#loading-task');
     },
 
     end()
     {
         return new Promise(function(resolve) {
-            var loader = $('#announce');
+            const loader = $('#announce');
             loader.fadeOut(200, function() {
-                loader.empty().removeClass('sk-folding-cube');
+                loader.empty();
                 resolve();
             });
         });
+    },
+
+    notifyTaskName(taskName)
+    {
+        if (this.taskElement)
+            this.taskElement.html(`Loading ${taskName} files…`);
+    },
+
+    notifyProgress(url, itemsLoaded, itemsTotal)
+    {
+        const newProgress = Math.floor(
+            100 * parseFloat(itemsLoaded) / parseFloat(itemsTotal)
+        );
+        if (!this.progressElement)
+            this.progressElement = $('#loading-progress');
+        if (this.progressElement)
+            this.progressElement
+                .attr('aria-valuenow', newProgress)
+                .css('width', `${newProgress}%`);
+
+        const fileElement = $('#loading-file');
+        if (fileElement) fileElement.html(url);
+    },
+
+    notifyError(url)
+    {
+        console.log(`[States/Loading] There was an error loading ${url}.`);
     }
 
 });

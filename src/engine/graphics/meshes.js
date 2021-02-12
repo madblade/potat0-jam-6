@@ -55,6 +55,7 @@ let MeshesModule = {
     loadReferenceMeshes()
     {
         // TODO [GRAPHICS] LOAD here animated meshes (morphed or skinned)
+        //         (don’t forget loadingState.notifyTaskName())
         this.referenceMeshes = new Map();
         let meshesToLoad = [
             // 'portal-gun',

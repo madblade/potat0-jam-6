@@ -221,7 +221,7 @@ extend(GamepadControls.prototype, {
             '[Controls] Unexpected stick state.'
         );
         const controlsEngine = this.controlsEngine;
-        if (!controlsEngine.threeControlsEnabled) return; // TODO menu nav
+        if (!controlsEngine.threeControlsEnabled) return;
 
         if (axis1 === 0) // left stick
         {

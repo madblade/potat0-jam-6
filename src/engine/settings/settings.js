@@ -39,6 +39,7 @@ extend(Settings.prototype, {
         this.controlsSettings = app.engine.controls.settings;
         this.audioSettings =    app.engine.audio.settings;
 
+        if (this.activeMenu) this.activeMenu.unlisten();
         this.activeMenu = this.homeMenu;
 
         // Add content, then fade in and add listeners.

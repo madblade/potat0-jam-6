@@ -45,6 +45,11 @@ let GamepadModule = {
         this.gamepadControls.start();
     },
 
+    resetGamepadListeners()
+    {
+        this.stopMovePlayerFromLeftStickGamepad();
+    },
+
     /** @deprecated */
     stopGamepadListeners()
     // Keeping this method for consistency; it should never be called.

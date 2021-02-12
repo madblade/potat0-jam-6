@@ -143,6 +143,7 @@ let CoreModule = {
         const paused = ux.isGamePaused();
         if (paused)
         {
+            // always refresh gamepads.
             controlsEngine.updateControlsDevice(0);
             return;
         }

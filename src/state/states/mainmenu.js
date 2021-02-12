@@ -4,8 +4,9 @@
 
 'use strict';
 
-import extend        from '../../extend';
-import { $ }         from '../../modules/polyfills/dom';
+import { $ }                from '../../modules/polyfills/dom';
+import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
+import extend, { inherit }  from '../../extend';
 
 const GameTitle = 'Rad Yarns';
 const GameHeader = `
@@ -57,7 +58,13 @@ let MainMenuState = function(stateManager)
         `;
 
     this.htmlTail = '</div>';
+
+    // This is a menu, we need navigable functionality.
+    const nbNavigableObjects = 3;
+    GamepadNavigable.call(this, nbNavigableObjects);
 };
+
+inherit(MainMenuState, GamepadNavigable);
 
 extend(MainMenuState.prototype, {
 
@@ -118,8 +125,8 @@ extend(MainMenuState.prototype, {
         bl.off('click');
         bl.off('mouseenter');
 
-        const settings = this.stateManager.app.engine.settings;
-        settings.audioMenu.stopVolumeController();
+        const audioMenu = this.stateManager.app.engine.settings.audioMenu;
+        audioMenu.stopVolumeController();
     },
 
     end()
@@ -133,8 +140,17 @@ extend(MainMenuState.prototype, {
         });
     },
 
+    // Gamepad navigation
+
     navigate(navigationOptions)
     {
+        this.super.navigate.call(this, navigationOptions);
+        // manage audio
+    },
+
+    selectItems()
+    {
+        return [];
     }
 
 });

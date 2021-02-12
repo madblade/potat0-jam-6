@@ -136,6 +136,8 @@ extend(Game.Core.prototype, {
         console.log('[Game/Client] Starting game.');
 
         // this.engine.graphics.run();
+        // ^ We need the animation loop to be running for gamepad polling
+        // so we launch it at the MainMenuState (game title).
         this.engine.controls.run();
         this.engine.audio.run();
         this.register.gameStarted();

@@ -2,7 +2,8 @@
 
 // Utility function to extend a prototype.
 // Can be used to concatenate objects of functions.
-export default function(prototype, functions)
+
+let extend = function(prototype, functions)
 {
     if (typeof prototype !== 'object' || typeof functions !== 'object')
         throw Error(`Could not extend ${prototype} with ${functions}.`);
@@ -21,7 +22,18 @@ export default function(prototype, functions)
                 prototype[property] = functions[property];
         }
     }
-}
+};
+
+let inherit = function(derived, parent)
+{
+    if (typeof derived !== 'function' || typeof parent !== 'function')
+        throw Error(`Could not inherit from/to non-function: ${derived} / ${parent}.`);
+
+    derived.prototype = Object.assign(Object.create(parent.prototype), {
+        constructor: derived,
+        super: parent.prototype
+    });
+};
 
 let assert = function(expr, msg)
 {
@@ -31,4 +43,4 @@ let assert = function(expr, msg)
     }
 };
 
-export { assert };
+export { extend as default, assert, inherit };

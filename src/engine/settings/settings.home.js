@@ -4,15 +4,19 @@
 
 'use strict';
 
-import { $ }  from '../../modules/polyfills/dom';
-import extend from '../../extend';
+import { $ }                from '../../modules/polyfills/dom';
+import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
+import extend, { inherit }  from '../../extend';
 
 let HomeMenu = function(settingsModule)
 {
+    const nbNavigableObjects = 4;
+    GamepadNavigable.call(this, nbNavigableObjects);
+
     this.settingsModule = settingsModule;
-    this.activeItem = 0;
-    this.maxActiveItem = 4;
 };
+
+inherit(HomeMenu, GamepadNavigable);
 
 extend(HomeMenu.prototype, {
 
@@ -89,28 +93,7 @@ extend(HomeMenu.prototype, {
 
     navigate(options)
     {
-        if (options === 'up')
-        {
-            this.activeItem--;
-            if (this.activeItem < 0)
-                this.activeItem = this.maxActiveItem;
-            this.highlightActiveItem();
-        }
-        else if (options === 'down')
-        {
-            this.activeItem++;
-            if (this.activeItem > this.maxActiveItem)
-                this.activeItem = 0;
-            this.highlightActiveItem();
-        }
-        else if (options === 'enter')
-        {
-            this.clickActiveItem();
-        }
-        else if (options === 'back')
-        {
-            this.clickReturn();
-        }
+        this.super.navigate.call(this, options);
     },
 
     selectItems()
@@ -123,28 +106,6 @@ extend(HomeMenu.prototype, {
             $('#return')
         ];
     },
-
-    highlightActiveItem()
-    {
-        const items = this.selectItems();
-        const ai = this.activeItem;
-        for (let i = 0; i < items.length; ++i)
-            if (i === ai) items[i].addClass('gamepad-selected');
-            else items[i].removeClass('gamepad-selected');
-    },
-
-    clickActiveItem()
-    {
-        const items = this.selectItems();
-        const ai = this.activeItem;
-        items[ai].trigger('click');
-    },
-
-    clickReturn()
-    {
-        const r = $('#return');
-        r.trigger('click');
-    }
 
 });
 

@@ -204,6 +204,10 @@ extend(LevelSelectState.prototype, {
 
     navigate(navigationOptions)
     {
+        // Only cross is valid here.
+        if (navigationOptions === 'enter')
+        {
+        }
     }
 
 });

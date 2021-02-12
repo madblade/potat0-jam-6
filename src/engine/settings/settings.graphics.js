@@ -4,14 +4,19 @@
 
 'use strict';
 
-import { $ }  from '../../modules/polyfills/dom';
-import extend from '../../extend';
+import { $ }                from '../../modules/polyfills/dom';
+import extend, { inherit }  from '../../extend';
+import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let GraphicsMenu = function(settingsModule)
 {
+    const nbNavigableObjects = 0;
+    GamepadNavigable.call(this, nbNavigableObjects);
+
     this.settingsModule = settingsModule;
-    this.activeItem = 0;
 };
+
+inherit(GraphicsMenu, GamepadNavigable);
 
 extend(GraphicsMenu.prototype, {
 
@@ -54,8 +59,16 @@ extend(GraphicsMenu.prototype, {
         $('#return').off('click');
     },
 
+    // Navigation
+
+    selectItems()
+    {
+        return [];
+    },
+
     navigate(options)
     {
+        this.super.navigate.call(this, options);
     }
 
 });

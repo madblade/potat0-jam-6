@@ -4,14 +4,19 @@
 
 'use strict';
 
-import { $ }  from '../../modules/polyfills/dom';
-import extend from '../../extend';
+import { $ }                from '../../modules/polyfills/dom';
+import extend, {inherit}    from '../../extend';
+import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let AudioMenu = function(settingsModule)
 {
+    const nbNavigableObjects = 1;
+    GamepadNavigable.call(this, nbNavigableObjects);
+
     this.settingsModule = settingsModule;
-    this.activeItem = 0;
 };
+
+inherit(AudioMenu, GamepadNavigable);
 
 extend(AudioMenu.prototype, {
 
@@ -115,8 +120,17 @@ extend(AudioMenu.prototype, {
         volumeControl.off('input change');
     },
 
+    // Navigation
+
+    selectItems()
+    {
+        return [];
+    },
+
     navigate(options)
     {
+        this.super.navigate.call(this, options);
+        // manage audio
     }
 
 });

@@ -123,6 +123,10 @@ extend(GamepadControls.prototype, {
                 lastButtonStates[b] = pressed;
                 this.aButtonWasUpdated(b, newState, pressed, touched);
             }
+            else if (pressed)
+            {
+                this.aButtonWasHeld(b, newState, pressed, touched);
+            }
         }
 
         // Refresh sticks
@@ -205,6 +209,10 @@ extend(GamepadControls.prototype, {
         }
     },
 
+    aButtonWasHeld(b, state, pressed, touched)
+    {
+    },
+
     aStickWasHeldOrReleased(axis1, axis2, val1, val2, dt)
     {
         // console.log(`${s}, ${value}`);
@@ -213,6 +221,7 @@ extend(GamepadControls.prototype, {
             '[Controls] Unexpected stick state.'
         );
         const controlsEngine = this.controlsEngine;
+        if (!controlsEngine.threeControlsEnabled) return; // TODO menu nav
 
         if (axis1 === 0) // left stick
         {

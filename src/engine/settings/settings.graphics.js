@@ -4,12 +4,21 @@
 
 'use strict';
 
-import { $ } from '../../modules/polyfills/dom';
+import { $ }  from '../../modules/polyfills/dom';
+import extend from '../../extend';
 
-let GraphicsModule = {
+let GraphicsMenu = function(settingsModule)
+{
+    this.settingsModule = settingsModule;
+    this.activeItem = 0;
+};
 
-    getGraphicsHTML(graphicsSettings)
+extend(GraphicsMenu.prototype, {
+
+    getHTML()
     {
+        const graphicsSettings = this.settingsModule.graphicsSettings;
+
         let content = `
             <div class="container">
             <table class="table table border rounded noselect" style="width:100%"
@@ -27,20 +36,28 @@ let GraphicsModule = {
         return content;
     },
 
-    goGraphics()
+    listen()
     {
-        this.unlistenSettingsMenu();
-        $('#announce')
-            .empty()
-            .append(this.getGraphicsHTML(this.graphicsSettings));
         this.listenReturn();
     },
 
-    listenGraphics()
+    listenReturn()
     {
+        const sm = this.settingsModule;
+        $('#return').click(() => {
+            sm.switchToMenu(sm.homeMenu);
+        });
+    },
 
+    unlisten()
+    {
+        $('#return').off('click');
+    },
+
+    navigate(options)
+    {
     }
 
-};
+});
 
-export { GraphicsModule };
+export { GraphicsMenu };

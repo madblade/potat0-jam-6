@@ -125,7 +125,11 @@ canvas {
 
 /* Main Menu */
 
-.main-menu {
+.main-menu,
+.level-select {
+    position: absolute;
+    display: block;
+    width: 100%;
     padding-top: 50px;
     padding-bottom: 50px;
 }

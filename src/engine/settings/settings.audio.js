@@ -4,11 +4,18 @@
 
 'use strict';
 
-import { $ } from '../../modules/polyfills/dom';
+import { $ }  from '../../modules/polyfills/dom';
+import extend from '../../extend';
 
-let AudioModule = {
+let AudioMenu = function(settingsModule)
+{
+    this.settingsModule = settingsModule;
+    this.activeItem = 0;
+};
 
-    getAudioHTML(audioSettings)
+extend(AudioMenu.prototype, {
+
+    getHTML()
     {
         let content = `
             <div class="container">
@@ -36,30 +43,21 @@ let AudioModule = {
         return content;
     },
 
-    goAudio()
+    listen()
     {
-        this.unlistenSettingsMenu();
-        $('#announce')
-            .empty()
-            .append(this.getAudioHTML(this.audioSettings));
-        this.listenAudioSettings();
-    },
-
-    listenAudioSettings()
-    {
-        $('#return').click(() => {
-            // Remove listeners.
-            this.unlistenAudioSettings();
-            $('#announce')
-                .empty()
-                .append(this.getHomeHTML());
-            // Go to settings home.
-            this.listenHome();
-        });
+        this.listenReturn();
         this.startVolumeController();
     },
 
-    unlistenAudioSettings()
+    listenReturn()
+    {
+        const sm = this.settingsModule;
+        $('#return').click(() => {
+            sm.switchToMenu(sm.homeMenu);
+        });
+    },
+
+    unlisten()
     {
         $('#return').off('click');
         this.stopVolumeController();
@@ -67,7 +65,7 @@ let AudioModule = {
 
     startVolumeController()
     {
-        const app = this.app;
+        const app = this.settingsModule.app;
         const audio = app.engine.audio;
 
         // Init control graphics from model.
@@ -117,6 +115,10 @@ let AudioModule = {
         volumeControl.off('input change');
     },
 
-};
+    navigate(options)
+    {
+    }
 
-export { AudioModule };
+});
+
+export { AudioMenu };

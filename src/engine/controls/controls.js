@@ -86,7 +86,8 @@ extend(UI.prototype, {
             this.stopTouchListeners();
         } else {
             this.stopKeyboardListeners();
-            this.stopGamepadListeners();
+            // do NOT call this.stopGamepadListeners();
+            // ^ it remains used in menu navigation.
             this.stopMouseListeners();
         }
         this.stopWindowListeners();

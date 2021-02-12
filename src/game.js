@@ -135,7 +135,7 @@ extend(Game.Core.prototype, {
     {
         console.log('[Game/Client] Starting game.');
 
-        this.engine.graphics.run();
+        // this.engine.graphics.run();
         this.engine.controls.run();
         this.engine.audio.run();
         this.register.gameStarted();
@@ -144,6 +144,7 @@ extend(Game.Core.prototype, {
     stopGame()
     {
         this.register.gameStopped();
+        this.engine.ux.setGamePaused(true);
         this.engine.graphics.stop();
         this.engine.controls.stop();
         this.engine.audio.stop();

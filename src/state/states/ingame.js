@@ -19,11 +19,13 @@ extend(IngameState.prototype, {
     {
         $('#announce')
             .removeClass()
-            .empty()
-            .addClass('reticle-wrapper')
-            .append('<div class="reticle"></div>')
-            .center()
-            .show();
+            .empty();
+
+        // To add an FPS reticule:
+        // .addClass('reticle-wrapper')
+        // .append('<div class="reticle"></div>')
+        // .center()
+        // .show();
 
         const ux = this.stateManager.app.engine.ux;
         ux.setGamePaused(false);
@@ -41,10 +43,17 @@ extend(IngameState.prototype, {
 
         return new Promise(function(resolve) {
             $('#announce')
-                .empty()
-                .removeClass('reticle-wrapper');
+                .empty();
+
+            // To remove the FPS reticule:
+            // .removeClass('reticle-wrapper')
             resolve();
         });
+    },
+
+    navigate()
+    {
+        console.warn('[States/Ingame] Should not be able to navigate menus whilst in-game.');
     }
 
 });

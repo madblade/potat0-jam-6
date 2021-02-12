@@ -101,6 +101,9 @@ let CoreModule = {
 
         // Init animation.
         this.resize();
+        // Cleanup previous animation requests.
+        if (this.requestId)
+            cancelAnimationFrame(this.requestId);
         this.animate();
 
         // Init stats.
@@ -132,12 +135,17 @@ let CoreModule = {
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
 
+        // Bench.
         this.fps.update();
 
         // Ping UX.
         ux.refresh();
         const paused = ux.isGamePaused();
-        if (paused) return;
+        if (paused)
+        {
+            controlsEngine.updateControlsDevice(0);
+            return;
+        }
 
         // Ping AI
         aiEngine.refresh();
@@ -154,9 +162,6 @@ let CoreModule = {
 
         // Ping physics engines.
         const deltaT = physicsEngine.refresh();
-
-        // Bench.
-        // this.fps.update();
 
         // Update controls for Touch/Gamepad devices.
         controlsEngine.updateControlsDevice(deltaT);
@@ -205,9 +210,9 @@ let CoreModule = {
 
     stop()
     {
-        if (this.requestId) {
-            cancelAnimationFrame(this.requestId);
-        }
+        // if (this.requestId) {
+        //     cancelAnimationFrame(this.requestId);
+        // }
     },
 
     cleanupFullGraphics()

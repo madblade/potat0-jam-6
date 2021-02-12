@@ -85,7 +85,9 @@ extend(LoadingState.prototype, {
     notifyError(url)
     {
         console.log(`[States/Loading] There was an error loading ${url}.`);
-    }
+    },
+
+    navigate() {}, // does nothing while loading
 
 });
 

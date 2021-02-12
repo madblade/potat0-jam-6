@@ -41,12 +41,18 @@ let GamepadActionModule = {
     {
         if (!this.threeControlsEnabled) // menu state
         {
-            // go up once
+            const sm = this.app.engine.settings;
+            sm.navigate('up'); // go up once
         }
     },
 
     dPadDown()
     {
+        if (!this.threeControlsEnabled) // menu state
+        {
+            const sm = this.app.engine.settings;
+            sm.navigate('down'); // go up once
+        }
     },
 
     dPadRight()
@@ -62,6 +68,8 @@ let GamepadActionModule = {
         if (!this.threeControlsEnabled && isPressed)
         {
             // menu back
+            const sm = this.app.engine.settings;
+            sm.navigate('back'); // go up once
         }
     },
 
@@ -70,6 +78,8 @@ let GamepadActionModule = {
         if (!this.threeControlsEnabled && isPressed)
         {
             // menu click
+            const sm = this.app.engine.settings;
+            sm.navigate('enter'); // go up once
         }
     }
 

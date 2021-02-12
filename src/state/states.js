@@ -78,6 +78,20 @@ extend(StateManager.prototype, {
         return this.states[state];
     },
 
+    navigate(navigationOptions)
+    {
+        const currentState = this.state;
+        if (!this.states.hasOwnProperty(currentState)) return;
+
+        const s = this.states[currentState];
+        if (!s.navigate) {
+            console.error(`[StateManager] State "${currentState}" does not implement navigate().`);
+            return;
+        }
+
+        s.navigate(navigationOptions);
+    },
+
     cleanupDOM()
     {
         $('#announce').empty();

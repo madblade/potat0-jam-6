@@ -83,8 +83,12 @@ extend(MainMenuState.prototype, {
             audio.playMenuSound();
         });
 
+        // Volume listeners are the same as in the audio menu.
         const settings = app.engine.settings;
-        settings.startVolumeController();
+        settings.audioMenu.startVolumeController();
+
+        // Force graphics to start.
+        app.engine.graphics.run();
     },
 
     start()
@@ -97,7 +101,9 @@ extend(MainMenuState.prototype, {
                 this.htmlQuick +
                 this.htmlTail
             )
-            .css('position', '')
+            .css('left', '')
+            .css('right', '')
+            // .css('position', '')
             .show();
 
         this.startListeners();
@@ -113,7 +119,7 @@ extend(MainMenuState.prototype, {
         bl.off('mouseenter');
 
         const settings = this.stateManager.app.engine.settings;
-        settings.stopVolumeController();
+        settings.audioMenu.stopVolumeController();
     },
 
     end()
@@ -126,6 +132,10 @@ extend(MainMenuState.prototype, {
             resolve();
         });
     },
+
+    navigate(navigationOptions)
+    {
+    }
 
 });
 

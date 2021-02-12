@@ -86,7 +86,8 @@ let PointerLockModule = {
         b.requestPointerLock();
 
         controlsEngine.startKeyboardListeners();
-        controlsEngine.startGamepadListeners();
+        // do NOT call controlsEngine.startGamepadListeners();
+        // ^ gamepad is useful for menu navigation!
         controlsEngine.startMouseListeners();
         controlsEngine.startWindowListeners();
     },

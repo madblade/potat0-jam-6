@@ -24,7 +24,13 @@ extend(SettingsState.prototype, {
     {
         const app = this.stateManager.app;
         return app.engine.settings.stop();
-    }
+    },
+
+    navigate(navigationOptions)
+    {
+        const app = this.stateManager.app;
+        app.engine.settings.navigate(navigationOptions);
+    },
 
 });
 

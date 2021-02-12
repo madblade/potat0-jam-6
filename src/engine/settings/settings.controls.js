@@ -4,12 +4,22 @@
 
 'use strict';
 
-import { $ } from '../../modules/polyfills/dom';
+import { $ }  from '../../modules/polyfills/dom';
+import extend from '../../extend';
 
-let ControlsModule = {
+let ControlsMenu = function(settingsModule)
+{
+    this.settingsModule = settingsModule;
+    this.activeItem = 0;
+};
 
-    getControlsHTML(controlsSettings)
+extend(ControlsMenu.prototype, {
+
+    getHTML()
     {
+        // XXX put controlsSettings in this object
+        const controlsSettings = this.settingsModule.controlsSettings;
+
         let content = `
             <div class="container">
             <table class="table table border rounded noselect" style="width:100%">
@@ -34,36 +44,42 @@ let ControlsModule = {
         return content;
     },
 
-    goControls()
+    listen()
     {
-        this.unlistenSettingsMenu();
-        $('#announce')
-            .empty()
-            .append(this.getControlsHTML(this.controlsSettings));
-        this.listenReturn();
-        this.listenControls();
-    },
+        const sm = this.settingsModule;
+        let controlsEngine = sm.controlsEngine;
 
-    listenControls()
-    {
-        let controlsEngine = this.app.engine.controls;
-
-        if (this.controlsSettings.hasOwnProperty('language')) {
+        if (sm.controlsSettings.hasOwnProperty('language')) {
             let l = $('#language');
             l.change(function() {
                 let selected = l.find('option:selected').val();
                 controlsEngine.changeLayout(selected, true); // Don't restart listeners.
             });
         }
+
+        this.listenReturn();
     },
 
-    unlistenControls()
+    listenReturn()
     {
-        if (this.controlsSettings.hasOwnProperty('language')) {
+        const sm = this.settingsModule;
+        $('#return').click(() => {
+            sm.switchToMenu(sm.homeMenu);
+        });
+    },
+
+    unlisten()
+    {
+        if (this.settingsModule.controlsSettings.hasOwnProperty('language')) {
             $('#language').off('change');
         }
+        $('#return').off('click');
+    },
+
+    navigate(options)
+    {
     }
 
-};
+});
 
-export { ControlsModule };
+export { ControlsMenu };

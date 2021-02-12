@@ -18,6 +18,9 @@ let GamepadModule = {
 
         window.addEventListener('gamepadconnected', this.connectGamepad.bind(this));
         window.addEventListener('gamepaddisconnected', this.disconnectGamepad.bind(this));
+
+        // Prefer continuous polling over state management.
+        this.startGamepadListeners();
     },
 
     connectGamepad(event)
@@ -29,6 +32,8 @@ let GamepadModule = {
     disconnectGamepad(event)
     {
         this.gamepadControls.gamepadDisconnected(event.gamepad);
+        // Never stop gamepad controls from there,
+        // for the gamepad API we use continuous polling.
         console.log('[Controls] Gamepad disconnected.');
     },
 
@@ -40,8 +45,11 @@ let GamepadModule = {
         this.gamepadControls.start();
     },
 
+    /** @deprecated */
     stopGamepadListeners()
+    // Keeping this method for consistency; it should never be called.
     {
+        console.error('[Gamepad] Stopping gamepad listeners.');
         this.gamepadControls.stop();
     },
 

@@ -124,14 +124,15 @@ extend(LevelSelectState.prototype, {
         let announce = $('#announce');
         announce.empty()
             .removeClass()
-            .addClass('announce')
+            .addClass('level-select')
             .append(
                 this.htmlHead +
                 this.getInstancesHTMLContainer() +
                 this.getCommandsHTML()
             )
-            .css('position', '')
-            .fadeIn();
+            // .css('position', '')
+            // .fadeIn();
+            .show();
 
         // Add listeners.
         this.startListeners();
@@ -199,6 +200,10 @@ extend(LevelSelectState.prototype, {
                 resolve();
             });
         });
+    },
+
+    navigate(navigationOptions)
+    {
     }
 
 });

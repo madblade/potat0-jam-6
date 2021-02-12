@@ -13,11 +13,9 @@ let PreIngameState = function(stateManager)
     this.stateManager = stateManager;
     this.stateName = 'preingame';
     this.html = `
-<!--        <div class="panel panel-default border rounded">-->
-            <table class="table border rounded noselect" style="width:100%">
-                <tr id="request-pl"><td>Click to play</td></tr>
-            </table>
-<!--        </div>-->
+        <table class="table border rounded noselect" style="width:100%">
+            <tr id="request-pl"><td>Click to play</td></tr>
+        </table>
     `;
 };
 
@@ -51,7 +49,11 @@ extend(PreIngameState.prototype, {
                 resolve();
             });
         });
-    }
+    },
+
+    navigate() {
+        // only validate.
+    },
 
 });
 

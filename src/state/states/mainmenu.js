@@ -45,7 +45,8 @@ let MainMenuState = function(stateManager)
 
         <div class="row mt-3">
             <div class="col-4"></div>
-            <div id="volume-control-wrapper" class="input-group mb-1 center-block col-4 slider-container">
+            <div id="volume-control-wrapper"
+                class="input-group mb-1 center-block col-4 slider-container">
                 <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
                 <div class="col-10 input-group-append flex-fill">
                     <input type="range" min="0" max="100" value="0" class="slider"

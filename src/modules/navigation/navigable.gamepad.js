@@ -8,7 +8,7 @@ import { $ }  from '../polyfills/dom';
 let GamepadNavigable = function(maxActiveItems)
 {
     this.activeItem = 0;
-    this.maxActiveItem = maxActiveItems;
+    this.maxActiveItem = maxActiveItems - 1;
 };
 
 extend(GamepadNavigable.prototype, {

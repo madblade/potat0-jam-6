@@ -10,7 +10,7 @@ import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let AudioMenu = function(settingsModule)
 {
-    const nbNavigableObjects = 1;
+    const nbNavigableObjects = 2;
     GamepadNavigable.call(this, nbNavigableObjects);
 
     this.settingsModule = settingsModule;

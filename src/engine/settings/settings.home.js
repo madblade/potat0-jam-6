@@ -10,7 +10,7 @@ import extend, { inherit }  from '../../extend';
 
 let HomeMenu = function(settingsModule)
 {
-    const nbNavigableObjects = 4;
+    const nbNavigableObjects = 5;
     GamepadNavigable.call(this, nbNavigableObjects);
 
     this.settingsModule = settingsModule;

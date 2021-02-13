@@ -10,7 +10,7 @@ import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let GraphicsMenu = function(settingsModule)
 {
-    const nbNavigableObjects = 0;
+    const nbNavigableObjects = 1;
     GamepadNavigable.call(this, nbNavigableObjects);
 
     this.settingsModule = settingsModule;

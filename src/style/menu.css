@@ -51,6 +51,14 @@
     cursor: pointer;
 }
 
+#volume-control-wrapper {
+    border-radius: 5px;
+}
+
+#volume-control-wrapper.gamepad-selected {
+    background-color: #413786;
+}
+
 /* Level select */
 
 .announce {

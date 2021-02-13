@@ -45,7 +45,7 @@ let MainMenuState = function(stateManager)
 
         <div class="row mt-3">
             <div class="col-4"></div>
-            <div class="input-group mb-1 center-block col-4 slider-container">
+            <div id="volume-control-wrapper" class="input-group mb-1 center-block col-4 slider-container">
                 <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
                 <div class="col-10 input-group-append flex-fill">
                     <input type="range" min="0" max="100" value="0" class="slider"
@@ -142,20 +142,64 @@ extend(MainMenuState.prototype, {
 
     // Gamepad navigation
 
-    navigate(navigationOptions)
-    {
-        this.super.navigate.call(this, navigationOptions);
-        // manage audio
-    },
-
     selectItems()
     {
         return [
             $('#button-play'),
             $('#button-load'),
-            $('#main-volume-controller')
+            $('#volume-control-wrapper')
         ];
-    }
+    },
+
+    navigate(navigationOptions)
+    {
+        this.super.navigate.call(this, navigationOptions);
+
+        // manage audio
+        if (this.activeItem === 2) // vol control
+        {
+            const app = this.stateManager.app;
+            const audio = app.engine.audio;
+
+            const volumeControl = $('#main-volume-controller');
+            const iconVolume = $('#volume-status');
+            if (navigationOptions === 'right' || navigationOptions === 'left')
+            {
+                const volume = audio.getVolume();
+                const newVolume =
+                    navigationOptions === 'right' ?
+                        Math.min(volume + 0.05, 1.) :
+                        Math.max(volume - 0.05, 0.);
+                audio.setVolume(newVolume);
+
+                if (newVolume === 0)
+                    iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
+                else
+                {
+                    iconVolume.html('<i class="fas fa-volume-up fa-2x">');
+                    audio.playText(' Cxy');
+                }
+
+                volumeControl.val(Math.floor(newVolume * 100));
+            }
+            else if (navigationOptions === 'enter') // toggle
+            {
+                const isMute = audio.isMute();
+                if (isMute)
+                {
+                    const newV = Math.floor(audio.getVolume() * 100);
+                    volumeControl.val(newV);
+                    iconVolume.html('<i class="fas fa-volume-up fa-2x">');
+                    audio.unMute();
+                }
+                else
+                {
+                    iconVolume.html('<i class="fas fa-volume-mute fa-2x">');
+                    audio.mute();
+                }
+            }
+        }
+    },
 
 });
 

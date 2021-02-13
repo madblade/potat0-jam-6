@@ -94,6 +94,12 @@ extend(HomeMenu.prototype, {
     navigate(options)
     {
         this.super.navigate.call(this, options);
+        if (options === 'up' || options === 'down')
+        {
+            const app = this.settingsModule.app;
+            const audio = app.engine.audio;
+            audio.playMenuSound();
+        }
     },
 
     selectItems()

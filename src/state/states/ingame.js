@@ -53,7 +53,15 @@ extend(IngameState.prototype, {
 
     navigate()
     {
-        console.warn('[States/Ingame] Should not be able to navigate menus whilst in-game.');
+        console.warn(
+            '[States/Ingame] Should not be able to navigate menus whilst in-game.'
+        );
+
+        // (Gamepad triggered ingame while not locked -> restart controls)
+        // Note: the user should click inside the window first.
+        const controlsEngine = this.stateManager.app.engine.controls;
+        controlsEngine.stopListeners();
+        controlsEngine.requestStartControls();
     }
 
 });

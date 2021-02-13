@@ -57,10 +57,20 @@ let GamepadActionModule = {
 
     dPadRight()
     {
+        if (!this.threeControlsEnabled) // menu state
+        {
+            const sm = this.app.state;
+            sm.navigate('right'); // go up once
+        }
     },
 
     dPadLeft()
     {
+        if (!this.threeControlsEnabled) // menu state
+        {
+            const sm = this.app.state;
+            sm.navigate('left'); // go up once
+        }
     },
 
     circleButton(isPressed)

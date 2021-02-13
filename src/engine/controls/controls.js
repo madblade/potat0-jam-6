@@ -66,7 +66,8 @@ extend(UI.prototype, {
             this.setupTouch();
         } else {
             this.setupKeyboard();
-            this.setupGamepad();
+            // do NOT call this.setupGamepad();
+            // ^ this is set once and for all at the app startup.
             this.setupMouse();
         }
         this.setupWindowListeners();

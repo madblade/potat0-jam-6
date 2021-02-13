@@ -214,6 +214,9 @@ extend(LevelSelectState.prototype, {
     navigate(navigationOptions)
     {
         this.super.navigate.call(this, navigationOptions);
+
+        if (navigationOptions === 'back')
+            $('#button-return-main').trigger('click');
     },
 
     selectItems()

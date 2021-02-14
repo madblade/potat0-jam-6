@@ -114,7 +114,8 @@ extend(UX.prototype, {
     {
         // Current level was completed.
         const levels = this.app.model.levels.getLevels();
-        const currentLevel = this.playerState.getLevel();
+        const state = this.playerState;
+        const currentLevel = state.getLevel();
         const levelID = currentLevel.getID();
         const nextLevelID = levelID + 1;
         const nextLevel = levels[nextLevelID];
@@ -124,9 +125,16 @@ extend(UX.prototype, {
         }
         else
         {
-            this.playerState.setLevel(nextLevel);
+            state.setLevel(nextLevel);
         }
-    }
+    },
+
+    validateTask()
+    {
+        const state = this.playerState;
+        state.resetProgressInCurrentTask(); // goto next set of tasks
+        state.incrementProgressInLevel(); // 1 level = n tasks
+    },
 
 });
 

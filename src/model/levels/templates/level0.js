@@ -99,7 +99,7 @@ let Level0 = function(title, id)
         {
             type: 'event',
             // eslint-disable-next-line no-unused-vars
-            condition: function(backend, ux)
+            checkCondition: function(backend, ux)
             {
                 // console.log(ux);
                 const player = backend.selfModel.position;
@@ -111,12 +111,13 @@ let Level0 = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
+                ux.validateTask(); // goto next task
             }
         },
         {
             type: 'event',
             // eslint-disable-next-line no-unused-vars
-            condition: function(backend, ux)
+            checkCondition: function(backend, ux)
             {
                 // console.log(ux);
                 const player = backend.selfModel.position;
@@ -126,7 +127,7 @@ let Level0 = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Checkpoint passed! Go to the next level…');
-                ux.validateLevel();
+                ux.validateLevel(); // goto next level (or win)
             }
         }
     ];

@@ -16,6 +16,8 @@ let UXIngameModule = {
         const scenario = level.getScenario();
         const currentTask = scenario[progressInLevel];
 
+        const backend = this.app.model.backend;
+
         switch (currentTask.type)
         {
             case 'splash':
@@ -31,10 +33,11 @@ let UXIngameModule = {
                     // the renderer manager should have ended transitioning!
                     {
                         // call things to perform (level model logic)
-                        const backend = this.app.model.backend;
                         currentTask.performWhenConditionMet(backend, this);
 
                         // go to next task!
+                        // (player can’t lose in menu so the only possible next stage is
+                        // to go forward)
                         playerState.resetProgressInCurrentTask(); // goto next set of tasks
                         playerState.incrementProgressInLevel(); // 1 level = n tasks
                     }
@@ -88,10 +91,16 @@ let UXIngameModule = {
 
                 // console.log('[UX] Splash progress.');
                 break;
+
             case 'event':
-                // TODO check task progress
+
+                const cond = currentTask.checkCondition(backend, this);
+                if (cond) currentTask.performWhenConditionMet(backend, this);
+                // ^ should handle which things come next.
+
                 console.log('[UX] Event progress.');
                 break;
+
             default:
                 console.log('[UX] Task not recognized.');
                 break;

@@ -1,3 +1,8 @@
+
+'use strict';
+
+import { inherit }        from '../../../extend';
+
 import { ConvexHull } from './ConvexHull';
 import {
     BufferAttribute, BufferGeometry, CylinderGeometry,
@@ -7,25 +12,25 @@ import { Geometry }   from 'three/examples/jsm/deprecated/Geometry';
 
 export function geometryInfo(g, type)
 {
-    var verticesOnly = false;
-    var facesOnly = false;
-    var withColor = true;
+    const verticesOnly = false;
+    let facesOnly = false;
+    const withColor = true;
 
     if (type === 'mesh' || type === 'convex') facesOnly = true;
     //if(type == 'convex') verticesOnly = true;
 
-    var i;
-    var j;
-    var n;
-    var p;
-    var n2;
+    let i;
+    let j;
+    let n;
+    let p;
+    let n2;
 
-    var tmpGeo = g.isBufferGeometry ? new Geometry().fromBufferGeometry(g) : g;
+    const tmpGeo = g.isBufferGeometry ? new Geometry().fromBufferGeometry(g) : g;
     tmpGeo.mergeVertices();
 
-    var totalVertices = g.attributes.position.array.length / 3;
-    var numVertices = tmpGeo.vertices.length;
-    var numFaces = tmpGeo.faces.length;
+    const totalVertices = g.attributes.position.array.length / 3;
+    const numVertices = tmpGeo.vertices.length;
+    const numFaces = tmpGeo.faces.length;
 
     g.realVertices = new Float32Array(numVertices * 3);
     g.realIndices = new (numFaces * 3 > 65535 ? Uint32Array : Uint16Array)(numFaces * 3);
@@ -72,7 +77,7 @@ export function geometryInfo(g, type)
     //g.setIndex(g.realIndices);
 
     if (facesOnly) {
-        var faces = [];
+        const faces = [];
         i = g.realIndices.length;
         while (i--) {
             n = i * 3;
@@ -85,8 +90,8 @@ export function geometryInfo(g, type)
     }
 
     // find same point
-    var ar = [];
-    var pos = g.attributes.position.array;
+    const ar = [];
+    const pos = g.attributes.position.array;
     i = numVertices;
     while (i--) {
         n = i * 3;
@@ -100,8 +105,8 @@ export function geometryInfo(g, type)
     }
 
     // generate same point index
-    var pPoint = new (numVertices > 65535 ? Uint32Array : Uint16Array)(numVertices);
-    var lPoint = new (totalVertices > 65535 ? Uint32Array : Uint16Array)(totalVertices);
+    const pPoint = new (numVertices > 65535 ? Uint32Array : Uint16Array)(numVertices);
+    const lPoint = new (totalVertices > 65535 ? Uint32Array : Uint16Array)(totalVertices);
 
     p = 0;
     for (i = 0; i < numVertices; i++) {
@@ -134,24 +139,24 @@ function Capsule(radius, height, radialSegs, heightSegs)
     radius = radius || 1;
     height = height || 1;
 
-    var pi = Math.PI;
+    const pi = Math.PI;
 
     radialSegs = Math.floor(radialSegs) || 12;
-    var sHeight = Math.floor(radialSegs * 0.5);
+    const sHeight = Math.floor(radialSegs * 0.5);
 
     heightSegs = Math.floor(heightSegs) || 1;
-    var o0 = Math.PI * 2;
-    var o1 = Math.PI * 0.5;
-    var g = new Geometry();
-    var m0 = new CylinderGeometry(radius, radius, height, radialSegs, heightSegs, true);
+    const o0 = Math.PI * 2;
+    const o1 = Math.PI * 0.5;
+    const g = new Geometry();
+    const m0 = new CylinderGeometry(radius, radius, height, radialSegs, heightSegs, true);
 
-    var mr = new Matrix4();
-    var m1 = new SphereGeometry(radius, radialSegs, sHeight, 0, o0, 0, o1);
-    var m2 = new SphereGeometry(radius, radialSegs, sHeight, 0, o0, o1, o1);
-    var mtx0 = new Matrix4().makeTranslation(0, 0, 0);
+    const mr = new Matrix4();
+    const m1 = new SphereGeometry(radius, radialSegs, sHeight, 0, o0, 0, o1);
+    const m2 = new SphereGeometry(radius, radialSegs, sHeight, 0, o0, o1, o1);
+    const mtx0 = new Matrix4().makeTranslation(0, 0, 0);
     // if(radialSegs===6) mtx0.makeRotationY( 30 * Math.DEG2RAD );
-    var mtx1 = new Matrix4().makeTranslation(0, height * 0.5, 0);
-    var mtx2 = new Matrix4().makeTranslation(0, -height * 0.5, 0);
+    const mtx1 = new Matrix4().makeTranslation(0, height * 0.5, 0);
+    const mtx2 = new Matrix4().makeTranslation(0, -height * 0.5, 0);
     mr.makeRotationZ(pi);
     g.merge(m0, mtx0.multiply(mr));
     g.merge(m1, mtx1);
@@ -169,7 +174,7 @@ function Capsule(radius, height, radialSegs, heightSegs)
     g.dispose();
 }
 
-Capsule.prototype = Object.create(BufferGeometry.prototype);
+inherit(Capsule, BufferGeometry);
 
 export { Capsule };
 
@@ -185,8 +190,7 @@ function ConvexGeometry(points)
     this.mergeVertices();
 }
 
-ConvexGeometry.prototype = Object.create(Geometry.prototype);
-ConvexGeometry.prototype.constructor = ConvexGeometry;
+inherit(ConvexGeometry, Geometry);
 
 export { ConvexGeometry };
 
@@ -199,28 +203,22 @@ function ConvexBufferGeometry(points)
     BufferGeometry.call(this);
 
     // buffers
-
-    var vertices = [];
-    var normals = [];
+    const vertices = [];
+    const normals = [];
 
     // execute QuickHull
-
-    var quickHull = new ConvexHull().setFromPoints(points);
-
+    const quickHull = new ConvexHull().setFromPoints(points);
 
     // generate vertices and normals
-
-    var faces = quickHull.faces;
-
-    for (var i = 0; i < faces.length; i++)
+    const faces = quickHull.faces;
+    for (let i = 0; i < faces.length; i++)
     {
-        var face = faces[i];
-        var edge = face.edge;
+        const face = faces[i];
+        let edge = face.edge;
 
         // we move along a doubly-connected edge list to access all face points (see HalfEdge docs)
-
         do {
-            var point = edge.head().point;
+            const point = edge.head().point;
 
             vertices.push(point.x, point.y, point.z);
             normals.push(face.normal.x, face.normal.y, face.normal.z);
@@ -235,7 +233,6 @@ function ConvexBufferGeometry(points)
     this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
 }
 
-ConvexBufferGeometry.prototype = Object.create(BufferGeometry.prototype);
-ConvexBufferGeometry.prototype.constructor = ConvexBufferGeometry;
+inherit(ConvexBufferGeometry, BufferGeometry);
 
 export { ConvexBufferGeometry };

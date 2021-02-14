@@ -1,6 +1,13 @@
+
+import { inherit }      from '../../../extend';
+
 import {
-    BufferGeometry, CircleGeometry, CylinderGeometry,
-    Matrix4, PlaneGeometry, SphereGeometry,
+    BufferGeometry,
+    CircleGeometry,
+    CylinderGeometry,
+    Matrix4,
+    PlaneGeometry,
+    SphereGeometry,
     TorusGeometry
 }                   from 'three';
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry';
@@ -87,8 +94,7 @@ let ChamferBox = function(a, c, d, e, f, h, m, k)
     this.fromGeometry(E);
     E.dispose();
 };
-ChamferBox.prototype = Object.create(BufferGeometry.prototype);
-ChamferBox.prototype.constructor = ChamferBox;
+inherit(ChamferBox, BufferGeometry);
 let ChamferCyl = function(a, c, d, e, f, h, m)
 {
     BufferGeometry.call(this);
@@ -129,7 +135,7 @@ let ChamferCyl = function(a, c, d, e, f, h, m)
     this.fromGeometry(h);
     h.dispose();
 };
-ChamferCyl.prototype = Object.create(BufferGeometry.prototype);
-ChamferCyl.prototype.constructor = ChamferCyl;
+
+inherit(ChamferCyl, BufferGeometry);
 
 export { ChamferBox, ChamferCyl };

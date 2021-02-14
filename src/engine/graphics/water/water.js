@@ -9,6 +9,8 @@
  * @author Jonas Wagner / http://29a.ch/ && http://29a.ch/slides/2012/webglwater/ : Water shader explanations in WebGL
  */
 
+import { inherit }           from '../../../extend';
+
 import {
     Color,
     FrontSide,
@@ -18,7 +20,7 @@ import {
     UniformsLib,
     UniformsUtils,
     Vector3,
-} from 'three';
+}                        from 'three';
 import { ShadersModule } from '../shaders/shaders';
 
 let Water = function(
@@ -105,7 +107,6 @@ let Water = function(
     this.material = material;
 };
 
-Water.prototype = Object.create(Mesh.prototype);
-Water.prototype.constructor = Water;
+inherit(Water, Mesh);
 
 export { Water };

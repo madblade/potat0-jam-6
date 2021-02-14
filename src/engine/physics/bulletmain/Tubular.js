@@ -1,10 +1,22 @@
 
-import {
-    BufferGeometry, CatmullRomCurve3, Float32BufferAttribute,
-    Line, LineBasicMaterial, Matrix4, Quaternion, Uint16BufferAttribute,
-    Uint32BufferAttribute, Vector2, Vector3
-}                   from 'three';
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry';
+'use strict';
+
+import extend, { inherit }  from '../../../extend';
+
+import  {
+    BufferGeometry,
+    CatmullRomCurve3,
+    Float32BufferAttribute,
+    Line,
+    LineBasicMaterial,
+    Matrix4,
+    Quaternion,
+    Uint16BufferAttribute,
+    Uint32BufferAttribute,
+    Vector2,
+    Vector3
+}                           from 'three';
+import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 
 let Tubular = function(a, c, d, e, f, h)//, m)
 {
@@ -51,142 +63,153 @@ let Tubular = function(a, c, d, e, f, h)//, m)
     this.setAttribute('color', new Float32BufferAttribute(this.colors, 3));
     this.setAttribute('normal', new Float32BufferAttribute(this.normals, 3));
     this.setAttribute('uv', new Float32BufferAttribute(this.uvs, 2));
-}
-;
-Tubular.prototype = Object.create(BufferGeometry.prototype);
-Tubular.prototype.constructor = Tubular;
-Tubular.prototype.addDebug = function(a)
-{
-    this.path.g = new Geometry();
-    for (var c = 0; c < this.tubularSegments + 1; c++)
-        this.path.g.vertices.push(new Vector3());
-    this.path.mesh = new Line(this.path.g, new LineBasicMaterial({
-        color: 16746496,
-        linewidth: 1,
-        depthTest: !1,
-        depthWrite: !1,
-        transparent: !0
-    }));
-    a.add(this.path.mesh);
-    this.debug = !0;
 };
-Tubular.prototype.setTension = function(a)
-{
-    this.path.tension = a;
-};
-Tubular.prototype.generateSegment = function(a)
-{
-    let c = a / this.tubularSegments;
-    let d = this.scalar;
-    this.geoType === 'sphere' && (d = 2 * Math.sqrt(Math.pow(.5, 2) - Math.pow(c - .5, 2)));
-    var e = 3 * a * (this.radialSegments + 1);
-    c = this.path.getPointAt(c);
-    this.debug && this.path.g.vertices[a].copy(c);
-    for (var f = this.frames.normals[a], h = this.frames.binormals[a], m = !0, k = 1, n = 0; n <= this.radialSegments; n++)
+
+inherit(Tubular, BufferGeometry);
+
+extend(Tubular.prototype, {
+
+    addDebug(a)
     {
-        var q = n / this.radialSegments * Math.PI * 2;
-        this.radialSegments === 1 && (q = 0);
-        a = 3 * n;
-        var r = Math.sin(q);
-        q = -Math.cos(q);
-        this.radialSegments === 1 ?
-            (m ? (k = .5, m = !1) : (k = -.5, m = !0),
-            this.normal.copy(f).negate().projectOnPlane(new Vector3(0, 1, 0))) : (this.normal.x = q * f.x + r * h.x,
-            this.normal.y = q * f.y + r * h.y,
-            this.normal.z = q * f.z + r * h.z);
-        this.normal.normalize();
-        this.normals[e + a] = this.normal.x;
-        this.normals[e + a + 1] = this.normal.y;
-        this.normals[e + a + 2] = this.normal.z;
-        this.normal.multiplyScalar(d);
-        this.vertices[e + a] = c.x + this.radius * this.normal.x * k;
-        this.vertices[e + a + 1] = c.y + this.radius * this.normal.y * k;
-        this.vertices[e + a + 2] = c.z + this.radius * this.normal.z * k;
-        this.colors[e + a] = Math.abs(this.normal.x);
-        this.colors[e + a + 1] = Math.abs(this.normal.y);
-        this.colors[e + a + 2] = Math.abs(this.normal.z);
-        this.radialSegments === 1 && (
-            this.normals[e + a] = 0,
-            this.normals[e + a + 1] = 1,
-            this.normals[e + a + 2] = 0
-        );
-    }
-};
-Tubular.prototype.generateIndicesAndUv = function()
-{
-    for (var a = 0; a <= this.tubularSegments; a++)
-        for (var c = 0; c <= this.radialSegments; c++) {
-            if (c > 0 && a > 0) {
-                let d = (this.radialSegments + 1) * a + (c - 1);
-                let e = (this.radialSegments + 1) * a + c;
-                let f = (this.radialSegments + 1) * (a - 1) + c;
-                this.indices.push((this.radialSegments + 1) * (a - 1) + (c - 1), d, f);
-                this.indices.push(d, e, f);
-            }
-            this.uv.x = c / this.radialSegments;
-            this.uv.y = a / this.tubularSegments;
-            this.uvs.push(this.uv.x, this.uv.y);
+        this.path.g = new Geometry();
+        for (var c = 0; c < this.tubularSegments + 1; c++)
+            this.path.g.vertices.push(new Vector3());
+        this.path.mesh = new Line(this.path.g, new LineBasicMaterial({
+            color: 16746496,
+            linewidth: 1,
+            depthTest: !1,
+            depthWrite: !1,
+            transparent: !0
+        }));
+        a.add(this.path.mesh);
+        this.debug = !0;
+    },
+
+    setTension(a)
+    {
+        this.path.tension = a;
+    },
+
+    generateSegment(a)
+    {
+        let c = a / this.tubularSegments;
+        let d = this.scalar;
+        this.geoType === 'sphere' && (d = 2 * Math.sqrt(Math.pow(.5, 2) - Math.pow(c - .5, 2)));
+        var e = 3 * a * (this.radialSegments + 1);
+        c = this.path.getPointAt(c);
+        this.debug && this.path.g.vertices[a].copy(c);
+        for (var f = this.frames.normals[a], h = this.frames.binormals[a], m = !0, k = 1, n = 0;
+            n <= this.radialSegments; n++)
+        {
+            var q = n / this.radialSegments * Math.PI * 2;
+            this.radialSegments === 1 && (q = 0);
+            a = 3 * n;
+            var r = Math.sin(q);
+            q = -Math.cos(q);
+            this.radialSegments === 1 ?
+                (m ? (k = .5, m = !1) : (k = -.5, m = !0),
+                this.normal.copy(f).negate().projectOnPlane(new Vector3(0, 1, 0))) :
+                (this.normal.x = q * f.x + r * h.x,
+                this.normal.y = q * f.y + r * h.y,
+                this.normal.z = q * f.z + r * h.z);
+            this.normal.normalize();
+            this.normals[e + a] = this.normal.x;
+            this.normals[e + a + 1] = this.normal.y;
+            this.normals[e + a + 2] = this.normal.z;
+            this.normal.multiplyScalar(d);
+            this.vertices[e + a] = c.x + this.radius * this.normal.x * k;
+            this.vertices[e + a + 1] = c.y + this.radius * this.normal.y * k;
+            this.vertices[e + a + 2] = c.z + this.radius * this.normal.z * k;
+            this.colors[e + a] = Math.abs(this.normal.x);
+            this.colors[e + a + 1] = Math.abs(this.normal.y);
+            this.colors[e + a + 2] = Math.abs(this.normal.z);
+            this.radialSegments === 1 && (
+                this.normals[e + a] = 0,
+                this.normals[e + a + 1] = 1,
+                this.normals[e + a + 2] = 0
+            );
         }
-};
-Tubular.prototype.generatePath = function(a)
-{
-    for (a = 0; a <= this.tubularSegments; a++)
-        this.generateSegment(a);
-    this.generateIndicesAndUv();
-};
-Tubular.prototype.updatePath = function(a)
-{
-    this.frames = computeFrenetFrames(this.tubularSegments, this.closed, this.rotations);
-    this.normals = this.attributes.normal.array;
-    this.vertices = this.attributes.position.array;
-    this.colors = this.attributes.color.array;
-    for (a = 0; a <= this.tubularSegments; a++)
-        this.generateSegment(a);
-    this.attributes.color.needsUpdate = !0;
-    this.attributes.position.needsUpdate = !0;
-    this.attributes.normal.needsUpdate = !0;
-    this.attributes.uv.needsUpdate = !0;
-    this.debug && (this.path.g.verticesNeedUpdate = !0);
-    this.geoType === 'sphere' && this.computeVertexNormals();
-    this.computeBoundingSphere();
-};
-Tubular.prototype.updateUV = function()
-{
-    this.uvs = this.attributes.uv.array;
-    for (var a, c, d = 0; d <= this.tubularSegments; d++) {
-        a = 2 * d * (this.radialSegments + 1);
-        for (let e = 0; e <= this.radialSegments; e++)
-            // eslint-disable-next-line no-sequences
-            c = 2 * e,
-            this.uv.x = d / this.tubularSegments,
-            this.uv.y = e / this.radialSegments,
-            this.uvs[a + c] = this.uv.x,
-            this.uvs[a + c + 1] = this.uv.y;
-    }
-    this.attributes.uv.needsUpdate = !0;
-};
-Tubular.prototype.updateIndices = function()
-{
-    this.indices = [];
-    for (let a, c, d = 0; d <= this.tubularSegments; d++) {
-        c = 2 * d * (this.radialSegments + 1);
-        for (let e = 0; e <= this.radialSegments; e++) {
-            if (e > 0 && d > 0)
-            {
-                let f = (this.radialSegments + 1) * d + (e - 1);
-                let h = (this.radialSegments + 1) * d + e;
-                let m = (this.radialSegments + 1) * (d - 1) + e;
-                this.indices.push((this.radialSegments + 1) * (d - 1) + (e - 1), f, m);
-                this.indices.push(f, h, m);
+    },
+
+    generateIndicesAndUv()
+    {
+        for (var a = 0; a <= this.tubularSegments; a++)
+            for (var c = 0; c <= this.radialSegments; c++) {
+                if (c > 0 && a > 0) {
+                    let d = (this.radialSegments + 1) * a + (c - 1);
+                    let e = (this.radialSegments + 1) * a + c;
+                    let f = (this.radialSegments + 1) * (a - 1) + c;
+                    this.indices.push((this.radialSegments + 1) * (a - 1) + (c - 1), d, f);
+                    this.indices.push(d, e, f);
+                }
+                this.uv.x = c / this.radialSegments;
+                this.uv.y = a / this.tubularSegments;
+                this.uvs.push(this.uv.x, this.uv.y);
             }
-            this.uv.x = d / this.tubularSegments;
-            this.uv.y = e / this.radialSegments;
-            this.uvs[c + a] = this.uv.y;
-            this.uvs[c + a + 1] = this.uv.x;
-            a = 2 * e;
+    },
+
+    generatePath(a)
+    {
+        for (a = 0; a <= this.tubularSegments; a++)
+            this.generateSegment(a);
+        this.generateIndicesAndUv();
+    },
+
+    updatePath(a)
+    {
+        this.frames = computeFrenetFrames(this.tubularSegments, this.closed, this.rotations);
+        this.normals = this.attributes.normal.array;
+        this.vertices = this.attributes.position.array;
+        this.colors = this.attributes.color.array;
+        for (a = 0; a <= this.tubularSegments; a++)
+            this.generateSegment(a);
+        this.attributes.color.needsUpdate = !0;
+        this.attributes.position.needsUpdate = !0;
+        this.attributes.normal.needsUpdate = !0;
+        this.attributes.uv.needsUpdate = !0;
+        this.debug && (this.path.g.verticesNeedUpdate = !0);
+        this.geoType === 'sphere' && this.computeVertexNormals();
+        this.computeBoundingSphere();
+    },
+
+    updateUV()
+    {
+        this.uvs = this.attributes.uv.array;
+        for (var a, c, d = 0; d <= this.tubularSegments; d++) {
+            a = 2 * d * (this.radialSegments + 1);
+            for (let e = 0; e <= this.radialSegments; e++)
+                // eslint-disable-next-line no-sequences
+                c = 2 * e,
+                this.uv.x = d / this.tubularSegments,
+                this.uv.y = e / this.radialSegments,
+                this.uvs[a + c] = this.uv.x,
+                this.uvs[a + c + 1] = this.uv.y;
+        }
+        this.attributes.uv.needsUpdate = !0;
+    },
+
+    updateIndices()
+    {
+        this.indices = [];
+        for (let a, c, d = 0; d <= this.tubularSegments; d++) {
+            c = 2 * d * (this.radialSegments + 1);
+            for (let e = 0; e <= this.radialSegments; e++) {
+                if (e > 0 && d > 0) {
+                    let f = (this.radialSegments + 1) * d + (e - 1);
+                    let h = (this.radialSegments + 1) * d + e;
+                    let m = (this.radialSegments + 1) * (d - 1) + e;
+                    this.indices.push((this.radialSegments + 1) * (d - 1) + (e - 1), f, m);
+                    this.indices.push(f, h, m);
+                }
+                this.uv.x = d / this.tubularSegments;
+                this.uv.y = e / this.radialSegments;
+                this.uvs[c + a] = this.uv.y;
+                this.uvs[c + a + 1] = this.uv.x;
+                a = 2 * e;
+            }
         }
     }
-};
+});
 
 let computeFrenetFrames = function(a, c, d)
 {

@@ -1,9 +1,19 @@
 
+'use strict';
+
+import extend, { inherit }  from '../../../extend';
 import {
-    BufferAttribute, BufferGeometry, Geometry, Mesh, MeshLambertMaterial, MeshPhongMaterial,
-    PlaneBufferGeometry, PlaneGeometry,
-    Vector2, Vector3, VertexColors
-} from 'three';
+    BufferAttribute,
+    BufferGeometry,
+    Mesh,
+    MeshLambertMaterial,
+    MeshPhongMaterial,
+    PlaneBufferGeometry,
+    PlaneGeometry,
+    Vector2,
+    Vector3,
+}                           from 'three';
+import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 
 let Terrain3 = function(a)
 {
@@ -62,7 +72,7 @@ let Terrain3 = function(a)
     this.vertices = this.geometry.attributes.position.array;
     c = {
         name: 'terrain',
-        vertexColors: VertexColors,
+        vertexColors: true,
         metalness: .2,
         roughness: .6,
         normalScale: a.normalScale || [2, 2],
@@ -152,7 +162,9 @@ let Terrain3 = function(a)
     this.receiveShadow = !0;
 };
 
-Terrain3.prototype = Object.assign(Object.create(Mesh.prototype), {
+inherit(Terrain3, Mesh);
+
+extend(Terrain3.prototype, {
 
     constructor: Terrain3,
 
@@ -168,7 +180,7 @@ Terrain3.prototype = Object.assign(Object.create(Mesh.prototype), {
     addBorder(a)
     {
         this.borderMaterial = new MeshPhongMaterial({
-            vertexColors: VertexColors,
+            vertexColors: true,
             metalness: .4,
             roughness: .6,
             normalScale: [-1, -1],

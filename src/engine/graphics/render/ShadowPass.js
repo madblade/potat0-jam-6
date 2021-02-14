@@ -1,5 +1,7 @@
 
-import { Pass } from 'three/examples/jsm/postprocessing/Pass';
+import extend, { inherit }         from '../../../extend';
+
+import { Pass }                    from 'three/examples/jsm/postprocessing/Pass';
 import { LightDefaultIntensities } from '../light';
 
 let ShadowPass = function(
@@ -19,9 +21,9 @@ let ShadowPass = function(
     this.needsSwap = false;
 };
 
-ShadowPass.prototype = Object.assign(Object.create(Pass.prototype), {
+inherit(ShadowPass, Pass);
 
-    constructor: ShadowPass,
+extend(ShadowPass.prototype, {
 
     render(renderer, writeBuffer, readBuffer)
     {

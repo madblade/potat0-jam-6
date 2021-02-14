@@ -4,11 +4,17 @@
 
 'use strict';
 
-import { ShadersModule }  from '../shaders/shaders';
+import { inherit }          from '../../../extend';
+
+import { ShadersModule }    from '../shaders/shaders';
 import {
-    UniformsUtils, DoubleSide,
-    BoxBufferGeometry, Mesh, ShaderMaterial, Vector3
-} from 'three';
+    UniformsUtils,
+    DoubleSide,
+    BoxBufferGeometry,
+    Mesh,
+    ShaderMaterial,
+    Vector3
+}                           from 'three';
 
 // turbidity, 1.0, 20.0, 0.1
 // rayleigh, 0.0, 4, 0.001
@@ -46,6 +52,6 @@ let SkyFlat = function()
     );
 };
 
-SkyFlat.prototype = Object.create(Mesh.prototype);
+inherit(SkyFlat, Mesh);
 
 export { SkyFlat };

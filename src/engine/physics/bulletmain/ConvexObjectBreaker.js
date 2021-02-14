@@ -1,5 +1,13 @@
-import { ConvexBufferGeometry }        from './Geometry';
-import { Line3, Mesh, Plane, Vector3 } from 'three';
+
+import extend                   from '../../../extend';
+
+import { ConvexBufferGeometry } from './Geometry';
+import {
+    Line3,
+    Mesh,
+    Plane,
+    Vector3
+}                               from 'three';
 
 /**
  * @author yomboprime https://github.com/yomboprime
@@ -60,9 +68,7 @@ function ConvexObjectBreaker(minSizeForBreak, smallDelta)
     for (var i = 0; i < n; i++) this.segments[i] = false;
 }
 
-ConvexObjectBreaker.prototype = {
-
-    constructor: ConvexObjectBreaker,
+extend(ConvexObjectBreaker.prototype, {
 
     prepareBreakableObject(object, mass, velocity, angularVelocity, breakable)
     {
@@ -390,7 +396,9 @@ ConvexObjectBreaker.prototype = {
 
         return numObjects;
     }
-};
+});
+
+// Statics
 
 ConvexObjectBreaker.transformFreeVector = function(v, m)
 {
@@ -398,10 +406,10 @@ ConvexObjectBreaker.transformFreeVector = function(v, m)
     // vector interpreted as a free vector
     // Matrix4 orthogonal matrix (matrix without scale)
 
-    var x = v.x;
-    var y = v.y;
-    var z = v.z;
-    var e = m.elements;
+    const x = v.x;
+    const y = v.y;
+    const z = v.z;
+    const e = m.elements;
 
     v.x = e[0] * x + e[4] * y + e[8] * z;
     v.y = e[1] * x + e[5] * y + e[9] * z;
@@ -416,10 +424,10 @@ ConvexObjectBreaker.transformFreeVectorInverse = function(v, m)
     // vector interpreted as a free vector
     // Matrix4 orthogonal matrix (matrix without scale)
 
-    var x = v.x;
-    var y = v.y;
-    var z = v.z;
-    var e = m.elements;
+    const x = v.x;
+    const y = v.y;
+    const z = v.z;
+    const e = m.elements;
 
     v.x = e[0] * x + e[1] * y + e[2] * z;
     v.y = e[4] * x + e[5] * y + e[6] * z;
@@ -434,10 +442,10 @@ ConvexObjectBreaker.transformTiedVectorInverse = function(v, m)
     // vector interpreted as a tied (ordinary) vector
     // Matrix4 orthogonal matrix (matrix without scale)
 
-    var x = v.x;
-    var y = v.y;
-    var z = v.z;
-    var e = m.elements;
+    const x = v.x;
+    const y = v.y;
+    const z = v.z;
+    const e = m.elements;
 
     v.x = e[0] * x + e[1] * y + e[2] * z - e[12];
     v.y = e[4] * x + e[5] * y + e[6] * z - e[13];
@@ -448,14 +456,14 @@ ConvexObjectBreaker.transformTiedVectorInverse = function(v, m)
 
 ConvexObjectBreaker.transformPlaneToLocalSpace = (function()
 {
-    var v1 = new Vector3();
+    const v1 = new Vector3();
 
     return function transformPlaneToLocalSpace(plane, m, resultPlane)
     {
         resultPlane.normal.copy(plane.normal);
         resultPlane.constant = plane.constant;
 
-        var referencePoint = ConvexObjectBreaker.transformTiedVectorInverse(plane.coplanarPoint(v1), m);
+        const referencePoint = ConvexObjectBreaker.transformTiedVectorInverse(plane.coplanarPoint(v1), m);
 
         ConvexObjectBreaker.transformFreeVectorInverse(resultPlane.normal, m);
 

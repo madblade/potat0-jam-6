@@ -5,6 +5,7 @@
 'use strict';
 
 import extend     from '../../extend';
+
 import { Level }  from './level';
 import { Level0 } from './templates/0/level0';
 

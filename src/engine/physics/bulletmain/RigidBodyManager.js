@@ -2,8 +2,14 @@
 import { Capsule, geometryInfo }  from './Geometry';
 import { map, root }              from './root';
 import {
-    BoxBufferGeometry, CylinderBufferGeometry, Euler, Group,
-    Matrix4, Mesh, Quaternion, SphereBufferGeometry
+    BoxBufferGeometry,
+    CylinderBufferGeometry,
+    Euler,
+    Group,
+    Matrix4,
+    Mesh,
+    Quaternion,
+    SphereBufferGeometry
 } from 'three';
 import { ChamferBox, ChamferCyl } from './Chamfer';
 

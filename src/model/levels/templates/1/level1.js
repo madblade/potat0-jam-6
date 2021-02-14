@@ -2,6 +2,7 @@
 'use strict';
 
 import extend, { inherit }  from '../../../../extend';
+
 import { Level }            from '../../level';
 
 let Level1 = function(title, id)

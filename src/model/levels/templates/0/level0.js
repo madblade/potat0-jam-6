@@ -4,11 +4,11 @@
 
 'use strict';
 
-import extend, { inherit }  from '../../../../extend';
+import extend, { inherit }      from '../../../../extend';
 
-import { Level }              from '../../level';
-import { HeightMapConstants } from '../../../../engine/physics/mad/model/terrain';
-import { Vector3 }            from 'three';
+import { Level }                from '../../level';
+import { HeightMapConstants }   from '../../../../engine/physics/mad/model/terrain';
+import { Vector3 }              from 'three';
 
 let Level0 = function(title, id)
 {

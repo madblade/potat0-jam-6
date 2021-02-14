@@ -1,4 +1,12 @@
-import { BufferAttribute, BufferGeometry, LineBasicMaterial, LineSegments, VertexColors } from 'three';
+
+import { inherit }          from '../../../extend';
+
+import {
+    BufferAttribute,
+    BufferGeometry,
+    LineBasicMaterial,
+    LineSegments,
+} from 'three';
 
 let CarHelper = function(a, c, d)
 {
@@ -21,14 +29,14 @@ let CarHelper = function(a, c, d)
     this.geometry.setAttribute('color', new BufferAttribute(c, 3));
     this.positions = this.geometry.attributes.position.array;
     this.material = new LineBasicMaterial({
-        vertexColors: VertexColors,
+        vertexColors: true,
         name: 'helper'
     });
     LineSegments.call(this, this.geometry, this.material);
 };
 
-CarHelper.prototype = Object.create(LineSegments.prototype);
-CarHelper.prototype.constructor = CarHelper;
+inherit(CarHelper, LineSegments);
+
 CarHelper.prototype.dispose = function()
 {
     this.geometry.dispose();

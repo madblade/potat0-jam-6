@@ -1,5 +1,15 @@
-import { map, root }                                                    from './root';
-import { Float32BufferAttribute, Line, Matrix4, Vector3, VertexColors } from 'three';
+
+'use strict';
+
+import extend, { inherit } from '../../../extend';
+
+import { map, root }       from './root';
+import {
+    Float32BufferAttribute,
+    Line,
+    Matrix4,
+    Vector3,
+}                           from 'three';
 
 function RayCaster()
 {
@@ -137,7 +147,7 @@ function Ray(o)
     this.colors = this.geometry.attributes.color.array;
 
     this.material.color.setHex(0xFFFFFF);
-    this.material.vertexColors = VertexColors;
+    this.material.vertexColors = true;
 
     this.base = false;
 
@@ -146,7 +156,9 @@ function Ray(o)
     this.upGeo();
 }
 
-Ray.prototype = Object.assign(Object.create(Line.prototype), {
+inherit(Ray, Line);
+
+extend(Ray.prototype, {
 
     setFromCamera(coords, camera)
     {

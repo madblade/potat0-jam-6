@@ -8,8 +8,8 @@
 
 'use strict';
 
-import { CollisionModel } from './collisionmodel';
-import extend             from '../../../../extend';
+import { CollisionModel }  from './collisionmodel';
+import extend, { inherit } from '../../../../extend';
 
 let PlatformCollisionModel = function(physicsEntity, collisionSettings, e)
 {
@@ -17,7 +17,7 @@ let PlatformCollisionModel = function(physicsEntity, collisionSettings, e)
     this.isPlatform = true;
 };
 
-PlatformCollisionModel.prototype = Object.create(CollisionModel.prototype);
+inherit(PlatformCollisionModel, CollisionModel);
 
 extend(PlatformCollisionModel.prototype, {
 

@@ -1,4 +1,8 @@
-import { Level }  from '../level';
+
+'use strict';
+
+import extend, { inherit }  from '../../../../extend';
+import { Level }            from '../../level';
 
 let Level1 = function(title, id)
 {
@@ -13,9 +17,9 @@ let Level1 = function(title, id)
     this.scenario = [];
 };
 
-Level1.prototype = Object.assign(Object.create(Level.prototype), {
+inherit(Level1, Level);
 
-    constructor: Level1,
+extend(Level1.prototype, {
 
     getTerrain() {
         return this.terrain;

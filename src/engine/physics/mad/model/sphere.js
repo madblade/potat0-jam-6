@@ -4,8 +4,8 @@
 
 'use strict';
 
-import { CollisionModel } from './collisionmodel';
-import extend             from '../../../../extend';
+import { CollisionModel }   from './collisionmodel';
+import extend, { inherit }  from '../../../../extend';
 
 let SphereCollisionModel = function(physicsEntity, collisionSettings)
 {
@@ -16,6 +16,8 @@ let SphereCollisionModel = function(physicsEntity, collisionSettings)
     // More flexible than Character.
     // Might be used for special entities.
 };
+
+inherit(SphereCollisionModel, CollisionModel);
 
 extend(SphereCollisionModel.prototype, {
 

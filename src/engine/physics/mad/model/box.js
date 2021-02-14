@@ -4,8 +4,8 @@
 
 'use strict';
 
-import { CollisionModel } from './collisionmodel';
-import extend             from '../../../../extend';
+import { CollisionModel }   from './collisionmodel';
+import extend, { inherit }  from '../../../../extend';
 
 let BoxCollisionModel = function(physicsEntity, collisionSettings, e)
 {
@@ -13,7 +13,7 @@ let BoxCollisionModel = function(physicsEntity, collisionSettings, e)
     this.isBox = true;
 };
 
-BoxCollisionModel.prototype = Object.create(CollisionModel.prototype);
+inherit(BoxCollisionModel, CollisionModel);
 
 extend(BoxCollisionModel.prototype, {
 

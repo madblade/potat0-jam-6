@@ -4,8 +4,8 @@
 
 'use strict';
 
-import { CollisionModel } from './collisionmodel';
-import extend               from '../../../../extend';
+import { CollisionModel }   from './collisionmodel';
+import extend, { inherit }  from '../../../../extend';
 import { Matrix4, Vector3 } from 'three';
 
 let TrimeshCollisionModel = function(
@@ -32,7 +32,7 @@ let TrimeshCollisionModel = function(
     }
 };
 
-TrimeshCollisionModel.prototype = Object.create(CollisionModel.prototype);
+inherit(TrimeshCollisionModel, CollisionModel);
 
 extend(TrimeshCollisionModel.prototype, {
 

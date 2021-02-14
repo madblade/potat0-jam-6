@@ -258,7 +258,7 @@ extend(XGraph.prototype, {
         }
     },
 
-    toString()
+    computeString()
     {
         let string = '';
         let flatGraph = this.flatGraph;

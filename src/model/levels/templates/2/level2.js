@@ -1,10 +1,10 @@
 
 'use strict';
 
-import extend, { inherit }  from '../../../extend';
-import { Level }            from '../level';
+import extend, { inherit }  from '../../../../extend';
+import { Level }            from '../../level';
 
-let LevelN = function(title, id)
+let Level2 = function(title, id)
 {
     Level.call(this, title, id);
 
@@ -17,9 +17,9 @@ let LevelN = function(title, id)
     this.scenario = [];
 };
 
-inherit(LevelN, Level);
+inherit(Level2, Level);
 
-extend(LevelN.prototype, {
+extend(Level2.prototype, {
 
     getTerrain() {
         return this.terrain;
@@ -40,4 +40,4 @@ extend(LevelN.prototype, {
 
 });
 
-export { LevelN };
+export { Level2 };

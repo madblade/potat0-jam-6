@@ -7,9 +7,9 @@
 
 'use strict';
 
-import { CollisionModel } from './collisionmodel';
-import extend             from '../../../../extend';
-import { Vector3 }        from 'three';
+import { CollisionModel }  from './collisionmodel';
+import extend, { inherit } from '../../../../extend';
+import { Vector3 }         from 'three';
 
 let CylinderCollisionModel = function(physicsEntity, collisionSettings, e)
 {
@@ -23,7 +23,7 @@ let CylinderCollisionModel = function(physicsEntity, collisionSettings, e)
     this.basePoint = new Vector3();
 };
 
-CylinderCollisionModel.prototype = Object.create(CollisionModel.prototype);
+inherit(CylinderCollisionModel, CollisionModel);
 
 extend(CylinderCollisionModel.prototype, {
 

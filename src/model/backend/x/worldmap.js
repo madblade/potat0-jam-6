@@ -91,12 +91,12 @@ extend(WorldMap.prototype, {
     renderString() {
         this.computeWorldMap();
         this.xGraph.computeFlatGraph();
-        this.string = this.xGraph.toString();
+        this.string = this.xGraph.computeString();
         this.needsUpdate = false;
         return this.string;
     },
 
-    toString() {
+    computeString() {
         if (this.needsUpdate) this.renderString();
         return this.string;
     }

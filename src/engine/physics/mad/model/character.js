@@ -4,13 +4,13 @@
 
 'use strict';
 
-import { CollisionModel }          from './collisionmodel';
-import extend                      from '../../../../extend';
+import { CollisionModel }           from './collisionmodel';
+import extend, { inherit }          from '../../../../extend';
 import {
     Mesh, MeshBasicMaterial,
     SphereBufferGeometry, Vector3
-}                                  from 'three';
-import { CharacterResponseModule } from './character.response';
+}                                   from 'three';
+import { CharacterResponseModule }  from './character.response';
 
 let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
 {
@@ -71,7 +71,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.canJumpFromGround = false;
 };
 
-CharacterCollisionModel.prototype = Object.create(CollisionModel.prototype);
+inherit(CharacterCollisionModel, CollisionModel);
 
 extend(CharacterCollisionModel.prototype, {
 

@@ -2,8 +2,12 @@
  * First level.
  */
 
-import { Level }              from '../level';
-import { HeightMapConstants } from '../../../engine/physics/mad/model/terrain';
+'use strict';
+
+import extend, { inherit }  from '../../../../extend';
+
+import { Level }              from '../../level';
+import { HeightMapConstants } from '../../../../engine/physics/mad/model/terrain';
 import { Vector3 }            from 'three';
 
 let Level0 = function(title, id)
@@ -133,9 +137,9 @@ let Level0 = function(title, id)
     ];
 };
 
-Level0.prototype = Object.assign(Object.create(Level.prototype), {
+inherit(Level0, Level);
 
-    constructor: Level0,
+extend(Level0.prototype, {
 
     getTerrain() {
         return this.terrain;

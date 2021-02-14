@@ -1,11 +1,13 @@
 /**
- *
+ * Texture management.
  */
 
 'use strict';
 
 import {
-    NearestFilter, RepeatWrapping, TextureLoader
+    NearestFilter,
+    RepeatWrapping,
+    TextureLoader
 } from 'three';
 
 import waterNormals from '../../assets/textures/water-normals.jpg';

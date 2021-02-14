@@ -1,14 +1,16 @@
 /**
- *
+ * Mesh management.
  */
 
 'use strict';
 
+import { ItemType } from '../../model/backend/self/items';
 import {
     Mesh,
-    BoxGeometry, PlaneGeometry, Object3D
-} from 'three';
-import { ItemType } from '../../model/backend/self/items';
+    BoxGeometry,
+    PlaneGeometry,
+    Object3D
+}                   from 'three';
 
 let MeshesModule = {
 

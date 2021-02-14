@@ -1,8 +1,14 @@
-/*
+/**
  * Root of main-thread engine.
  */
 
-import { Euler, Matrix4, Quaternion } from 'three';
+'use strict';
+
+import {
+    Euler,
+    Matrix4,
+    Quaternion
+} from 'three';
 
 let REVISION = 'Shotgun005+Mad';
 

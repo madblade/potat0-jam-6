@@ -1,9 +1,18 @@
+/**
+ * Utility functions for computing shadow volumes in real-time.
+ * Adapted from https://github.com/gkjohnson/threejs-sandbox/tree/master/shadow-volumes
+ * Might need a bit of refactor.
+ */
 
-// Adapted from https://github.com/gkjohnson/threejs-sandbox/tree/master/shadow-volumes
-import { BufferAttribute, FrontSide, ShaderMaterial, Vector3 } from 'three';
-import { ShaderLib } from 'three/src/renderers/shaders/ShaderLib';
-import { UniformsUtils } from 'three/src/renderers/shaders/UniformsUtils';
-import { ShadersModule } from '../shaders/shaders';
+import { ShadersModule }    from '../shaders/shaders';
+import { ShaderLib }        from 'three/src/renderers/shaders/ShaderLib';
+import { UniformsUtils }    from 'three/src/renderers/shaders/UniformsUtils';
+import {
+    BufferAttribute,
+    FrontSide,
+    ShaderMaterial,
+    Vector3
+}                           from 'three';
 
 const v0 = new Vector3();
 const v1 = new Vector3();

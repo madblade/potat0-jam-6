@@ -7,6 +7,7 @@
 'use strict';
 
 import extend      from '../../../extend';
+
 import { Vector3 } from 'three';
 
 const COLLISION_EPS = 0.000001;

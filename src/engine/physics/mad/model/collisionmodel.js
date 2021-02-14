@@ -6,13 +6,13 @@
 
 'use strict';
 
-import extend           from '../../../../extend';
+import extend   from '../../../../extend';
 
 import {
     Vector2,
     Vector3,
     Vector4
-}                       from 'three';
+}               from 'three';
 
 const AABB_EPS = 0.00001;
 

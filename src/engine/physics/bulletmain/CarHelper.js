@@ -1,3 +1,8 @@
+/**
+ * Legacy car helper.
+ */
+
+'use strict';
 
 import { inherit }          from '../../../extend';
 
@@ -6,7 +11,7 @@ import {
     BufferGeometry,
     LineBasicMaterial,
     LineSegments,
-} from 'three';
+}                           from 'three';
 
 let CarHelper = function(a, c, d)
 {

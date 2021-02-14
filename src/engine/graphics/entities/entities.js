@@ -1,16 +1,18 @@
 /**
- *
+ * Entity loading / management.
  */
 
 'use strict';
 
+import { Geometry }     from 'three/examples/jsm/deprecated/Geometry';
 import {
-    AnimationMixer, AnimationClip,
-    Object3D, Mesh,
+    AnimationMixer,
+    AnimationClip,
+    Object3D,
+    Mesh,
     MeshLambertMaterial,
     BufferGeometry,
 }                       from 'three';
-import { Geometry }     from 'three/examples/jsm/deprecated/Geometry';
 
 let EntitiesModule = {
 

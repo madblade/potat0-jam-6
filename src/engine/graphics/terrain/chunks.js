@@ -1,18 +1,18 @@
 /**
- *
+ * Heightmap chunks.
  */
 
 'use strict';
 
+import { VertexNormalsHelper }  from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {
     ArrowHelper,
-    Mesh, MeshBasicMaterial,
-    PlaneBufferGeometry, SphereBufferGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    PlaneBufferGeometry,
+    SphereBufferGeometry,
     Vector3
-} from 'three';
-import {
-    VertexNormalsHelper
-} from 'three/examples/jsm/helpers/VertexNormalsHelper';
+}                               from 'three';
 
 let ChunksModule = {
 

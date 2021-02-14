@@ -1,6 +1,20 @@
-import { map, root }                      from './root';
-import { Capsule }                        from './Geometry';
-import { Euler, Group, Mesh, Quaternion } from 'three';
+/**
+ * Legacy — Don’t use.
+ * Disaster of a character management workflow.
+ */
+
+'use strict';
+
+import extend        from '../../../extend';
+
+import { map, root } from './root';
+import { Capsule }   from './Geometry';
+import {
+    Euler,
+    Group,
+    Mesh,
+    Quaternion
+}                    from 'three';
 
 function CharacterManager()
 {
@@ -8,16 +22,16 @@ function CharacterManager()
     this.heroes = [];
 }
 
-Object.assign(CharacterManager.prototype, {
+extend(CharacterManager.prototype, {
 
     step(AR, N)
     {
-        var n;
+        let n;
 
         this.heroes.forEach(function(b, id)
         {
             n = N + id * 8;
-            var s = AR[n] * 3.33;
+            const s = AR[n] * 3.33;
             b.userData.speed = s * 100;
             b.position.fromArray(AR, n + 1);
             b.quaternion.fromArray(AR, n + 4);
@@ -48,9 +62,9 @@ Object.assign(CharacterManager.prototype, {
     remove(name)
     {
         if (!map.has(name)) return;
-        var b = map.get(name);
+        const b = map.get(name);
 
-        var n = this.heroes.indexOf(b);
+        const n = this.heroes.indexOf(b);
         if (n !== -1) {
             this.heroes.splice(n, 1);
             this.destroy(b);
@@ -59,7 +73,8 @@ Object.assign(CharacterManager.prototype, {
 
     add(o)
     {
-        var name = o.name !== undefined ? o.name : o.type + this.ID++;
+        const py = -(Math.abs(gm.boundingBox.max.y) - Math.abs(gm.boundingBox.min.y)) * o.scale * 0.5; // ?
+        const name = o.name !== undefined ? o.name : o.type + this.ID++;
 
         // delete old if same name
         this.remove(name);
@@ -68,9 +83,8 @@ Object.assign(CharacterManager.prototype, {
         o.size = o.size !== undefined ? o.size : [0.25, 2];
 
         if (o.mesh) {
-            var gm = o.mesh.geometry;
-            var h = (Math.abs(gm.boundingBox.max.y) + Math.abs(gm.boundingBox.min.y)) * o.scale;
-            var py = -(Math.abs(gm.boundingBox.max.y) - Math.abs(gm.boundingBox.min.y)) * o.scale * 0.5; // ?
+            const gm = o.mesh.geometry;
+            const h = (Math.abs(gm.boundingBox.max.y) + Math.abs(gm.boundingBox.min.y)) * o.scale;
             o.size[1] = h;
         }
 
@@ -81,7 +95,7 @@ Object.assign(CharacterManager.prototype, {
         o.rot = o.rot === undefined ? [0, 0, 0] : o.rot;
         o.quat = new Quaternion().setFromEuler(new Euler().fromArray(o.rot)).toArray();
 
-        var material;
+        let material;
         if (o.material !== undefined) {
             if (o.material.constructor === String) material = root.mat[o.material];
             else material = o.material;
@@ -89,18 +103,18 @@ Object.assign(CharacterManager.prototype, {
             material = root.mat.hero;
         }
 
-        var g = new Capsule(o.size[0], o.size[1], 6);
+        const g = new Capsule(o.size[0], o.size[1], 6);
 
-        var mesh = new Group();
+        const mesh = new Group();
 
         if (o.debug) {
-            var mm = new Mesh(g, root.mat.debug);
+            const mm = new Mesh(g, root.mat.debug);
             root.extraGeo.push(g);
             mesh.add(mm);
         }
 
         if (o.mesh) {
-            var model = o.mesh;
+            const model = o.mesh;
             model.material = material;
             model.scale.multiplyScalar(o.scale);
             model.position.set(0, py, 0);
@@ -113,7 +127,7 @@ Object.assign(CharacterManager.prototype, {
 
             //this.extraGeo.push( mesh.skin.geometry );
         } else {
-            var mx = new Mesh(g, material);
+            const mx = new Mesh(g, material);
             root.extraGeo.push(g);
             mesh.add(mx);
         }

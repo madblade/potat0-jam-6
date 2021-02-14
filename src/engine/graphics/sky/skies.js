@@ -4,16 +4,19 @@
 
 'use strict';
 
-import { SkyFlat }   from './sky';
+import { SkyFlat }          from './sky';
 import {
-    Mesh, MeshBasicMaterial,
+    LightDefaultColors,
+    LightDefaultIntensities
+}                           from '../light';
+import { WorldType }        from '../../../model/backend/terrain/chunks';
+import {
+    Mesh,
+    MeshBasicMaterial,
     SphereBufferGeometry,
-    Vector3, Color
-}                    from 'three';
-import {
-    LightDefaultColors, LightDefaultIntensities
-}                    from '../light';
-import { WorldType } from '../../../model/backend/terrain/chunks';
+    Vector3,
+    Color
+}                           from 'three';
 
 let SkyModule = {
 

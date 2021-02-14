@@ -1,15 +1,19 @@
+/**
+ * Title scenes and cross-fade manager.
+ */
+
+'use strict';
+
 import {
     LinearFilter,
     Mesh,
     OrthographicCamera,
     PlaneBufferGeometry,
     RGBFormat,
-    Scene, ShaderMaterial, WebGLRenderTarget
+    Scene,
+    ShaderMaterial,
+    WebGLRenderTarget
 } from 'three';
-
-/**
- * Title scenes and cross-fade manager.
- */
 
 let RendererTitles = {
 

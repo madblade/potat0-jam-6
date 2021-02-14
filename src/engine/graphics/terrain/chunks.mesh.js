@@ -1,8 +1,15 @@
+/**
+ * Terrain / Chunk mesh wrapper.
+ */
+
+import { Water }            from '../water/water';
 import {
-    BoxBufferGeometry, Mesh, MeshBasicMaterial,
-    DoubleSide, Vector3
-} from 'three';
-import { Water } from '../water/water';
+    BoxBufferGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    DoubleSide,
+    Vector3
+}                           from 'three';
 
 let ChunksMeshModule = {
 

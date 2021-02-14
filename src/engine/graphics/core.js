@@ -4,8 +4,8 @@
 
 'use strict';
 
-import { LoadingManager } from 'three';
 import Stats              from 'three/examples/jsm/libs/stats.module';
+import { LoadingManager } from 'three';
 
 let CoreModule = {
 

@@ -1,16 +1,23 @@
 /**
- *
+ * Player graphics link.
  */
 
 'use strict';
 
-import { Entity } from './entity';
+import { Entity }           from './entity';
+import { ItemType }         from '../self/items';
+import { ShadersModule }    from '../../../engine/graphics/shaders/shaders';
 import {
-    BufferAttribute, BufferGeometry, DoubleSide, Line,
-    LineDashedMaterial, Mesh, Object3D, RingBufferGeometry, ShaderMaterial
-} from 'three';
-import { ItemType } from '../self/items';
-import { ShadersModule } from '../../../engine/graphics/shaders/shaders';
+    BufferAttribute,
+    BufferGeometry,
+    DoubleSide,
+    Line,
+    LineDashedMaterial,
+    Mesh,
+    Object3D,
+    RingBufferGeometry,
+    ShaderMaterial
+}                           from 'three';
 
 let PlayerModule = {
 

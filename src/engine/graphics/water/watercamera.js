@@ -1,7 +1,18 @@
+/**
+ * Water texture / reflection effect updates.
+ * Adapted from THREE.
+ */
+
 import {
     LinearFilter,
-    Matrix4, Object3D, PerspectiveCamera, Plane,
-    RGBFormat, Vector3, Vector4, WebGLRenderTarget
+    Matrix4,
+    Object3D,
+    PerspectiveCamera,
+    Plane,
+    RGBFormat,
+    Vector3,
+    Vector4,
+    WebGLRenderTarget
 } from 'three';
 
 let WaterCameraModule = {

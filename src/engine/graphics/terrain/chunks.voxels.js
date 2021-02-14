@@ -8,7 +8,9 @@
 import {
     BufferAttribute,
     BufferGeometry,
-    Color, Mesh, Vector3
+    Color,
+    Mesh,
+    Vector3
 }                                   from 'three';
 import {
     createShadowCastingMaterial,

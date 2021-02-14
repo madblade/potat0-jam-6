@@ -9,8 +9,11 @@
  * @author Jonas Wagner / http://29a.ch/ && http://29a.ch/slides/2012/webglwater/ : Water shader explanations in WebGL
  */
 
-import { inherit }           from '../../../extend';
+'use strict';
 
+import { inherit }       from '../../../extend';
+
+import { ShadersModule } from '../shaders/shaders';
 import {
     Color,
     FrontSide,
@@ -21,7 +24,6 @@ import {
     UniformsUtils,
     Vector3,
 }                        from 'three';
-import { ShadersModule } from '../shaders/shaders';
 
 let Water = function(
     graphics, geometry, options, worldId

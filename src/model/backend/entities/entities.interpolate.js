@@ -1,8 +1,10 @@
-import { Vector3 } from 'three';
-
 /**
  * Handles entities position / rotation interpolation.
  */
+
+'use strict';
+
+import { Vector3 } from 'three';
 
 let EntitiesInterpolationModule = {
 

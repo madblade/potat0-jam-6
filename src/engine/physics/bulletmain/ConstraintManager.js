@@ -1,14 +1,24 @@
-import { map, root }                                   from './root';
+/**
+ * Legacy.
+ */
+
+'use strict';
+
+import { map, root }    from './root';
 import {
-    BufferAttribute, BufferGeometry, Line, Mesh
-} from 'three';
+    BufferAttribute,
+    BufferGeometry,
+    Line,
+    Mesh
+}                       from 'three';
 
 function ConstraintManager()
 {
     this.ID = 0;
     this.joints = [];
 
-    /*this.mat0 =new LineBasicMaterial( { vertexColors: VertexColors, depthTest: false, depthWrite: false, transparent: true });
+    /*this.mat0 =new LineBasicMaterial( { vertexColors: VertexColors, depthTest: false,
+        depthWrite: false, transparent: true });
     this.mat1 = new MeshBasicMaterial({ wireframe:true, color:0x00ff00, depthTest:false, depthWrite:true });
     this.mat2 = new MeshBasicMaterial({ wireframe:true, color:0xffff00, depthTest:false, depthWrite:true });
 

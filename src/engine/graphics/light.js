@@ -5,7 +5,9 @@
 'use strict';
 
 import {
-    AmbientLight, DirectionalLight, HemisphereLight,
+    AmbientLight,
+    DirectionalLight,
+    HemisphereLight,
 } from 'three';
 
 let LightDefaultIntensities = {

@@ -5,9 +5,15 @@
 'use strict';
 
 import {
-    FrontSide,
+    DataTexture,
     DoubleSide,
-    MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshToonMaterial, LuminanceFormat, NearestFilter, DataTexture,
+    FrontSide,
+    LuminanceFormat,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    MeshPhongMaterial,
+    MeshToonMaterial,
+    NearestFilter,
 } from 'three';
 
 let MaterialsModule = {

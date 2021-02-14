@@ -2,7 +2,9 @@
  * (c) madblade 2021 all rights reserved
  */
 
-import { Object3D }       from 'three';
+'use strict';
+
+import { Object3D }  from 'three';
 
 let PhysicsInputModule = {
 

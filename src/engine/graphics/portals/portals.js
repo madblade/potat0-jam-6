@@ -4,11 +4,17 @@
 
 'use strict';
 
-import { Screen } from './screen';
+import { Screen }   from './screen';
 import {
-    DoubleSide, LinearFilter, NearestFilter, RGBFormat,
-    Mesh, PlaneBufferGeometry, ShaderMaterial, WebGLRenderTarget
-} from 'three';
+    DoubleSide,
+    LinearFilter,
+    NearestFilter,
+    RGBFormat,
+    Mesh,
+    PlaneBufferGeometry,
+    ShaderMaterial,
+    WebGLRenderTarget
+}                   from 'three';
 
 let PortalsModule = {
 

@@ -1,14 +1,21 @@
+/**
+ * Legacy Geometry, extended for the needs of bullet.
+ */
 
 'use strict';
 
-import { inherit }        from '../../../extend';
+import { inherit }              from '../../../extend';
 
-import { ConvexHull } from './ConvexHull';
+import { ConvexHull }           from './ConvexHull';
+import { Geometry }             from 'three/examples/jsm/deprecated/Geometry';
 import {
-    BufferAttribute, BufferGeometry, CylinderGeometry,
-    Float32BufferAttribute, Matrix4, SphereGeometry
-}                     from 'three';
-import { Geometry }   from 'three/examples/jsm/deprecated/Geometry';
+    BufferAttribute,
+    BufferGeometry,
+    CylinderGeometry,
+    Float32BufferAttribute,
+    Matrix4,
+    SphereGeometry
+}                               from 'three';
 
 export function geometryInfo(g, type)
 {

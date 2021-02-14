@@ -4,14 +4,16 @@
 
 'use strict';
 
-import { ClearMaskPass, MaskPass } from 'three/examples/jsm/postprocessing/MaskPass';
-import { ClearPass } from 'three/examples/jsm/postprocessing/ClearPass';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { ClearMaskPass, MaskPass }  from 'three/examples/jsm/postprocessing/MaskPass';
+import { ClearPass }                from 'three/examples/jsm/postprocessing/ClearPass';
+import { ShaderPass }               from 'three/examples/jsm/postprocessing/ShaderPass';
+import { CopyShader }               from 'three/examples/jsm/shaders/CopyShader';
+import { EffectComposer }           from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass }               from 'three/examples/jsm/postprocessing/RenderPass';
+import { FXAAShader }               from 'three/examples/jsm/shaders/FXAAShader';
+import { UnrealBloomPass }          from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { ShadowPass }               from './ShadowPass';
+import { SAOPass }                  from 'three/examples/jsm/postprocessing/SAOPass';
 import {
     ACESFilmicToneMapping,
     PCFSoftShadowMap,
@@ -19,9 +21,7 @@ import {
     sRGBEncoding,
     Vector2,
     WebGLRenderer
-} from 'three';
-import { ShadowPass } from './ShadowPass';
-import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass';
+}                                   from 'three';
 
 let RendererFactory = {
 

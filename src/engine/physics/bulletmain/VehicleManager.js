@@ -1,8 +1,18 @@
+/**
+ * Vehicle.
+ */
 
-import { geometryInfo }                             from './Geometry';
-import { map, root }                                from './root';
-import { BoxGeometry, BufferGeometry, Group, Mesh } from 'three';
-import { CarHelper }                                from './CarHelper';
+'use strict';
+
+import { geometryInfo }     from './Geometry';
+import { map, root }        from './root';
+import { CarHelper }        from './CarHelper';
+import {
+    BoxGeometry,
+    BufferGeometry,
+    Group,
+    Mesh
+}                           from 'three';
 
 function VehicleManager()
 {

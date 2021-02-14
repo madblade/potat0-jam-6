@@ -5,10 +5,15 @@
  *
  */
 
-import { Line3, Plane, Triangle, Vector3 } from 'three';
+import {
+    Line3,
+    Plane,
+    Triangle,
+    Vector3
+} from 'three';
 
-var Visible = 0;
-var Deleted = 1;
+const Visible = 0;
+const Deleted = 1;
 
 // var v1 = new Vector3();
 

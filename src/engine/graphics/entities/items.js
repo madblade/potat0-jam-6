@@ -1,14 +1,22 @@
+/**
+ * Items.
+ */
 
 'use strict';
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader }   from 'three/examples/jsm/loaders/GLTFLoader';
 import {
     AnimationClip,
     AnimationMixer,
-    BufferAttribute, Color, DataTexture, LoopRepeat,
+    BufferAttribute,
+    Color,
+    DataTexture,
+    LoopRepeat,
     MeshPhongMaterial,
-    Object3D, RepeatWrapping, RGBFormat,
-} from 'three';
+    Object3D,
+    RepeatWrapping,
+    RGBFormat,
+}                       from 'three';
 
 let ItemsGraphicsModule = {
 

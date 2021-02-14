@@ -1,6 +1,12 @@
+/**
+ * Rigid bodies manager.
+ */
 
-import { Capsule, geometryInfo }  from './Geometry';
-import { map, root }              from './root';
+'use strict';
+
+import { Capsule, geometryInfo }    from './Geometry';
+import { map, root }                from './root';
+import { ChamferBox, ChamferCyl }   from './Chamfer';
 import {
     BoxBufferGeometry,
     CylinderBufferGeometry,
@@ -10,8 +16,7 @@ import {
     Mesh,
     Quaternion,
     SphereBufferGeometry
-} from 'three';
-import { ChamferBox, ChamferCyl } from './Chamfer';
+}                                   from 'three';
 
 function RigidBodyManager()
 {

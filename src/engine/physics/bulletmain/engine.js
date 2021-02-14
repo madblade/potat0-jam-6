@@ -22,8 +22,10 @@ import { ConvexObjectBreaker }  from './ConvexObjectBreaker';
 import { map, REVISION, root }  from './root';
 import {
     BoxBufferGeometry,
-    CircleBufferGeometry, ConeBufferGeometry,
-    CylinderBufferGeometry, Group,
+    CircleBufferGeometry,
+    ConeBufferGeometry,
+    CylinderBufferGeometry,
+    Group,
     LineBasicMaterial,
     Matrix4,
     MeshBasicMaterial,

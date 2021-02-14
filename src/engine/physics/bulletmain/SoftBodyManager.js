@@ -1,9 +1,21 @@
-import { ConvexGeometry, geometryInfo }               from './Geometry';
-import { map, root }                                  from './root';
-import { BufferAttribute, BufferGeometry,
-    Mesh, PlaneBufferGeometry, Vector3
-} from 'three';
-import { Tubular }                                    from './Tubular';
+/**
+ * Soft bodies.
+ */
+
+'use strict';
+
+import extend                           from '../../../extend';
+
+import { ConvexGeometry, geometryInfo } from './Geometry';
+import { map, root }                    from './root';
+import { Tubular }                      from './Tubular';
+import {
+    BufferAttribute,
+    BufferGeometry,
+    Mesh,
+    PlaneBufferGeometry,
+    Vector3
+}                                       from 'three';
 
 function SoftBodyManager()
 {
@@ -13,7 +25,7 @@ function SoftBodyManager()
     this.tmpMat = null;
 }
 
-Object.assign(SoftBodyManager.prototype, {
+extend(SoftBodyManager.prototype, {
 
     step(AR, N)
     {

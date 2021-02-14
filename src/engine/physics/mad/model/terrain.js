@@ -6,12 +6,12 @@
 
 'use strict';
 
-import extend               from '../../../../extend';
+import extend   from '../../../../extend';
 
 import {
     Matrix4,
     Vector3
-}                           from 'three';
+}               from 'three';
 
 const HeightMapConstants = {
     DEFAULT_EXTENT: 10

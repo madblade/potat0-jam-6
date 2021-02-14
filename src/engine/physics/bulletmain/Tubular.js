@@ -6,6 +6,7 @@
 
 import extend, { inherit }  from '../../../extend';
 
+import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 import  {
     BufferGeometry,
     CatmullRomCurve3,
@@ -19,7 +20,6 @@ import  {
     Vector2,
     Vector3
 }                           from 'three';
-import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 
 let Tubular = function(a, c, d, e, f, h)//, m)
 {

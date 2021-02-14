@@ -6,8 +6,9 @@
 
 'use strict';
 
-import { Vector3 }        from 'three';
 import extend             from '../../../extend';
+
+import { Vector3 }        from 'three';
 
 // Generic entity that can collide.
 let PhysicsEntity = function(

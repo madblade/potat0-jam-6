@@ -1,3 +1,8 @@
+/**
+ * Box with rounded corners. Legacy.
+ */
+
+'use strict';
 
 import { inherit }      from '../../../extend';
 
@@ -9,8 +14,8 @@ import {
     PlaneGeometry,
     SphereGeometry,
     TorusGeometry
-}                   from 'three';
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry';
+}                       from 'three';
+import { Geometry }     from 'three/examples/jsm/deprecated/Geometry';
 
 let ChamferBox = function(a, c, d, e, f, h, m, k)
 {

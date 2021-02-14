@@ -1,28 +1,27 @@
 /**
  * Render target hierarchy management helper.
+ *
+ *
+ *  Does not display stubs.
+ *
+ *   w0
+ *   ├─ w1        | p1 -> p1'
+ *   │   ├─ w3   | p3 -> p3'
+ *   │   ├─ w4   | p4 -> p4'
+ *   │   └─ w5   | p5 -> p5'
+ *   └─ w2        | p2 -> p2'
+ *       ├─ w5    | p5 -> p5'
+ *       ├─ w6    | p6 -> p6'
+ *       └─ w0    | p7 -> p7'
+ *
+ *  red: rewired backwards
+ *  cyan: contains direct circle
+ *  orange: duplicated
+ *  green: linear
+ *
  */
 
 'use strict';
-
-/*
- * Does not display stubs.
- *
- *  w0
- *  ├─ w1        | p1 -> p1'
- *  │   ├─ w3   | p3 -> p3'
- *  │   ├─ w4   | p4 -> p4'
- *  │   └─ w5   | p5 -> p5'
- *  └─ w2        | p2 -> p2'
- *      ├─ w5    | p5 -> p5'
- *      ├─ w6    | p6 -> p6'
- *      └─ w0    | p7 -> p7'
- *
- * red: rewired backwards
- * cyan: contains direct circle
- * orange: duplicated
- * green: linear
- *
- */
 
 import extend           from '../../../extend';
 

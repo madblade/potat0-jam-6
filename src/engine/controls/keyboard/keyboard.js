@@ -1,10 +1,11 @@
 /**
- *
+ * Keyboard config entrypoint.
  */
 
 'use strict';
 
 import extend               from '../../../extend';
+
 import { ListenerModule }   from './listeners';
 import { KeysModule }       from './keys';
 import { LayoutAZERTY }     from './layout.azerty';

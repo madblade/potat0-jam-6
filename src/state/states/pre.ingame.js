@@ -1,12 +1,14 @@
 /**
- *
+ * Almost in-game.
+ * Signifies the user that it is necessary to click
+ * before a pointer lock request can be completed.
  */
 
 'use strict';
 
-import { $ } from '../../modules/polyfills/dom';
-
 import extend from '../../extend';
+
+import { $ } from '../../modules/polyfills/dom';
 
 let PreIngameState = function(stateManager)
 {

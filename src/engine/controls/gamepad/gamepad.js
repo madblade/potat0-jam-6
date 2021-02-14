@@ -4,8 +4,9 @@
 
 'use strict';
 
-import { GamepadActionModule }   from './actions';
 import extend                    from '../../../extend';
+
+import { GamepadActionModule }   from './actions';
 import { GamepadControls }       from './GamepadControls';
 
 let GamepadModule = {

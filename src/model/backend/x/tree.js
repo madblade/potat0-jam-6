@@ -1,5 +1,5 @@
 /**
- *
+ * Connectivity beteen worlds.
  */
 
 'use strict';

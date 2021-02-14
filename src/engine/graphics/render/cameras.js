@@ -4,14 +4,19 @@
 
 'use strict';
 
-import extend from '../../../extend';
-import { Camera } from './camera';
+import extend                   from '../../../extend';
+
+import { Camera }               from './camera';
+import { WaterCameraModule }    from '../water/watercamera';
 import {
-    Matrix4, PerspectiveCamera,
-    Plane, Raycaster,
-    Vector2, Vector3, Vector4,
-} from 'three';
-import { WaterCameraModule } from '../water/watercamera';
+    Matrix4,
+    PerspectiveCamera,
+    Plane,
+    Raycaster,
+    Vector2,
+    Vector3,
+    Vector4,
+}                               from 'three';
 
 const DEFAULT_CAMERA = {
     fov: 90,

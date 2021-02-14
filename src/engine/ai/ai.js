@@ -2,6 +2,8 @@
  * AI.
  */
 
+'use strict';
+
 import extend       from '../../extend';
 
 let AI = function(app)

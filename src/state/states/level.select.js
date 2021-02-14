@@ -5,6 +5,7 @@
 'use strict';
 
 import extend, { inherit }  from '../../extend';
+
 import { $ }                from '../../modules/polyfills/dom';
 import { GameHeader }       from './mainmenu';
 import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';

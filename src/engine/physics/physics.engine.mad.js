@@ -9,20 +9,22 @@
 
 'use strict';
 
-import extend                 from '../../extend';
-import { Sweeper }                 from './mad/sweeper';
-import { Collider }                from './mad/collider';
-import { Integrator }              from './mad/integrator';
-import { PhysicsEntity }           from './mad/entity';
-import TimeUtils                   from './mad/time';
-import { HeightMapModel }          from './mad/model/terrain';
-import { PhysicsInputModule }      from './mad/input/input';
+import extend                       from '../../extend';
+
+import { Sweeper }                  from './mad/sweeper';
+import { Collider }                 from './mad/collider';
+import { Integrator }               from './mad/integrator';
+import { PhysicsEntity }            from './mad/entity';
+import TimeUtils                    from './mad/time';
+import { HeightMapModel }           from './mad/model/terrain';
+import { PhysicsInputModule }       from './mad/input/input';
+import { CollisionModel }           from './mad/model/collisionmodel';
+import { CharacterCollisionModel }  from './mad/model/character';
+import { TrimeshCollisionModel }    from './mad/model/trimesh';
 import {
-    Quaternion, Vector3
-}                                  from 'three';
-import { CollisionModel }          from './mad/model/collisionmodel';
-import { CharacterCollisionModel } from './mad/model/character';
-import { TrimeshCollisionModel }   from './mad/model/trimesh';
+    Quaternion,
+    Vector3
+}                                   from 'three';
 
 let MadEngine = function(physics)
 {

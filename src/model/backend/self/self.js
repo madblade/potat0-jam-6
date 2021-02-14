@@ -1,16 +1,20 @@
 /**
- *
+ * Self model component.
  */
 
 'use strict';
 
-import extend                from '../../../extend';
+import extend                       from '../../../extend';
 
-import { InventoryModel }    from './inventory';
-import { Object3D, Vector3, Vector4 } from 'three';
-import { SelfInterpolationModule } from './self.interpolate';
-import { SelfUpdateModule } from './self.update';
-import { SelfObjectsModule } from './self.objects';
+import { InventoryModel }           from './inventory';
+import { SelfInterpolationModule }  from './self.interpolate';
+import { SelfUpdateModule }         from './self.update';
+import { SelfObjectsModule }        from './self.objects';
+import {
+    Object3D,
+    Vector3,
+    Vector4
+}                                   from 'three';
 
 let SelfModel = function(app)
 {

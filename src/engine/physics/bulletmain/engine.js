@@ -6,17 +6,20 @@
 
 'use strict';
 
-import Worker                  from '../bulletworker/engine.worker';
-import { RigidBodyManager }    from './RigidBodyManager';
-import { ConstraintManager }   from './ConstraintManager';
-import { SoftBodyManager }     from './SoftBodyManager';
-import { TerrainManager }      from './TerrainManager';
-import { VehicleManager }      from './VehicleManager';
-import { CharacterManager }    from './CharacterManager';
-import { CollisionManager }    from './CollisionManager';
-import { RayCaster }           from './RayCaster';
-import { ConvexObjectBreaker } from './ConvexObjectBreaker';
-import { map, REVISION, root } from './root';
+import extend                   from '../../../extend';
+
+import Worker                   from '../bulletworker/engine.worker';
+// ^ webpack-managed import
+import { RigidBodyManager }     from './RigidBodyManager';
+import { ConstraintManager }    from './ConstraintManager';
+import { SoftBodyManager }      from './SoftBodyManager';
+import { TerrainManager }       from './TerrainManager';
+import { VehicleManager }       from './VehicleManager';
+import { CharacterManager }     from './CharacterManager';
+import { CollisionManager }     from './CollisionManager';
+import { RayCaster }            from './RayCaster';
+import { ConvexObjectBreaker }  from './ConvexObjectBreaker';
+import { map, REVISION, root }  from './root';
 import {
     BoxBufferGeometry,
     CircleBufferGeometry, ConeBufferGeometry,
@@ -27,9 +30,8 @@ import {
     MeshLambertMaterial,
     PlaneBufferGeometry,
     SphereBufferGeometry,
-    Vector3, VertexColors
-}             from 'three';
-import extend from '../../../extend';
+    Vector3
+}                               from 'three';
 
 const Time = typeof performance === 'undefined' ? Date : performance;
 const PI90 = Math.PI * 0.5;
@@ -828,13 +830,13 @@ extend(AmmoWrapper.prototype, {
                 color: 0x88FF33, name: 'kinematic', wireframe: wire
             }),
             soft: new MeshLambertMaterial({
-                name: 'soft', vertexColors: VertexColors
+                name: 'soft', vertexColors: true
             }),
             debug: new MeshBasicMaterial({
                 name: 'debug', color: 0x00FF00, depthTest: false, depthWrite: false, wireframe: true
             }),
             jointLine: new LineBasicMaterial({
-                name: 'jointLine', vertexColors: VertexColors, depthTest: false, depthWrite: false, transparent: true
+                name: 'jointLine', vertexColors: true, depthTest: false, depthWrite: false, transparent: true
             }),
             jointP1: new MeshBasicMaterial({
                 name: 'jointP1', color: 0x00FF00, depthTest: false, depthWrite: true, wireframe: true

@@ -4,8 +4,9 @@
 
 'use strict';
 
-import extend from '../../../extend';
-import { Scene } from 'three';
+import extend       from '../../../extend';
+
+import { Scene }    from 'three';
 
 let SceneManager = function()
 {

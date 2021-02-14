@@ -1,3 +1,6 @@
+/**
+ * Tubular mesh from legacy THREE.
+ */
 
 'use strict';
 

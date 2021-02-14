@@ -1,11 +1,14 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Box.
  */
 
 'use strict';
 
-import { CollisionModel }   from './collisionmodel';
 import extend, { inherit }  from '../../../../extend';
+
+import { CollisionModel }   from './collisionmodel';
 
 let BoxCollisionModel = function(physicsEntity, collisionSettings, e)
 {

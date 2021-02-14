@@ -5,7 +5,7 @@
 
 'use strict';
 
-import extend               from '../../extend';
+import extend from '../../extend';
 
 let Checkpoint = function(level)
 {

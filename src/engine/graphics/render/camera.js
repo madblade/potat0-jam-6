@@ -4,10 +4,14 @@
 
 'use strict';
 
-import extend from '../../../extend';
+import extend           from '../../../extend';
+
 import {
-    Object3D, PerspectiveCamera, Quaternion, Vector3
-} from 'three';
+    Object3D,
+    PerspectiveCamera,
+    Quaternion,
+    Vector3
+}                       from 'three';
 
 let Camera = function(
     fov, aspect, nearPlane, farPlane, worldId

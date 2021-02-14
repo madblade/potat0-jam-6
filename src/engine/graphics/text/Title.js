@@ -1,3 +1,8 @@
+/**
+ * In-game text graphical component.
+ */
+
+'use strict';
 
 import extend      from '../../../extend';
 

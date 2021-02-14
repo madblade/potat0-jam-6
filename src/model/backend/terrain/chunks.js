@@ -1,12 +1,11 @@
 /**
- *
+ * Terrain model component.
  */
 
 'use strict';
 
-/** Model **/
-
 import extend                from '../../../extend';
+
 import { ChunkUpdateModule } from './chunks.update';
 
 const WorldType = Object.freeze({

@@ -1,5 +1,7 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Static-to-dynamic narrow phase.
  */
 
 'use strict';

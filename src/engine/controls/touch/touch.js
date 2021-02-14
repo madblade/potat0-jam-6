@@ -4,7 +4,7 @@
 
 'use strict';
 
-import extend from '../../../extend';
+import extend                   from '../../../extend';
 
 import { TouchListenerModule }  from './listeners';
 import { MobileWidgetControls } from './MobileWidgetControls';

@@ -3,13 +3,13 @@
  *
  * Maybe this should be able to push entities around?
  * Think about scripting this behavior.
- *
  */
 
 'use strict';
 
-import { CollisionModel }  from './collisionmodel';
 import extend, { inherit } from '../../../../extend';
+
+import { CollisionModel }  from './collisionmodel';
 
 let PlatformCollisionModel = function(physicsEntity, collisionSettings, e)
 {

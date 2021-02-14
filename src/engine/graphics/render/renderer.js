@@ -5,17 +5,20 @@
 'use strict';
 
 import extend                      from '../../../extend';
-import {
-    DoubleSide,
-    MeshBasicMaterial,
-    Scene, PlaneBufferGeometry, Mesh
-}                                  from 'three';
+
 import { ShaderPass }              from 'three/examples/jsm/postprocessing/ShaderPass';
 import { RendererFactory }         from './renderer.factory';
 import { RendererUpdates }         from './renderer.updates';
 import { LightDefaultIntensities } from '../light';
 import { RendererPortals }         from './renderer.portals';
 import { RendererTitles }          from './renderer.titles';
+import {
+    DoubleSide,
+    MeshBasicMaterial,
+    Scene,
+    PlaneBufferGeometry,
+    Mesh
+}                                  from 'three';
 
 let RendererManager = function(graphicsEngine)
 {

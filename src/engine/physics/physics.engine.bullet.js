@@ -5,11 +5,15 @@
 
 'use strict';
 
-import {
-    Matrix4, MeshBasicMaterial, Quaternion, Vector3
-} from 'three';
 import extend           from '../../extend';
+
 import { AmmoWrapper }  from './bulletmain/engine';
+import {
+    Matrix4,
+    MeshBasicMaterial,
+    Quaternion,
+    Vector3
+}                       from 'three';
 
 let BulletEngine = function(physics)
 {

@@ -1,10 +1,11 @@
 /**
- *
+ * Entrypoint for modding.
  */
 
 'use strict';
 
 import extend           from '../../extend';
+
 import { Chat }         from '../chat/chat';
 import { Hud }          from '../hud/hud';
 

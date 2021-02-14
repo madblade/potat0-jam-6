@@ -1,11 +1,12 @@
 /**
- *
+ * In-game.
  */
 
 'use strict';
 
-import extend               from '../../extend';
-import { $ }                from '../../modules/polyfills/dom';
+import extend from '../../extend';
+
+import { $ }  from '../../modules/polyfills/dom';
 
 let IngameState = function(stateManager)
 {

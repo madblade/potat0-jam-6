@@ -1,11 +1,12 @@
 /**
- *
+ * Loading state.
  */
 
 'use strict';
 
-import extend        from '../../extend';
-import { $ }         from '../../modules/polyfills/dom';
+import extend  from '../../extend';
+
+import { $ }   from '../../modules/polyfills/dom';
 
 let LoadingState = function(stateManager)
 {

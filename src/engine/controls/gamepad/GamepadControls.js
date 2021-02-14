@@ -1,7 +1,10 @@
 /**
- * (c) madblade 2021
- * All rights reserved.
+ * (c) madblade 2021 all rights reserved.
+ *
+ * Gamepad API bindings.
  */
+
+'use strict';
 
 import extend, { assert } from '../../../extend';
 

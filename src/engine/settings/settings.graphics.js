@@ -1,11 +1,13 @@
 /**
- *
+ * Graphics settings menu.
  */
 
 'use strict';
 
-import { $ }                from '../../modules/polyfills/dom';
 import extend, { inherit }  from '../../extend';
+
+import { $ }                from '../../modules/polyfills/dom';
+
 import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let GraphicsMenu = function(settingsModule)

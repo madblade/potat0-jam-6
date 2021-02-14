@@ -1,11 +1,17 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Heightmap collision model.
  */
 
 'use strict';
 
 import extend               from '../../../../extend';
-import { Matrix4, Vector3 } from 'three';
+
+import {
+    Matrix4,
+    Vector3
+}                           from 'three';
 
 const HeightMapConstants = {
     DEFAULT_EXTENT: 10

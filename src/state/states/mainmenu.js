@@ -1,12 +1,13 @@
 /**
- * Connect to a distant / local server or launch a local server.
+ * Main menu. New game, load, set audio.
  */
 
 'use strict';
 
+import extend, { inherit }  from '../../extend';
+
 import { $ }                from '../../modules/polyfills/dom';
 import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
-import extend, { inherit }  from '../../extend';
 
 const GameTitle = 'Rad Yarns';
 const GameHeader = `

@@ -1,12 +1,12 @@
 /**
- *
+ * In-game setting menus.
  */
 
 'use strict';
 
-import { $ }              from '../../modules/polyfills/dom';
-
 import extend, { assert } from '../../extend';
+
+import { $ }              from '../../modules/polyfills/dom';
 
 import { AudioMenu }      from './settings.audio';
 import { ControlsMenu }   from './settings.controls';

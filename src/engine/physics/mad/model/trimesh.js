@@ -1,12 +1,18 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Triangle set collision model.
  */
 
 'use strict';
 
-import { CollisionModel }   from './collisionmodel';
 import extend, { inherit }  from '../../../../extend';
-import { Matrix4, Vector3 } from 'three';
+
+import { CollisionModel }   from './collisionmodel';
+import {
+    Matrix4,
+    Vector3
+}                           from 'three';
 
 let TrimeshCollisionModel = function(
     physicsEntity, collisionSettings, e,

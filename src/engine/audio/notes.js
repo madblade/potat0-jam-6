@@ -2,7 +2,10 @@
  * Generating, aggregating notes.
  */
 
+'use strict';
+
 import extend, { assert }      from '../../extend';
+
 import { AlphabetFrequencies } from './frequencies';
 import { Audio }               from 'three';
 

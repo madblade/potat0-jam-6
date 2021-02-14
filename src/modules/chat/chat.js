@@ -1,5 +1,6 @@
 /**
- *
+ * (Multi-player) chat module.
+ * No use in a single-player game (unless?)
  */
 
 'use strict';

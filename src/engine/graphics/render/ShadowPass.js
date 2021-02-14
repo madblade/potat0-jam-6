@@ -1,3 +1,8 @@
+/**
+ * Shadow volume effect.
+ */
+
+'use strict';
 
 import extend, { inherit }         from '../../../extend';
 

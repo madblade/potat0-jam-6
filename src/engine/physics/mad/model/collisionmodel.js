@@ -1,11 +1,18 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Abstract collision model.
  */
 
 'use strict';
 
-import extend                        from '../../../../extend';
-import { Vector2, Vector3, Vector4 } from 'three';
+import extend           from '../../../../extend';
+
+import {
+    Vector2,
+    Vector3,
+    Vector4
+}                       from 'three';
 
 const AABB_EPS = 0.00001;
 

@@ -1,5 +1,12 @@
+/**
+ * Math utilities and bullet extends.
+ */
+
+'use strict';
 
 /* global Ammo */
+
+import extend from '../../../extend';
 
 let math = {
 
@@ -92,9 +99,9 @@ let math = {
 
     distanceArray(p1, p2)
     {
-        var x = p2[0] - p1[0];
-        var y = p2[1] - p1[1];
-        var z = p2[2] - p1[2];
+        const x = p2[0] - p1[0];
+        const y = p2[1] - p1[1];
+        const z = p2[2] - p1[2];
         return Math.sqrt(x * x + y * y + z * z);
     },
 };
@@ -104,7 +111,8 @@ let mathExtend = function()
     //--------------------------------------------------
     //  ammo btTransform extend
     //--------------------------------------------------
-    Ammo.btTransform.prototype = Object.assign(Object.create(Ammo.btTransform.prototype), {
+    // Ammo.btTransform.prototype = Object.assign(Object.create(Ammo.btTransform.prototype), {
+    extend(Ammo.btTransform.prototype, {
 
         identity()
         {
@@ -313,7 +321,8 @@ let mathExtend = function()
     //--------------------------------------------------
     //  ammo btVector3 extend
     //--------------------------------------------------
-    Ammo.btVector3.prototype = Object.assign(Object.create(Ammo.btVector3.prototype), {
+    // Ammo.btVector3.prototype = Object.assign(Object.create(Ammo.btVector3.prototype), {
+    extend(Ammo.btVector3.prototype, {
 
         log()
         {
@@ -470,7 +479,8 @@ let mathExtend = function()
     //--------------------------------------------------
     //  ammo btQuaternion extend
     //--------------------------------------------------
-    Ammo.btQuaternion.prototype = Object.assign(Object.create(Ammo.btQuaternion.prototype), {
+    // Ammo.btQuaternion.prototype = Object.assign(Object.create(Ammo.btQuaternion.prototype), {
+    extend(Ammo.btQuaternion.prototype, {
 
         set(x, y, z, w)
         {

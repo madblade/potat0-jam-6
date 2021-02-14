@@ -1,5 +1,5 @@
 /**
- *
+ * Model that is directly wired to the user input (e.g. camera).
  */
 
 'use strict';

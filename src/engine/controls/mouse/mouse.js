@@ -1,5 +1,5 @@
 /**
- *
+ * Mouse config entrypoint.
  */
 
 'use strict';

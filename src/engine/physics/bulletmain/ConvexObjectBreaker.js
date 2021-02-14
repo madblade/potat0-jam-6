@@ -1,14 +1,3 @@
-
-import extend                   from '../../../extend';
-
-import { ConvexBufferGeometry } from './Geometry';
-import {
-    Line3,
-    Mesh,
-    Plane,
-    Vector3
-}                               from 'three';
-
 /**
  * @author yomboprime https://github.com/yomboprime
  *
@@ -39,6 +28,18 @@ import {
  * @param {double} smallDelta Max distance to consider that a point belongs to a plane.
  *
  */
+
+'use strict';
+
+import extend                   from '../../../extend';
+
+import { ConvexBufferGeometry } from './Geometry';
+import {
+    Line3,
+    Mesh,
+    Plane,
+    Vector3
+}                               from 'three';
 
 function ConvexObjectBreaker(minSizeForBreak, smallDelta)
 {

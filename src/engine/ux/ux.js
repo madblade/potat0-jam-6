@@ -6,6 +6,7 @@
 'use strict';
 
 import extend             from '../../extend';
+
 import { Checkpoint }     from './checkpoint';
 import { UXIngameModule } from './ux.ingame';
 import { PlayerState }    from './player.state';

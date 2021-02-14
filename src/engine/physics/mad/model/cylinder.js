@@ -7,8 +7,9 @@
 
 'use strict';
 
-import { CollisionModel }  from './collisionmodel';
 import extend, { inherit } from '../../../../extend';
+
+import { CollisionModel }  from './collisionmodel';
 import { Vector3 }         from 'three';
 
 let CylinderCollisionModel = function(physicsEntity, collisionSettings, e)

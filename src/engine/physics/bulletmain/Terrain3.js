@@ -1,7 +1,12 @@
+/**
+ * Legacy Terrain.
+ */
 
 'use strict';
 
 import extend, { inherit }  from '../../../extend';
+
+import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 import {
     BufferAttribute,
     BufferGeometry,
@@ -13,7 +18,6 @@ import {
     Vector2,
     Vector3,
 }                           from 'three';
-import { Geometry }         from 'three/examples/jsm/deprecated/Geometry';
 
 let Terrain3 = function(a)
 {

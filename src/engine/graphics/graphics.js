@@ -4,7 +4,7 @@
 
 'use strict';
 
-import extend       from '../../extend';
+import extend                   from '../../extend';
 
 // Base dependencies.
 import { CoreModule }           from './core';
@@ -17,19 +17,25 @@ import { EntitiesModule }       from './entities/entities';
 import { ItemsGraphicsModule }  from './entities/items';
 import { AnimationsModule }     from './entities/animations';
 import { PortalsModule }        from './portals/portals';
-import { CameraManager,
-    CamerasModule }          from './render/cameras';
-import { RendererManager,
-    RenderersModule }        from './render/renderer';
-import { SceneManager,
-    ScenesModule }           from './render/scene';
-import { FacesModule }       from './terrain/chunks.voxels.faces';
-import { ChunksModule }      from './terrain/chunks';
-import { ChunksMeshModule }  from './terrain/chunks.mesh';
-import { ShadersModule }     from './shaders/shaders';
-import { SkyModule }         from './sky/skies';
-import { TextModule }        from './text/text';
-import { ChunksVoxelModule } from './terrain/chunks.voxels';
+import {
+    CameraManager,
+    CamerasModule
+}                               from './render/cameras';
+import {
+    RendererManager,
+    RenderersModule
+}                               from './render/renderer';
+import {
+    SceneManager,
+    ScenesModule
+}                               from './render/scene';
+import { FacesModule }          from './terrain/chunks.voxels.faces';
+import { ChunksModule }         from './terrain/chunks';
+import { ChunksMeshModule }     from './terrain/chunks.mesh';
+import { ShadersModule }        from './shaders/shaders';
+import { SkyModule }            from './sky/skies';
+import { TextModule }           from './text/text';
+import { ChunksVoxelModule }    from './terrain/chunks.voxels';
 
 let Graphics = function(app)
 {

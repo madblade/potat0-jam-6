@@ -1,15 +1,18 @@
 /**
- *
+ * Entity model.
  */
 
 'use strict';
 
-import extend           from '../../../extend';
+import extend                               from '../../../extend';
 
-import { PlayerModule }                        from './player';
-import { BoxBufferGeometry, MeshBasicMaterial} from 'three';
-import { EntitiesInterpolationModule }         from './entities.interpolate';
-import { EntitiesUpdateModule }                from './entities.update';
+import { PlayerModule }                     from './player';
+import { EntitiesInterpolationModule }      from './entities.interpolate';
+import { EntitiesUpdateModule }             from './entities.update';
+import {
+    BoxBufferGeometry,
+    MeshBasicMaterial
+}                                           from 'three';
 
 let EntityModel = function(app)
 {

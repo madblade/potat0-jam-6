@@ -4,16 +4,16 @@
 
 'use strict';
 
-import extend, { assert } from '../../extend';
+import extend, { assert }   from '../../extend';
+
+import { Notes }            from './notes';
+import { SFXLibrary }       from './library';
 import {
     Audio,
     AudioListener,
-    AudioLoader, PositionalAudio,
-}                         from 'three';
-
-// Sounds
-import { Notes }      from './notes';
-import { SFXLibrary } from './library';
+    AudioLoader,
+    PositionalAudio,
+}                           from 'three';
 
 let AudioEngine = function(app)
 {

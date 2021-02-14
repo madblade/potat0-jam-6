@@ -1,10 +1,13 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Dynamic AABB broad phase.
  */
 
 'use strict';
 
 import extend, { assert }     from '../../../extend';
+
 import { PlaceHolder }        from './placeholder';
 import { HeightMapConstants } from './model/terrain';
 

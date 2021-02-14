@@ -4,15 +4,15 @@
 
 'use strict';
 
-import { $ }                from '../../modules/polyfills/dom';
-
 import extend               from '../../extend';
 
-import { KeyboardModule } from './keyboard/keyboard';
-import { MouseModule }    from './mouse/mouse';
-import { TouchModule }    from './touch/touch';
-import { WindowModule }   from './window/window';
-import { GamepadModule }  from './gamepad/gamepad';
+import { $ }                from '../../modules/polyfills/dom';
+
+import { KeyboardModule }   from './keyboard/keyboard';
+import { MouseModule }      from './mouse/mouse';
+import { TouchModule }      from './touch/touch';
+import { WindowModule }     from './window/window';
+import { GamepadModule }    from './gamepad/gamepad';
 
 let UI = function(app)
 {

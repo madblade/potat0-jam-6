@@ -1,10 +1,13 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Integration routines (leapfrog).
  */
 
 'use strict';
 
 import extend      from '../../../extend';
+
 import { Vector3 } from 'three';
 
 let Integrator = function(sweeper)

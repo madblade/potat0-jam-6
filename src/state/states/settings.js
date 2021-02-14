@@ -1,5 +1,5 @@
 /**
- *
+ * In-game settings menu state.
  */
 
 'use strict';

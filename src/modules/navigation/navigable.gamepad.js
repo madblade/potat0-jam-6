@@ -3,6 +3,7 @@
  */
 
 import extend from '../../extend';
+
 import { $ }  from '../polyfills/dom';
 
 let GamepadNavigable = function(maxActiveItems)

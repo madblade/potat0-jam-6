@@ -1,16 +1,22 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Bumper-lifter collision routines.
+ * See GDC 2014 / Overgrowth.
  */
 
 'use strict';
 
-import { CollisionModel }           from './collisionmodel';
 import extend, { inherit }          from '../../../../extend';
-import {
-    Mesh, MeshBasicMaterial,
-    SphereBufferGeometry, Vector3
-}                                   from 'three';
+
+import { CollisionModel }           from './collisionmodel';
 import { CharacterResponseModule }  from './character.response';
+import {
+    Mesh,
+    MeshBasicMaterial,
+    SphereBufferGeometry,
+    Vector3
+}                                   from 'three';
 
 let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
 {

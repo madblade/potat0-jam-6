@@ -1,5 +1,5 @@
 /**
- *
+ * Portal model component.
  */
 
 'use strict';

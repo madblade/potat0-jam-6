@@ -1,3 +1,6 @@
+/**
+ * Legacy raycasting.
+ */
 
 'use strict';
 

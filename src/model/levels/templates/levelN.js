@@ -1,7 +1,11 @@
+/**
+ * Level template.
+ */
 
 'use strict';
 
 import extend, { inherit }  from '../../../extend';
+
 import { Level }            from '../level';
 
 let LevelN = function(title, id)

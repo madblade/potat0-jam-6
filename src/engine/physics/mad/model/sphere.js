@@ -1,11 +1,14 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Sphere.
  */
 
 'use strict';
 
-import { CollisionModel }   from './collisionmodel';
 import extend, { inherit }  from '../../../../extend';
+
+import { CollisionModel }   from './collisionmodel';
 
 let SphereCollisionModel = function(physicsEntity, collisionSettings)
 {

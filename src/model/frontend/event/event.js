@@ -1,5 +1,6 @@
 /**
- *
+ * Frontend output,
+ * where events are pushed to the server / physics engine / game logic component.
  */
 
 'use strict';

@@ -1,6 +1,7 @@
 
-import * as Ammo from '../../../libs/ammo3.wasm';
-import                '../../../libs/ammo3.wasm.wasm';
+import * as Ammo            from '../../../libs/ammo3.wasm';
+import                           '../../../libs/ammo3.wasm.wasm';
+// ^ webpack-managed imports
 
 import { math, mathExtend } from './math';
 import { RigidBody }        from './RigidBody';

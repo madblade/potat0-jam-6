@@ -1,7 +1,6 @@
 /**
- *
+ * Portal models.
  */
-
 
 'use strict';
 

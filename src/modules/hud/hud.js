@@ -5,6 +5,7 @@
 'use strict';
 
 import extend                   from '../../extend';
+
 import { $ }                    from '../polyfills/dom';
 import { HUDInventoryModule }   from './hud.inventory';
 

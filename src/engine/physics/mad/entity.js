@@ -1,5 +1,7 @@
 /**
  * (c) madblade 2021 all rights reserved
+ *
+ * Abstract entity collision model.
  */
 
 'use strict';

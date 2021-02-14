@@ -1,6 +1,9 @@
 /**
  * Handles player progress, state, objectives.
  */
+
+'use strict';
+
 import extend from '../../extend';
 
 let PlayerState = function()

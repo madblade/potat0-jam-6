@@ -2,7 +2,6 @@
  * Single level.
  */
 
-
 'use strict';
 
 import extend       from '../../extend';

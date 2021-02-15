@@ -95,7 +95,6 @@ let SelfObjectsModule = {
                 graphics.cameraManager.mainCamera.up.position;
             mesh.position.copy(p);
 
-
             mesh.rotation.copy(mc.up.rotation);
             mesh.getWrapper().rotation.x = -Math.PI / 2 + 0.2 + mc.pitch.rotation.x;
             mesh.getWrapper().rotation.z = mc.yaw.rotation.z;
@@ -108,18 +107,21 @@ let SelfObjectsModule = {
         }
     },
 
+    /** @deprecated */
     updateBow()
     {
-        let graphics = this.app.engine.graphics;
-        let times = graphics.times;
-        let mixers = graphics.mixers;
-        let mixer = mixers.get('yumi');
+        const graphics = this.app.engine.graphics;
+        const am = graphics.animationManager;
+        const times = am.times;
+        const mixers = am.mixers;
+        const clips = am.clips;
+        const mixer = mixers.get('yumi');
         if (!mixer) return;
         if (this.needsStartLoadingBow)
         {
             mixer.setTime(0);
             mixer.update(0);
-            let yumiClip = graphics.clips.get('yumi');
+            let yumiClip = clips.get('yumi');
             yumiClip.reset();
             yumiClip.play();
             times.set('yumi', Date.now());

@@ -33,9 +33,6 @@ let EntitiesModule = {
 
     initializeEntity(entityId, model, color)
     {
-        let mixers = this.mixers;
-        let times = this.times;
-
         // XXX [ANIMATION] export model to format glTF
         let geometry = this.loadReferenceGeometryFromMemory(model); // Should be 'steve'.
         if (!geometry) return;
@@ -59,8 +56,8 @@ let EntitiesModule = {
         mixer.clipAction(clip)
             .setDuration(1)
             .play();
-        mixers.set(entityId, mixer);
-        times.set(entityId, Date.now());
+
+        this.animationManager.addEntityAnimation(entityId, mixer);
 
         return mesh;
     },

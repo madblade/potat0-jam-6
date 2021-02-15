@@ -1,5 +1,6 @@
 /**
- *
+ * Client updates entrypoint.
+ * (a distant server would updates that are parsed with these methods)
  */
 
 'use strict';

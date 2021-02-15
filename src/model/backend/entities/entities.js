@@ -4,15 +4,16 @@
 
 'use strict';
 
-import extend                               from '../../../extend';
+import extend                          from '../../../extend';
 
-import { PlayerModule }                     from './player';
-import { EntitiesInterpolationModule }      from './entities.interpolate';
-import { EntitiesUpdateModule }             from './entities.update';
+import { PlayerModule }                from './player';
+import { EntitiesInterpolationModule } from './entities.interpolate';
+import { EntitiesUpdateModule }        from './entities.update';
 import {
     BoxBufferGeometry,
     MeshBasicMaterial
-}                                           from 'three';
+}                                      from 'three';
+import { ProjectileUpdateModule }      from './projectile';
 
 let EntityModel = function(app)
 {
@@ -48,8 +49,12 @@ extend(EntityModel.prototype, {
             switch (o.type)
             {
                 case 'box':
-                    const geo = new BoxBufferGeometry(o.w, o.h, o.d, 2, 2, 2);
-                    const mat = new MeshBasicMaterial({ wireframe: true, color: 0x000000 });
+                    const geo = new BoxBufferGeometry(
+                        o.w, o.h, o.d, 2, 2, 2
+                    );
+                    const mat = new MeshBasicMaterial(
+                        { wireframe: true, color: 0x000000 }
+                    );
                     const m = graphics.createMesh(geo, mat);
                     const p = o.position;
                     const r = o.rotation;
@@ -78,6 +83,8 @@ extend(EntityModel.prototype, {
         let entities = this.entitiesIngame;
         let pushes = this.entitiesOutdated;
 
+        // We’re not actually using the 'outdated' mechanism
+        // with direct updates: this is used for client/server multi-player.
         pushes.forEach(
             (updatedEntity, id) =>
             {
@@ -85,11 +92,11 @@ extend(EntityModel.prototype, {
 
                 let currentEntity = entities.get(id);
                 if (!updatedEntity)
-                    this.removeEntity(id, graphics, entities);
+                    this.removeEntity(id);
                 else if (!currentEntity)
-                    this.addEntity(id, updatedEntity, graphics, entities);
+                    this.addEntity(id, updatedEntity);
                 else
-                    this.updateEntity(id, currentEntity, updatedEntity, graphics, entities);
+                    this.updateEntity(id, currentEntity, updatedEntity);
             }
         );
 
@@ -122,6 +129,7 @@ extend(EntityModel.prototype, {
 });
 
 extend(EntityModel.prototype, EntitiesUpdateModule);
+extend(EntityModel.prototype, ProjectileUpdateModule);
 extend(EntityModel.prototype, EntitiesInterpolationModule);
 
 export { EntityModel };

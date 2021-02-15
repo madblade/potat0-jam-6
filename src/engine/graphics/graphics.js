@@ -15,7 +15,6 @@ import { MeshesModule }         from './meshes';
 import { TexturesModule }       from './textures';
 import { EntitiesModule }       from './entities/entities';
 import { ItemsGraphicsModule }  from './entities/items';
-import { AnimationsModule }     from './entities/animations';
 import { PortalsModule }        from './portals/portals';
 import {
     CameraManager,
@@ -28,14 +27,15 @@ import {
 import {
     SceneManager,
     ScenesModule
-}                               from './render/scene';
-import { FacesModule }          from './terrain/chunks.voxels.faces';
-import { ChunksModule }         from './terrain/chunks';
-import { ChunksMeshModule }     from './terrain/chunks.mesh';
-import { ShadersModule }        from './shaders/shaders';
-import { SkyModule }            from './sky/skies';
-import { TextModule }           from './text/text';
-import { ChunksVoxelModule }    from './terrain/chunks.voxels';
+}                            from './render/scene';
+import { AnimationManager }  from './animations/animations';
+import { FacesModule }       from './terrain/chunks.voxels.faces';
+import { ChunksModule }      from './terrain/chunks';
+import { ChunksMeshModule }  from './terrain/chunks.mesh';
+import { ShadersModule }     from './shaders/shaders';
+import { SkyModule }         from './sky/skies';
+import { TextModule }        from './text/text';
+import { ChunksVoxelModule } from './terrain/chunks.voxels';
 
 let Graphics = function(app)
 {
@@ -57,7 +57,7 @@ let Graphics = function(app)
     this.sceneManager       = new SceneManager(this);
     this.rendererManager    = new RendererManager(this);
     this.cameraManager      = new CameraManager(this);
-    // TODO animations manager
+    this.animationManager   = new AnimationManager(this);
 
     // Interaction.
     this.controls =     null;
@@ -105,7 +105,6 @@ extend(Graphics.prototype, MeshesModule);
 extend(Graphics.prototype, TexturesModule);
 extend(Graphics.prototype, EntitiesModule);
 extend(Graphics.prototype, ItemsGraphicsModule);
-extend(Graphics.prototype, AnimationsModule);
 extend(Graphics.prototype, PortalsModule);
 extend(Graphics.prototype, CamerasModule);
 extend(Graphics.prototype, RenderersModule);

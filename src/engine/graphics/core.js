@@ -24,7 +24,7 @@ let CoreModule = {
         this.initPhysics();
 
         // Animations
-        this.initializeAnimations();
+        this.animationManager.initializeAnimations();
 
         // Audio
         this.initAudio();
@@ -130,6 +130,7 @@ let CoreModule = {
         let controlsEngine = this.app.engine.controls;
         let physicsEngine = this.app.engine.physics;
         let aiEngine = this.app.engine.ai;
+        let animationEngine = this.animationManager;
         let ux = this.app.engine.ux;
 
         // Request animation frame.
@@ -166,6 +167,9 @@ let CoreModule = {
 
         // Update controls for Touch/Gamepad devices.
         controlsEngine.updateControlsDevice(deltaT);
+
+        // Update animation mixers.
+        animationEngine.updateAnimations(deltaT);
 
         // Render.
         serverModel.refresh();

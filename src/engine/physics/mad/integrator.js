@@ -129,15 +129,31 @@ extend(Integrator.prototype, {
         cm.updateCollisionModelAfterMovement();
 
         // Notify server model.
+        const app = this.physics.physics.app;
         if (entity.entityId === 0)
         {
-            const app = this.physics.physics.app;
             const sm = app.model.backend.selfModel;
             sm.updateSelf(cm.position0, cm.rotation0, -1);
-            // window.dh.h.position.set(
-            //     cm.position0.x, cm.position0.y, cm.position0.z + 0.5);
-
-            // sm.updateSelf([0, 0, 1], [0, 0, 0, 0], -1);
+            cm.lifterHelper.position.copy(cm.lifterCenter);
+            cm.bumperHelper.position.copy(cm.bumperCenter);
+        }
+        else
+        {
+            const em = app.model.backend.entityModel;
+            const updates = {};
+            updates[entity.entityId] = {
+                p: cm.position0,
+                r: cm.rotation0,
+                w: -1,
+                // d: null
+            };
+            em.updateEntities(updates);
+            if (!cm.isCharacter)
+            {
+                console.error(
+                    `[Integrator] Entity ${entity.entityId} is dynamic but not a character.`
+                );
+            }
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
         }

@@ -22,7 +22,8 @@ let SelfUpdateModule = {
         // Update animation.
         const animate = p.x !== newP.x || p.y !== newP.y; // XXX [ANIMATION] manage 3D.
         if (animate) {
-            graphics.updateAnimation(id);
+            // graphics.updateAnimation(id);
+            // TODO animation here
             // graphics.updateAnimation('yumi');
         }
         p.copy(newP);

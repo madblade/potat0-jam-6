@@ -53,6 +53,7 @@ let PhysicsInputModule = {
                 case 'lx': if (d[3]) changed = true; d[3] = !1; break;
                 case 'ux': if (d[4]) changed = true; d[4] = !1; break;
                 case 'dx': if (d[5]) changed = true; d[5] = !1; break;
+                case 'xx': d.fill(false); changed = true; break;
                 case 'vecx': cm._ww = null; changed = true; break;
                 default:
                     return;

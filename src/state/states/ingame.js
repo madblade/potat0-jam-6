@@ -40,6 +40,7 @@ extend(IngameState.prototype, {
         const rendererManager = app.engine.graphics.rendererManager;
         rendererManager.setInTitleScene(false);
         controlsEngine.stopListeners();
+        controlsEngine.stopKeyboardInteraction();
         ux.setGamePaused(true);
 
         return new Promise(function(resolve) {

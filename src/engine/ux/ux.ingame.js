@@ -29,6 +29,10 @@ let UXIngameModule = {
 
                 const titles = currentTask.titles;
                 const progressInCurrentTask = playerState.getProgressInCurrentTask();
+                if (progressInCurrentTask === 0)
+                {
+                    console.log(progressInCurrentTask);
+                }
                 const rendererManager = this.app.engine.graphics.rendererManager;
 
                 // check if we already started transitioning…

@@ -9,6 +9,7 @@ import extend, { inherit }  from '../../../../extend';
 import { Level }         from '../../level';
 import { Level2Terrain } from './terrain';
 import { Vector3 }       from 'three';
+import { Level2Objects } from './objects';
 
 let Level2 = function(title, id)
 {
@@ -18,6 +19,7 @@ let Level2 = function(title, id)
     this.generateTerrain();
 
     this.objects = [];
+    this.generateStaticObjects();
 
     this.player = {
         position: [0, 0, 1.5]
@@ -85,5 +87,6 @@ extend(Level2.prototype, {
 });
 
 extend(Level2.prototype, Level2Terrain);
+extend(Level2.prototype, Level2Objects);
 
 export { Level2 };

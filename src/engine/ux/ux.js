@@ -111,6 +111,22 @@ extend(UX.prototype, {
         console.log(`[UX] Message: '${text}'`);
     },
 
+    directJoinLevel(level)
+    {
+        // cleanup old level
+        const app = this.app;
+        app.model.backend.cleanupFullModel();
+        app.model.frontend.cleanupFullModel();
+        app.engine.graphics.cleanupFullGraphics();
+        app.engine.physics.cleanupFullPhysics();
+
+        // prepare new level
+        app.model.frontend.init();
+        app.model.backend.init(level);
+
+        // run
+    },
+
     validateLevel()
     {
         // Current level was completed.
@@ -126,7 +142,9 @@ extend(UX.prototype, {
         }
         else
         {
+            this.resetTimeSinceLastEvent();
             state.setLevel(nextLevel);
+            this.directJoinLevel(nextLevel);
         }
     },
 
@@ -135,6 +153,7 @@ extend(UX.prototype, {
         const state = this.playerState;
         state.resetProgressInCurrentTask(); // goto next set of tasks
         state.incrementProgressInLevel(); // 1 level = n tasks
+        this.resetTimeSinceLastEvent();
 
         // Check that there are more tasks left.
         const currentLevel = state.getLevel();

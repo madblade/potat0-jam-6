@@ -30,6 +30,7 @@ extend(PlayerState.prototype, {
 
         // Reset progress in loaded level.
         this.progressInLevel = 0;
+        this.progressInCurrentTask = 0;
     },
 
     getLevel()

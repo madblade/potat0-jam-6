@@ -20,8 +20,9 @@ $.fn.center = function() {
 };
 
 $(window).resize(function() {
+    $('#announce').center();
     $('.settings').center();
-    $('.reticle').center();
+    // $('.reticle').center();
 });
 
 export { $ };

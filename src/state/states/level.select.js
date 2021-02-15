@@ -52,7 +52,7 @@ let LevelSelectState = function(stateManager)
         </div>
 
         <div class="input-group">
-            <button class="btn btn-outline-secondary btn-block" id="button-return-main">
+            <button class="btn btn-outline-secondary btn-block" id="return">
                 Back
             </button>
         </div>
@@ -140,7 +140,15 @@ extend(LevelSelectState.prototype, {
             )
             // .css('position', '')
             // .fadeIn();
+            .center()
             .show();
+
+        // Retrieve nb of navigable menus.
+        const ux = this.stateManager.app.engine.ux;
+        const maxLevel = ux.playerState.getFarthestLevel();
+        this.maxActiveItem = 2 + // return & load farthest
+            (maxLevel + 1) - // selectable levels
+            1; // starts at 0
 
         // Add listeners.
         this.startListeners();
@@ -171,7 +179,7 @@ extend(LevelSelectState.prototype, {
 
         this.startTableListeners();
 
-        $('#button-return-main').click(function() {
+        $('#return').click(function() {
             // Necessary to disconnect from WebRTC socket
             // (among, possibly, other things).
             app.setState('main');
@@ -200,13 +208,13 @@ extend(LevelSelectState.prototype, {
         // Remove jQuery listeners.
         this.stopListeners();
 
-        // Fade out hub announce.
+        // Clear announce.
         return new Promise(function(resolve) {
-            let hub = $('#announce');
-            hub.fadeOut(200, function() {
-                hub.empty().removeClass('hub');
-                resolve();
-            });
+            let announce = $('#announce');
+            // announce.fadeOut(200, function() {
+            announce.empty().removeClass('hub');
+            resolve();
+            // });
         });
     },
 
@@ -217,13 +225,32 @@ extend(LevelSelectState.prototype, {
         this.super.navigate.call(this, navigationOptions);
 
         if (navigationOptions === 'back')
-            $('#button-return-main').trigger('click');
+            $('#return').trigger('click');
     },
 
     selectItems()
     {
-        // TODO get all loadable levels.
-        return [];
+        const app = this.stateManager.app;
+        const levels = app.model.levels.getLevels();
+
+        const selectableItems = [];
+
+        if (levels)
+        {
+            // const nbLevels = levels.length;
+            const ux = app.engine.ux;
+            const maxLevel = ux.playerState.getFarthestLevel();
+            for (let i = 0; i <= maxLevel; ++i)
+            {
+                const lid = `#button-join-level-${i}`;
+                selectableItems.push($(lid));
+            }
+        }
+
+        selectableItems.push($('#button-resume'));
+        selectableItems.push($('#return'));
+
+        return selectableItems;
     }
 
 });

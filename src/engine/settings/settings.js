@@ -49,7 +49,8 @@ extend(Settings.prototype, {
             .addClass('settings')
             .append(this.activeMenu.getHTML())
             .center()
-            .fadeIn();
+            // .fadeIn()
+            .show();
 
         this.activeMenu.listen();
     },
@@ -69,10 +70,10 @@ extend(Settings.prototype, {
 
         return new Promise(resolve => {
             let settings = $('#announce');
-            settings.fadeOut(200, () => {
-                settings.empty().removeClass('settings');
-                resolve();
-            });
+            // settings.fadeOut(200, () => {
+            settings.empty().removeClass('settings');
+            resolve();
+            // });
         });
     },
 
@@ -117,7 +118,6 @@ extend(Settings.prototype, {
             return;
         }
 
-        this.gamepadActive = true;
         am.navigate(navigationOptions);
     },
 

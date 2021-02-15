@@ -61,6 +61,10 @@
 
 /* Level select */
 
+.btn-outline-light.gamepad-selected {
+    background-color: #db805e;
+}
+
 .announce {
     padding-top: 50px;
     padding-bottom: 50px;

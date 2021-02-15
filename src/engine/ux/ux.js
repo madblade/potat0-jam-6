@@ -75,6 +75,7 @@ extend(UX.prototype, {
         if (status)
         {
             const state = this.playerState;
+            state.setLevel(level);
             state.resetProgressInLevel();
             state.resetProgressInCurrentTask();
             this.resetTimeSinceLastEvent();

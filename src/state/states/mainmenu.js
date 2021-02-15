@@ -25,40 +25,6 @@ let MainMenuState = function(stateManager)
         <div class="container">
             ${GameHeader}
         `;
-
-    this.htmlQuick =
-        `
-        <div class="col-12"><div class="col-12">
-
-        <div class="input-group mb-1 center-block" id="play-quick">
-            <div class="input-group-append flex-fill">
-                <button id="button-play"
-                    class="btn btn-outline-secondary flex-fill" type="button">New Game</button>
-            </div>
-        </div>
-
-        <div class="input-group mb-1 center-block" id="load">
-            <div class="input-group-append flex-fill">
-                <button id="button-load"
-                    class="btn btn-outline-secondary flex-fill" type="button">Load</button>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-4"></div>
-            <div id="volume-control-wrapper"
-                class="input-group mb-1 center-block col-4 slider-container">
-                <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
-                <div class="col-10 input-group-append flex-fill">
-                    <input type="range" min="0" max="100" value="0" class="slider"
-                        id="main-volume-controller">
-                </div>
-            </div>
-        </div>
-
-        </div></div>
-        `;
-
     this.htmlTail = '</div>';
 
     // This is a menu, we need navigable functionality.
@@ -69,6 +35,52 @@ let MainMenuState = function(stateManager)
 inherit(MainMenuState, GamepadNavigable);
 
 extend(MainMenuState.prototype, {
+
+
+    getMainMenuHTML()
+    {
+        const ga = this.stateManager.app.engine.settings.gamepadActive;
+        const ai = this.activeItem;
+
+        return `
+            <div class="col-12"><div class="col-12">
+
+            <div class="input-group mb-1 center-block" id="play-quick">
+                <div class="input-group-append flex-fill">
+                    <button id="button-play"
+                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 0)}"
+                        type="button">New Game</button>
+                </div>
+            </div>
+
+            <div class="input-group mb-1 center-block" id="load">
+                <div class="input-group-append flex-fill">
+                    <button id="button-load"
+                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 1)}"
+                        type="button">Load</button>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4"></div>
+                <div id="volume-control-wrapper"
+                    class="input-group mb-1 center-block col-4 slider-container ${this.hl(ga, ai, 2)}">
+                    <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
+                    <div class="col-10 input-group-append flex-fill">
+                        <input type="range" min="0" max="100" value="0" class="slider"
+                            id="main-volume-controller">
+                    </div>
+                </div>
+            </div>
+
+            </div></div>
+        `;
+    },
+
+    hl(ga, ai, i) // highlight
+    {
+        return ga && ai === i ? 'gamepad-selected' : '';
+    },
 
     startListeners()
     {
@@ -107,11 +119,12 @@ extend(MainMenuState.prototype, {
             .addClass('main-menu')
             .append(
                 this.htmlHead +
-                this.htmlQuick +
+                this.getMainMenuHTML() +
                 this.htmlTail
             )
-            .css('left', '')
-            .css('right', '')
+            // .css('left', '')
+            // .css('right', '')
+            .center()
             // .css('position', '')
             .show();
 

@@ -23,6 +23,12 @@ extend(GamepadNavigable.prototype, {
     // Inherited
     navigate(options)
     {
+        // Ensure gamepad is active for persistent menu highlighting.
+        if (this.settingsModule)
+            this.settingsModule.gamepadActive = true;
+        else if (this.stateManager)
+            this.stateManager.app.engine.settings.gamepadActive = true;
+
         let didSomething = false;
 
         if (options === 'up')

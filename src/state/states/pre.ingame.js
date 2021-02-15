@@ -31,7 +31,8 @@ extend(PreIngameState.prototype, {
             .addClass('settings')
             .append(this.html)
             .center()
-            .fadeIn();
+            // .fadeIn()
+            .show();
 
         $('#request-pl').click(() => {
             const state = this.stateManager;
@@ -46,10 +47,10 @@ extend(PreIngameState.prototype, {
         $('#request-pl').off('click');
         return new Promise(function(resolve) {
             let requestTab = $('#announce');
-            requestTab.fadeOut(200, function() {
-                requestTab.empty().removeClass('settings');
-                resolve();
-            });
+            // requestTab.fadeOut(200, function() {
+            requestTab.empty().removeClass('settings');
+            resolve();
+            // });
         });
     },
 

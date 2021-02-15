@@ -54,10 +54,10 @@ extend(LoadingState.prototype, {
     {
         return new Promise(function(resolve) {
             const loader = $('#announce');
-            loader.fadeOut(200, function() {
-                loader.empty();
-                resolve();
-            });
+            // loader.fadeOut(200, function() {
+            loader.empty();
+            resolve();
+            // });
         });
     },
 

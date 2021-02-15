@@ -30,7 +30,7 @@ let Level1 = function(title, id)
             type: 'splash',
             titles: [
                 '<h2>Chapter I</h2>', // after, sub
-                '<h2>Title</h2>', // main
+                `<h2>${this.title}</h2>`, // main
             ],
             fadeInTitle: 500,
             fadeOutTitle: 500,
@@ -56,7 +56,7 @@ let Level1 = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.validateTask(); // goto next task
+                ux.validateLevel(); // goto next task
             }
         },
     ];

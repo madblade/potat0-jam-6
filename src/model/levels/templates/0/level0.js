@@ -68,7 +68,7 @@ let Level0 = function(title, id)
             {
                 // console.log(ux);
                 const player = backend.selfModel.position;
-                const destination = new Vector3(10, 10, 1);
+                const destination = new Vector3(-5, -5, 1);
                 return player.distanceTo(destination) < 1;
             },
             performWhenConditionMet: function(backend, ux)

@@ -135,6 +135,19 @@ extend(UX.prototype, {
         const state = this.playerState;
         state.resetProgressInCurrentTask(); // goto next set of tasks
         state.incrementProgressInLevel(); // 1 level = n tasks
+
+        // Check that there are more tasks left.
+        const currentLevel = state.getLevel();
+        const scenario = currentLevel.getScenario();
+        const progressInLevel = state.getProgressInLevel();
+        const currentTask = scenario[progressInLevel];
+        if (!currentTask)
+        {
+            console.error(
+                '[UX/ValidateTask] ValidateTask called instead of ValidateLevel.'
+            );
+            this.validateLevel();
+        }
     },
 
 });

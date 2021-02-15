@@ -15,6 +15,11 @@ let UXIngameModule = {
         const progressInLevel = playerState.getProgressInLevel();
         const scenario = level.getScenario();
         const currentTask = scenario[progressInLevel];
+        if (!currentTask)
+        {
+            console.error('[UX] Current task not found.');
+            return;
+        }
 
         const backend = this.app.model.backend;
 

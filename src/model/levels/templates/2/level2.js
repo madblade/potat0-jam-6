@@ -28,7 +28,7 @@ let Level2 = function(title, id)
             type: 'splash',
             titles: [
                 '<h2>Chapter II</h2>', // after, sub
-                '<h2>Title</h2>', // main
+                `<h2>${this.title}</h2>`, // main
             ],
             fadeInTitle: 500,
             fadeOutTitle: 500,
@@ -47,7 +47,7 @@ let Level2 = function(title, id)
             {
                 // console.log(ux);
                 const player = backend.selfModel.position;
-                const destination = new Vector3(5, 5, 1);
+                const destination = new Vector3(0, 0, 1);
                 return player.distanceTo(destination) < 1;
             },
             performWhenConditionMet: function(backend, ux)
@@ -55,7 +55,7 @@ let Level2 = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.validateTask(); // goto next task
+                ux.validateLevel(); // goto next task
             }
         },
     ];

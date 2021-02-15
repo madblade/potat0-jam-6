@@ -112,14 +112,61 @@ extend(Collider.prototype, {
             {
                 if (this._debug)
                     console.warn(`[Mad/Collider] No height map underneath ${e.entityId}??`);
-                return;
+            }
+            else
+            {
+                // 2. Collide.
+                const localX = x - (i - .5) * heightMapWidth;
+                const localY = y - (j - .5) * heightMapWidth;
+                cm.collideAgainstTerrain(localX, localY, hms, this);
             }
 
-            // 2. Collide.
-            const localX = x - (i - .5) * heightMapWidth;
-            const localY = y - (j - .5) * heightMapWidth;
-            cm.collideAgainstTerrain(localX, localY, hms, this);
+            // Other possibly colliding heightmaps.
+            const maxRadius = cm.getMaxRadius();
+            const halfHM = heightMapWidth / 2;
+            const checkIMinus = this.positiveMod(x + halfHM, heightMapWidth) <= maxRadius;
+            const checkIPlus = this.positiveMod(x + halfHM, heightMapWidth) + maxRadius >= heightMapWidth;
+            const checkJMinus = this.positiveMod(y + halfHM, heightMapWidth) <= maxRadius;
+            const checkJPlus = this.positiveMod(y + halfHM, heightMapWidth) + maxRadius >= heightMapWidth;
+            // Borders.
+            if (checkIMinus)
+                this.collideOnBorder(i - 1, j, x, y, heightMapWidth, heightMaps, cm);
+            if (checkIPlus)
+                this.collideOnBorder(i + 1, j, x, y, heightMapWidth, heightMaps, cm);
+            if (checkJMinus)
+                this.collideOnBorder(i, j - 1, x, y, heightMapWidth, heightMaps, cm);
+            if (checkJPlus)
+                this.collideOnBorder(i, j + 1, x, y, heightMapWidth, heightMaps, cm);
+            // Corners
+            if (checkIMinus && checkJMinus)
+                this.collideOnBorder(i - 1, j - 1, x, y, heightMapWidth, heightMaps, cm);
+            if (checkIPlus && checkJMinus)
+                this.collideOnBorder(i + 1, j - 1, x, y, heightMapWidth, heightMaps, cm);
+            if (checkIMinus && checkJPlus)
+                this.collideOnBorder(i - 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
+            if (checkIPlus && checkJPlus)
+                this.collideOnBorder(i + 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
         });
+    },
+
+    positiveMod(a, b)
+    {
+        return (a % b + b) % b;
+    },
+
+    collideOnBorder(i, j, x, y, heightMapWidth, heightMaps, cm)
+    {
+        const hms = heightMaps.get(`${i},${j}`);
+        if (hms)
+            cm.collideAgainstTerrain(
+                x - (i - .5) * heightMapWidth,
+                y - (j - .5) * heightMapWidth,
+                hms, this
+            );
+        else if (this._debug)
+        {
+            console.warn('[Map/Collider] No heightmap on border.');
+        }
     },
 
     collideStaticToDynamic(staticEntityCM, dynamicEntityCM)

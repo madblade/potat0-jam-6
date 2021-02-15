@@ -30,6 +30,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.bumperCenter = new Vector3();
     this.bumperRadius = collisionSettings.bumperRadius || 1;
     this.lifterDelta = collisionSettings.lifterDelta || 0.2;
+    this.maxRadius = Math.max(this.bumperRadius, this.lifterRadius);
     // TODO leg raycast coordinates here + forward orientation
 
     // Step down test
@@ -80,6 +81,11 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
 inherit(CharacterCollisionModel, CollisionModel);
 
 extend(CharacterCollisionModel.prototype, {
+
+    getMaxRadius()
+    {
+        return this.maxRadius;
+    },
 
     computeAABB()
     {

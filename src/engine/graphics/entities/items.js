@@ -1,5 +1,5 @@
 /**
- * Items.
+ * (Legacy) Items.
  */
 
 'use strict';
@@ -25,6 +25,7 @@ let ItemsGraphicsModule = {
         this.loadItemMesh('portal-gun', callback);
     },
 
+    /** @deprecated */
     loadItemMesh(modelPath, callback, errorCallback)
     {
         if (modelPath !== 'portal-gun' &&
@@ -323,7 +324,6 @@ let ItemsGraphicsModule = {
         g.attributes.uv.needsUpdate = true;
         g.uvsNeedUpdate = true;
         g.needsUpdate = true;
-
 
         // Think about setting roughness
         object.scale.set(0.08, 0.08, 0.08);

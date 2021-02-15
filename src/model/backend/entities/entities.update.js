@@ -75,6 +75,7 @@ let EntitiesUpdateModule = {
         entities.delete(id);
     },
 
+    // v   Position / rotation are updated from the server here!
     updateEntity(
         id, currentEntity, updatedEntity,
     )
@@ -151,7 +152,6 @@ let EntitiesUpdateModule = {
     {
         // Update positions and rotation
         let object3D = currentEntity.getObject3D();
-        let graphics = this.app.engine.graphics;
 
         // XXX [ANIMATION] link animation in 3D case
         let p = object3D.position;
@@ -172,6 +172,7 @@ let EntitiesUpdateModule = {
 
         // Update animation
         const id = currentEntity.id;
+        let graphics = this.app.engine.graphics;
         // TODO animation
         // if (animate) graphics.updateAnimation(id);
     },

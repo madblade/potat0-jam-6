@@ -12,7 +12,7 @@ let SelfUpdateModule = {
         let graphics = this.app.engine.graphics;
         let clientModel = this.app.model.frontend;
         let handItemWrapper = this.handItemWrapper;
-        const id = this.entityId;
+        // const id = this.entityId;
 
         let p = avatar.position;
 
@@ -45,7 +45,7 @@ let SelfUpdateModule = {
         let handItemWrapper = this.handItemWrapper;
 
         avatar.rotation.z = r.z;
-        avatar.rotation.x = r.w;
+        avatar.rotation.x = r.w + Math.PI / 2;
         avatar.getWrapper().rotation.y = Math.PI + r.x;
 
         let theta0 = r.z;

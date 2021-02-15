@@ -4,15 +4,69 @@
 
 'use strict';
 
-import { ItemType } from '../../model/backend/self/items';
+import Shiro            from '../../assets/models/teishiro.glb';
+import { ItemType }     from '../../model/backend/self/items';
+import { GLTFLoader }   from 'three/examples/jsm/loaders/GLTFLoader';
 import {
     Mesh,
     BoxGeometry,
     PlaneGeometry,
     Object3D
-}                   from 'three';
+}                       from 'three';
 
 let MeshesModule = {
+
+    // Load meshes here.
+    //    (don’t forget loadingState.notifyTaskName())
+    loadReferenceMeshes()
+    {
+        this.referenceMeshes = new Map();
+        let meshesToLoad = new Map([
+            ['shiro', Shiro]
+        ]);
+        this._nbMeshesToLoad = meshesToLoad.size;
+
+        let loader = new GLTFLoader(this.loadingManager);
+        meshesToLoad.forEach((path, id) =>
+        {
+            this.loadMesh(path, loader, gltfObject => {
+                this.referenceMeshes.set(id, gltfObject);
+                this._nbMeshesLoadedOrError++;
+            }, () => {
+                this._nbMeshesLoadedOrError++;
+            });
+        });
+    },
+
+    loadMesh(path, loader, successCallback, errorCallback)
+    {
+        const loadingState = this.app.state.getState('loading');
+        loader.load(path, gltf => {
+            if (path === Shiro)
+            {
+                this.finalizeMainCharacter(gltf, successCallback);
+            }
+        }, () => {
+            loadingState.notifyTaskName('mesh');
+        }, error => {
+            if (errorCallback) errorCallback();
+            console.error(error);
+        });
+    },
+
+    finalizeMainCharacter(gltf, callback)
+    {
+        let object = gltf.scene.children[0];
+        console.log(object);
+
+        let wrapper = new Object3D();
+        wrapper.rotation.reorder('ZYX');
+        wrapper.add(object);
+
+        object.getWrapper = () => wrapper;
+
+        if (callback) callback(object);
+    },
 
     getItemMesh(itemID, renderOnTop, cloneGeometry)
     {
@@ -52,36 +106,6 @@ let MeshesModule = {
             case ItemType.NODACHI: return 'nodachi';
             default: return;
         }
-    },
-
-    loadReferenceMeshes()
-    {
-        // TODO [GRAPHICS] LOAD here animated meshes (morphed or skinned)
-        //         (don’t forget loadingState.notifyTaskName())
-        this.referenceMeshes = new Map();
-        let meshesToLoad = [
-            // 'portal-gun',
-            // 'yumi-morph', 'ya',
-            // 'yari', 'nagamaki', 'naginata', 'nodachi', 'katana'
-        ];
-        this._nbMeshesToLoad = meshesToLoad.length;
-
-        meshesToLoad.forEach(id =>
-        {
-            this.loadItemMesh(id, gltfObject => {
-                this.referenceMeshes.set(id, gltfObject);
-                this._nbMeshesLoadedOrError++;
-            }, () => {
-                this._nbMeshesLoadedOrError++;
-            });
-        });
-
-        // this.loadMeshFromJSON('steve', geometry => {
-        //     this.referenceMeshes.set('steve', geometry);
-        //     this._nbMeshesLoadedOrError++;
-        // }, () => {
-        //     this._nbMeshesLoadedOrError++;
-        // });
     },
 
     renderOnTop(object)

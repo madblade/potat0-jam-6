@@ -9,6 +9,21 @@ import { Object3D }         from 'three';
 
 let SelfObjectsModule = {
 
+    loadSelfGraphics()
+    {
+        const selfModel = this;
+        const graphics = this.app.engine.graphics;
+        const worldId = selfModel.worldId;
+
+        let up = graphics.loadReferenceMeshFromMemory(
+            'shiro', false, false
+        );
+
+        selfModel.avatar = up;
+        graphics.addToScene(selfModel.avatar, worldId);
+    },
+
+    /** @deprecated */
     loadSelf()
     {
         let selfModel = this;
@@ -30,7 +45,10 @@ let SelfObjectsModule = {
 
         let createdEntity = graphics.createMesh(
             graphics.createGeometry('box'),
-            graphics.createMaterial('flat-phong', {color: 0x00ffff})
+            graphics.createMaterial(
+                'flat-phong',
+                {color: 0x00ffff}
+            )
         );
 
         let up = new Object3D();

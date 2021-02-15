@@ -63,7 +63,7 @@ extend(SelfModel.prototype, {
 
     init(level)
     {
-        this.loadSelf();
+        this.loadSelfGraphics();
         let player = level.getPlayer();
         const positionVector = new Vector3().fromArray(player.position);
         const rotationVector = new Vector4().fromArray([0, 0, 0, 0]); // player.rotation
@@ -124,6 +124,8 @@ extend(SelfModel.prototype, {
     },
 
     // Called every time a server update was received.
+    // This is direct (unlike entity model updates).
+    // v   Position / rotation are updated here!
     updateSelf(p, r, w, s)
     {
         w = w.toString();

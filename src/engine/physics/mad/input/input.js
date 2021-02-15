@@ -92,7 +92,7 @@ let PhysicsInputModule = {
             wv.set(f.x, f.y, 0).normalize();
         else
         {
-            console.log('DBG: forward computed from the up vector.');
+            // console.log('DBG: forward computed from the up vector.');
 
             // retry with up if camera is vertical
             const u = this._f;

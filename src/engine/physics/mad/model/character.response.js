@@ -1,8 +1,10 @@
-import { COLLISION_EPS } from '../collider';
-
 /**
  * (c) madblade 2021 all rights reserved
  */
+
+'use strict';
+
+import { COLLISION_EPS } from '../collider';
 
 let CharacterResponseModule = {
 

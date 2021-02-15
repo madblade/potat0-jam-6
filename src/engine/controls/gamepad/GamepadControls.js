@@ -118,7 +118,7 @@ extend(GamepadControls.prototype, {
             }
             if (pressed || touched)
             {
-                console.log(b);
+                // console.log(b);
             }
 
             if (pressed !== lastButtonStates[b])

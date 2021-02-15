@@ -98,7 +98,13 @@ let UXIngameModule = {
                 if (cond) currentTask.performWhenConditionMet(backend, this);
                 // ^ should handle which things come next.
 
-                console.log('[UX] Event progress.');
+                // console.log(backend.selfModel.position);
+
+                // const sweeper = this.app.engine.physics.madEngine.sweeper;
+                // const cm0 = sweeper.physicsEntities[0].collisionModel;
+                // console.log(cm0.onGround);
+
+                // console.log('[UX] Event progress.');
                 break;
 
             default:

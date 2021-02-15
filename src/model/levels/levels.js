@@ -12,7 +12,6 @@ import { Level0 } from './templates/0/level0';
 let Levels = function(app)
 {
     this.app = app;
-    this.games = new Map();
 
     this.levels = [
         new Level0('first level'),

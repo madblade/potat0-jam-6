@@ -28,7 +28,7 @@ let LevelSelectState = function(stateManager)
         <!-- Current progress -->
         <div class="input-group">
             <div class="input-group-prepend mb-1 flex-fill">
-                <span class="input-group-text flex-fill">Farthest Checkpoint</span>
+                <span class="input-group-text flex-fill">Last Checkpoint</span>
             </div>
             <div class="input-group-append mb-1">
                 <button class="btn btn-outline-light"

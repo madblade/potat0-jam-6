@@ -57,6 +57,7 @@ let Graphics = function(app)
     this.sceneManager       = new SceneManager(this);
     this.rendererManager    = new RendererManager(this);
     this.cameraManager      = new CameraManager(this);
+    // TODO animations manager
 
     // Interaction.
     this.controls =     null;

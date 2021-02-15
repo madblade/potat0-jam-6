@@ -6,6 +6,9 @@
 
 let EntitiesUpdateModule = {
 
+    //
+    // Updates from server.
+
     updateEntities(entities)
     {
         if (!entities)
@@ -24,50 +27,8 @@ let EntitiesUpdateModule = {
         this.needsUpdate = true;
     },
 
-    directUpdateEntities()
-    {
-        let entities = this.entitiesIngame;
-        entities.forEach(entity => {
-            if (!entity.needsUpdate) return;
-            this.directUpdateEntity(entity);
-        });
-    },
-
-    directUpdateEntity(entity)
-    {
-        let upToDatePosition = entity.position;
-        let upToDateRotation = entity.rotation;
-        this.updateGraphicalEntity(entity, upToDatePosition, upToDateRotation);
-    },
-
-    updateGraphicalEntity(currentEntity, newP, newR) //, oldP)
-    {
-        // Update positions and rotation
-        let object3D = currentEntity.getObject3D();
-        let graphics = this.app.engine.graphics;
-
-        // XXX [ANIMATION] link animation in 3D case
-        let p = object3D.position;
-        if (currentEntity.isProjectile)
-        {
-            this.updateProjectile(currentEntity, object3D, p, newP);
-        }
-        else
-        {
-            object3D.rotation.x = newR.z; // ur[3];
-            object3D.rotation.z = newR.y; // ur[2];
-            object3D.getWrapper().rotation.y = Math.PI + newR.x; // + ur[0];
-            object3D.updateMatrixWorld();
-        }
-
-        let animate = p.x !== newP.x || p.y !== newP.y;
-        p.copy(newP);
-
-        // Update animation
-        const id = currentEntity.id;
-        // TODO animation
-        // if (animate) graphics.updateAnimation(id);
-    },
+    //
+    // Updates at model refresh.
 
     addEntity(id, updatedEntity)
     {
@@ -165,6 +126,54 @@ let EntitiesUpdateModule = {
             }
             // console.log(updatedEntity.d);
         }
+    },
+
+    //
+    // Graphics link.
+
+    directUpdateEntities()
+    {
+        let entities = this.entitiesIngame;
+        entities.forEach(entity => {
+            if (!entity.needsUpdate) return;
+            this.directUpdateEntity(entity);
+        });
+    },
+
+    directUpdateEntity(entity)
+    {
+        let upToDatePosition = entity.position;
+        let upToDateRotation = entity.rotation;
+        this.updateGraphicalEntity(entity, upToDatePosition, upToDateRotation);
+    },
+
+    updateGraphicalEntity(currentEntity, newP, newR) //, oldP)
+    {
+        // Update positions and rotation
+        let object3D = currentEntity.getObject3D();
+        let graphics = this.app.engine.graphics;
+
+        // XXX [ANIMATION] link animation in 3D case
+        let p = object3D.position;
+        if (currentEntity.isProjectile)
+        {
+            this.updateProjectile(currentEntity, object3D, p, newP);
+        }
+        else
+        {
+            object3D.rotation.x = newR.z; // ur[3];
+            object3D.rotation.z = newR.y; // ur[2];
+            object3D.getWrapper().rotation.y = Math.PI + newR.x; // + ur[0];
+            object3D.updateMatrixWorld();
+        }
+
+        let animate = p.x !== newP.x || p.y !== newP.y;
+        p.copy(newP);
+
+        // Update animation
+        const id = currentEntity.id;
+        // TODO animation
+        // if (animate) graphics.updateAnimation(id);
     },
 
 };

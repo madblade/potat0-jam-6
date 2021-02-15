@@ -78,8 +78,6 @@ extend(EntityModel.prototype, {
             return;
         }
 
-        let graphics = this.app.engine.graphics;
-
         let entities = this.entitiesIngame;
         let pushes = this.entitiesOutdated;
 

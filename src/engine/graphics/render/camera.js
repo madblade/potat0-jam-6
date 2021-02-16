@@ -223,7 +223,7 @@ extend(Camera.prototype, {
     setThirdPerson()
     {
         let p = this.cameraObject.position;
-        p.set(0, 0, 2);
+        p.set(0, 0, 1);
     },
 
     getCameraForwardVector()

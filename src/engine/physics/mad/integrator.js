@@ -72,29 +72,41 @@ extend(Integrator.prototype, {
             v0.y * dtr + dtr2h * a0.y,
             v0.z * dtr + dtr2h * a0.z,
         );
-        const maxSpeedDtr = maxSpeed;// * dtr;
-        let l = increment.length();
-        if (l > maxSpeedDtr) increment.multiplyScalar(maxSpeedDtr / l);
+        const maxSpeedDtr = maxSpeed * dtr;
         // console.log(p0);
 
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
         // (self movement uses Euler integration!)
-        const wv = cm.wantedVelocity;
-        let iv = cm.instantaneousVelocity; // scalar
-        const ia = cm.instantaneousAcceleration; // scalar
-        const selfIncrement = this._w2;
-        iv = Math.min(iv + ia * dtr, 1.0);
-        selfIncrement.copy(wv).multiplyScalar(iv);
-        cm.instantaneousVelocity = iv; // Apply Euler integration
-        increment.add(selfIncrement);
+        const wv = cm.wantedVelocity; // max wv is ~ 1.1
+        if (wv.manhattanLength() > 0)
+        {
+            let iv = cm.instantaneousVelocity; // scalar in [0, 1]
+            const ia = cm.instantaneousAcceleration; // fixed scalar
+            const selfIncrement = this._w2;
+            const linearIntegration = iv + ia * dtr;
+            iv = Math.min(linearIntegration, 1.0);
+            // if (iv < 1.) console.log(iv);
+            selfIncrement.copy(wv).multiplyScalar(iv * maxSpeedDtr);
+            cm.instantaneousVelocity = iv; // apply Euler integration
+            increment.add(selfIncrement);
+        }
+
+        let l = increment.length();
+        if (l > maxSpeedDtr)
+        {
+            increment.multiplyScalar(maxSpeedDtr / l);
+        }
 
         // Apply Leapfrog integration
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);
         v1.copy(a0).add(a1).multiplyScalar(0.5 * dtr).add(v0);
         l = v1.length();
-        if (l > maxSpeedDtr) v1.multiplyScalar(maxSpeedDtr / l);
+        if (l > maxSpeed)
+        {
+            v1.multiplyScalar(maxSpeed / l);
+        }
     },
 
     applyIntegration(dt) // Swap p0 and p1
@@ -103,7 +115,7 @@ extend(Integrator.prototype, {
         outOfDateEntities.forEach(e => this.applyIntegrationTo(e, dt));
     },
 
-    applyIntegrationTo(entity, dt)
+    applyIntegrationTo(entity) //, dt)
     {
         const cm = entity.collisionModel;
         if (cm.isStatic)

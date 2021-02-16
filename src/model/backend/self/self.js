@@ -30,6 +30,7 @@ let SelfModel = function(app)
     this.position = new Vector3(0, 0, 0);
     this.rotation = new Vector4(0, 0, 0, 0);
     this.inventoryModel = new InventoryModel();
+    this._r = new Vector3(0, 0, 0); // opti
 
     // animation
     this.animationComponent = Object.create(null);

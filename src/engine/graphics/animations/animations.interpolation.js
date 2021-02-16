@@ -12,7 +12,7 @@ let AnimationInterpolation = {
         const gr = this.graphics;
         const backend = gr.app.model.backend;
         const initialTheta = entityId === 0 ?
-            backend.selfModel.avatar.rotation.z :
+            backend.selfModel.getTheta() :
             entity.rotation.z;
         if (!entity.p0)
         {
@@ -108,12 +108,16 @@ let AnimationInterpolation = {
 
         // Tilt target.
         const a = entity.a0;
-
+        // console.log(entity.a0.length());
         if (Math.abs(a.x) + Math.abs(a.y) > 0 && false)
         {
-            const r = Math.sqrt(a.x * a.x + a.y * a.y) * 10000;
+            let r = Math.sqrt(a.x * a.x + a.y * a.y);
+            r = Math.min(1., r / 10.);
+            // r = .1;
             const tx = r * Math.cos(entity.currentTheta);
             const ty = r * Math.sin(entity.currentTheta);
+            window.dh.h.position.copy(entity.p0);
+            window.dh.h.rotation.set(tx, ty, 0);
 
             if (tx !== entity.xy1.x || ty !== entity.xy1.y)
             {

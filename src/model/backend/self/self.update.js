@@ -41,9 +41,11 @@ let SelfUpdateModule = {
     setRotation(r, avatar)
     {
         if (!avatar) avatar = this.avatar;
+        const object = avatar.getInnerObject();
         avatar.rotation.x = r.x + Math.PI / 2;
         avatar.rotation.y = r.y + 0;
-        avatar.rotation.z = r.z;
+
+        object.rotation.y = r.z;
     },
 
     getRotation()
@@ -53,7 +55,24 @@ let SelfUpdateModule = {
             console.error('[SelfModel] Cannot get avatar.');
             return;
         }
-        return this.avatar.rotation;
+        const avatar = this.avatar;
+        const object = avatar.getInnerObject();
+        this._r.set(
+            avatar.rotation.x,
+            avatar.rotation.y,
+            object.rotation.y
+        );
+        return this._r;
+    },
+
+    getTheta()
+    {
+        if (!this.avatar)
+        {
+            console.error('[SelfModel] Cannot get avatar.');
+            return;
+        }
+        return this.avatar.getInnerObject().rotation.y;
     },
 
     /** @deprecated */

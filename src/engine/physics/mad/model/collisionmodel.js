@@ -58,7 +58,10 @@ let CollisionModel = function(
             this.gravity = engine.gravity; // shared, will throw if engine wasn’t specified
         this.continuousForces = [];
 
-        this.instantaneousAcceleration = 20.0; // used to get up to max velocity
+        // bind input to acceleration
+        const timeToReachMaxVel = 0.200; // in s
+        // const timeToReachMaxVel = 1.500; // in s
+        this.instantaneousAcceleration = 1. / timeToReachMaxVel;
         this.instantaneousVelocity = 0.; // normalized
         this.wantedVelocity = new Vector3(); // accelerate until satisfied
         this.maxSpeedInAir = 10.0;

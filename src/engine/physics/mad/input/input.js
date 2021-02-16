@@ -75,6 +75,7 @@ let PhysicsInputModule = {
         if (!isFw && !isRg && !isUd && !ww)
         {
             collisionModel.wantsToMove = false;
+            collisionModel.instantaneousVelocity = 0;
             wv.set(0, 0, 0);
             return;
         }
@@ -130,9 +131,16 @@ let PhysicsInputModule = {
         else wv.set(0, 0, 0);
         wv.z = d[4] ? 1 : d[5] ? -1 : 0;
 
-        wv.multiplyScalar(norm * 0.1);
+        wv.multiplyScalar(norm);
 
-        if (wv.manhattanLength() > 0) collisionModel.wantsToMove = true;
+        if (wv.manhattanLength() > 0)
+        {
+            collisionModel.wantsToMove = true;
+        }
+        else
+        {
+            collisionModel.instantaneousVelocity = 0;
+        }
     },
 
 };

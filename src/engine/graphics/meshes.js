@@ -57,15 +57,17 @@ let MeshesModule = {
     finalizeMainCharacter(gltf, callback)
     {
         let object = gltf.scene.children[0];
-        console.log(object);
-
+        // console.log(object);
         object.position.set(0, -0.15, 0.07);
         object.scale.set(0.44, 0.44, 0.44);
-        let wrapper = new Object3D();
-        wrapper.rotation.reorder('ZYX');
-        wrapper.add(object);
 
-        // object.getWrapper = () => wrapper;
+        let innerWrapper = new Object3D();
+        innerWrapper.add(object);
+
+        let wrapper = new Object3D();
+        wrapper.add(innerWrapper);
+
+        wrapper.getInnerObject = () => innerWrapper;
 
         if (callback) callback(wrapper);
     },

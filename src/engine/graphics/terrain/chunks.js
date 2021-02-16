@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { VertexNormalsHelper }  from 'three/examples/jsm/helpers/VertexNormalsHelper';
+// import { VertexNormalsHelper }  from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {
     ArrowHelper,
     Mesh,
@@ -50,8 +50,8 @@ let ChunksModule = {
         if (!isWater) newMesh.receiveShadow = true;
         newMesh.material = new MeshBasicMaterial({color: 0xff000000, wireframe: true}); // dbg
         // newMesh.add(new AxesHelper(5));
-        let normH = new VertexNormalsHelper(newMesh, 0.5);
-        newMesh.add(normH);
+        // let normH = new VertexNormalsHelper(newMesh, 0.5);
+        // newMesh.add(normH);
         const dh = {
             v: new Vector3(1, 0, 0),
             o: new Vector3(.1, 0.1, 0.1),

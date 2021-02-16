@@ -32,10 +32,10 @@ let Level1 = function(title, id)
                 '<h2>Chapter I</h2>', // after, sub
                 `<h2>${this.title}</h2>`, // main
             ],
-            fadeInTitle: 500,
-            fadeOutTitle: 500,
-            keepTitle: 1000,
-            fadeOutSplash: 100,
+            fadeInTitle: 100, //500,
+            fadeOutTitle: 100, // 500,
+            keepTitle: 100, //1000,
+            fadeOutSplash: 100, //100,
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

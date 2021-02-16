@@ -31,6 +31,9 @@ let SelfModel = function(app)
     this.rotation = new Vector4(0, 0, 0, 0);
     this.inventoryModel = new InventoryModel();
 
+    // animation
+    this.animationComponent = Object.create(null);
+
     // Graphical component.
     this.worldNeedsUpdate = false;
     this.needsUpdate = false;
@@ -63,13 +66,16 @@ extend(SelfModel.prototype, {
 
     init(level)
     {
+        // Init graphics and mixer.
         this.loadSelfGraphics();
+
         let player = level.getPlayer();
         const positionVector = new Vector3().fromArray(player.position);
         const rotationVector = new Vector4().fromArray([0, 0, 0, 0]); // player.rotation
         console.log('[Model/Self] TODO bind player state from level.');
         this.updateSelf(positionVector, rotationVector, '-1'); // -1 === main world
-        this.updatePosition(this.avatar, this.avatar.position);
+        this.updatePosition(this.position, this.avatar);
+        this.setRotation(this.rotation, this.avatar);
 
         // Notify physics engine.
         let physics = this.app.engine.physics;
@@ -117,10 +123,10 @@ extend(SelfModel.prototype, {
     directUpdateSelfPosition()
     {
         let p = this.position;
-        let r = this.rotation;
+        this.updatePosition(p, this.avatar);
 
-        this.updateRotation(this.avatar, r);
-        this.updatePosition(this.avatar, p);
+        // let r = this.rotation;
+        // this.updateRotation(r, this.avatar);
     },
 
     // Called every time a server update was received.

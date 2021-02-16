@@ -6,7 +6,7 @@
 
 let SelfUpdateModule = {
 
-    updatePosition(avatar, newP)
+    updatePosition(newP, avatar)
     {
         let register = this.app.register;
         let graphics = this.app.engine.graphics;
@@ -20,12 +20,11 @@ let SelfUpdateModule = {
         register.updateSelfState({ position: [p.x, p.y, p.z] });
 
         // Update animation.
-        const animate = p.x !== newP.x || p.y !== newP.y; // XXX [ANIMATION] manage 3D.
-        if (animate) {
-            // graphics.updateAnimation(id);
-            // TODO animation here
-            // graphics.updateAnimation('yumi');
-        }
+        // const animate = p.x !== newP.x || p.y !== newP.y;
+        // if (animate) {
+        //     graphics.updateAnimation(id);
+        //     graphics.updateAnimation('yumi');
+        // }
         p.copy(newP);
 
         // Update camera.
@@ -39,14 +38,24 @@ let SelfUpdateModule = {
         }
     },
 
+    setRotation(r, avatar)
+    {
+        if (!avatar) avatar = this.avatar;
+        avatar.rotation.x = Math.PI / 2;
+        avatar.rotation.y = r.x;
+        avatar.rotation.z = r.z + Math.PI;
+    },
+
+    /** @deprecated */
     updateRotation(avatar, r)
     {
         let graphics = this.app.engine.graphics;
         let handItemWrapper = this.handItemWrapper;
 
-        avatar.rotation.z = r.z;
         avatar.rotation.x = r.w + Math.PI / 2;
-        avatar.getWrapper().rotation.y = Math.PI + r.x;
+        avatar.rotation.y = r.x;
+        avatar.rotation.z = r.z + Math.PI;
+        // avatar.getWrapper().rotation.y = Math.PI + r.x;
 
         let theta0 = r.z;
         let theta1 = r.w;

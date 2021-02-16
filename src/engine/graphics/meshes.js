@@ -59,13 +59,15 @@ let MeshesModule = {
         let object = gltf.scene.children[0];
         console.log(object);
 
+        object.position.set(0, -0.15, 0.07);
+        object.scale.set(0.44, 0.44, 0.44);
         let wrapper = new Object3D();
         wrapper.rotation.reorder('ZYX');
         wrapper.add(object);
 
-        object.getWrapper = () => wrapper;
+        // object.getWrapper = () => wrapper;
 
-        if (callback) callback(object);
+        if (callback) callback(wrapper);
     },
 
     getItemMesh(itemID, renderOnTop, cloneGeometry)

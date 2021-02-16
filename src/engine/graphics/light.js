@@ -21,7 +21,10 @@ let LightDefaultIntensities = {
 
 let LightDefaultColors = Object.freeze({
     DIRECTIONAL: 0xffffff,
-    AMBIENT: 0x0011ee,
+
+    // AMBIENT: 0x0011ee, // night
+    AMBIENT: 0xffffff, // day
+
     HEMISPHERE_SKY: 0xeeeeff,
     HEMISPHERE_GROUND: 0x777788,
 });

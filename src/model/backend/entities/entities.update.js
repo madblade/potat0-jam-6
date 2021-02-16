@@ -167,13 +167,12 @@ let EntitiesUpdateModule = {
             object3D.updateMatrixWorld();
         }
 
-        let animate = p.x !== newP.x || p.y !== newP.y;
+        // let animate = p.x !== newP.x || p.y !== newP.y;
         p.copy(newP);
 
         // Update animation
-        const id = currentEntity.id;
-        let graphics = this.app.engine.graphics;
-        // TODO animation
+        // const id = currentEntity.id;
+        // let graphics = this.app.engine.graphics;
         // if (animate) graphics.updateAnimation(id);
     },
 

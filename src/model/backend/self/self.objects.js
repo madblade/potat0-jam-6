@@ -15,11 +15,16 @@ let SelfObjectsModule = {
         const graphics = this.app.engine.graphics;
         const worldId = selfModel.worldId;
 
-        let up = graphics.loadReferenceMeshFromMemory(
+        const up = graphics.loadReferenceMeshFromMemory(
             'shiro', false, false
         );
-
         selfModel.avatar = up;
+
+        // Init animation mixer.
+        const animations = this.app.engine.graphics.animationManager;
+        animations.addSkinnedEntityAnimation(0, up);
+
+        // Add player to scene.
         graphics.addToScene(selfModel.avatar, worldId);
     },
 

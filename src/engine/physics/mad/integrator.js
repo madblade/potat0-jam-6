@@ -97,13 +97,13 @@ extend(Integrator.prototype, {
         if (l > maxSpeedDtr) v1.multiplyScalar(maxSpeedDtr / l);
     },
 
-    applyIntegration() // Swap p0 and p1
+    applyIntegration(dt) // Swap p0 and p1
     {
         const outOfDateEntities = this.sweeper.entitiesNeedingToMove;
-        outOfDateEntities.forEach(e => this.applyIntegrationTo(e));
+        outOfDateEntities.forEach(e => this.applyIntegrationTo(e, dt));
     },
 
-    applyIntegrationTo(entity)
+    applyIntegrationTo(entity, dt)
     {
         const cm = entity.collisionModel;
         if (cm.isStatic)
@@ -157,6 +157,9 @@ extend(Integrator.prototype, {
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
         }
+
+        const am = app.engine.graphics.animationManager;
+        am.updateEntityPosition(entity.entityId, cm.position0, dt);
     },
 
     cleanup()

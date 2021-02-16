@@ -130,7 +130,7 @@ let SelfInterpolationModule = {
     {
         // Rotation
         this.interpolatingRotation.set(xr, yr, zr, wr);
-        this.updateRotation(this.avatar, this.interpolatingRotation);
+        // this.updateRotation(this.avatar, this.interpolatingRotation);
 
         // Update interpolating position before world cross check
         this.interpolatingPosition.set(xp, yp, zp);
@@ -153,7 +153,7 @@ let SelfInterpolationModule = {
         }
 
         // Update avatar position after world cross check
-        this.updatePosition(this.avatar, this.interpolatingPosition);
+        this.updatePosition(this.interpolatingPosition, this.avatar);
     },
 
     interpolateSwitchWorld()
@@ -175,7 +175,7 @@ let SelfInterpolationModule = {
         last.copy(current);
         current.copy(p);
         this.interpolatingPosition.copy(p);
-        this.updatePosition(this.avatar, this.interpolatingPosition);
+        this.updatePosition(this.interpolatingPosition, this.avatar);
         this.interpolationUpToDate = true;
         this.worldNeedsUpdate = false;
         this.needsWorldSwitchRetry = false;

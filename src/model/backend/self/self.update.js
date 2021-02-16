@@ -41,9 +41,19 @@ let SelfUpdateModule = {
     setRotation(r, avatar)
     {
         if (!avatar) avatar = this.avatar;
-        avatar.rotation.x = Math.PI / 2;
-        avatar.rotation.y = 0;
+        avatar.rotation.x = r.x + Math.PI / 2;
+        avatar.rotation.y = r.y + 0;
         avatar.rotation.z = r.z;
+    },
+
+    getRotation()
+    {
+        if (!this.avatar)
+        {
+            console.error('[SelfModel] Cannot get avatar.');
+            return;
+        }
+        return this.avatar.rotation;
     },
 
     /** @deprecated */

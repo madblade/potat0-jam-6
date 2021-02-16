@@ -42,8 +42,8 @@ let SelfUpdateModule = {
     {
         if (!avatar) avatar = this.avatar;
         avatar.rotation.x = Math.PI / 2;
-        avatar.rotation.y = r.x;
-        avatar.rotation.z = r.z + Math.PI;
+        avatar.rotation.y = 0;
+        avatar.rotation.z = r.z;
     },
 
     /** @deprecated */

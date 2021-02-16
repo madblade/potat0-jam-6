@@ -71,7 +71,7 @@ extend(SelfModel.prototype, {
 
         let player = level.getPlayer();
         const positionVector = new Vector3().fromArray(player.position);
-        const rotationVector = new Vector4().fromArray([0, 0, 0, 0]); // player.rotation
+        const rotationVector = new Vector4().fromArray(player.rotation);
         console.log('[Model/Self] TODO bind player state from level.');
         this.updateSelf(positionVector, rotationVector, '-1'); // -1 === main world
         this.updatePosition(this.position, this.avatar);

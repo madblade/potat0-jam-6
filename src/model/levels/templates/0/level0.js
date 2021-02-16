@@ -23,7 +23,7 @@ let Level0 = function(title, id)
 
     this.player = {
         position: [0, 0, 1.5],
-        rotation: [0, 0, Math.PI / 2]
+        rotation: [0, 0, Math.PI]
     };
 
     this.scenario = [

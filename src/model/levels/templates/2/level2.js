@@ -22,7 +22,8 @@ let Level2 = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, 0, 1.5]
+        position: [0, 0, 1.5],
+        rotation: [0, 0, Math.PI]
     };
 
     this.scenario = [

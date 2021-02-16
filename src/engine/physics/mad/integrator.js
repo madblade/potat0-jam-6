@@ -157,9 +157,6 @@ extend(Integrator.prototype, {
             cm.lifterHelper.position.copy(cm.lifterCenter);
             cm.bumperHelper.position.copy(cm.bumperCenter);
         }
-
-        const am = app.engine.graphics.animationManager;
-        am.updateEntityPosition(entity.entityId, cm.position0, dt);
     },
 
     cleanup()

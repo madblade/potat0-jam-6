@@ -47,7 +47,8 @@ extend(AnimationManager.prototype, {
                 return;
             }
 
-            this.updateEntityRotationAndTilt(e, id);
+            this.updateEntityPosition(id, id === 0 ? backend.selfModel.position : e.position, deltaT);
+            this.updateEntityRotationAndTilt(e, id, deltaT);
         });
     },
 
@@ -67,7 +68,8 @@ extend(AnimationManager.prototype, {
 
         if (!e.p0)
         {
-            this.initializeEntityAnimation(e);
+            const initialTheta = entityId !== 0 ? e.rotation.z : backend.selfModel.rotation.z;
+            this.initializeEntityAnimation(e, initialTheta);
             e.p0.copy(newPosition);
             e.dt01 = dt;
             return;
@@ -89,29 +91,120 @@ extend(AnimationManager.prototype, {
         e.a0.multiplyScalar(1 / e.dt01);
     },
 
-    updateEntityRotationAndTilt(entity, entityId)
+    updateEntityRotationAndTilt(entity, entityId, deltaT)
     {
         // Init entity model if needed
+        const initialTheta = entityId === 0 ?
+            this.graphics.app.model.backend.selfModel.avatar.rotation.z :
+            entity.rotation.z;
         if (!entity.p0)
         {
-            this.initializeEntityAnimation(entity);
+            this.initializeEntityAnimation(entity, initialTheta);
             return;
         }
         const gr = this.graphics;
 
+        // Rotation target.
         const v = entity.v0;
-        if (Math.abs(v.x) + Math.abs(v.y) === 0.)
-            return;
-
-        // set target
-        const theta = Math.atan2(v.y, v.x) + Math.PI / 2;
-        this._r.set(0, 0, theta);
-
         const id = entityId;
-        if (id === 0)
-            gr.app.model.backend.selfModel.setRotation(this._r);
+        const pi = Math.PI;
+        if (Math.abs(v.x) + Math.abs(v.y) > 0.)
+        {
+            let theta = Math.atan2(v.y, v.x) - pi / 2;
+            // Clamp theta between [-pi, pi].
+            if (theta > pi) theta -= 2 * pi;
+            else if (theta < -pi) theta += 2 * pi;
+            else if (theta > 2 * pi || theta < -2 * pi)
+                throw Error('[Animations] Invalid target theta.');
+
+            // Set rotation target.
+            if (!this.almostEqual(entity.theta1, theta))
+            {
+                console.log(`${initialTheta} -> ${theta}`);
+                // Update rotation target.
+                if (entity.theta1 !== entity.theta0) // was rotating
+                {
+                    entity.thetaT = 0.1;
+                    entity.theta0 = initialTheta;
+                    entity.theta1 = theta;
+                }
+                else // was not rotating
+                {
+                    entity.thetaT = 0;
+                    entity.theta0 = initialTheta;
+                    entity.theta1 = theta;
+                }
+            }
+        }
+
+        // Rotation interpolate.
+        if (entity.currentTheta !== entity.theta1)
+        {
+            const sourceTheta = entity.theta0;
+            const targetTheta = entity.theta1;
+            entity.thetaT += deltaT / 1e3;
+            const t = this.smoothstep(0, .300, entity.thetaT);
+            // const t = this.lerp(0, .500, entity.thetaT);
+
+            if (t === 1) // End interpolation
+            {
+                entity.currentTheta = entity.theta1;
+            }
+            else
+            {
+                let targetTheta2 = targetTheta;
+                // Target - source should be < pi.
+                if (Math.abs(sourceTheta - targetTheta2) > pi)
+                {
+                    // Choose shortest path.
+                    targetTheta2 =
+                        targetTheta > sourceTheta ? targetTheta - 2 * pi :
+                            targetTheta < sourceTheta ? targetTheta + 2 * pi : null;
+                    if (targetTheta2 === null || Math.abs(sourceTheta - targetTheta2) > pi)
+                        throw Error('[Animations] still target delta > pi.');
+                }
+
+                // Clamp result to [-pi, pi].
+                let ct = t * targetTheta2 + (1 - t) * sourceTheta;
+                if (ct > pi) ct -= 2 * pi;
+                else if (ct < -pi) ct += 2 * pi;
+                entity.currentTheta = ct;
+            }
+
+            if (id === 0)
+            {
+                const sm = gr.app.model.backend.selfModel;
+                this._r.set(0, 0, entity.currentTheta);
+                sm.setRotation(this._r);
+            }
+        }
+        else
+        {
+            entity.theta0 = entity.theta1;
+        }
 
         // const a = entity.a0;
+    },
+
+    almostEqual(t1, t2)
+    {
+        return Math.abs(t1 - t2) < 0.00001;
+    },
+
+    lerp(end1, end2, t)
+    {
+        return this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+    },
+
+    smoothstep(end1, end2, t)
+    {
+        const x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+        return x * x * (3 - 2 * x);
+    },
+
+    clamp(t, low, high)
+    {
+        return Math.min(high, Math.max(low, t));
     },
 
     updateAnimation(entityId)
@@ -136,7 +229,7 @@ extend(AnimationManager.prototype, {
         times.set(entityId, Date.now());
     },
 
-    initializeEntityAnimation(entity)
+    initializeEntityAnimation(entity, initialTheta)
     {
         entity.p0 = new Vector3(0, 0, 0);
         entity.p1 = new Vector3(0, 0, 0);
@@ -146,6 +239,12 @@ extend(AnimationManager.prototype, {
         entity.v0 = new Vector3(0, 0, 0);
         entity.v1 = new Vector3(0, 0, 0);
         entity.a0 = new Vector3(0, 0, 0);
+
+        // initialTheta
+        entity.theta0 = initialTheta - Math.PI;
+        entity.theta1 = entity.theta0;
+        entity.currentTheta = entity.theta0;
+        entity.thetaT = 0;
     }
 
 });

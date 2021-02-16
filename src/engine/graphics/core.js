@@ -168,12 +168,16 @@ let CoreModule = {
         // Update controls for Touch/Gamepad devices.
         controlsEngine.updateControlsDevice(deltaT);
 
+        // Update model.
+        serverModel.refresh();
+
         // Update animation mixers.
         animationEngine.updateAnimations(deltaT);
 
         // Render.
-        serverModel.refresh();
         this.render();
+
+        // Update client / camera.
         clientModel.refresh();
     },
 

@@ -51,7 +51,8 @@ extend(AnimationManager.prototype, {
                 return;
             }
 
-            this.updateEntityPosition(id, id === 0 ? backend.selfModel.position : e.position, deltaT);
+            this.updateEntityPosition(id, id === 0 ?
+                backend.selfModel.position : e.position, deltaT);
             this.updateEntityRotationAndTilt(e, id, deltaT);
         });
     },

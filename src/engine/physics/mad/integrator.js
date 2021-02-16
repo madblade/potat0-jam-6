@@ -58,9 +58,12 @@ extend(Integrator.prototype, {
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
-        dtr = 0.016; // TODO variable dt
-        // dtr = 0.1;
-        // dtr = 0.05;
+        if (dtr > 0.1)
+        {
+            console.warn(`[Integrator] Large DT: ${dtr}.`);
+            dtr = 0.016;
+        }
+        // dtr = 0.016;
         const inWater = this.physics.isWater(p0);
         const maxSpeed = inWater ?
             cm.maxSpeedInWater : cm.maxSpeedInAir;
@@ -95,6 +98,7 @@ extend(Integrator.prototype, {
         let l = increment.length();
         if (l > maxSpeedDtr)
         {
+            // console.log('cor');
             increment.multiplyScalar(maxSpeedDtr / l);
         }
 
@@ -105,6 +109,7 @@ extend(Integrator.prototype, {
         l = v1.length();
         if (l > maxSpeed)
         {
+            // console.log('cor');
             v1.multiplyScalar(maxSpeed / l);
         }
     },

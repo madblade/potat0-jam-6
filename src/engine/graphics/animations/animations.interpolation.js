@@ -4,6 +4,8 @@
 
 'use strict';
 
+// import { Vector3 } from 'three';
+
 let AnimationInterpolation = {
 
     updateEntityRotationAndTilt(entity, entityId, deltaT)
@@ -108,18 +110,23 @@ let AnimationInterpolation = {
 
         // Tilt target.
         const a = entity.a0;
-        // console.log(entity.a0.length());
-        if (Math.abs(a.x) + Math.abs(a.y) > 0 && false)
+        if (Math.abs(a.x) + Math.abs(a.y) > 10.1)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
-            r = Math.min(1., r / 10.);
-            // r = .1;
-            const tx = r * Math.cos(entity.currentTheta);
-            const ty = r * Math.sin(entity.currentTheta);
-            window.dh.h.position.copy(entity.p0);
-            window.dh.h.rotation.set(tx, ty, 0);
+            r = 1.;
+            // if (r < 100)    // r ~ 50 at movement startup.
+            //     r = 1.2;
+            // else            // r > 100 at movement stop.
+            //     r = .01;
 
-            if (tx !== entity.xy1.x || ty !== entity.xy1.y)
+            const tet = Math.atan2(a.y, a.x) - pi / 2;
+            const tx = r * Math.cos(tet);
+            const ty = r * Math.sin(tet);
+
+            if (
+                !this.almostEqual(tx, entity.xy1.x) ||
+                !this.almostEqual(ty, entity.xy1.y)
+            )
             {
                 const initX = entityId === 0 ?
                     backend.selfModel.avatar.rotation.x - pi / 2 :
@@ -142,21 +149,23 @@ let AnimationInterpolation = {
                 }
             }
         }
-        else
-        {
-            entity.xy1.set(0, 0);
-        }
 
         // Tilt interpolation.
-        if (entity.currentXY.manhattanDistanceTo(entity.xy1) > 0)
+        const needsInterp1 = // target tilt (after a stop, backwards tilt)
+            entity.currentXY.manhattanDistanceTo(entity.xy1) > 0;
+        const needsInterp2 = // pause tilt (from backwards tilt to no tilt)
+            !needsInterp1 &&
+            entity.currentXY.manhattanDistanceTo(entity.xy2) > 0;
+        if (needsInterp1 || needsInterp2)
         {
+            // console.log(`${needsInterp1}, ${needsInterp2}`);
             const sourceXY = entity.xy0;
-            const targetXY = entity.xy1;
+            const targetXY = needsInterp1 ? entity.xy1 : entity.xy2;
             entity.xyT += deltaTInSeconds;
-            const t = this.smoothstep(0, .400, entity.thetaT);
+            const t = this.smoothstep(0, .300, entity.xyT);
             if (t === 1) // End interpolation
             {
-                entity.currentXY.copy(entity.xy1);
+                entity.currentXY.copy(targetXY);
             }
             else // Interpolate
             {
@@ -178,13 +187,14 @@ let AnimationInterpolation = {
                 sm.setRotation(this._r);
             }
         }
-        else
+
+        const needsInterp1Again =
+            entity.currentXY.manhattanDistanceTo(entity.xy1) > 0;
+        if (!needsInterp1Again)
         {
             entity.xy0.copy(entity.xy1);
-            if (Math.abs(entity.xy1.x) + Math.abs(entity.xy1.y) > 0 && entity.xyT >= 1.)
-            {
-                entity.xyT = 0;
-            }
+            entity.xy1.copy(entity.xy2);
+            entity.xyT = 0;
         }
     },
 

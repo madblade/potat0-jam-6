@@ -32,6 +32,7 @@ let AnimationModel = {
         // tilt interpolation
         entity.xy0 = new Vector2(0, 0);
         entity.xy1 = new Vector2(0, 0);
+        entity.xy2 = new Vector2(0, 0); // pause state, always 0.
         entity.currentXY = new Vector2(0, 0);
         entity.xyT = 0;
     },
@@ -78,6 +79,8 @@ let AnimationModel = {
         // {
         //     console.log(e.a0.length());
         // }
+        // console.log(`${e.p0.length()} -> ${e.p1.length()}`);
+        // console.log(`${e.v0.length()} -> ${e.v1.length()}`);
     },
 
 };

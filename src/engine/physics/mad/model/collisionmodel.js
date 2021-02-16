@@ -59,7 +59,7 @@ let CollisionModel = function(
         this.continuousForces = [];
 
         // bind input to acceleration
-        const timeToReachMaxVel = 0.200; // in s
+        const timeToReachMaxVel = 0.400; // in s
         // const timeToReachMaxVel = 1.500; // in s
         this.instantaneousAcceleration = 1. / timeToReachMaxVel;
         this.instantaneousVelocity = 0.; // normalized

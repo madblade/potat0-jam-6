@@ -95,18 +95,21 @@ extend(Integrator.prototype, {
             increment.add(selfIncrement);
         }
 
-        let l = increment.length();
-        if (l > maxSpeedDtr)
+        const lxy = Math.sqrt(
+            increment.x * increment.x +
+            increment.y * increment.y
+        );
+        if (lxy > maxSpeedDtr)
         {
-            // console.log('cor');
-            increment.multiplyScalar(maxSpeedDtr / l);
+            increment.x *= maxSpeedDtr / lxy;
+            increment.y *= maxSpeedDtr / lxy;
         }
 
         // Apply Leapfrog integration
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);
         v1.copy(a0).add(a1).multiplyScalar(0.5 * dtr).add(v0);
-        l = v1.length();
+        const l = v1.length();
         if (l > maxSpeed)
         {
             // console.log('cor');

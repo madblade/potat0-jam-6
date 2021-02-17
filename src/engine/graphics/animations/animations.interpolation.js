@@ -4,7 +4,7 @@
 
 'use strict';
 
-// import { Vector3 } from 'three';
+import { Vector3 } from 'three';
 
 let AnimationInterpolation = {
 
@@ -195,7 +195,6 @@ let AnimationInterpolation = {
         if (Math.abs(a.x) + Math.abs(a.y) > 0.)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
-            console.log(r);
             const pe = entityId === 0 ?
                 backend.selfModel.physicsEntity :
                 entity.physicsEntity;
@@ -224,15 +223,28 @@ let AnimationInterpolation = {
                     backend.selfModel.getRotationY() : // - vt.y :
                     entity.rotation.y; // - vt.y;
 
+                // was tilting
                 if (entity.xy0.manhattanDistanceTo(entity.xy1) > 0)
                 {
-                    // was tilting
-                    entity.xyT = 0;
-                    entity.xy0.set(initX, initY);
-                    entity.xy1.set(tx, ty);
-                } else
+                    // was tilting toward pause
+                    if (entity.xy1.manhattanDistanceTo(entity.xy2) < 0.01)
+                    {
+                        entity.xyT = 0.01;
+                        entity.xy0.set(initX, initY);
+                        entity.xy1.set(tx, ty);
+                    }
+                    else // was tilting toward something else
+                    {
+                        // entity.xyT += 0.1;
+                        // entity.xy0.set(initX, initY);
+                        // entity.xy1.set(tx, ty);
+                    }
+                    // if (entity.xyT > 0.1)
+                    // {
+                    // }
+                }
+                else // was not tilting
                 {
-                    // was not tilting
                     entity.xyT = 0;
                     entity.xy0.set(initX, initY);
                     entity.xy1.set(tx, ty);
@@ -257,11 +269,12 @@ let AnimationInterpolation = {
             const timeToInterp = .800;
 
             let t = this.smoothstepAttack(0, timeToInterp, entity.xyT);
-            t = 1;
+            // t = 1;
             if (t === 1) // End interpolation
             {
                 entity.currentXY.copy(targetXY);
-            } else // Interpolate
+            }
+            else // Interpolate
             {
                 const ctx = t * targetXY.x + (1 - t) * sourceXY.x;
                 const cty = t * targetXY.y + (1 - t) * sourceXY.y;

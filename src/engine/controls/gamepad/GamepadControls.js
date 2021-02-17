@@ -29,6 +29,13 @@ let GamepadControls = function(controlsEngine)
         axes: new Array(4)
     };
     this.initMainGamepadState();
+    // oscillation fix
+    this.oscillationDetection = [
+        {last: 0, lastDifferent: 0},
+        {last: 0, lastDifferent: 0},
+        {last: 0, lastDifferent: 0},
+        {last: 0, lastDifferent: 0},
+    ];
 
     // Flags.
     // this.hasAtLeastOneGamepad = false;
@@ -134,6 +141,7 @@ extend(GamepadControls.prototype, {
 
         // Refresh sticks
         const lastStickStates = this.mainGamepadState.axes;
+        const osc = this.oscillationDetection;
         const newStickStates = gamepad.axes;
         const nbStickAxes = newStickStates.length;
         assert(nbStickAxes === 4, `[Gamepad] Did not expect ${nbStickAxes} axes.`);
@@ -145,8 +153,33 @@ extend(GamepadControls.prototype, {
             let a2 = newStickStates[s2];
             if (Math.abs(a1) < 0.1) a1 = 0.;
             if (Math.abs(a2) < 0.1) a2 = 0.;
-            if (a1 !== lastStickStates[s1] || a2 !== lastStickStates[s2] || a1 !== 0 || a2 !== 0)
+
+            if (
+                a1 !== lastStickStates[s1] ||
+                a2 !== lastStickStates[s2] ||
+                a1 !== 0 || a2 !== 0
+            )
             {
+                // left stick oscillation correction
+                if (s1 === 0)
+                {
+                    const o1 = osc[s1];
+                    if (o1.lastDifferent === a1) {
+                        // going back to a previous state: bad
+                        a1 = o1.last;
+                    } else if (o1.last !== a1) {
+                        o1.lastDifferent = o1.last;
+                        o1.last = a1;
+                    }
+                    const o2 = osc[s2];
+                    if (o2.lastDifferent === a2) {
+                        a2 = o2.last;
+                    } else if (o2.last !== a2) {
+                        o2.lastDifferent = o2.last;
+                        o2.last = a2;
+                    }
+                }
+
                 lastStickStates[s1] = a1;
                 lastStickStates[s2] = a2;
                 this.aStickWasHeldOrReleased(s1, s2, a1, a2, dt);

@@ -28,13 +28,13 @@ let AnimationInterpolation = {
 
         // TODO only if on ground, reverse if in air
 
-        // this.applyTiltFromVelocity(
-        //     entity, entityId
-        // );
-
-        this.applyTiltFromAcceleration(
-            entity, entityId, deltaTInSeconds
+        this.applyTiltFromVelocity(
+            entity, entityId
         );
+
+        // this.applyTiltFromAcceleration(
+        //     entity, entityId, deltaTInSeconds
+        // );
     },
 
     applyRotationFromVelocity(
@@ -195,11 +195,12 @@ let AnimationInterpolation = {
         if (Math.abs(a.x) + Math.abs(a.y) > 0.)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
-            const pe = entityId === 0 ?
-                backend.selfModel.physicsEntity :
-                entity.physicsEntity;
-            if (pe && pe.collisionModel.instantaneousAcceleration)
-                r /= pe.collisionModel.instantaneousAcceleration;
+            // const pe = entityId === 0 ?
+            //     backend.selfModel.physicsEntity :
+            //     entity.physicsEntity;
+            // if (pe && pe.collisionModel.instantaneousAcceleration)
+            //     r /= pe.collisionModel.instantaneousAcceleration;
+            // console.log(r);
             r /= 10.;
             if (r > 2.) r = 0.1; // stop
             r = Math.min(r, 1.);

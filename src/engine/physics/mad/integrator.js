@@ -6,9 +6,12 @@
 
 'use strict';
 
-import extend      from '../../../extend';
+import extend       from '../../../extend';
 
-import { Vector3 } from 'three';
+import {
+    Vector2,
+    Vector3
+}                   from 'three';
 
 let Integrator = function(sweeper)
 {
@@ -19,6 +22,7 @@ let Integrator = function(sweeper)
     this._w0 = new Vector3();
     this._w1 = new Vector3();
     this._w2 = new Vector3();
+    this._vec20 = new Vector2();
 };
 
 extend(Integrator.prototype, {
@@ -84,14 +88,44 @@ extend(Integrator.prototype, {
         const wv = cm.wantedVelocity; // max wv is ~ 1.1
         if (wv.manhattanLength() > 0)
         {
-            let iv = cm.instantaneousVelocity; // scalar in [0, 1]
-            const ia = cm.instantaneousAcceleration; // fixed scalar
-            const selfIncrement = this._w2;
-            const linearIntegration = iv + ia * dtr;
-            iv = Math.min(linearIntegration, 1.0);
+            // let iv = cm.instantaneousVelocity; // scalar in [0, 1]
+            // const ia = cm.instantaneousAcceleration; // fixed scalar
+            // const linearIntegration = iv + ia * dtr;
+            // iv = Math.min(linearIntegration, 1.0);
             // if (iv < 1.) console.log(iv);
-            selfIncrement.copy(wv).multiplyScalar(iv * maxSpeedDtr);
-            cm.instantaneousVelocity = iv; // apply Euler integration
+            // selfIncrement.copy(wv).multiplyScalar(iv * maxSpeedDtr);
+            // cm.instantaneousVelocity = iv; // apply Euler integration
+            const selfIncrement = this._w2;
+
+            let wx = wv.x;
+            let wy = wv.y;
+            // console.log(`${wx},${wy}`);
+            const lsq = wx * wx + wy * wy;
+            if (lsq > 1.)
+            {
+                const n = Math.sqrt(lsq);
+                wx /= n;
+                wy /= n;
+            }
+            const iaXY = cm.instantaneousAccelerationXY;
+            const ivXY = cm.instantaneousVelocityXY;
+            const delta = this._vec20;
+            delta.set(wx - ivXY.x, wy - ivXY.y);
+            const timeToReachMaxVel = 0.200; // s
+            const acc = 1. / timeToReachMaxVel;
+            iaXY.copy(delta).normalize().multiplyScalar(acc)
+                .multiplyScalar(dtr);
+            ivXY.add(iaXY); // v1 = v0 + (a0 * dt)
+            if (ivXY.lengthSq() > wx * wx + wy * wy)
+            {
+                ivXY.set(wx, wy);
+            }
+
+            selfIncrement.set(
+                ivXY.x * maxSpeedDtr,
+                ivXY.y * maxSpeedDtr,
+                wv.z
+            );
             increment.add(selfIncrement);
         }
 
@@ -101,6 +135,7 @@ extend(Integrator.prototype, {
         );
         if (lxy > maxSpeedDtr)
         {
+            console.log('cor');
             increment.x *= maxSpeedDtr / lxy;
             increment.y *= maxSpeedDtr / lxy;
         }

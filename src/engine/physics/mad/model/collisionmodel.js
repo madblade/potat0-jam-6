@@ -63,6 +63,9 @@ let CollisionModel = function(
         // const timeToReachMaxVel = 1.500; // in s
         this.instantaneousAcceleration = 1. / timeToReachMaxVel;
         this.instantaneousVelocity = 0.; // normalized
+        this.instantaneousVelocityXY = new Vector2(0, 0);
+        this.instantaneousAccelerationXY = new Vector2(0, 0,);
+
         this.wantedVelocity = new Vector3(); // accelerate until satisfied
         this.maxSpeedInAir = 10.0;
         this.maxSpeedInWater = 5.0;

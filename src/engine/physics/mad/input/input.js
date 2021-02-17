@@ -78,6 +78,8 @@ let PhysicsInputModule = {
         {
             collisionModel.wantsToMove = false;
             collisionModel.instantaneousVelocity = 0;
+            collisionModel.instantaneousVelocityXY.set(0, 0);
+            // ^  large post-mort. acceleration
             wv.set(0, 0, 0);
             return;
         }
@@ -142,6 +144,8 @@ let PhysicsInputModule = {
         else
         {
             collisionModel.instantaneousVelocity = 0;
+            collisionModel.instantaneousVelocityXY.set(0, 0);
+            // ^  large post-mort. acceleration effect
         }
     },
 

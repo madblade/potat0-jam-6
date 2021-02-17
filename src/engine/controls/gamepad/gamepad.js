@@ -27,6 +27,13 @@ let GamepadModule = {
     connectGamepad(event)
     {
         this.gamepadControls.gamepadConnected(event.gamepad);
+        this.app.engine.settings.gamepadActive = true;
+        const isInTitleScreen = this.app.getState() === 'main';
+        if (isInTitleScreen)
+        {
+            this.app.state.getState('main').updateGamepadStatus();
+        }
+
         console.log('[Controls] Gamepad connected.');
     },
 
@@ -36,6 +43,18 @@ let GamepadModule = {
         // Never stop gamepad controls from there,
         // for the gamepad API we use continuous polling.
         console.log('[Controls] Gamepad disconnected.');
+
+        // poll
+        let gamepads = navigator.getGamepads ? navigator.getGamepads() :
+            navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : [];
+        const noGamepadDetected = gamepads.length < 1 || !gamepads[0];
+        if (noGamepadDetected)
+        {
+            this.app.engine.settings.gamepadActive = false;
+            const isInTitleScreen = this.app.getState() === 'main';
+            if (isInTitleScreen)
+                this.app.state.getState('main').updateGamepadStatus();
+        }
     },
 
     // There is no real gamepad listener pipeline;

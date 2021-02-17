@@ -36,7 +36,6 @@ inherit(MainMenuState, GamepadNavigable);
 
 extend(MainMenuState.prototype, {
 
-
     getMainMenuHTML()
     {
         const ga = this.stateManager.app.engine.settings.gamepadActive;
@@ -73,8 +72,48 @@ extend(MainMenuState.prototype, {
                 </div>
             </div>
 
+            <div class="row mt-3" id="gamepad-detector">
+                ${this.getDetectGamepadHTML(ga)}
+            </div>
+
             </div></div>
         `;
+    },
+
+    getDetectGamepadHTML(ga)
+    {
+        return ga ? `
+            <div class="col-4"></div>
+            <div class="col-4 mb-1 center-block gamepad-status">
+                <div class="col-3">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-gamepad fa-stack-1x"></i>
+                    </span>
+                </div>
+                <div class="col-9 input-group-append flex-fill">
+                    Gamepad detected!
+                </div>
+            </div>
+            ` : `
+            <div class="col-4"></div>
+                <div class="col-4 mb-1 center-block gamepad-status">
+                    <div class="col-3">
+                        <span class="fa-stack fa-2x">
+                            <i class="fas fa-gamepad fa-stack-1x"></i>
+                            <i class="fa fa-ban fa-stack-1x nested-icon"></i>
+                        </span>
+                    </div>
+                    <div class="col-9 input-group-append flex-fill">
+                        No gamepad detected.
+                    </div>
+                </div>
+            `;
+    },
+
+    updateGamepadStatus()
+    {
+        const ga = this.stateManager.app.engine.settings.gamepadActive;
+        $('#gamepad-detector').html(this.getDetectGamepadHTML(ga));
     },
 
     hl(ga, ai, i) // highlight

@@ -39,6 +39,21 @@
     cursor: pointer; /* Cursor on hover */
 }
 
+/* Gamepad */
+
+#gamepad-detector {
+    margin-top: 0 !important;
+}
+
+.gamepad-status {
+    display: flex;
+    align-items: center;
+}
+
+.nested-icon {
+    color: rgba(217, 83, 79, 0.7);
+}
+
 /* Audio */
 
 .slider-container {

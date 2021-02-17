@@ -29,7 +29,10 @@ let AnimationModel = {
         entity.currentTheta = entity.theta0;
         entity.thetaT = 0;
 
-        // tilt interpolation
+        // instantaneous tilt (from velocity)
+        entity.velTilt = new Vector2(0, 0);
+
+        // tilt interpolation (from acceleration)
         entity.xy0 = new Vector2(0, 0);
         entity.xy1 = new Vector2(0, 0);
         entity.xy2 = new Vector2(0, 0); // pause state, always 0.

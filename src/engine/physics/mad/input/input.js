@@ -20,7 +20,9 @@ let PhysicsInputModule = {
             lifterRadius: 0.41
             // lifterRadius: 0.00004
         };
-        this.addPhysicsEntity(position, options);
+
+        const pe = this.addPhysicsEntity(position, options);
+        playerSelfModel.physicsEntity = pe;
     },
 
     pushEvent(e)

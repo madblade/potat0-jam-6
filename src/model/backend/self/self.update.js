@@ -4,6 +4,8 @@
 
 'use strict';
 
+import { assert } from '../../../extend';
+
 let SelfUpdateModule = {
 
     updatePosition(newP, avatar)
@@ -50,12 +52,9 @@ let SelfUpdateModule = {
 
     getRotation()
     {
-        if (!this.avatar)
-        {
-            console.error('[SelfModel] Cannot get avatar.');
-            return;
-        }
         const avatar = this.avatar;
+        assert(!!avatar, '[SelfModel] Cannot get avatar.');
+        if (!avatar) return;
         const object = avatar.getInnerObject();
         this._r.set(
             avatar.rotation.x,
@@ -65,13 +64,21 @@ let SelfUpdateModule = {
         return this._r;
     },
 
+    getRotationX()
+    {
+        assert(!!this.avatar, '[SelfModel] Cannot get avatar.');
+        return this.avatar.rotation.x;
+    },
+
+    getRotationY()
+    {
+        assert(!!this.avatar, '[SelfModel] Cannot get avatar.');
+        return this.avatar.rotation.y;
+    },
+
     getTheta()
     {
-        if (!this.avatar)
-        {
-            console.error('[SelfModel] Cannot get avatar.');
-            return;
-        }
+        assert(!!this.avatar, '[SelfModel] Cannot get avatar.');
         return this.avatar.getInnerObject().rotation.y;
     },
 

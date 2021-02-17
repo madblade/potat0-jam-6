@@ -1,10 +1,16 @@
 /**
- * Holds logic for rotation interpolation.
+ * Outer object animator.
+ * Manipulates 3D objects but not bones.
+ *
+ * Holds logic for:
+ * - rotation theta from velocity
+ * - rotation tilt from velocity
+ * - rotation tilt from acceleration
  */
 
 'use strict';
 
-let AnimationInterpolation = {
+let AnimationOuter = {
 
     updateEntityRotationAndTilt(entity, entityId, deltaT)
     {
@@ -14,7 +20,8 @@ let AnimationInterpolation = {
         const initialTheta = entityId === 0 ?
             backend.selfModel.getTheta() :
             entity.rotation.z;
-        if (!entity.p0) {
+        if (!entity.p0)
+        {
             this.initializeEntityAnimation(entity, initialTheta);
             return;
         }
@@ -27,7 +34,7 @@ let AnimationInterpolation = {
         // TODO only if on ground, reverse if in air
 
         this.applyTiltFromVelocity(
-            entity, entityId
+            entity, entityId, deltaTInSeconds
         );
 
         this.applyTiltFromAcceleration(
@@ -132,11 +139,11 @@ let AnimationInterpolation = {
 
     applyTiltFromVelocity(
         entity,
-        entityId
+        entityId,
+        deltaTInSeconds
     )
     {
-        // const maxVelocityTilt = Math.PI / 4;
-        const maxVelocityTilt = Math.PI / 8;
+        const maxVelocityTilt = Math.PI / 16;
 
         const gr = this.graphics;
         const sm = gr.app.model.backend.selfModel;
@@ -158,12 +165,19 @@ let AnimationInterpolation = {
         norm = Math.min(norm, 1.);
         norm *= maxVelocityTilt;
 
-        const newTiltX = norm * Math.cos(tet);
-        const newTiltY = norm * Math.sin(tet);
-        const dx = newTiltX - oldTiltX;
-        const dy = newTiltY - oldTiltY;
+        // const timeToMV = pe.collisionModel.timeToReachMaxVel || 0.100;
+        let d = 5.9 * deltaTInSeconds * 2.;
+        d = Math.min(d, 1.);
+
+        const targetTiltX = norm * Math.cos(tet);
+        const targetTiltY = norm * Math.sin(tet);
+        const dx = d * (targetTiltX - oldTiltX);
+        const dy = d * (targetTiltY - oldTiltY);
         if (Math.abs(dx) + Math.abs(dy) > 0.)
         {
+            const newTiltX = oldTiltX + dx;
+            const newTiltY = oldTiltY + dy;
+
             // Apply changes.
             if (entityId === 0)
             {
@@ -203,8 +217,8 @@ let AnimationInterpolation = {
                 acc = cm.maxSpeedInAir / cm.timeToReachMaxVel;
             }
             r /= acc;
-            // console.log(r);
-            if (r > 1.1) r = 0.1; // stop
+            if (r < 0.1) r = 0.; // interp to pause
+            if (r > 1.1) r = 0.2; // stop
             r = Math.min(r, 1.);
             r *= maxAccelerationTilt;
 
@@ -218,7 +232,6 @@ let AnimationInterpolation = {
                 !this.almostEqual(ty, entity.xy1.y)
             )
             {
-                // const vt = entity.velTilt;
                 const initX = entityId === 0 ?
                     backend.selfModel.getRotationX() - pi / 2 : // - vt.x :
                     entity.rotation.x; // - vt.x;
@@ -226,19 +239,10 @@ let AnimationInterpolation = {
                     backend.selfModel.getRotationY() : // - vt.y :
                     entity.rotation.y; // - vt.y;
 
-                // was tilting
-                if (entity.xy0.manhattanDistanceTo(entity.xy1) > 0)
-                {
-                    entity.xyT = 0.;
-                    entity.xy0.set(initX, initY);
-                    entity.xy1.set(tx, ty);
-                }
-                else // was not tilting
-                {
-                    entity.xyT = 0;
-                    entity.xy0.set(initX, initY);
-                    entity.xy1.set(tx, ty);
-                }
+                entity.xyT = 0;
+                entity.xy0.set(initX, initY);
+                entity.xy1.set(tx, ty);
+                entity.currentXY.copy(entity.xy0);
             }
         }
 
@@ -253,10 +257,20 @@ let AnimationInterpolation = {
             const sourceXY = entity.xy0;
             const targetXY = needsInterp1 ? entity.xy1 : entity.xy2;
             entity.xyT += deltaTInSeconds;
-            const timeToInterp = .800;
 
-            let t = this.smoothstepAttack(0, timeToInterp, entity.xyT);
-            // t = 1;
+            let t;
+            const timeToInterp = .600;
+            if (targetXY.manhattanLength() < 0.01)
+            {
+                t = this.smoothstepAttackReverse(0, timeToInterp,
+                    entity.xyT);
+            }
+            else
+            {
+                t = this.smoothstepAttack(0, timeToInterp,
+                    entity.xyT);
+            }
+
             if (t === 1) // End interpolation
             {
                 entity.currentXY.copy(targetXY);
@@ -308,10 +322,21 @@ let AnimationInterpolation = {
         return x * x * (3 - 2 * x);
     },
 
+    // harder at startup
     smoothstepAttack(end1, end2, t)
     {
-        const t2 = Math.pow(t, .7);
-        return this.smoothstep(end1, end2, t2);
+        let x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+        x = Math.pow(x, .5);
+        return x * x * (3 - 2 * x);
+    },
+
+    // softer at startup
+    smoothstepAttackReverse(end1, end2, t)
+    {
+        let x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+        x = Math.pow(1 - x, .5);
+        const res = x * x * (3 - 2 * x);
+        return 1 - res;
     },
 
     clamp(t, low, high)
@@ -321,4 +346,4 @@ let AnimationInterpolation = {
 
 };
 
-export { AnimationInterpolation };
+export { AnimationOuter };

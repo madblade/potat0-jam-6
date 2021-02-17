@@ -127,7 +127,6 @@ extend(Integrator.prototype, {
         );
         if (lxy > maxSpeedDtr)
         {
-            console.log('cor');
             increment.x *= maxSpeedDtr / lxy;
             increment.y *= maxSpeedDtr / lxy;
         }
@@ -139,7 +138,6 @@ extend(Integrator.prototype, {
         const l = v1.length();
         if (l > maxSpeed)
         {
-            // console.log('cor');
             v1.multiplyScalar(maxSpeed / l);
         }
     },

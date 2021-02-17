@@ -4,14 +4,15 @@
 
 'use strict';
 
-import extend                       from '../../../extend';
-import { AnimationModel }           from './animations.model';
-import { AnimationInterpolation }   from './animations.interpolation';
+import extend              from '../../../extend';
+import { AnimationModel }  from './animations.model';
+import { AnimationOuter }  from './animations.outer';
+import { AnimationMixers } from './animations.mixers';
 import {
     AnimationMixer,
     Vector2,
     Vector3
-}                                   from 'three';
+}                          from 'three';
 
 let AnimationManager = function(graphics)
 {
@@ -54,6 +55,7 @@ extend(AnimationManager.prototype, {
             this.updateEntityPosition(id, id === 0 ?
                 backend.selfModel.position : e.position, deltaT);
             this.updateEntityRotationAndTilt(e, id, deltaT);
+            this.updateMixerAction(e, id, deltaT);
         });
     },
 
@@ -82,6 +84,7 @@ extend(AnimationManager.prototype, {
 });
 
 extend(AnimationManager.prototype, AnimationModel);
-extend(AnimationManager.prototype, AnimationInterpolation);
+extend(AnimationManager.prototype, AnimationOuter);
+extend(AnimationManager.prototype, AnimationMixers);
 
 export { AnimationManager };

@@ -64,7 +64,7 @@ let CollisionModel = function(
         this.timeToReachMaxVel = 0.400; // in s
 
         this.wantedVelocity = new Vector3(); // accelerate until satisfied
-        this.maxSpeedInAir = 10.0;
+        this.maxSpeedInAir = 5.0;
         this.maxSpeedInWater = 2.5;
 
         // Intelligent internals

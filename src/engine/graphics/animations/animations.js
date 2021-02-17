@@ -5,6 +5,7 @@
 'use strict';
 
 import extend              from '../../../extend';
+
 import { AnimationModel }  from './animations.model';
 import { AnimationOuter }  from './animations.outer';
 import { AnimationMixers } from './animations.mixers';
@@ -72,13 +73,14 @@ extend(AnimationManager.prototype, {
         }
     },
 
-    addSkinnedEntityAnimation(entityId, mesh)
+    addSkinnedEntityAnimation(entityId, mesh, entityModel)
     {
         const mixers = this.mixers;
         const times = this.times;
         const mixer = new AnimationMixer(mesh);
         mixers.set(entityId, mixer);
         times.set(entityId, Date.now());
+        this.setupMixer(entityId, mesh, mixer, entityModel);
     },
 
 });

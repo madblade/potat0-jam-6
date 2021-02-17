@@ -10,6 +10,11 @@
 
 let AnimationMixers = {
 
+    setupMixer(entityId, mesh, mixer, entityModel)
+    {
+        console.log(mesh);
+    },
+
     updateMixerAction(
         entity,
         entityId,

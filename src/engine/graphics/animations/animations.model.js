@@ -57,7 +57,8 @@ let AnimationModel = {
         const dtInSeconds = dt / 1e3;
         if (!e.p0)
         {
-            const initialTheta = entityId !== 0 ? e.rotation.z : backend.selfModel.rotation.z;
+            const initialTheta = entityId !== 0 ?
+                e.rotation.z : backend.selfModel.rotation.z;
             this.initializeEntityAnimation(e, initialTheta);
             e.p0.copy(newPosition);
             e.dt01 = dtInSeconds;

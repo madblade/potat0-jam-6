@@ -22,7 +22,7 @@ let SelfObjectsModule = {
 
         // Init animation mixer.
         const animations = this.app.engine.graphics.animationManager;
-        animations.addSkinnedEntityAnimation(0, up);
+        animations.addSkinnedEntityAnimation(0, up, selfModel);
 
         // Add player to scene.
         graphics.addToScene(selfModel.avatar, worldId);

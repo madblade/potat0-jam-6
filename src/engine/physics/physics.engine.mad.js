@@ -55,7 +55,7 @@ extend(MadEngine.prototype, {
 
     resetGravity()
     {
-        this.gravity.set(0, 0, -9.8);
+        this.gravity.set(0, 0, -2 * 9.8);
     },
 
     initObject()

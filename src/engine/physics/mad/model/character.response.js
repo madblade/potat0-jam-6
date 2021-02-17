@@ -334,6 +334,15 @@ let CharacterResponseModule = {
 
     stepDown(collider)
     {
+        if (this.isJumping)
+        {
+            // console.log('reset');
+            // Reset jump flag.
+            this.onGround = false;
+            this.isJumping = false;
+            return;
+        }
+
         // 1. go down by h / 2
         let bumperCenter = this.bumperCenterTest; // Should be set to p1!
         let bumperCenterLocal = this.bumperCenterTestTranslated;

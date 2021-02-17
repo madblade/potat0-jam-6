@@ -143,7 +143,7 @@ let AnimationOuter = {
         deltaTInSeconds
     )
     {
-        const maxVelocityTilt = Math.PI / 16;
+        const maxVelocityTilt = 0.75 * Math.PI / 8;
 
         const gr = this.graphics;
         const sm = gr.app.model.backend.selfModel;
@@ -184,7 +184,11 @@ let AnimationOuter = {
                 const er = sm.getRotation();
                 if (er)
                 {
-                    this._r.set(er.x - pi / 2 + dx, er.y + dy, er.z);
+                    this._r.set(
+                        er.x - pi / 2 + dx,
+                        er.y + dy,
+                        er.z
+                    );
                     sm.setRotation(this._r);
                     entity.velTilt.set(newTiltX, newTiltY);
                 }
@@ -218,20 +222,22 @@ let AnimationOuter = {
             }
             r /= acc;
             if (r < 0.1) r = 0.; // interp to pause
-            if (r > 1.1) r = 0.2; // stop
+            if (r > 1.1) r = 0.5; // stop
             r = Math.min(r, 1.);
             r *= maxAccelerationTilt;
 
             const pi = Math.PI;
             const tet = Math.atan2(a.y, a.x) - pi / 2;
-            const tx = r * Math.cos(tet);
-            const ty = r * Math.sin(tet);
+            const vt = entity.velTilt;
+            const tx = r * Math.cos(tet) + vt.x;
+            const ty = r * Math.sin(tet) + vt.y;
 
             if (
                 !this.almostEqual(tx, entity.xy1.x) ||
                 !this.almostEqual(ty, entity.xy1.y)
             )
             {
+                // const vt = entity.velTilt;
                 const initX = entityId === 0 ?
                     backend.selfModel.getRotationX() - pi / 2 : // - vt.x :
                     entity.rotation.x; // - vt.x;
@@ -259,7 +265,7 @@ let AnimationOuter = {
             entity.xyT += deltaTInSeconds;
 
             let t;
-            const timeToInterp = .600;
+            const timeToInterp = .400;
             if (targetXY.manhattanLength() < 0.01)
             {
                 t = this.smoothstepAttackReverse(0, timeToInterp,

@@ -6,12 +6,12 @@
 
 'use strict';
 
-import extend       from '../../../extend';
+import extend, { assert }   from '../../../extend';
 
 import {
     Vector2,
     Vector3
-}                   from 'three';
+}                           from 'three';
 
 let Integrator = function(sweeper)
 {
@@ -36,12 +36,9 @@ extend(Integrator.prototype, {
     integrateEntity(entity, relativeDt)
     {
         const cm = entity.collisionModel;
-        if (cm.isStatic)
-        {
-            console.warn(
-                `[Integrator] Trying to integrate a static entity ${entity}.`
-            );
-        }
+        assert(!cm.isStatic,
+            `[Integrator] Trying to integrate a static entity ${entity}.`
+        );
 
         const p0 = cm.position0; const p1 = cm.position1;
         const v0 = cm.velocity0; const v1 = cm.velocity1;
@@ -56,6 +53,19 @@ extend(Integrator.prototype, {
             let cf = cm.continuousForces;
             for (let i = 0; i < cf.length; ++i)
                 sumOfForces.add(cf[i]);
+        }
+
+        // Jump
+        const wv = cm.wantedVelocity;
+        if (wv.z > 0 && cm.onGround)
+        {
+            cm.isJumping = true;
+            const jumpHeight = 2.5; // 0.72 -> 6.969
+            const rh = jumpHeight - 1.969; // + 0.72;
+            const targetA1 = 2 * rh / (relativeDt * relativeDt);
+            a0.z = targetA1;
+            // sumOfForces.z = targetA1 / 2;
+            // ^  we don’t know how much the next dt is gonna be :(
         }
 
         // console.log(`Integrating ${entity.entityId}.`);
@@ -85,8 +95,7 @@ extend(Integrator.prototype, {
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
         // (self movement uses Euler integration!)
-        const wv = cm.wantedVelocity; // max wv is ~ 1.1
-        if (wv.manhattanLength() > 0)
+        if (wv.manhattanLength() > 0) // max wv is ~ 1.1
         {
             const selfIncrement = this._w2;
 
@@ -113,10 +122,11 @@ extend(Integrator.prototype, {
                 ivXY.set(wx, wy);
             }
 
+            // const dz = wv.z > 0 && cm.onGround ? wv.z : 0;
             selfIncrement.set(
                 ivXY.x * maxSpeedDtr,
                 ivXY.y * maxSpeedDtr,
-                wv.z
+                0
             );
             increment.add(selfIncrement);
         }
@@ -157,6 +167,11 @@ extend(Integrator.prototype, {
         cm.position0.copy(cm.position1);
         cm.velocity0.copy(cm.velocity1);
         cm.accelera0.copy(cm.accelera1);
+
+        const p = window.dh.sg1.position;
+        // if (cm.position0.z > p.z)
+        //     console.log(cm.position0.z);
+        p.set(0, 0, Math.max(p.z, cm.position0.z));
         // cm.velocity1.set(0, 0, 0);
         // cm.accelera1.set(0, 0, 0);
 

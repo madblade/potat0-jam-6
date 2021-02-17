@@ -153,14 +153,14 @@ let CoreModule = {
         aiEngine.refresh();
 
         // Emulate lower framerate
-        // this.now = Date.now();
-        // this.elapsed = this.now - (this.then || 0);
-        // const fps = 10;
-        // const fpsInterval = 1000 / fps;
-        // if (this.elapsed > fpsInterval)
-        // {
-        //     this.then = this.now - (this.elapsed % fpsInterval);
-        // } else return;
+        this.now = Date.now();
+        this.elapsed = this.now - (this.then || 0);
+        const fps = 60;
+        const fpsInterval = 1000 / fps;
+        if (this.elapsed > fpsInterval)
+        {
+            this.then = this.now - (this.elapsed % fpsInterval);
+        } else return;
 
         // Ping physics engines.
         const deltaT = physicsEngine.refresh();

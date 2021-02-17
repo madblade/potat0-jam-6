@@ -55,7 +55,7 @@ extend(AnimationManager.prototype, {
             this.updateEntityPosition(id, id === 0 ?
                 backend.selfModel.position : e.position, deltaT);
             this.updateEntityRotationAndTilt(e, id, deltaT);
-            this.updateMixerAction(e, id, deltaT);
+            this.updateMixerAction(e, id, m, deltaT);
         });
     },
 

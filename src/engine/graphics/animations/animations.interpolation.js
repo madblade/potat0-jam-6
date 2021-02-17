@@ -4,8 +4,6 @@
 
 'use strict';
 
-import { Vector3 } from 'three';
-
 let AnimationInterpolation = {
 
     updateEntityRotationAndTilt(entity, entityId, deltaT)
@@ -22,9 +20,9 @@ let AnimationInterpolation = {
         }
         const deltaTInSeconds = deltaT / 1e3;
 
-        // this.applyRotationFromVelocity(
-        //     entity, entityId, initialTheta, deltaTInSeconds
-        // );
+        this.applyRotationFromVelocity(
+            entity, entityId, initialTheta, deltaTInSeconds
+        );
 
         // TODO only if on ground, reverse if in air
 
@@ -32,9 +30,9 @@ let AnimationInterpolation = {
             entity, entityId
         );
 
-        // this.applyTiltFromAcceleration(
-        //     entity, entityId, deltaTInSeconds
-        // );
+        this.applyTiltFromAcceleration(
+            entity, entityId, deltaTInSeconds
+        );
     },
 
     applyRotationFromVelocity(
@@ -137,8 +135,8 @@ let AnimationInterpolation = {
         entityId
     )
     {
-        const maxVelocityTilt = Math.PI / 4;
-        // const maxTilt = Math.PI / 16;
+        // const maxVelocityTilt = Math.PI / 4;
+        const maxVelocityTilt = Math.PI / 8;
 
         const gr = this.graphics;
         const sm = gr.app.model.backend.selfModel;
@@ -186,7 +184,8 @@ let AnimationInterpolation = {
         deltaTInSeconds
     )
     {
-        const maxAccelerationTilt = Math.PI / 4;
+        const maxAccelerationTilt = Math.PI / 8;
+
         const gr = this.graphics;
         const backend = gr.app.model.backend;
 
@@ -195,14 +194,17 @@ let AnimationInterpolation = {
         if (Math.abs(a.x) + Math.abs(a.y) > 0.)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
-            // const pe = entityId === 0 ?
-            //     backend.selfModel.physicsEntity :
-            //     entity.physicsEntity;
-            // if (pe && pe.collisionModel.instantaneousAcceleration)
-            //     r /= pe.collisionModel.instantaneousAcceleration;
+            const cm = entityId === 0 ?
+                backend.selfModel.physicsEntity.collisionModel :
+                entity.physicsEntity.collisionModel;
+            let acc = 1.;
+            if (cm && cm.timeToReachMaxVel)
+            {
+                acc = cm.maxSpeedInAir / cm.timeToReachMaxVel;
+            }
+            r /= acc;
             // console.log(r);
-            r /= 10.;
-            if (r > 2.) r = 0.1; // stop
+            if (r > 1.1) r = 0.1; // stop
             r = Math.min(r, 1.);
             r *= maxAccelerationTilt;
 
@@ -227,22 +229,9 @@ let AnimationInterpolation = {
                 // was tilting
                 if (entity.xy0.manhattanDistanceTo(entity.xy1) > 0)
                 {
-                    // was tilting toward pause
-                    if (entity.xy1.manhattanDistanceTo(entity.xy2) < 0.01)
-                    {
-                        entity.xyT = 0.01;
-                        entity.xy0.set(initX, initY);
-                        entity.xy1.set(tx, ty);
-                    }
-                    else // was tilting toward something else
-                    {
-                        // entity.xyT += 0.1;
-                        // entity.xy0.set(initX, initY);
-                        // entity.xy1.set(tx, ty);
-                    }
-                    // if (entity.xyT > 0.1)
-                    // {
-                    // }
+                    entity.xyT = 0.;
+                    entity.xy0.set(initX, initY);
+                    entity.xy1.set(tx, ty);
                 }
                 else // was not tilting
                 {
@@ -261,12 +250,9 @@ let AnimationInterpolation = {
             entity.currentXY.manhattanDistanceTo(entity.xy2) > 0;
         if (needsInterp1 || needsInterp2)
         {
-            // console.log(`${needsInterp1}, ${needsInterp2}`);
             const sourceXY = entity.xy0;
             const targetXY = needsInterp1 ? entity.xy1 : entity.xy2;
             entity.xyT += deltaTInSeconds;
-            // const towardsZero =
-            //     entity.xy1.manhattanDistanceTo(entity.xy2) === 0;
             const timeToInterp = .800;
 
             let t = this.smoothstepAttack(0, timeToInterp, entity.xyT);

@@ -88,13 +88,6 @@ extend(Integrator.prototype, {
         const wv = cm.wantedVelocity; // max wv is ~ 1.1
         if (wv.manhattanLength() > 0)
         {
-            // let iv = cm.instantaneousVelocity; // scalar in [0, 1]
-            // const ia = cm.instantaneousAcceleration; // fixed scalar
-            // const linearIntegration = iv + ia * dtr;
-            // iv = Math.min(linearIntegration, 1.0);
-            // if (iv < 1.) console.log(iv);
-            // selfIncrement.copy(wv).multiplyScalar(iv * maxSpeedDtr);
-            // cm.instantaneousVelocity = iv; // apply Euler integration
             const selfIncrement = this._w2;
 
             let wx = wv.x;
@@ -111,8 +104,7 @@ extend(Integrator.prototype, {
             const ivXY = cm.instantaneousVelocityXY;
             const delta = this._vec20;
             delta.set(wx - ivXY.x, wy - ivXY.y);
-            const timeToReachMaxVel = 0.200; // s
-            const acc = 1. / timeToReachMaxVel;
+            const acc = 1. / cm.timeToReachMaxVel;
             iaXY.copy(delta).normalize().multiplyScalar(acc)
                 .multiplyScalar(dtr);
             ivXY.add(iaXY); // v1 = v0 + (a0 * dt)

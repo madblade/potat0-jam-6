@@ -164,7 +164,7 @@ extend(GamepadControls.prototype, {
                 if (s1 === 0)
                 {
                     const o1 = osc[s1];
-                    if (o1.lastDifferent === a1) {
+                    if (a1 !== 0 && o1.lastDifferent === a1) {
                         // going back to a previous state: bad
                         a1 = o1.last;
                     } else if (o1.last !== a1) {
@@ -172,7 +172,7 @@ extend(GamepadControls.prototype, {
                         o1.last = a1;
                     }
                     const o2 = osc[s2];
-                    if (o2.lastDifferent === a2) {
+                    if (a2 !== 0 && o2.lastDifferent === a2) {
                         a2 = o2.last;
                     } else if (o2.last !== a2) {
                         o2.lastDifferent = o2.last;

@@ -59,16 +59,13 @@ let CollisionModel = function(
         this.continuousForces = [];
 
         // bind input to acceleration
-        const timeToReachMaxVel = 0.400; // in s
-        // const timeToReachMaxVel = 1.500; // in s
-        this.instantaneousAcceleration = 1. / timeToReachMaxVel;
-        this.instantaneousVelocity = 0.; // normalized
         this.instantaneousVelocityXY = new Vector2(0, 0);
         this.instantaneousAccelerationXY = new Vector2(0, 0,);
+        this.timeToReachMaxVel = 0.400; // in s
 
         this.wantedVelocity = new Vector3(); // accelerate until satisfied
         this.maxSpeedInAir = 10.0;
-        this.maxSpeedInWater = 5.0;
+        this.maxSpeedInWater = 2.5;
 
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];

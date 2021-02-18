@@ -143,17 +143,17 @@ let AnimationOuter = {
         deltaTInSeconds
     )
     {
-        const maxVelocityTilt = 0.75 * Math.PI / 8;
+        const maxVelocityTilt = 0.5 * Math.PI / 8;
 
         const gr = this.graphics;
         const sm = gr.app.model.backend.selfModel;
         const pe = entityId === 0 ?
             sm.physicsEntity :
             entity.physicsEntity;
+        const pi = Math.PI;
 
         // Direct rotation.
         const v = entity.v0;
-        const pi = Math.PI;
         const oldTiltX = entity.velTilt.x;
         const oldTiltY = entity.velTilt.y;
         const tet = Math.atan2(v.y, v.x) - pi / 2;
@@ -175,8 +175,10 @@ let AnimationOuter = {
         const dy = d * (targetTiltY - oldTiltY);
         if (Math.abs(dx) + Math.abs(dy) > 0.)
         {
-            const newTiltX = oldTiltX + dx;
-            const newTiltY = oldTiltY + dy;
+            let newTiltX = oldTiltX + dx;
+            if (Math.abs(newTiltX) < 0.001) newTiltX = 0;
+            let newTiltY = oldTiltY + dy;
+            if (Math.abs(newTiltY) < 0.001) newTiltY = 0;
 
             // Apply changes.
             if (entityId === 0)
@@ -202,7 +204,7 @@ let AnimationOuter = {
         deltaTInSeconds
     )
     {
-        const maxAccelerationTilt = Math.PI / 8;
+        const maxAccelerationTilt = 0.5 * Math.PI / 8;
 
         const gr = this.graphics;
         const backend = gr.app.model.backend;
@@ -221,58 +223,99 @@ let AnimationOuter = {
                 acc = cm.maxSpeedInAir / cm.timeToReachMaxVel;
             }
             r /= acc;
-            if (r < 0.1) r = 0.; // interp to pause
-            if (r > 1.1) r = 0.5; // stop
-            r = Math.min(r, 1.);
-            r *= maxAccelerationTilt;
+            // r ~ 0 : nothing happens (slight gamepad oscillation)
+            // r > 1.1 : halt (stopped holding controls)
+            // r ~ 1 : regular acceleration
+            // r in [0, 1] : clamped acceleration (gamepad)
 
+            // Correct slight oscillations around 0.
+            if (r < 0.1) r = 0.;
+            // Correct slight oscillations around 1.
+            if (Math.abs(r - 1.) < 0.001) r = 1.;
+            // Gamepad: correct oscillations between acceleration states.
+            // Require acceleration to be held at least during 2 frames
+            const na = entity.a0.angleTo(entity.a1);
+            if (r < 1. && Math.abs(na) > 0.1) r = 0;
+
+            // Compute angles.
+            const needsToSwitchTarget = r > 0.;
             const pi = Math.PI;
             const tet = Math.atan2(a.y, a.x) - pi / 2;
+            const oldR = entity.towardsR;
+            const oldT = entity.towardsT;
+            // Gamepad: set current r to max r when the angle is small.
+            if (needsToSwitchTarget && r <= 1.)
+            {
+                if (Math.abs(oldT - tet) < 0.5 && r < oldR)
+                {
+                    r = oldR;
+                }
+            }
+
+            // Halt: reduce halting amplitude.
+            if (
+                r > 2. &&
+                Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.0001
+            )
+            {
+                r = 1.;
+            }
+            else
+            {
+                // Clamp r.
+                r = Math.min(r, 1.);
+            }
+
+            r *= maxAccelerationTilt;
+
             const vt = entity.velTilt;
             const tx = r * Math.cos(tet) + vt.x;
             const ty = r * Math.sin(tet) + vt.y;
 
+            // Switch target if needed.
             if (
-                !this.almostEqual(tx, entity.xy1.x) ||
-                !this.almostEqual(ty, entity.xy1.y)
+                needsToSwitchTarget &&
+                (!this.almostEqual(tx, entity.xy1.x) ||
+                !this.almostEqual(ty, entity.xy1.y))
             )
             {
-                // const vt = entity.velTilt;
                 const initX = entityId === 0 ?
-                    backend.selfModel.getRotationX() - pi / 2 : // - vt.x :
-                    entity.rotation.x; // - vt.x;
+                    backend.selfModel.getRotationX() - pi / 2 :
+                    entity.rotation.x;
                 const initY = entityId === 0 ?
-                    backend.selfModel.getRotationY() : // - vt.y :
-                    entity.rotation.y; // - vt.y;
+                    backend.selfModel.getRotationY() :
+                    entity.rotation.y;
 
                 entity.xyT = 0;
                 entity.xy0.set(initX, initY);
                 entity.xy1.set(tx, ty);
                 entity.currentXY.copy(entity.xy0);
+                entity.towardsR = r;
+                entity.towardsT = tet;
             }
         }
 
         // Tilt interpolation.
         const needsInterp1 = // target tilt (after a stop, backwards tilt)
             entity.currentXY.manhattanDistanceTo(entity.xy1) > 0;
-        const needsInterp2 = // pause tilt (from backwards tilt to no tilt)
-            !needsInterp1 &&
-            entity.currentXY.manhattanDistanceTo(entity.xy2) > 0;
-        if (needsInterp1 || needsInterp2)
+        if (needsInterp1)
         {
             const sourceXY = entity.xy0;
-            const targetXY = needsInterp1 ? entity.xy1 : entity.xy2;
+            const targetXY = entity.xy1;
             entity.xyT += deltaTInSeconds;
 
             let t;
-            const timeToInterp = .400;
-            if (targetXY.manhattanLength() < 0.01)
+            let timeToInterp;
+            if (targetXY.manhattanDistanceTo(entity.xy2) < 0.01)
+            // distance to snapshot (is it the last velTilt?)
             {
-                t = this.smoothstepAttackReverse(0, timeToInterp,
+                timeToInterp = .400;
+                t = this.smoothstep(0, timeToInterp,
                     entity.xyT);
             }
             else
             {
+                timeToInterp = .200;
                 t = this.smoothstepAttack(0, timeToInterp,
                     entity.xyT);
             }
@@ -304,10 +347,12 @@ let AnimationOuter = {
 
         const needsInterp1Again =
             entity.currentXY.manhattanDistanceTo(entity.xy1) > 0;
-        if (!needsInterp1Again)
+        if (!needsInterp1Again &&
+            entity.xy1.manhattanDistanceTo(entity.velTilt) > 0)
         {
             entity.xy0.copy(entity.xy1);
-            entity.xy1.copy(entity.xy2);
+            entity.xy1.copy(entity.velTilt);
+            entity.xy2.copy(entity.velTilt); // snapshot target
             entity.xyT = 0;
         }
     },

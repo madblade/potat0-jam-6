@@ -18,10 +18,11 @@ let AnimationModel = {
         entity.p1 = new Vector3(0, 0, 0);
         // entity.p2 = new Vector3(0, 0, 0);
         entity.dt01 = 0;
-        // entity.dt12 = 0;
+        entity.dt12 = 0;
         entity.v0 = new Vector3(0, 0, 0);
         entity.v1 = new Vector3(0, 0, 0);
         entity.a0 = new Vector3(0, 0, 0);
+        entity.a1 = new Vector3(0, 0, 0);
 
         // z rotation interpolation
         entity.theta0 = initialTheta;
@@ -38,6 +39,8 @@ let AnimationModel = {
         entity.xy2 = new Vector2(0, 0); // pause state, always 0.
         entity.currentXY = new Vector2(0, 0);
         entity.xyT = 0;
+        entity.towardsR = 0;
+        entity.towardsT = 0;
     },
 
     // v  Called at integration.
@@ -76,9 +79,12 @@ let AnimationModel = {
         e.v1.copy(e.v0);
         e.v0.copy(e.p1).addScaledVector(e.p0, -1);
         e.v0.multiplyScalar(1 / e.dt01); // (p1 - p0) / dt
+
         // update acceleration
+        e.a1.copy(e.a0);
         e.a0.copy(e.v0).addScaledVector(e.v1, -1);
         e.a0.multiplyScalar(1 / e.dt01);
+
         // if (e.a0.manhattanLength() > 0 && e.v1.manhattanLength() > 0)
         // {
         //     console.log(e.a0.length());

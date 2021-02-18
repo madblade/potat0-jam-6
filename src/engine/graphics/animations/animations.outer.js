@@ -211,7 +211,7 @@ let AnimationOuter = {
 
         // Tilt target.
         const a = entity.a0;
-        if (Math.abs(a.x) + Math.abs(a.y) > 0.)
+        if (Math.abs(a.x) + Math.abs(a.y) > -0.1)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
             const cm = entityId === 0 ?
@@ -224,19 +224,20 @@ let AnimationOuter = {
             if (cm && cm.timeToReachMaxVel)
                 acc = cm.maxSpeedInAir / cm.timeToReachMaxVel;
             r /= acc;
+            // Old tilting method:
             // r ~ 0 : nothing happens (slight gamepad oscillation)
             // r > 1.1 : halt (stopped holding controls)
             // r ~ 1 : regular acceleration
             // r in [0, 1] : clamped acceleration (gamepad)
 
             // Correct slight oscillations around 0.
-            if (r < 0.001) r = 0.;
+            // if (r < 0.001) r = 0.;
             // Correct slight oscillations around 1.
-            if (Math.abs(r - 1.) < 0.001) r = 1.;
+            // if (Math.abs(r - 1.) < 0.001) r = 1.;
             // Gamepad: correct oscillations between acceleration states.
             // Require acceleration to be held at least during 2 frames
-            const na = entity.a0.angleTo(entity.a1);
-            if (r < 1. && Math.abs(na) > 0.5) r = 0.;
+            // const na = entity.a0.angleTo(entity.a1);
+            // if (r < 1. && Math.abs(na) > 0.5) r = 0.;
 
             // Compute angles.
             let needsToSwitchTarget = r > 0.;
@@ -250,33 +251,40 @@ let AnimationOuter = {
                     r = oldR;
 
             // Halt: reduce halting amplitude.
-            if (
-                r > 2. &&
-                Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.001
-            )
+            if (r > 2.)
             {
+                if (Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.001)
+                {
+                    // To trigger only when the user stopped going forward,
+                    // set r / lastWantedXY here.
+                }
+                else
+                {
+                    // branches here after a sharp turn or hitting an object;
+                    // the latter is interesting, I need to figure out
+                    // how to get rid of the former
+                }
+
                 r = .5;
                 entity.lastWantedXY.set(0, 0);
             }
-            else
+            else // ignore small acceleration inputs
             {
-                // Clamp r.
-                r = Math.min(r, 1.);
                 r = 0;
             }
 
             if (r < 1)
+            // no big acceleration delta: wire user controls instead
             {
                 const wl = wantedXY.length();
                 const lastWantedXY = entity.lastWantedXY;
                 const lwl = lastWantedXY.length();
                 if (
-                    wl > lwl ||
+                    (wl > lwl ||
                     Math.abs(lastWantedXY.dot(wantedXY) / (wl * lwl)) < 0.999
+                    ) && this.dotV2V3(wantedXY, entity.v0) < -0.99
                 )
                 {
-                    // console.log(`${wl},${el}`);
-                    // console.log('to wanted');
                     tet = Math.atan2(-wantedXY.y, -wantedXY.x) - pi / 2;
                     r = wl;
                 }
@@ -331,23 +339,19 @@ let AnimationOuter = {
                 timeToInterp = .600;
                 t = this.smoothstep(0, timeToInterp,
                     entity.xyT);
-                // console.log(`reverse ${t}`);
             }
             else
             {
                 timeToInterp = .200;
                 t = this.smoothstepAttack(0, timeToInterp,
                     entity.xyT);
-                // console.log('attack');
-                // console.log(targetXY.manhattanDistanceTo(entity.xy2));
             }
-            // t = 1;
 
-            if (t === 1) // End interpolation
+            if (t === 1) // end interpolation
             {
                 entity.currentXY.copy(targetXY);
             }
-            else // Interpolate
+            else // interpolate
             {
                 const ctx = t * targetXY.x + (1 - t) * sourceXY.x;
                 const cty = t * targetXY.y + (1 - t) * sourceXY.y;
@@ -359,12 +363,15 @@ let AnimationOuter = {
             {
                 const sm = backend.selfModel;
                 const er = sm.getRotation();
+                // sum acceleration + velocity tilts
                 const cxy = entity.currentXY;
                 const vt = entity.velTilt;
                 if (er)
-                    this._r.set(cxy.x + vt.x, cxy.y + vt.y, er.z);
-                else
-                    this._r.set(cxy.x + vt.x, cxy.y + vt.y, 0);
+                    this._r.set(
+                        cxy.x + vt.x,
+                        cxy.y + vt.y,
+                        er.z
+                    );
                 sm.setRotation(this._r);
             }
         }
@@ -377,10 +384,16 @@ let AnimationOuter = {
             entity.xy0.copy(entity.xy1);
             entity.xy1.copy(entity.xy2); // === (0, 0)
             entity.currentXY.copy(entity.xy0);
-            // entity.xy1.copy(entity.velTilt);
-            // entity.xy2.copy(entity.velTilt); // snapshot target
             entity.xyT = 0;
         }
+    },
+
+    dotV2V3(v2, v3)
+    {
+        const n1 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+        const n2 = Math.sqrt(v3.x * v3.x + v3.y * v3.y);
+        if (n1 === 0 || n1 === 0) return 0;
+        return (v2.x * v3.x + v2.y * v3.y) / (n1 * n2);
     },
 
     almostEqual(t1, t2)

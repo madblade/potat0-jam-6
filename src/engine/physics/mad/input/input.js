@@ -62,7 +62,9 @@ let PhysicsInputModule = {
             }
 
         if (changed)
+        {
             this.computeWantedVelocity(cm);
+        }
     },
 
     computeWantedVelocity(collisionModel)

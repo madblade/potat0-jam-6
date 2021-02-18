@@ -152,7 +152,7 @@ let CoreModule = {
         // Emulate lower framerate
         this.now = Date.now();
         this.elapsed = this.now - (this.then || 0);
-        const fps = 60;
+        const fps = 20;
         const fpsInterval = 1000 / fps;
         if (this.elapsed > fpsInterval)
         {

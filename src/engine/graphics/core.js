@@ -136,9 +136,6 @@ let CoreModule = {
         // Request animation frame.
         this.requestId = requestAnimationFrame(this.animate.bind(this));
 
-        // Bench.
-        this.fps.update();
-
         // Ping UX.
         ux.refresh();
         const paused = ux.isGamePaused();
@@ -176,6 +173,9 @@ let CoreModule = {
 
         // Render.
         this.render();
+
+        // Bench.
+        this.fps.update();
 
         // Update client / camera.
         clientModel.refresh();

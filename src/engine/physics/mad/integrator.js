@@ -132,18 +132,6 @@ extend(Integrator.prototype, {
             );
             increment.add(selfIncrement);
         }
-        // else
-        // {
-        //     const iaXY = cm.instantaneousAccelerationXY;
-        //     const acc = 1. / cm.timeToReachMaxVel;
-        //     const ivXY = cm.instantaneousVelocityXY;
-        //     const delta = this._vec20;
-        //     delta.set(-ivXY.x, -ivXY.y);
-        //     iaXY.copy(delta).normalize().multiplyScalar(acc);
-        //     iaXY.multiplyScalar(dtr);
-        //     ivXY.add(iaXY); // v1 = v0 + (a0 * dt)
-        //     if (ivXY.dot(delta) > 0) ivXY.set(0, 0);
-        // }
 
         const lxy = Math.sqrt(
             increment.x * increment.x +

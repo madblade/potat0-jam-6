@@ -8,7 +8,8 @@ let RendererUpdates = {
 
     darkenNonBloomed(obj, materials)
     {
-        if (obj.isMesh && obj.userData.bloom !== true) {
+        if (obj.isMesh && obj.userData.bloom !== true)
+        {
             materials[obj.uuid] = obj.material;
             obj.material = this.darkMaterial;
         }
@@ -16,7 +17,8 @@ let RendererUpdates = {
 
     restoreMaterial(obj, materials)
     {
-        if (materials[obj.uuid]) {
+        if (materials[obj.uuid])
+        {
             obj.material = materials[obj.uuid];
             delete materials[obj.uuid];
         }

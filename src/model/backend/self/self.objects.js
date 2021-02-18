@@ -4,8 +4,11 @@
 
 'use strict';
 
-import { ItemsModelModule } from './items';
-import { Object3D }         from 'three';
+import { ItemsModelModule }     from './items';
+import {
+    MeshBasicMaterial,
+    Object3D
+}                               from 'three';
 
 let SelfObjectsModule = {
 
@@ -22,7 +25,34 @@ let SelfObjectsModule = {
 
         // Init animation mixer.
         const animations = this.app.engine.graphics.animationManager;
-        animations.addSkinnedEntityAnimation(0, up, selfModel);
+        animations.addSkinnedEntityAnimation(
+            0, up, selfModel.animationComponent
+        );
+
+        // Change eye color.
+        try
+        {
+            const inner = up.children[0];
+            const gltf = inner.children[0];
+            const rootBone = gltf.children[0];
+            // const mesh = gltf.children[1];
+            // mesh.userData.bloom = true;
+            const waist = rootBone.children[0];
+            const ab = waist.children[0];
+            const torso = ab.children[0];
+            const neck = torso.children[0];
+            const head = neck.children[0];
+            const eyes = head.children[0];
+            // eyes.material.color.set(0xffffff);
+            // eyes.material.emissive.set(0xffffff);
+            eyes.material = new MeshBasicMaterial({
+                color: 0xffffff,
+            });
+            eyes.userData.bloom = true;
+        } catch (e)
+        {
+            console.error('[Self/Objetts] Invalid skeleton hierarchy.');
+        }
 
         // Add player to scene.
         graphics.addToScene(selfModel.avatar, worldId);

@@ -229,13 +229,13 @@ let AnimationOuter = {
             // r in [0, 1] : clamped acceleration (gamepad)
 
             // Correct slight oscillations around 0.
-            if (r < 0.1) r = 0.;
+            if (r < 0.001) r = 0.;
             // Correct slight oscillations around 1.
             if (Math.abs(r - 1.) < 0.001) r = 1.;
             // Gamepad: correct oscillations between acceleration states.
             // Require acceleration to be held at least during 2 frames
             const na = entity.a0.angleTo(entity.a1);
-            if (r < 1. && Math.abs(na) > 0.1) r = 0;
+            if (r < 1. && Math.abs(na) > 0.5) r = 0;
 
             // Compute angles.
             const needsToSwitchTarget = r > 0.;
@@ -258,7 +258,7 @@ let AnimationOuter = {
                 Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.0001
             )
             {
-                r = 1.;
+                r = .5;
             }
             else
             {

@@ -56,7 +56,6 @@ let MeshesModule = {
 
     finalizeMainCharacter(gltf, callback)
     {
-        console.log(gltf);
         let object = gltf.scene.children[0];
         object.name = 'gltf0';
         object.position.set(0, -0.15, 0.07);
@@ -69,6 +68,7 @@ let MeshesModule = {
         let wrapper = new Object3D();
         wrapper.name = 'outer';
         wrapper.add(innerWrapper);
+        wrapper.userData.animations = gltf.animations;
 
         wrapper.getInnerObject = () => innerWrapper;
 

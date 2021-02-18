@@ -129,9 +129,9 @@ let RendererFactory = {
         let bloomPass = new UnrealBloomPass(
             new Vector2(window.innerWidth, window.innerHeight),
             1.5, 0.4, 0.85);
-        bloomPass.exposure = 0.5;
-        bloomPass.threshold = 0.3;
-        bloomPass.strength = 1.0;
+        bloomPass.exposure = 1.; // 0.5
+        bloomPass.threshold = 0.; // 0.3
+        bloomPass.strength = 5.0; // 1.0
         bloomPass.radius = 0;
         let bloomComposer = new EffectComposer(renderer);
         bloomComposer.renderTarget1.stencilBuffer = true;

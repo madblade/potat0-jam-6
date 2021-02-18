@@ -59,6 +59,7 @@ let CollisionModel = function(
         this.continuousForces = [];
 
         // bind input to acceleration
+        this.wantedXY = new Vector2(0, 0);
         this.instantaneousVelocityXY = new Vector2(0, 0);
         this.instantaneousAccelerationXY = new Vector2(0, 0,);
         this.timeToReachMaxVel = 0.200; // in s

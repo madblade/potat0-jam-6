@@ -143,7 +143,7 @@ let AnimationOuter = {
         deltaTInSeconds
     )
     {
-        const maxVelocityTilt = 0.5 * Math.PI / 8;
+        const maxVelocityTilt = 0.25 * Math.PI / 8;
 
         const gr = this.graphics;
         const sm = gr.app.model.backend.selfModel;
@@ -217,11 +217,12 @@ let AnimationOuter = {
             const cm = entityId === 0 ?
                 backend.selfModel.physicsEntity.collisionModel :
                 entity.physicsEntity.collisionModel;
+
+            const wantedXY = cm.wantedXY;
+
             let acc = 1.;
             if (cm && cm.timeToReachMaxVel)
-            {
                 acc = cm.maxSpeedInAir / cm.timeToReachMaxVel;
-            }
             r /= acc;
             // r ~ 0 : nothing happens (slight gamepad oscillation)
             // r > 1.1 : halt (stopped holding controls)
@@ -235,42 +236,59 @@ let AnimationOuter = {
             // Gamepad: correct oscillations between acceleration states.
             // Require acceleration to be held at least during 2 frames
             const na = entity.a0.angleTo(entity.a1);
-            if (r < 1. && Math.abs(na) > 0.5) r = 0;
+            if (r < 1. && Math.abs(na) > 0.5) r = 0.;
 
             // Compute angles.
-            const needsToSwitchTarget = r > 0.;
+            let needsToSwitchTarget = r > 0.;
             const pi = Math.PI;
-            const tet = Math.atan2(a.y, a.x) - pi / 2;
+            let tet = Math.atan2(a.y, a.x) - pi / 2;
             const oldR = entity.towardsR;
             const oldT = entity.towardsT;
             // Gamepad: set current r to max r when the angle is small.
             if (needsToSwitchTarget && r <= 1.)
-            {
                 if (Math.abs(oldT - tet) < 0.5 && r < oldR)
-                {
                     r = oldR;
-                }
-            }
 
             // Halt: reduce halting amplitude.
             if (
                 r > 2. &&
-                Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.0001
+                Math.abs(pi / 2 - Math.abs(entity.a0.angleTo(entity.v0))) < 0.001
             )
             {
                 r = .5;
+                entity.lastWantedXY.set(0, 0);
             }
             else
             {
                 // Clamp r.
                 r = Math.min(r, 1.);
+                r = 0;
+            }
+
+            if (r < 1)
+            {
+                const wl = wantedXY.length();
+                const lastWantedXY = entity.lastWantedXY;
+                const lwl = lastWantedXY.length();
+                if (
+                    wl > lwl ||
+                    Math.abs(lastWantedXY.dot(wantedXY) / (wl * lwl)) < 0.999
+                )
+                {
+                    // console.log(`${wl},${el}`);
+                    // console.log('to wanted');
+                    tet = Math.atan2(-wantedXY.y, -wantedXY.x) - pi / 2;
+                    r = wl;
+                }
+                lastWantedXY.copy(wantedXY);
             }
 
             r *= maxAccelerationTilt;
+            needsToSwitchTarget = r > 0;
 
-            const vt = entity.velTilt;
-            const tx = r * Math.cos(tet) + vt.x;
-            const ty = r * Math.sin(tet) + vt.y;
+            // const vt = entity.velTilt;
+            const tx = r * Math.cos(tet);// + vt.x;
+            const ty = r * Math.sin(tet);// + vt.y;
 
             // Switch target if needed.
             if (
@@ -286,8 +304,9 @@ let AnimationOuter = {
                     backend.selfModel.getRotationY() :
                     entity.rotation.y;
 
+                const vt = entity.velTilt;
                 entity.xyT = 0;
-                entity.xy0.set(initX, initY);
+                entity.xy0.set(initX - vt.x, initY - vt.y);
                 entity.xy1.set(tx, ty);
                 entity.currentXY.copy(entity.xy0);
                 entity.towardsR = r;
@@ -306,19 +325,23 @@ let AnimationOuter = {
 
             let t;
             let timeToInterp;
-            if (targetXY.manhattanDistanceTo(entity.xy2) < 0.01)
+            if (targetXY.manhattanDistanceTo(entity.xy2) < 0.001)
             // distance to snapshot (is it the last velTilt?)
             {
-                timeToInterp = .400;
+                timeToInterp = .600;
                 t = this.smoothstep(0, timeToInterp,
                     entity.xyT);
+                // console.log(`reverse ${t}`);
             }
             else
             {
                 timeToInterp = .200;
                 t = this.smoothstepAttack(0, timeToInterp,
                     entity.xyT);
+                // console.log('attack');
+                // console.log(targetXY.manhattanDistanceTo(entity.xy2));
             }
+            // t = 1;
 
             if (t === 1) // End interpolation
             {
@@ -337,10 +360,11 @@ let AnimationOuter = {
                 const sm = backend.selfModel;
                 const er = sm.getRotation();
                 const cxy = entity.currentXY;
+                const vt = entity.velTilt;
                 if (er)
-                    this._r.set(cxy.x, cxy.y, er.z);
+                    this._r.set(cxy.x + vt.x, cxy.y + vt.y, er.z);
                 else
-                    this._r.set(cxy.x, cxy.y, 0);
+                    this._r.set(cxy.x + vt.x, cxy.y + vt.y, 0);
                 sm.setRotation(this._r);
             }
         }
@@ -348,11 +372,13 @@ let AnimationOuter = {
         const needsInterp1Again =
             entity.currentXY.manhattanDistanceTo(entity.xy1) > 0;
         if (!needsInterp1Again &&
-            entity.xy1.manhattanDistanceTo(entity.velTilt) > 0)
+            entity.xy1.manhattanDistanceTo(entity.xy2) > 0)
         {
             entity.xy0.copy(entity.xy1);
-            entity.xy1.copy(entity.velTilt);
-            entity.xy2.copy(entity.velTilt); // snapshot target
+            entity.xy1.copy(entity.xy2); // === (0, 0)
+            entity.currentXY.copy(entity.xy0);
+            // entity.xy1.copy(entity.velTilt);
+            // entity.xy2.copy(entity.velTilt); // snapshot target
             entity.xyT = 0;
         }
     },
@@ -365,6 +391,12 @@ let AnimationOuter = {
     lerp(end1, end2, t)
     {
         return this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+    },
+
+    smootherstep(end1, end2, t)
+    {
+        let x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+        return x * x * x * (x * (x * 6 - 15) + 10);
     },
 
     smoothstep(end1, end2, t)

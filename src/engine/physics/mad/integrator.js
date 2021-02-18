@@ -101,14 +101,6 @@ extend(Integrator.prototype, {
 
             let wx = wv.x;
             let wy = wv.y;
-            // console.log(`${wx},${wy}`);
-            const lsq = wx * wx + wy * wy;
-            if (lsq > 1.)
-            {
-                const n = Math.sqrt(lsq);
-                wx /= n;
-                wy /= n;
-            }
             const iaXY = cm.instantaneousAccelerationXY;
             const acc = 1. / cm.timeToReachMaxVel;
 
@@ -171,11 +163,7 @@ extend(Integrator.prototype, {
         cm.accelera0.copy(cm.accelera1);
 
         const p = window.dh.sg1.position;
-        // if (cm.position0.z > p.z)
-        //     console.log(cm.position0.z);
         p.set(0, 0, Math.max(p.z, cm.position0.z));
-        // cm.velocity1.set(0, 0, 0);
-        // cm.accelera1.set(0, 0, 0);
 
         if (cm.isCharacter)
         {

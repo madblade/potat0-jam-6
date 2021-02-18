@@ -37,6 +37,7 @@ let AnimationModel = {
         entity.xy1 = new Vector2(0, 0);
         entity.xy2 = new Vector2(0, 0); // pause state, always 0.
         entity.currentXY = new Vector2(0, 0);
+        entity.lastWantedXY = new Vector2(0, 0);
         entity.xyT = 0;
         entity.towardsR = 0;
         entity.towardsT = 0;

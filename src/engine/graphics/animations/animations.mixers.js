@@ -85,11 +85,19 @@ let AnimationMixers = {
         const distanceTravelled = deltaP.length();
         // console.log(distanceTravelled);
 
-        const normalizedDelta = distanceTravelled / 5;
+        const normalizedDelta = distanceTravelled / 4;
         if (normalizedDelta > 1. || normalizedDelta === 0.) return;
         const actionDelta = normalizedDelta * cycleDuration;
 
         mixer.update(actionDelta);
+    },
+
+    updateRunCycle()
+    {
+    },
+
+    updateJumpCycle()
+    {
     }
 
 };

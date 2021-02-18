@@ -77,6 +77,7 @@ let PhysicsInputModule = {
         if (!isFw && !isRg && !isUd && !ww)
         {
             collisionModel.wantsToMove = false;
+            collisionModel.wantedXY.set(0, 0);
             collisionModel.instantaneousVelocityXY.set(0, 0);
             // ^  large post-mort. acceleration
             wv.set(0, 0, 0);
@@ -89,16 +90,14 @@ let PhysicsInputModule = {
         // or the camera up projected on (x, y)
         const f = this._f;
         f.set(0, 0, -1); // camera looks at -z
-        const cam = this.physics.app.engine.graphics.cameraManager.mainCamera;
-        cam.cameraObject.matrixWorld.decompose(this._p, lq, this._s);
-        // const q = cam.cameraObject.quaternion;
+        const cam = this.physics.app.engine.graphics
+            .cameraManager.mainCamera.cameraObject;
+        cam.matrixWorld.decompose(this._p, lq, this._s);
         f.applyQuaternion(lq);
         if (Math.abs(f.x) + Math.abs(f.y) > 0.01)
             wv.set(f.x, f.y, 0).normalize();
         else
         {
-            // console.log('DBG: forward computed from the up vector.');
-
             // retry with up if camera is vertical
             const u = this._f;
             u.copy(Object3D.DefaultUp); // camera up is +y
@@ -117,7 +116,6 @@ let PhysicsInputModule = {
             to.set(ww[0], ww[1], 0);
             norm = to.length();
             to.multiplyScalar(1 / norm);
-            norm *= 10.;
         }
         else
             to.set(
@@ -132,17 +130,20 @@ let PhysicsInputModule = {
             wv.applyQuaternion(lq);
         }
         else wv.set(0, 0, 0);
-        wv.z = d[4] ? 1 : d[5] ? -1 : 0;
 
-        wv.multiplyScalar(norm);
+        wv.x *= norm;
+        wv.y *= norm;
+        wv.z = d[4] ? 1 : d[5] ? -1 : 0;
 
         if (wv.manhattanLength() > 0)
         {
             collisionModel.wantsToMove = true;
+            collisionModel.wantedXY.set(wv.x, wv.y);
         }
         else
         {
             collisionModel.instantaneousVelocityXY.set(0, 0);
+            collisionModel.wantedXY.set(0, 0);
             // ^  large post-mort. acceleration effect
         }
     },

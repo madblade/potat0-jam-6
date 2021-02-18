@@ -27,7 +27,11 @@ let GamepadActionModule = {
     movePlayerFromLeftStickGamepad(x, y)
     {
         let clientModel = this.app.model.frontend;
-        clientModel.triggerEvent('m', 'vec', [x * 0.1, -y * 0.1]);
+        clientModel.triggerEvent(
+            'm',
+            'vec',
+            [x, -y]
+        );
     },
 
     goToHomeMenu()

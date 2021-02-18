@@ -22,6 +22,9 @@ let Entity = function(id, graphicalComponent, worldId)
     this.isProjectile = false;
     this.inScene = false;
     this.helper = null;
+
+    // TODO init physics.
+    this.physicsEntity = null;
 };
 
 extend(Entity.prototype, {

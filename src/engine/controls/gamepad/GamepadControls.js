@@ -180,6 +180,14 @@ extend(GamepadControls.prototype, {
                     }
                 }
 
+                // Restrict stick movement to a circle.
+                const norm = Math.sqrt(a1 * a1 + a2 * a2);
+                if (norm > 1.)
+                {
+                    a1 /= norm;
+                    a2 /= norm;
+                }
+
                 lastStickStates[s1] = a1;
                 lastStickStates[s2] = a2;
                 this.aStickWasHeldOrReleased(s1, s2, a1, a2, dt);

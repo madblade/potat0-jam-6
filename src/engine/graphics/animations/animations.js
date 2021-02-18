@@ -4,16 +4,16 @@
 
 'use strict';
 
-import extend              from '../../../extend';
+import extend, { assert }   from '../../../extend';
 
-import { AnimationModel }  from './animations.model';
-import { AnimationOuter }  from './animations.outer';
-import { AnimationMixers } from './animations.mixers';
+import { AnimationModel }   from './animations.model';
+import { AnimationOuter }   from './animations.outer';
+import { AnimationMixers }  from './animations.mixers';
 import {
     AnimationMixer,
     Vector2,
     Vector3
-}                          from 'three';
+}                           from 'three';
 
 let AnimationManager = function(graphics)
 {
@@ -47,16 +47,14 @@ extend(AnimationManager.prototype, {
             const e = id !== 0 ?
                 entitiesIngame.get(id) :
                 backend.selfModel.animationComponent;
-            if (!e)
-            {
-                console.warn('[Animations] Lone animation mixer.');
-                return;
-            }
+            assert(!!e, '[Animations] Lone animation mixer.');
+            // const cm = id !== 0 ?
+            //     e.physicsEntity
 
             this.updateEntityPosition(id, id === 0 ?
                 backend.selfModel.position : e.position, deltaT);
             this.updateEntityRotationAndTilt(e, id, deltaT);
-            this.updateMixerAction(e, id, m, deltaT);
+            // this.updateMixerAction(e, id, m, deltaT);
         });
     },
 

@@ -44,17 +44,32 @@ extend(AnimationManager.prototype, {
 
         this.mixers.forEach((m, id) =>
         {
-            const e = id !== 0 ?
+            const entityModel = id !== 0 ?
                 entitiesIngame.get(id) :
-                backend.selfModel.animationComponent;
-            assert(!!e, '[Animations] Lone animation mixer.');
-            // const cm = id !== 0 ?
-            //     e.physicsEntity
+                backend.selfModel;
 
-            this.updateEntityPosition(id, id === 0 ?
-                backend.selfModel.position : e.position, deltaT);
-            // this.updateEntityRotationAndTilt(e, id, deltaT);
-            // this.updateMixerAction(e, id, m, deltaT);
+            assert(!!entityModel, '[Animations] Lone animation mixer.');
+
+            const animationComponent = entityModel.animationComponent;
+
+            this.updateEntityPosition(
+                entityModel,
+                animationComponent,
+                deltaT
+            );
+
+            this.updateEntityRotationAndTilt(
+                entityModel,
+                animationComponent,
+                deltaT
+            );
+
+            this.updateMixerAction(
+                entityModel,
+                animationComponent,
+                m,
+                deltaT
+            );
         });
     },
 

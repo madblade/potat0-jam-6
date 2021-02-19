@@ -4,14 +4,13 @@
 
 'use strict';
 
-import extend           from '../../../extend';
+import extend, { assert }   from '../../../extend';
 
-import { Vector3 }      from 'three';
+import { Vector3 }          from 'three';
 
 let Entity = function(id, graphicalComponent, worldId)
 {
     this.id = id;
-    this.graphicalComponent = graphicalComponent;
     this.worldId = worldId;
 
     this.position = new Vector3(0, 0, 0);
@@ -24,7 +23,10 @@ let Entity = function(id, graphicalComponent, worldId)
     this.helper = null;
 
     // TODO init physics.
+    this.graphicalComponent = graphicalComponent;
+    this.animationComponent = Object.create(null);
     this.physicsEntity = null;
+    this._r = new Vector3(0, 0, 0); // opti
 };
 
 extend(Entity.prototype, {
@@ -42,6 +44,56 @@ extend(Entity.prototype, {
     getObject3D()
     {
         return this.graphicalComponent;
+    },
+
+    getTheta()
+    {
+        assert(!!this.graphicalComponent,
+            '[EntityModel] Cannot get graphical component.'
+        );
+        return this.graphicalComponent.getInnerObject().rotation.y;
+    },
+
+    setRotation(r, gc)
+    {
+        if (!gc) gc = this.graphicalComponent;
+        const object = gc.getInnerObject();
+        gc.rotation.x = r.x + Math.PI / 2;
+        gc.rotation.y = r.y + 0;
+
+        object.rotation.y = r.z;
+    },
+
+    getRotation()
+    {
+        const gc = this.graphicalComponent;
+        assert(!!gc,
+            '[EntityModel] Cannot get graphical component.'
+        );
+        if (!gc) return;
+        const object = gc.getInnerObject();
+        this._r.set(
+            gc.rotation.x,
+            gc.rotation.y,
+            object.rotation.y
+        );
+        return this._r;
+    },
+
+    getRotationX()
+    {
+        assert(!!this.graphicalComponent,
+            '[SelfModel] Cannot get graphical component.'
+        );
+        return this.avatar.rotation.x;
+    },
+
+    getRotationY()
+    {
+        assert(!!this.graphicalComponent,
+            '[SelfModel] Cannot get graphical component.'
+        );
+        return this.graphicalComponent.rotation.y;
     },
 
     getWorldId()

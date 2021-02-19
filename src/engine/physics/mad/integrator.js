@@ -61,7 +61,7 @@ extend(Integrator.prototype, {
         // Jump.
         if (cm.isJumping)
         {
-            console.log('in air');
+            // console.log('in air');
             cm.timeSinceJumpStarted += relativeDt;
             cm.numberOfIterationsInAir += 1;
             if (cm.numberOfIterationsInAir < 2)
@@ -75,11 +75,11 @@ extend(Integrator.prototype, {
         }
         if (cm.isPreparingJump)
         {
-            console.log('waiting.');
+            // console.log('waiting.');
             cm.timeSincePreparedJump += relativeDt;
             if (cm.timeSincePreparedJump > 0.030) // in s.
             {
-                console.log('Jump!');
+                // console.log('Jump!');
                 cm.isJumping = true;
                 cm.isPreparingJump = false;
                 cm.timeSinceJumpStarted = 0;
@@ -103,7 +103,7 @@ extend(Integrator.prototype, {
         {
             cm.isPreparingJump = true;
             cm.timeSincePreparedJump = 0;
-            console.log('preparing jump');
+            // console.log('preparing jump');
         }
 
         // console.log(`Integrating ${entity.entityId}.`);

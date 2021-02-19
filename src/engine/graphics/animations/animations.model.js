@@ -44,24 +44,15 @@ let AnimationModel = {
     },
 
     // v  Called at integration.
-    updateEntityPosition(entityId, newPosition, dt) // dt in millis
+    updateEntityPosition(entityModel, animationComponent, dt) // dt in millis
     {
-        const backend = this.graphics.app.model.backend;
-        const ei = backend.entityModel.entitiesIngame;
-        const e = entityId !== 0 ?
-            ei.get(entityId) :
-            backend.selfModel.animationComponent;
-        if (!e)
-        {
-            console.warn(`[Animations] Entity ${entityId} not found.`);
-            return;
-        }
+        const e = animationComponent;
+        const newPosition = entityModel.position;
 
         const dtInSeconds = dt / 1e3;
         if (!e.p0)
         {
-            const initialTheta = entityId !== 0 ?
-                e.rotation.z : backend.selfModel.rotation.z;
+            const initialTheta = entityModel.rotation.z;
             this.initializeEntityAnimation(e, initialTheta);
             e.p0.copy(newPosition);
             e.dt01 = dtInSeconds;

@@ -12,43 +12,53 @@
 
 let AnimationOuter = {
 
-    updateEntityRotationAndTilt(entity, entityId, deltaT)
+    updateEntityRotationAndTilt(
+        entityModel,
+        animationComponent,
+        deltaT)
     {
+        const initialTheta = entityModel.getTheta();
+
         // Init entity model if needed.
-        const gr = this.graphics;
-        const backend = gr.app.model.backend;
-        const initialTheta = entityId === 0 ?
-            backend.selfModel.getTheta() :
-            entity.rotation.z;
-        if (!entity.p0)
+        if (!animationComponent.p0)
         {
-            this.initializeEntityAnimation(entity, initialTheta);
+            this.initializeEntityAnimation(animationComponent, initialTheta);
             return;
         }
         const deltaTInSeconds = deltaT / 1e3;
 
         this.applyRotationFromVelocity(
-            entity, entityId, initialTheta, deltaTInSeconds
+            entityModel,
+            animationComponent,
+            initialTheta,
+            deltaTInSeconds
         );
 
         // TODO only if on ground, reverse if in air
 
         this.applyTiltFromVelocity(
-            entity, entityId, deltaTInSeconds
+            entityModel,
+            animationComponent,
+            deltaTInSeconds
         );
 
         this.applyTiltFromAcceleration(
-            entity, entityId, deltaTInSeconds
+            entityModel,
+            animationComponent,
+            deltaTInSeconds
         );
     },
 
     applyRotationFromVelocity(
-        entity,
-        entityId,
+        entityModel,
+        animationComponent,
         initialTheta,
         deltaTInSeconds
     )
     {
+        const entity = animationComponent;
+        const sm = entityModel;
+
         // Rotation target.
         const v = entity.v0;
         const pi = Math.PI;
@@ -64,8 +74,6 @@ let AnimationOuter = {
             // Set rotation target.
             if (!this.almostEqual(entity.theta1, theta))
             {
-                // console.log(`${initialTheta} -> ${theta}`);
-
                 // Update rotation target.
                 if (entity.theta1 !== entity.theta0)
                 {
@@ -91,7 +99,6 @@ let AnimationOuter = {
             const targetTheta = entity.theta1;
             entity.thetaT += deltaTInSeconds;
             const t = this.smoothstep(0, .400, entity.thetaT);
-            // const t = this.lerp(0, .500, entity.thetaT);
 
             if (t === 1) // End interpolation
             {
@@ -121,35 +128,26 @@ let AnimationOuter = {
             }
 
             // Apply changes.
-            if (entityId === 0)
-            {
-                const gr = this.graphics;
-                const sm = gr.app.model.backend.selfModel;
-                const er = sm.getRotation();
-                if (er)
-                    this._r.set(er.x - pi / 2, er.y, entity.currentTheta);
-                else
-                    this._r.set(0, 0, entity.currentTheta);
-                sm.setRotation(this._r);
-            }
+            const er = sm.getRotation();
+            if (er)
+                this._r.set(er.x - pi / 2, er.y, entity.currentTheta);
+            sm.setRotation(this._r);
         } else {
             entity.theta0 = entity.theta1;
         }
     },
 
     applyTiltFromVelocity(
-        entity,
-        entityId,
+        entityModel,
+        animationComponent,
         deltaTInSeconds
     )
     {
         const maxVelocityTilt = 0.25 * Math.PI / 8;
 
-        const gr = this.graphics;
-        const sm = gr.app.model.backend.selfModel;
-        const pe = entityId === 0 ?
-            sm.physicsEntity :
-            entity.physicsEntity;
+        const entity = animationComponent;
+        const sm = entityModel;
+        const pe = entityModel.physicsEntity;
         const pi = Math.PI;
 
         // Direct rotation.
@@ -161,7 +159,9 @@ let AnimationOuter = {
         if (pe && pe.collisionModel.maxSpeedInAir)
             norm /= pe.collisionModel.maxSpeedInAir;
         else
-            console.warn('[Animations] Could not get entity collision model.');
+            console.warn(
+                '[Animations] Could not get entity collision model.'
+            );
         norm = Math.min(norm, 1.);
         norm *= maxVelocityTilt;
 
@@ -181,42 +181,36 @@ let AnimationOuter = {
             if (Math.abs(newTiltY) < 0.001) newTiltY = 0;
 
             // Apply changes.
-            if (entityId === 0)
+            const er = sm.getRotation();
+            if (er)
             {
-                const er = sm.getRotation();
-                if (er)
-                {
-                    this._r.set(
-                        er.x - pi / 2 + dx,
-                        er.y + dy,
-                        er.z
-                    );
-                    sm.setRotation(this._r);
-                    entity.velTilt.set(newTiltX, newTiltY);
-                }
+                this._r.set(
+                    er.x - pi / 2 + dx,
+                    er.y + dy,
+                    er.z
+                );
+                sm.setRotation(this._r);
+                entity.velTilt.set(newTiltX, newTiltY);
             }
         }
     },
 
     applyTiltFromAcceleration(
-        entity,
-        entityId,
+        entityModel,
+        animationComponent,
         deltaTInSeconds
     )
     {
         const maxAccelerationTilt = 0.5 * Math.PI / 8;
 
-        const gr = this.graphics;
-        const backend = gr.app.model.backend;
+        const entity = animationComponent;
 
         // Tilt target.
         const a = entity.a0;
         if (Math.abs(a.x) + Math.abs(a.y) > -0.1)
         {
             let r = Math.sqrt(a.x * a.x + a.y * a.y);
-            const cm = entityId === 0 ?
-                backend.selfModel.physicsEntity.collisionModel :
-                entity.physicsEntity.collisionModel;
+            const cm = entityModel.physicsEntity.collisionModel;
 
             const wantedXY = cm.wantedXY;
 
@@ -305,12 +299,8 @@ let AnimationOuter = {
                 !this.almostEqual(ty, entity.xy1.y))
             )
             {
-                const initX = entityId === 0 ?
-                    backend.selfModel.getRotationX() - pi / 2 :
-                    entity.rotation.x;
-                const initY = entityId === 0 ?
-                    backend.selfModel.getRotationY() :
-                    entity.rotation.y;
+                const initX = entityModel.getRotationX() - pi / 2;
+                const initY = entityModel.getRotationY();
 
                 const vt = entity.velTilt;
                 entity.xyT = 0;
@@ -358,22 +348,19 @@ let AnimationOuter = {
                 entity.currentXY.set(ctx, cty);
             }
 
-            // Apply
-            if (entityId === 0)
-            {
-                const sm = backend.selfModel;
-                const er = sm.getRotation();
-                // sum acceleration + velocity tilts
-                const cxy = entity.currentXY;
-                const vt = entity.velTilt;
-                if (er)
-                    this._r.set(
-                        cxy.x + vt.x,
-                        cxy.y + vt.y,
-                        er.z
-                    );
-                sm.setRotation(this._r);
-            }
+            // Apply.
+            const sm = entityModel;
+            const er = sm.getRotation();
+            // sum acceleration + velocity tilts
+            const cxy = entity.currentXY;
+            const vt = entity.velTilt;
+            if (er)
+                this._r.set(
+                    cxy.x + vt.x,
+                    cxy.y + vt.y,
+                    er.z
+                );
+            sm.setRotation(this._r);
         }
 
         const needsInterp1Again =

@@ -58,12 +58,14 @@ let AnimationMixers = {
     //   5 - recovery from reception
     //   6 - idle
     updateMixerAction(
-        entity,
-        entityId,
+        entityModel,
+        animationComponent,
         mixer,
         deltaT
     )
     {
+        const entity = animationComponent;
+
         assert(!!entity.actionStates,
             '[Mixers] Animation not properly initialized.'
         );
@@ -84,6 +86,7 @@ let AnimationMixers = {
         deltaP.copy(p0).addScaledVector(p1, -1);
         const distanceTravelled = deltaP.length();
         // console.log(distanceTravelled);
+        // const speed = distanceTravelled / deltaT;
 
         const normalizedDelta = distanceTravelled / 4;
         if (normalizedDelta > 1. || normalizedDelta === 0.) return;

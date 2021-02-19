@@ -322,6 +322,14 @@ let CharacterResponseModule = {
             else this.wasLifted = true;
             this.velocity1.z = 0;
             // ^ Reset velocity orthogonal to gravity
+
+            // Reset jumping state!
+            if (this.isJumping)
+            {
+                console.log('hit the ground :(');
+                this.isJumping = false;
+                this.isPreparingJump = false;
+            }
         }
 
         // Apply.
@@ -334,15 +342,6 @@ let CharacterResponseModule = {
 
     stepDown(collider)
     {
-        if (this.isJumping)
-        {
-            // console.log('reset');
-            // Reset jump flag.
-            this.onGround = false;
-            this.isJumping = false;
-            return;
-        }
-
         // 1. go down by h / 2
         let bumperCenter = this.bumperCenterTest; // Should be set to p1!
         let bumperCenterLocal = this.bumperCenterTestTranslated;

@@ -76,13 +76,19 @@ let PhysicsInputModule = {
         const isFw = d[0] !== d[1];
         const isRg = d[2] !== d[3];
         const isUd = d[4] !== d[5];
+        const preparingJump = collisionModel.isPreparingJump;
         if (!isFw && !isRg && !isUd && !ww)
         {
+            // No movement.
             collisionModel.wantsToMove = false;
             collisionModel.wantedXY.set(0, 0);
             collisionModel.instantaneousVelocityXY.set(0, 0);
             // ^  large post-mort. acceleration
             wv.set(0, 0, 0);
+
+            // Force entity update when a jump is being prepared.
+            if (preparingJump) collisionModel.wantsToMove = true;
+
             return;
         }
 
@@ -147,6 +153,9 @@ let PhysicsInputModule = {
             collisionModel.instantaneousVelocityXY.set(0, 0);
             collisionModel.wantedXY.set(0, 0);
             // ^  large post-mort. acceleration effect
+
+            // Force entity update when a jump is being prepared.
+            if (preparingJump) collisionModel.wantsToMove = true;
         }
     },
 

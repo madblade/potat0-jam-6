@@ -68,6 +68,19 @@ let CollisionModel = function(
         this.maxSpeedInAir = 7.0;
         this.maxSpeedInWater = 2.5;
 
+        // Jumping state.
+        // Jumping flags are updated at:
+        //    - integrator.js: update states / countdowns
+        //    - collider.js: prevent stepDown() (just got off ground)
+        //    - response.js: end jump (just hit an object on lift())
+        // Also, input.js should allow an entity preparing a jump
+        // to be updated by setting .wantsToMove to true.
+        this.isPreparingJump = false;
+        this.timeSincePreparedJump = 0;
+        this.isJumping = false;
+        this.timeSinceJumpStarted = 0;
+        this.numberOfIterationsInAir = 0;
+
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];
         this._ww = null;

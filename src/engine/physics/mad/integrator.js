@@ -30,7 +30,9 @@ extend(Integrator.prototype, {
     integrateMovement(relativeDt)
     {
         const outOfDateEntities = this.sweeper.entitiesNeedingToMove;
-        outOfDateEntities.forEach(e => this.integrateEntity(e, relativeDt));
+        outOfDateEntities.forEach(e =>
+            this.integrateEntity(e, relativeDt)
+        );
     },
 
     integrateEntity(entity, relativeDt)
@@ -44,10 +46,11 @@ extend(Integrator.prototype, {
         const v0 = cm.velocity0; const v1 = cm.velocity1;
         const a0 = cm.accelera0; const a1 = cm.accelera1;
         const g = cm.gravity;
-        const sumOfForces = this._w0;
         const increment = this._w1;
-        sumOfForces.copy(g);
+        const sumOfForces = this._w0;
 
+        // Sum forces.
+        sumOfForces.copy(g);
         if (cm.isSubjectToContinuousForce)
         {
             let cf = cm.continuousForces;
@@ -55,34 +58,68 @@ extend(Integrator.prototype, {
                 sumOfForces.add(cf[i]);
         }
 
-        // Jump
-        const wv = cm.wantedVelocity;
-        if (wv.z > 0 && cm.onGround)
+        // Jump.
+        if (cm.isJumping)
         {
-            cm.isJumping = true;
-            const jumpHeight = 2.5; // 0.72 -> 6.969
-            const rh = jumpHeight - 1.969; // + 0.72;
-            const targetA1 = 2 * rh / (relativeDt * relativeDt);
-            a0.z = targetA1;
-            // sumOfForces.z = targetA1 / 2;
-            // ^  we don’t know how much the next dt is gonna be :(
+            console.log('in air');
+            cm.timeSinceJumpStarted += relativeDt;
+            cm.numberOfIterationsInAir += 1;
+            if (cm.numberOfIterationsInAir < 2)
+            {
+                // console.log('rejump');
+                // const jumpHeight = 2.5; // 0.72 -> 6.969
+                // const rh = jumpHeight - 1.969; // + 0.72;
+                // const targetA0 = 2 * rh / (relativeDt * relativeDt);
+                // a0.z = targetA0 / 8;
+            }
+        }
+        if (cm.isPreparingJump)
+        {
+            console.log('waiting.');
+            cm.timeSincePreparedJump += relativeDt;
+            if (cm.timeSincePreparedJump > 0.030) // in s.
+            {
+                console.log('Jump!');
+                cm.isJumping = true;
+                cm.isPreparingJump = false;
+                cm.timeSinceJumpStarted = 0;
+                cm.numberOfIterationsInAir = 0;
+                // const jumpHeight = 2.5; // 0.72 -> 6.969
+                const jumpHeight = 2.5; // 0.72 -> 6.969
+                const rh = jumpHeight - 1.969; // + 0.72;
+                const targetA0 = 2 * rh / (relativeDt * relativeDt);
+                a0.z = targetA0 / 4;
+                // const targetV0 = 2 * rh / (relativeDt);
+                // v0.z = targetV0 / 4;
+                // a1.z = targetA1 * 7 / 8;
+                // sumOfForces.z = targetA1 / 2;
+                // sumOfForces.z = targetA0 / 2;
+                // ^  we don’t know how much the next dt is gonna be :(
+            }
+        }
+        const wv = cm.wantedVelocity;
+        if (wv.z > 0 && cm.onGround &&
+            !cm.isPreparingJump && !cm.isJumping)
+        {
+            cm.isPreparingJump = true;
+            cm.timeSincePreparedJump = 0;
+            console.log('preparing jump');
         }
 
         // console.log(`Integrating ${entity.entityId}.`);
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
-        if (dtr > 0.1)
+        if (dtr > 0.05)
         {
             console.warn(`[Integrator] Large DT: ${dtr}.`);
             dtr = 0.016;
         }
-        // dtr = 0.016;
         const inWater = this.physics.isWater(p0);
         const maxSpeed = inWater ?
             cm.maxSpeedInWater : cm.maxSpeedInAir;
 
-        // Compute Leapfrog increment
+        // Compute Leapfrog increment.
         const dtr2h = .5 * dtr * dtr;
         increment.set(
             v0.x * dtr + dtr2h * a0.x,
@@ -90,7 +127,6 @@ extend(Integrator.prototype, {
             v0.z * dtr + dtr2h * a0.z,
         );
         const maxSpeedDtr = maxSpeed * dtr;
-        // console.log(p0);
 
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
@@ -112,7 +148,6 @@ extend(Integrator.prototype, {
             ivXY.add(iaXY); // v1 = v0 + (a0 * dt)
             if (ivXY.lengthSq() > wx * wx + wy * wy)
             {
-                // console.log('clamping');
                 ivXY.set(wx, wy);
             }
 
@@ -125,6 +160,7 @@ extend(Integrator.prototype, {
             increment.add(selfIncrement);
         }
 
+        // Clamp max speed (horizontal).
         const lxy = Math.sqrt(
             increment.x * increment.x +
             increment.y * increment.y
@@ -135,10 +171,12 @@ extend(Integrator.prototype, {
             increment.y *= maxSpeedDtr / lxy;
         }
 
-        // Apply Leapfrog integration
+        // Apply Leapfrog integration.
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);
         v1.copy(a0).add(a1).multiplyScalar(0.5 * dtr).add(v0);
+
+        // Clamp max speed (vertical + horizontal).
         const l = v1.length();
         if (l > maxSpeed)
         {

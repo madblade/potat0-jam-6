@@ -146,6 +146,14 @@ extend(Collider.prototype, {
                 this.collideOnBorder(i - 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
             if (checkIPlus && checkJPlus)
                 this.collideOnBorder(i + 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
+            //
+            // if (cm.onGround && !cm.wasOnGround)
+            // {
+            //     // Just hit the ground.
+            //     console.log('hit the ground :(');
+            //     cm.isJumping = false;
+            //     cm.isPreparingJump = false;
+            // }
         });
     },
 
@@ -218,8 +226,23 @@ extend(Collider.prototype, {
     {
         this.collisionModelsNeedingStepDown.forEach(cm =>
         {
-            if (!cm.onGround && cm.wasOnGround) // flag was set in between different object tests
-                cm.stepDown(this); // perform actual checks and possibly step down
+            if (!cm.onGround && cm.wasOnGround)
+            // flag was set in between different object tests
+            {
+                let mustStepDown = true;
+                if (cm.isJumping)
+                {
+                    // Reset jump flag.
+                    cm.onGround = false;
+                    // cm.isJumping = false;
+                    mustStepDown = false;
+                }
+                if (cm.isPreparingJump)
+                    mustStepDown = false;
+
+                if (mustStepDown)
+                    cm.stepDown(this);
+            } // perform actual checks and possibly step down
 
             // Reset collision data again just to be sure.
             cm.stepDownCollisionData.length = 0;

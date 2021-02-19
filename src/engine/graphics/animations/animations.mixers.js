@@ -92,7 +92,7 @@ let AnimationMixers = {
         mixer.update(actionDelta);
     },
 
-    updateRunCycle()
+    updateWalkRunCycle()
     {
     },
 

@@ -41,6 +41,11 @@ let AnimationModel = {
         entity.xyT = 0;
         entity.towardsR = 0;
         entity.towardsT = 0;
+
+        // animation interpolation (from idle pause)
+        entity.idleBlendRatio = 1;
+        entity.idleTime = 0.;
+        entity.timeToIdle = .3;
     },
 
     // v  Called at integration.

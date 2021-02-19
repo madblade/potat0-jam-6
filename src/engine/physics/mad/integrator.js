@@ -77,7 +77,7 @@ extend(Integrator.prototype, {
         {
             // console.log('waiting.');
             cm.timeSincePreparedJump += relativeDt;
-            if (cm.timeSincePreparedJump > 0.030) // in s.
+            if (cm.timeSincePreparedJump > cm.timeToPrepareJump)
             {
                 // console.log('Jump!');
                 cm.isJumping = true;

@@ -77,6 +77,7 @@ let CollisionModel = function(
         // to be updated by setting .wantsToMove to true.
         this.isPreparingJump = false;
         this.timeSincePreparedJump = 0;
+        this.timeToPrepareJump = 0.5; // in s.
         this.isJumping = false;
         this.timeSinceJumpStarted = 0;
         this.numberOfIterationsInAir = 0;

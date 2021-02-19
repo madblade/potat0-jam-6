@@ -146,14 +146,6 @@ extend(Collider.prototype, {
                 this.collideOnBorder(i - 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
             if (checkIPlus && checkJPlus)
                 this.collideOnBorder(i + 1, j + 1, x, y, heightMapWidth, heightMaps, cm);
-            //
-            // if (cm.onGround && !cm.wasOnGround)
-            // {
-            //     // Just hit the ground.
-            //     console.log('hit the ground :(');
-            //     cm.isJumping = false;
-            //     cm.isPreparingJump = false;
-            // }
         });
     },
 

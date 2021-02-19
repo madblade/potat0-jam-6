@@ -326,7 +326,7 @@ let CharacterResponseModule = {
             // Reset jumping state!
             if (this.isJumping)
             {
-                console.log('hit the ground :(');
+                // console.log('hit the ground :(');
                 this.isJumping = false;
                 this.isPreparingJump = false;
             }

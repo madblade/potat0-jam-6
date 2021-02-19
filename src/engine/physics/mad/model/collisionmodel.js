@@ -84,6 +84,10 @@ let CollisionModel = function(
         this.timeToSetFallState = 0.4;
         this.numberOfIterationsInAir = 0;
         this._maxVZ = 0;
+        this.hasJustLanded = false;
+        this.isRecoveringFromLanding = false;
+        this.timeSinceHasLanded = 0;
+        this.timeToRecoverFromLanding = 0.6;
 
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];

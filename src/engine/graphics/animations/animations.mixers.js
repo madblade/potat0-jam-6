@@ -85,7 +85,9 @@ let AnimationMixers = {
             animationComponent.idleTime = 0;
             return;
         }
-        if (cm.isJumping)
+        if (cm.isJumping ||
+            cm.hasJustLanded ||
+            cm.isRecoveringFromLanding)
         {
             this.updateJump(
                 cm, entityModel,
@@ -142,6 +144,13 @@ let AnimationMixers = {
             sum += action.getEffectiveWeight();
         }
 
+        // Correct glitch on gamepad.
+        if (sum + newWeight < 1)
+        {
+            if (sum < 0.01 && newWeight < 1)
+                actions[animationName].setEffectiveWeight(1);
+        }
+
         // Reduce other actions.
         const remainder = 1 - newWeight;
         if (sum > 0)
@@ -161,7 +170,7 @@ let AnimationMixers = {
         mixer,
         deltaT)
     {
-        // console.log('to idle');
+        // console.log('idle');
         const actions = animationComponent.actions;
         const idleAction = actions['Idle'];
         const times = animationComponent.times['Idle'];
@@ -271,6 +280,7 @@ let AnimationMixers = {
         deltaT
     )
     {
+        // console.log('jump');
         const actions = animationComponent.actions;
         const jumpingAction = actions['Jumping'];
         const times = animationComponent.times['Jumping'];
@@ -299,6 +309,34 @@ let AnimationMixers = {
         }
         const continuedDecelerating = -newVZ < capVZ;
 
+        if (cm.hasJustLanded || cm.isRecoveringFromLanding)
+        {
+            cm.hasJustLanded = false;
+            cm.isRecoveringFromLanding = true;
+
+            cm.timeSinceHasLanded += deltaTInSecs;
+            const maxTime = cm.timeToRecoverFromLanding;
+            const ratio = this.clamp(
+                cm.timeSinceHasLanded / maxTime, 0, 1
+            );
+            const smoothed = this.smoothstepAttack(0, 1, ratio);
+            const start = 0.25 * cycleDuration;
+            const end = cycleDuration;
+            const dur = end - start;
+            const nt = start + dur * smoothed;
+            mixer.setTime(nt);
+
+            if (ratio === 1)
+            {
+                jumpingAction.setEffectiveWeight(0);
+                actions['Idle'].setEffectiveWeight(1);
+                mixer.update(0);
+                cm.timeSinceHasLanded = 0;
+                cm.isRecoveringFromLanding = false;
+            }
+            return;
+        }
+
         if (startedDecelerating || continuedDecelerating)
         {
             cm.timeSinceFallStarted += deltaTInSecs;
@@ -310,11 +348,11 @@ let AnimationMixers = {
             let r = this.smoothstep(0, 1, ratio);
             const newTime = r * maxTime;
             mixer.setTime(newTime);
+            return;
         }
-        else
-        {
-            mixer.setTime(0);
-        }
+
+        // other cases: it’s just starting to jump
+        mixer.setTime(0);
     }
 
 };

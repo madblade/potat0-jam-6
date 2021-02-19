@@ -329,6 +329,9 @@ let CharacterResponseModule = {
                 // console.log('hit the ground :(');
                 this.isJumping = false;
                 this.isPreparingJump = false;
+                this.hasJustLanded = true;
+                this.isRecoveringFromLanding = true;
+                this._maxVZ = 0;
             }
         }
 

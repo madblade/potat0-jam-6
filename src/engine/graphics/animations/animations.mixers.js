@@ -129,16 +129,13 @@ let AnimationMixers = {
     {
         // console.log('to idle');
         const actions = animationComponent.actions;
-        // const actionStates = animationComponent.actionStates;
-        // console.log(actionStates);
         const idleAction = actions['Idle'];
-        // const times = animationComponent.times['Idle'];
-        // const cycleDuration = times[times.length - 1];
+        const times = animationComponent.times['Idle'];
+        const cycleDuration = times[times.length - 1];
 
         const deltaTInSecs = deltaT / 1e3;
         animationComponent.idleTime += deltaTInSecs;
         const idleTime = animationComponent.idleTime;
-        // console.log(idleTime);
         const maxIdleTime = animationComponent.timeToIdle;
         let idleBlendRatio = this.clamp(idleTime / maxIdleTime, 0., 1.);
 
@@ -146,8 +143,6 @@ let AnimationMixers = {
         let oldWeight = idleAction.getEffectiveWeight();
         if (idleBlendRatio < oldWeight) idleBlendRatio = oldWeight;
         idleAction.setEffectiveWeight(idleBlendRatio);
-        // idleAction.play();
-        // actionStates['Idle'] = idleBlendRatio;
 
         // Reduce other animations.
         let sum = idleBlendRatio;
@@ -155,7 +150,7 @@ let AnimationMixers = {
         {
             if (ai === 'Idle') continue;
             const action = actions[ai];
-            const blendRatio = action.getEffectiveWeight(); //actionStates[ai];
+            const blendRatio = action.getEffectiveWeight();
             if (sum === 1)
             {
                 action.setEffectiveWeight(0);
@@ -164,15 +159,13 @@ let AnimationMixers = {
 
             if (blendRatio > 0.)
             {
-                console.log(`blending from ${ai}`);
+                // console.log(`blending from ${ai}`);
                 const newWeight = 1 - idleBlendRatio;
                 sum += newWeight;
                 action.setEffectiveWeight(newWeight);
-                // actionStates[ai] = newWeight;
             }
             else
             {
-                // actionStates[ai] = 0.;
                 action.setEffectiveWeight(0);
             }
         }
@@ -183,7 +176,7 @@ let AnimationMixers = {
             idleAction.setEffectiveWeight(1);
         }
 
-        mixer.update(0);
+        mixer.update(deltaTInSecs * cycleDuration);
     },
 
     updateWalkRunCycle(
@@ -194,43 +187,46 @@ let AnimationMixers = {
         mixer,
         deltaT)
     {
-        console.log('to walk');
+        // console.log(distanceTravelled);
+        // console.log('walk');
         const actions = animationComponent.actions;
-        // const actionStates = animationComponent.actionStates;
-        // console.log(actionStates);
         const runningAction = actions['Running'];
         const times = animationComponent.times['Running'];
         const cycleDuration = times[times.length - 1];
 
         const normalizedDelta = distanceTravelled / 4;
-        const actionDelta = normalizedDelta * cycleDuration;
         const deltaTInSeconds = deltaT / 1e3;
         const speed = distanceTravelled / deltaTInSeconds;
         const maxSpeed = cm.maxSpeedInAir;
-        const speedRatio = this.clamp(speed / maxSpeed, 0., 1.);
+        let speedRatio = this.clamp(speed / maxSpeed, 0., 1.);
+        // speedRatio *= speedRatio;
+
+        // const stepSize = distanceTravelled; //(speedRatio) * 4;
+        // const progressInStep = distanceTravelled / stepSize;
+        // const actionDelta = progressInStep * cycleDuration;
+        const r2 = 1. + Math.pow(speedRatio, 2.);
+        const actionDelta =
+            r2 * deltaTInSeconds * cycleDuration;
 
         // Blend toward run.
-        // runningAction.play();
-        runningAction.setEffectiveWeight(speedRatio);
-        // actionStates['Running'] = speedRatio;
+        const ratio = Math.pow(speedRatio, 0.5);
+        runningAction.setEffectiveWeight(ratio);
 
         // Reduce other animations.
-        let sum = speedRatio;
+        let sum = ratio;
         for (let ai in actions)
         {
             if (ai === 'Running') continue;
             const action = actions[ai];
-            const blendRatio = action.getEffectiveWeight(); //actionStates[ai];
+            const blendRatio = action.getEffectiveWeight();
             if (blendRatio > 0.)
             {
-                const newWeight = 1 - speedRatio;
+                const newWeight = 1 - ratio;
                 sum += newWeight;
                 action.setEffectiveWeight(newWeight);
-                // actionStates[ai] = newWeight;
             }
             else
             {
-                // actionStates[ai] = 0;
                 action.setEffectiveWeight(0);
             }
         }

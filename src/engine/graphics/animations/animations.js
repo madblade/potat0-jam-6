@@ -58,11 +58,11 @@ extend(AnimationManager.prototype, {
                 deltaT
             );
 
-            this.updateEntityRotationAndTilt(
-                entityModel,
-                animationComponent,
-                deltaT
-            );
+            // this.updateEntityRotationAndTilt(
+            //     entityModel,
+            //     animationComponent,
+            //     deltaT
+            // );
 
             this.updateMixerAction(
                 entityModel,

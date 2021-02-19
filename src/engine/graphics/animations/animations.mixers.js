@@ -11,6 +11,7 @@
 import { assert }  from '../../../extend';
 
 import { Vector2 } from 'three';
+import time        from '../../physics/mad/time';
 
 let AnimationMixers = {
 
@@ -54,13 +55,11 @@ let AnimationMixers = {
     //   1 - half crouched
     //   2 - crouched
     // jumping
-    //   0 - idle
-    //   1 - crouch before jump
-    //   2 - jumped
-    //   3 - jump top / falling
-    //   4 - reception
-    //   5 - recovery from reception
-    //   6 - idle
+    //   0 - jumped
+    //   1 - jump top / falling
+    //   2 - reception
+    //   3 - recovery from reception
+    //   4 - idle
     updateMixerAction(
         entityModel,
         animationComponent,
@@ -121,6 +120,41 @@ let AnimationMixers = {
         }
     },
 
+    updateOtherAnimationWeights(
+        newWeight,
+        animationName,
+        actions)
+    {
+        if (newWeight === 1)
+        {
+            for (let ai in actions) {
+                if (ai === animationName) continue;
+                actions[ai].setEffectiveWeight(0);
+            }
+            return;
+        }
+
+        // Compute sum.
+        let sum = 0;
+        for (let ai in actions) {
+            if (ai === animationName) continue;
+            const action = actions[ai];
+            sum += action.getEffectiveWeight();
+        }
+
+        // Reduce other actions.
+        const remainder = 1 - newWeight;
+        if (sum > 0)
+        {
+            for (let ai in actions) {
+                if (ai === animationName) continue;
+                const action = actions[ai];
+                const proportionalWeight = action.getEffectiveWeight() / sum;
+                action.setEffectiveWeight(remainder * proportionalWeight);
+            }
+        }
+    },
+
     updateToIdle(
         entityModel,
         animationComponent,
@@ -145,38 +179,11 @@ let AnimationMixers = {
         idleAction.setEffectiveWeight(idleBlendRatio);
 
         // Reduce other animations.
-        let sum = idleBlendRatio;
-        for (let ai in actions)
-        {
-            if (ai === 'Idle') continue;
-            const action = actions[ai];
-            const blendRatio = action.getEffectiveWeight();
-            if (sum === 1)
-            {
-                action.setEffectiveWeight(0);
-                continue;
-            }
+        this.updateOtherAnimationWeights(
+            idleBlendRatio, 'Idle', actions
+        );
 
-            if (blendRatio > 0.)
-            {
-                // console.log(`blending from ${ai}`);
-                const newWeight = 1 - idleBlendRatio;
-                sum += newWeight;
-                action.setEffectiveWeight(newWeight);
-            }
-            else
-            {
-                action.setEffectiveWeight(0);
-            }
-        }
-
-        if (Math.abs(sum - 1) > 0.001)
-        {
-            // console.log(`warn ${sum}`);
-            idleAction.setEffectiveWeight(1);
-        }
-
-        mixer.update(deltaTInSecs * cycleDuration);
+        mixer.update(0.2 * deltaTInSecs * cycleDuration);
     },
 
     updateWalkRunCycle(
@@ -187,8 +194,8 @@ let AnimationMixers = {
         mixer,
         deltaT)
     {
-        // console.log(distanceTravelled);
         // console.log('walk');
+        // console.log(distanceTravelled);
         const actions = animationComponent.actions;
         const runningAction = actions['Running'];
         const times = animationComponent.times['Running'];
@@ -204,7 +211,7 @@ let AnimationMixers = {
         // const stepSize = distanceTravelled; //(speedRatio) * 4;
         // const progressInStep = distanceTravelled / stepSize;
         // const actionDelta = progressInStep * cycleDuration;
-        const r2 = 1. + Math.pow(speedRatio, 2.);
+        const r2 = 1. + 0.7 * Math.pow(speedRatio, 2.);
         const actionDelta =
             r2 * deltaTInSeconds * cycleDuration;
 
@@ -213,28 +220,9 @@ let AnimationMixers = {
         runningAction.setEffectiveWeight(ratio);
 
         // Reduce other animations.
-        let sum = ratio;
-        for (let ai in actions)
-        {
-            if (ai === 'Running') continue;
-            const action = actions[ai];
-            const blendRatio = action.getEffectiveWeight();
-            if (blendRatio > 0.)
-            {
-                const newWeight = 1 - ratio;
-                sum += newWeight;
-                action.setEffectiveWeight(newWeight);
-            }
-            else
-            {
-                action.setEffectiveWeight(0);
-            }
-        }
-        if (Math.abs(sum - 1) > 0.001)
-        {
-            // console.log(`warn ${sum}`);
-            runningAction.setEffectiveWeight(1);
-        }
+        this.updateOtherAnimationWeights(
+            ratio, 'Running', actions
+        );
 
         // TODO smoothstep run palliers
         // TODO bounce
@@ -254,30 +242,25 @@ let AnimationMixers = {
         deltaT)
     {
         console.log('to prepare');
-        const current = cm.timeSincePreparedJump + deltaT;
+        const actions = animationComponent.actions;
+        const crouchingAction = actions['Crouching'];
+        const times = animationComponent.times['Running'];
+        const cycleDuration = times[times.length - 1];
+
+        const deltaTInSecs = deltaT / 1e3;
+        const current = cm.timeSincePreparedJump + deltaTInSecs;
         const max = cm.timeToPrepareJump;
         let normalizedT = this.clamp(current / max, 0., 1.);
         // normalizedT /= 6;
 
-        const actions = animationComponent.actions;
-        // for (let ai in actions)
-        //     actions[ai].stop();
+        crouchingAction.setEffectiveWeight(normalizedT);
 
-        const crouchingAction = actions['Crouching'];
-        // crouchingAction.play();
-        // crouchingAction.setEffectiveWeight(normalizedT);
-        for (let ai in actions)
-        {
-            if (ai === 'Crouching') continue;
-            // actions[ai].setEffectiveWeight(1 - normalizedT);
-        }
+        // reduce other weights
+        this.updateOtherAnimationWeights(
+            normalizedT, 'Crouching', actions
+        );
 
-        const times = animationComponent.times['Jumping'];
-        const cycleDuration = times[times.length - 1];
-        // jumping preparation is at 0,1 of 0,6
-
-        // console.log(normalizedT);
-        mixer.setTime(normalizedT * cycleDuration);
+        mixer.update(0.2 * deltaTInSecs * cycleDuration);
     },
 
     updateJump(
@@ -288,20 +271,50 @@ let AnimationMixers = {
         deltaT
     )
     {
-        console.log('to jump');
         const actions = animationComponent.actions;
-        for (let ai in actions)
-        {
-            if (ai === 'Jumping') continue;
-            actions[ai].stop();
-            // actions[ai].setEffectiveWeight(0);
-        }
-
         const jumpingAction = actions['Jumping'];
-        // jumpingAction.play();
-        // jumpingAction.setEffectiveWeight(1);
+        const times = animationComponent.times['Jumping'];
+        const cycleDuration = times[times.length - 1];
 
-        // mixer.update(deltaT);
+        const deltaTInSecs = deltaT / 1e3;
+
+        jumpingAction.setEffectiveWeight(1);
+        this.updateOtherAnimationWeights(
+            1, 'Jumping', actions
+        );
+
+        const oldVZ = animationComponent.v1.z;
+        const newVZ = animationComponent.v0.z;
+        // if (oldVZ < 0 && newVZ > 0) {
+        //     cm.timeSinceFallStarted = 0;
+        // }
+
+        cm._maxVZ = Math.max(cm._maxVZ, -newVZ);
+        let capVZ = cm._maxVZ / 2;
+        // const startedDecelerating = newVZ > 0;
+        const startedDecelerating = -oldVZ > capVZ && -newVZ < capVZ;
+        if (startedDecelerating)
+        {
+            cm.timeSinceFallStarted = 0;
+        }
+        const continuedDecelerating = -newVZ < capVZ;
+
+        if (startedDecelerating || continuedDecelerating)
+        {
+            cm.timeSinceFallStarted += deltaTInSecs;
+            // from jumping upwards to falling
+            const maxTime = 0.25 * cycleDuration;
+            const ratio = this.clamp(
+                cm.timeSinceFallStarted / cm.timeToSetFallState, 0, 1
+            );
+            let r = this.smoothstep(0, 1, ratio);
+            const newTime = r * maxTime;
+            mixer.setTime(newTime);
+        }
+        else
+        {
+            mixer.setTime(0);
+        }
     }
 
 };

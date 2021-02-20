@@ -49,6 +49,7 @@ extend(AnimationManager.prototype, {
                 backend.selfModel;
 
             assert(!!entityModel, '[Animations] Lone animation mixer.');
+            if (!entityModel) return;
 
             const animationComponent = entityModel.animationComponent;
 

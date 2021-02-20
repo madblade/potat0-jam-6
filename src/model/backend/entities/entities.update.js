@@ -32,7 +32,6 @@ let EntitiesUpdateModule = {
 
     addEntity(id, updatedEntity)
     {
-        const graphics = this.app.engine.graphics;
         const entities = this.entitiesIngame;
 
         this.entitiesLoading.add(id);
@@ -41,14 +40,15 @@ let EntitiesUpdateModule = {
         {
             case 'ia':
             case 'player':
-                this.loadPlayer(id, updatedEntity, graphics, entities);
+                // this.loadPlayer(id, updatedEntity, entities);
+                this.loadSkeletalEntity(id, updatedEntity, entities);
                 break;
 
             case 'projectile':
-                this.loadArrow(id, updatedEntity, graphics, entities);
+                this.loadArrow(id, updatedEntity, entities);
                 break;
             case 'cube':
-                this.loadCube(id, updatedEntity, graphics, entities);
+                this.loadCube(id, updatedEntity, entities);
                 break;
 
             default:
@@ -90,7 +90,7 @@ let EntitiesUpdateModule = {
         let ur = updatedEntity.r;
         if (!pos || !rot ||
             pos.x !== up.x || pos.y !== up.y || pos.z !== up.z ||
-            rot.x !== ur.x || rot.y !== ur.z || rot.z !== ur.w) // two last are shifted
+            rot.x !== ur.x || rot.y !== ur.y || rot.z !== ur.z)
         {
             currentEntity.position.set(up.x, up.y, up.z);
             currentEntity.rotation.set(ur.x, ur.z, ur.w);
@@ -161,9 +161,11 @@ let EntitiesUpdateModule = {
         }
         else
         {
-            object3D.rotation.x = newR.z; // ur[3];
-            object3D.rotation.z = newR.y; // ur[2];
-            object3D.getWrapper().rotation.y = Math.PI + newR.x; // + ur[0];
+            object3D.rotation.x = newR.x + Math.PI / 2;
+            object3D.rotation.y = newR.y;
+
+            const inner = object3D.getInnerObject();
+            inner.rotation.y = newR.z;
             object3D.updateMatrixWorld();
         }
 

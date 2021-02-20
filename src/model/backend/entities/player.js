@@ -108,9 +108,11 @@ let PlayerModule = {
     },
 
     loadArrow(
-        id, updatedEntity, graphics, entities
+        id, updatedEntity, entities
     )
     {
+        const graphics = this.app.engine.graphics;
+
         let wrapper = new Object3D();
         let cube = graphics.getItemMesh(ItemType.YA, false, true);
 
@@ -161,8 +163,10 @@ let PlayerModule = {
         this.entitiesLoading.delete(id);
     },
 
-    loadCube(id, updatedEntity, graphics, entities)
+    loadCube(id, updatedEntity, entities)
     {
+        const graphics = this.app.engine.graphics;
+
         // This should be done in graphics
         let wrapper = new Object3D();
         let cube = graphics.createMesh(
@@ -196,8 +200,10 @@ let PlayerModule = {
         this.entitiesLoading.delete(id);
     },
 
-    loadPlayer(id, updatedEntity, graphics, entities)
+    loadPlayer(id, updatedEntity, entities)
     {
+        const graphics = this.app.engine.graphics;
+
         let color = updatedEntity.a ? 0x00ff00 : 0xff0000;
         let createdEntity = graphics.initializeEntity(
             id, 'steve', color
@@ -211,6 +217,34 @@ let PlayerModule = {
 
         this.updateEntity(id, entity, updatedEntity, graphics, entities);
         this.entitiesLoading.delete(id);
+    },
+
+    loadSkeletalEntity(id, updatedEntity, entities)
+    {
+        const graphics = this.app.engine.graphics;
+        const object3D = graphics.loadReferenceMeshFromMemory(
+            'shiro', false, true
+        );
+
+        // model
+        let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
+
+        // init mixer
+        const animations = graphics.animationManager;
+        animations.addSkinnedEntityAnimation(
+            id, object3D, entity.animationComponent
+        );
+
+        // add to graphics
+        graphics.addToScene(entity.getObject3D(), entity.getWorldId());
+
+        // update model
+        this.updateEntity(id, entity, updatedEntity, graphics, entities);
+        this.entitiesLoading.delete(id);
+
+        // notify physics
+        let physics = this.app.engine.physics;
+        physics.addCharacterController(entity);
     }
 
 };

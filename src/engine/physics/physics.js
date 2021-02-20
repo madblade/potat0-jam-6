@@ -66,10 +66,11 @@ extend(Physics.prototype, {
         this.madEngine.pushEvent(e);
     },
 
-    addCharacterController(selfModel)
+    // Entity model can be either an entity or the player self model.
+    addCharacterController(entityModel)
     {
-        // this.bulletEngine.addCharacterController(selfModel);
-        this.madEngine.addCharacterController(selfModel);
+        // this.bulletEngine.addCharacterController(entityModel);
+        this.madEngine.addCharacterController(entityModel);
     },
 
     cleanupFullPhysics()

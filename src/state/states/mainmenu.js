@@ -9,7 +9,7 @@ import extend, { inherit }  from '../../extend';
 import { $ }                from '../../modules/polyfills/dom';
 import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
-const GameTitle = 'Rad Yarns';
+const GameTitle = 'Rad';
 const GameHeader = `
 <div class="container small-title">
     <h2>${GameTitle}</h2>
@@ -23,7 +23,6 @@ let MainMenuState = function(stateManager)
 
     this.htmlHead = `
         <div class="container">
-            ${GameHeader}
         `;
     this.htmlTail = '</div>';
 

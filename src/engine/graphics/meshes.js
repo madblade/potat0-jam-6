@@ -4,15 +4,17 @@
 
 'use strict';
 
-import Shiro            from '../../assets/models/teishiro.glb';
-import { ItemType }     from '../../model/backend/self/items';
-import { GLTFLoader }   from 'three/examples/jsm/loaders/GLTFLoader';
+import Shiro                from '../../assets/models/teishiro.glb';
+import { ItemType }         from '../../model/backend/self/items';
+import { GLTFLoader }       from 'three/examples/jsm/loaders/GLTFLoader';
+import { SkeletonUtils }    from 'three/examples/jsm/utils/SkeletonUtils';
 import {
     Mesh,
     BoxGeometry,
     PlaneGeometry,
-    Object3D
-}                       from 'three';
+    Object3D,
+    Group
+}                           from 'three';
 
 let MeshesModule = {
 
@@ -56,7 +58,14 @@ let MeshesModule = {
 
     finalizeMainCharacter(gltf, callback)
     {
-        let object = gltf.scene.children[0];
+        // const clone = SkeletonUtils.clone(gltf.scene);
+        if (callback) callback(gltf);
+    },
+
+    prepareMainCharacter(gltf)
+    {
+        let scene = SkeletonUtils.clone(gltf.scene);
+        let object = scene.children[0];
         object.name = 'gltf0';
         object.position.set(0, -0.15, 0.07);
         object.scale.set(0.44, 0.44, 0.44);
@@ -72,7 +81,7 @@ let MeshesModule = {
 
         wrapper.getInnerObject = () => innerWrapper;
 
-        if (callback) callback(wrapper);
+        return wrapper;
     },
 
     getItemMesh(itemID, renderOnTop, cloneGeometry)
@@ -149,19 +158,27 @@ let MeshesModule = {
         }
 
         let mesh = this.referenceMeshes.get(id);
-        if (!(mesh instanceof Object3D))
-            console.warn(`[Graphics/Meshes] "${id}" should be an instance of Object3D.`);
+        if (!(mesh instanceof Object3D) && !(mesh.scene instanceof Group))
+            console.warn(
+                `[Graphics/Meshes] "${id}" should be an instance of Object3D.`
+            );
 
-        let clone = cloneGeometry ? mesh.clone() : mesh;
+        let clone;
+        if (id !== 'shiro') clone = cloneGeometry ? mesh.clone() : mesh;
         // clone allows to reuse objects (but then the morph targets are reset)
         // so use only for arrows in this setup.
+
+        if (id === 'shiro')
+        {
+            clone = this.prepareMainCharacter(mesh);
+        }
 
         clone.rotation.reorder('ZYX');
         // clone.material.morphTargets = true;
 
-        let inner = clone.children[0];
+        // let inner = clone.children[0];
         // console.log(inner);
-        if (inner && renderOnTop) this.renderOnTop(inner);
+        // if (inner && renderOnTop) this.renderOnTop(inner);
         // if (inner.children && inner.children.length === 4) this.renderOnTop(inner);
         // for (let i = 0; i < inner.children.length; ++i)
         //     inner.children[i].renderOrder = 9999;

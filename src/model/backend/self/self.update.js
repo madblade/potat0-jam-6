@@ -44,10 +44,10 @@ let SelfUpdateModule = {
     setRotation(r, avatar)
     {
         if (!avatar) avatar = this.avatar;
-        const object = avatar.getInnerObject();
         avatar.rotation.x = r.x + Math.PI / 2;
         avatar.rotation.y = r.y + 0;
 
+        const object = avatar.getInnerObject();
         object.rotation.y = r.z;
     },
 

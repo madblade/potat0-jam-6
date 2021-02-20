@@ -19,17 +19,18 @@ let SelfObjectsModule = {
         const worldId = selfModel.worldId;
 
         const up = graphics.loadReferenceMeshFromMemory(
-            'shiro', false, false
+            'shiro', false, true
         );
         selfModel.avatar = up;
 
         // Init animation mixer.
-        const animations = this.app.engine.graphics.animationManager;
+        const animations = graphics.animationManager;
         animations.addSkinnedEntityAnimation(
             0, up, selfModel.animationComponent
         );
 
         // Change eye color.
+        // TODO ik targets.
         try
         {
             const inner = up.children[0];

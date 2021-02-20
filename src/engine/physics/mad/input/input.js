@@ -8,9 +8,9 @@ import { Object3D }  from 'three';
 
 let PhysicsInputModule = {
 
-    addCharacterController(playerSelfModel)
+    addCharacterController(entityModel)
     {
-        const position = playerSelfModel.position;
+        const position = entityModel.position;
         const options = {
             intelligent: true,
             static: false,
@@ -22,7 +22,7 @@ let PhysicsInputModule = {
         };
 
         const pe = this.addPhysicsEntity(position, options);
-        playerSelfModel.physicsEntity = pe;
+        entityModel.physicsEntity = pe;
     },
 
     pushEvent(e)

@@ -43,22 +43,15 @@ let AnimationMixers = {
         entityModel.displacement = new Vector2(0, 0);
     },
 
-    // walking / running:
+    // walking / running (1 track, 5 keyframes)
     //   0 - reach left
     //   1 - pass right
     //   2 - reach right
     //   3 - pass left
     //   4 - reach left (=== 0)
-    // idle / crouching
-    //   0 - idle
-    //   1 - half crouched
-    //   2 - crouched
-    // jumping
-    //   0 - jumped
-    //   1 - jump top / falling
-    //   2 - reception
-    //   3 - recovery from reception
-    //   4 - idle
+    // idle (1 keyframe / track)
+    // crouching (1 keyframe / track)
+    // jumping (1 keyframe / track)
     updateMixerAction(
         entityModel,
         animationComponent,
@@ -93,7 +86,7 @@ let AnimationMixers = {
                 animationComponent, mixer, deltaTInMillis
             );
             animationComponent.idleTime = 0;
-            // return;
+            // fall-through to walking animation (blend)
         }
 
         const p0 = animationComponent.p0;
@@ -161,14 +154,7 @@ let AnimationMixers = {
         {
             if (sum < 0.01 && newWeight < 1)
             {
-                // if (animationName !== 'Running')
                 actions[animationName].setEffectiveWeight(1);
-                // else
-                // {
-                //     actions[animationName].setEffectiveWeight(newWeight);
-                //     actions['Idle'].setEffectiveWeight(1 - newWeight);
-                //     return;
-                // }
             }
         }
 
@@ -185,17 +171,16 @@ let AnimationMixers = {
         }
     },
 
+    // Custom animations.
+
     updateToIdle(
         entityModel,
         animationComponent,
         mixer,
         deltaT)
     {
-        // console.log('idle');
         const actions = animationComponent.actions;
         const idleAction = actions['Idle'];
-        // const times = animationComponent.times['Running'];
-        // const cycleDuration = times[times.length - 1];
 
         const deltaTInSecs = deltaT / 1e3;
         animationComponent.idleTime += deltaTInSecs;
@@ -218,7 +203,6 @@ let AnimationMixers = {
         );
 
         mixer.update(0);
-        // mixer.update(0.2 * deltaTInSecs * cycleDuration);
     },
 
     updateWalkRunCycle(
@@ -229,26 +213,15 @@ let AnimationMixers = {
         mixer,
         deltaT)
     {
-        // console.log('walk');
-        // console.log(distanceTravelled);
         const actions = animationComponent.actions;
         const runningAction = actions['Running'];
         const times = animationComponent.times['Running'];
         const cycleDuration = times[times.length - 1];
 
-        // const normalizedDelta = distanceTravelled / 4;
         const deltaTInSeconds = deltaT / 1e3;
         const speed = distanceTravelled / deltaTInSeconds;
         const maxSpeed = cm.maxSpeedInAir;
         let speedRatio = this.clamp(speed / maxSpeed, 0., 1.);
-        // speedRatio *= speedRatio;
-
-        // const stepSize = distanceTravelled; //(speedRatio) * 4;
-        // const progressInStep = distanceTravelled / stepSize;
-        // const actionDelta = progressInStep * cycleDuration;
-        // const r2 = 1. + 0.7 * Math.pow(speedRatio, 2.);
-        // const actionDelta =
-        //     r2 * deltaTInSeconds * cycleDuration;
 
         const minStepSize = .6;
         const maxStepSize = 1.4;
@@ -257,8 +230,6 @@ let AnimationMixers = {
         const strideRatio = strideSize / maxStepSize;
 
         // Blend toward run.
-        // const ratio = Math.pow(speedRatio, 0.5);
-        // runningAction.setEffectiveWeight(ratio);
         runningAction.setEffectiveWeight(strideRatio);
 
         // Reduce other animations.
@@ -267,37 +238,209 @@ let AnimationMixers = {
                 strideRatio, 'Running', actions
             );
 
-        // const maxTime = cycleDuration;// * 4 / 6;
-        // const time = mixer.time % cycleDuration;
-        // let newTime = time + actionDelta;
-        // newTime = Math.max(newTime, maxTime);
-        // mixer.setTime(newTime);
+        // Starting to walk: reset model + mixer animation.
         if (animationComponent.idleTime > animationComponent.timeToIdle)
         {
             animationComponent.walkingAdvancement = 0.25 * cycleDuration;
             mixer.setTime(0.25 * cycleDuration);
         }
 
+        // Compute stride lengths.
         animationComponent.walkingAdvancement +=
             animationDelta * cycleDuration * 0.5; // half anim = 1 step
         animationComponent.walkingAdvancement %=
             cycleDuration; // loop back
         const advancement = animationComponent.walkingAdvancement;
-        const smoothed = this.doubleSmoothstep(advancement / cycleDuration);
+        const smoothed = this.doubleSmoothstep(
+            advancement / cycleDuration
+        );
 
+        // Bounce with an abs sine pseudo-cycloid
         let bounceAmount = 0.1 * this.cycloidBounce(smoothed);
-        // Math.max(speedRatio, 0.5);
+        // Soften at start (only walking)
+        // and end (faster => smaller grav effect)
         let cr = this.catmullRom4(
-            0, 2, 0, 0.2,
-            speedRatio
+            0, 2, 0, 0.2, speedRatio
         );
         bounceAmount *= cr;
         entityModel.setBounceAmount(bounceAmount);
 
+        // Apply.
         mixer.setTime(
             smoothed * cycleDuration
         );
     },
+
+    updatePrepareJump(
+        cm,
+        entityModel,
+        animationComponent,
+        mixer,
+        deltaT)
+    {
+        const actions = animationComponent.actions;
+        const crouchingAction = actions['Crouching'];
+        const jumpingAction = actions['Jumping'];
+
+        const deltaTInSecs = deltaT / 1e3;
+        const current = cm.timeSincePreparedJump + deltaTInSecs;
+        const max = cm.timeToPrepareJump;
+        let normalizedT = this.clamp(current / max, 0., 1.);
+
+        normalizedT = this.smoothstepAttackReverse(
+            0, 1, normalizedT
+        );
+        if (normalizedT < 0.5)
+        {
+            // to crouching
+            normalizedT = 2 * normalizedT;
+            crouchingAction.setEffectiveWeight(normalizedT);
+            this.updateOtherAnimationWeights(
+                normalizedT, 'Crouching', actions
+            );
+        }
+        else
+        {
+            // to jumping
+            normalizedT = 2 * (normalizedT - 0.5);
+            jumpingAction.setEffectiveWeight(normalizedT);
+            this.updateOtherAnimationWeights(
+                normalizedT, 'Jumping', actions
+            );
+        }
+
+        mixer.update(0);
+    },
+
+    updateJump(
+        cm,
+        entityModel,
+        animationComponent,
+        mixer,
+        deltaT
+    )
+    {
+        const actions = animationComponent.actions;
+        const jumpingAction = actions['Jumping'];
+        const times = animationComponent.times['Running'];
+        const cycleDuration = times[times.length - 1];
+
+        const deltaTInSecs = deltaT / 1e3;
+
+        const oldVZ = animationComponent.v1.z;
+        const newVZ = animationComponent.v0.z;
+        // if (oldVZ < 0 && newVZ > 0) {
+        //     cm.timeSinceFallStarted = 0;
+        // }
+
+        cm._maxVZ = Math.max(cm._maxVZ, -newVZ);
+        let capVZ = cm._maxVZ / 2;
+        const startedDecelerating = -oldVZ > capVZ && -newVZ < capVZ;
+        if (startedDecelerating)
+        {
+            cm.timeSinceFallStarted = 0;
+        }
+        const continuedDecelerating = -newVZ < capVZ;
+
+        if (cm.hasJustLanded || cm.isRecoveringFromLanding)
+        {
+            cm.hasJustLanded = false;
+            cm.isRecoveringFromLanding = true;
+
+            cm.timeSinceHasLanded += deltaTInSecs;
+            const maxTime = cm.timeToRecoverFromLanding;
+            const ratio = this.clamp(
+                cm.timeSinceHasLanded / maxTime, 0, 1
+            );
+
+            const smoothed = this.smoothstepAttack(0, 1, ratio);
+
+            if (smoothed < 0.5)
+            {
+                // blend to crouching
+                const crouchingAction = actions['Crouching'];
+                const newWeight = smoothed * 2;
+                crouchingAction.setEffectiveWeight(newWeight);
+                this.updateOtherAnimationWeights(
+                    newWeight, 'Crouching', actions
+                );
+                mixer.update(0);
+            }
+            else
+            {
+                // blend to idle (might be walking too?)
+                const idleAction = actions['Idle'];
+                const newWeight = (smoothed - 0.5) * 2;
+                idleAction.setEffectiveWeight(newWeight);
+                this.updateOtherAnimationWeights(
+                    newWeight, 'Idle', actions
+                );
+                mixer.update(0);
+            }
+
+            if (ratio === 1)
+            {
+                cm.timeSinceHasLanded = 0;
+                cm.isRecoveringFromLanding = false;
+                actions['Idle'].setEffectiveWeight(1);
+                this.updateOtherAnimationWeights(
+                    1, 'Idle', actions
+                );
+                mixer.update(0);
+            }
+            return;
+        }
+
+        if (newVZ > 0 && !cm.isJumping)
+        {
+            // [XXX] high fall detection (hit ground)
+            // if (animationComponent.a0.z < -100)
+            // {
+            //     cm.isFalling = false;
+            //     cm.hasJustLanded = true;
+            //     cm.isRecoveringFromLanding = true;
+            //     cm._maxVZ = 0;
+            // }
+            // else
+            // {
+            cm.isFalling = true;
+            const fallingAction = actions['Falling'];
+            let w = fallingAction.getEffectiveWeight();
+            w = Math.min(w + deltaTInSecs / cycleDuration, 1);
+            fallingAction.setEffectiveWeight(w);
+            this.updateOtherAnimationWeights(
+                w, 'Falling', actions
+            );
+            mixer.update(0);
+            // }
+            return;
+        }
+        else if (startedDecelerating || continuedDecelerating)
+        {
+            const fallingAction = actions['Falling'];
+            cm.timeSinceFallStarted += deltaTInSecs;
+            const ratio = this.clamp(
+                cm.timeSinceFallStarted / cm.timeToSetFallState, 0, 1
+            );
+            let r = this.smoothstep(0, 1, ratio);
+            fallingAction.setEffectiveWeight(r);
+            this.updateOtherAnimationWeights(
+                r, 'Falling', actions
+            );
+            mixer.update(0);
+            return;
+        }
+
+        // other cases: it’s just starting to jump
+        jumpingAction.setEffectiveWeight(1);
+        this.updateOtherAnimationWeights(
+            1, 'Jumping', actions
+        );
+        mixer.setTime(0);
+    },
+
+    //
+    // Custom interpolants
 
     // interpolation between 4 evenly-spaced points on a unit interval
     catmullRom4(y0, y1, y2, y3, t)
@@ -336,191 +479,6 @@ let AnimationMixers = {
         t = (t - 0.5) * Math.PI; // offset a quarter, scale to function
         return Math.pow(Math.abs(Math.sin(t)), 2.);
     },
-
-    updatePrepareJump(
-        cm,
-        entityModel,
-        animationComponent,
-        mixer,
-        deltaT)
-    {
-        const actions = animationComponent.actions;
-        const crouchingAction = actions['Crouching'];
-        const jumpingAction = actions['Jumping'];
-        // const times = animationComponent.times['Running'];
-        // const cycleDuration = times[times.length - 1];
-
-        const deltaTInSecs = deltaT / 1e3;
-        const current = cm.timeSincePreparedJump + deltaTInSecs;
-        const max = cm.timeToPrepareJump;
-        let normalizedT = this.clamp(current / max, 0., 1.);
-        // normalizedT /= 6;
-
-        normalizedT = this.smoothstepAttackReverse(
-            0, 1, normalizedT
-        );
-        if (normalizedT < 0.5)
-        {
-            // to crouching
-            normalizedT = 2 * normalizedT;
-            crouchingAction.setEffectiveWeight(normalizedT);
-            this.updateOtherAnimationWeights(
-                normalizedT, 'Crouching', actions
-            );
-        }
-        else
-        {
-            // to jumping
-            normalizedT = 2 * (normalizedT - 0.5);
-            jumpingAction.setEffectiveWeight(normalizedT);
-            this.updateOtherAnimationWeights(
-                normalizedT, 'Jumping', actions
-            );
-        }
-
-        mixer.update(0);
-        // mixer.update(0.2 * deltaTInSecs * cycleDuration);
-    },
-
-    updateJump(
-        cm,
-        entityModel,
-        animationComponent,
-        mixer,
-        deltaT
-    )
-    {
-        // console.log('jump');
-        const actions = animationComponent.actions;
-        const jumpingAction = actions['Jumping'];
-        const times = animationComponent.times['Running'];
-        const cycleDuration = times[times.length - 1];
-
-        const deltaTInSecs = deltaT / 1e3;
-
-        const oldVZ = animationComponent.v1.z;
-        const newVZ = animationComponent.v0.z;
-        // if (oldVZ < 0 && newVZ > 0) {
-        //     cm.timeSinceFallStarted = 0;
-        // }
-
-        cm._maxVZ = Math.max(cm._maxVZ, -newVZ);
-        let capVZ = cm._maxVZ / 2;
-        // const startedDecelerating = newVZ > 0;
-        const startedDecelerating = -oldVZ > capVZ && -newVZ < capVZ;
-        if (startedDecelerating)
-        {
-            cm.timeSinceFallStarted = 0;
-        }
-        const continuedDecelerating = -newVZ < capVZ;
-
-        if (cm.hasJustLanded || cm.isRecoveringFromLanding)
-        {
-            // jumpingAction.setEffectiveWeight(1);
-            // this.updateOtherAnimationWeights(
-            //     1, 'Jumping', actions
-            // );
-            cm.hasJustLanded = false;
-            cm.isRecoveringFromLanding = true;
-
-            cm.timeSinceHasLanded += deltaTInSecs;
-            const maxTime = cm.timeToRecoverFromLanding;
-            const ratio = this.clamp(
-                cm.timeSinceHasLanded / maxTime, 0, 1
-            );
-
-            const smoothed = this.smoothstepAttack(0, 1, ratio);
-
-            if (smoothed < 0.5)
-            {
-                // blend to crouching
-                const crouchingAction = actions['Crouching'];
-                const newWeight = smoothed * 2;
-                crouchingAction.setEffectiveWeight(newWeight);
-                this.updateOtherAnimationWeights(
-                    newWeight, 'Crouching', actions
-                );
-                mixer.update(0);
-            }
-            else
-            {
-                const newWeight = (smoothed - 0.5) * 2;
-                // blend to idle (might be walking too?)
-                const crouchingAction = actions['Idle'];
-                crouchingAction.setEffectiveWeight(newWeight);
-                this.updateOtherAnimationWeights(
-                    newWeight, 'Idle', actions
-                );
-                mixer.update(0);
-            }
-
-            if (ratio === 1)
-            {
-                cm.timeSinceHasLanded = 0;
-                cm.isRecoveringFromLanding = false;
-                actions['Idle'].setEffectiveWeight(1);
-                this.updateOtherAnimationWeights(
-                    1, 'Idle', actions
-                );
-                mixer.update(0);
-            }
-            return;
-        }
-
-        if (newVZ > 0 && !cm.isJumping)
-        {
-            // if (animationComponent.a0.z < -100) // hit ground
-            // {
-            //     cm.isFalling = false;
-            //     cm.hasJustLanded = true;
-            //     cm.isRecoveringFromLanding = true;
-            //     cm._maxVZ = 0;
-            // }
-            // else
-            // {
-            cm.isFalling = true;
-            const fallingAction = actions['Falling'];
-            let w = fallingAction.getEffectiveWeight();
-            w = Math.min(w + deltaTInSecs / cycleDuration, 1);
-            fallingAction.setEffectiveWeight(w);
-            this.updateOtherAnimationWeights(
-                w, 'Falling', actions
-            );
-            mixer.update(0);
-            // }
-            return;
-        }
-        else if (startedDecelerating || continuedDecelerating)
-        {
-            // jumpingAction.setEffectiveWeight(1);
-            // this.updateOtherAnimationWeights(
-            //     1, 'Jumping', actions
-            // );
-            const fallingAction = actions['Falling'];
-            cm.timeSinceFallStarted += deltaTInSecs;
-            // from jumping upwards to falling
-            // const maxTime = 0.25 * cycleDuration;
-            const ratio = this.clamp(
-                cm.timeSinceFallStarted / cm.timeToSetFallState, 0, 1
-            );
-            let r = this.smoothstep(0, 1, ratio);
-            fallingAction.setEffectiveWeight(r);
-            this.updateOtherAnimationWeights(
-                r, 'Falling', actions
-            );
-            // const newTime = r * maxTime;
-            // mixer.setTime(newTime);
-            mixer.update(0);
-            return;
-        }
-
-        // other cases: it’s just starting to jump
-        jumpingAction.setEffectiveWeight(1);
-        this.updateOtherAnimationWeights(
-            1, 'Jumping', actions
-        );
-        mixer.setTime(0);
-    }
 
 };
 

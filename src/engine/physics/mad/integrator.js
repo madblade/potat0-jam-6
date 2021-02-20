@@ -103,6 +103,7 @@ extend(Integrator.prototype, {
         {
             cm.isPreparingJump = true;
             cm.timeSincePreparedJump = 0;
+            cm.isRecoveringFromLanding = false;
             // console.log('preparing jump');
         }
 

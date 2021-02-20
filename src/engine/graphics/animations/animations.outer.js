@@ -36,17 +36,17 @@ let AnimationOuter = {
 
         // TODO only if on ground, reverse if in air
 
-        this.applyTiltFromVelocity(
-            entityModel,
-            animationComponent,
-            deltaTInSeconds
-        );
+        // this.applyTiltFromVelocity(
+        //     entityModel,
+        //     animationComponent,
+        //     deltaTInSeconds
+        // );
 
-        this.applyTiltFromAcceleration(
-            entityModel,
-            animationComponent,
-            deltaTInSeconds
-        );
+        // this.applyTiltFromAcceleration(
+        //     entityModel,
+        //     animationComponent,
+        //     deltaTInSeconds
+        // );
     },
 
     applyRotationFromVelocity(

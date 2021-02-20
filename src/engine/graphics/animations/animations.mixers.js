@@ -148,7 +148,16 @@ let AnimationMixers = {
         if (sum + newWeight < 1)
         {
             if (sum < 0.01 && newWeight < 1)
-                actions[animationName].setEffectiveWeight(1);
+            {
+                if (animationName !== 'Running')
+                    actions[animationName].setEffectiveWeight(1);
+                else
+                {
+                    actions[animationName].setEffectiveWeight(newWeight);
+                    actions['Idle'].setEffectiveWeight(1 - newWeight);
+                    return;
+                }
+            }
         }
 
         // Reduce other actions.
@@ -210,7 +219,7 @@ let AnimationMixers = {
         const times = animationComponent.times['Running'];
         const cycleDuration = times[times.length - 1];
 
-        const normalizedDelta = distanceTravelled / 4;
+        // const normalizedDelta = distanceTravelled / 4;
         const deltaTInSeconds = deltaT / 1e3;
         const speed = distanceTravelled / deltaTInSeconds;
         const maxSpeed = cm.maxSpeedInAir;
@@ -220,17 +229,24 @@ let AnimationMixers = {
         // const stepSize = distanceTravelled; //(speedRatio) * 4;
         // const progressInStep = distanceTravelled / stepSize;
         // const actionDelta = progressInStep * cycleDuration;
-        const r2 = 1. + 0.7 * Math.pow(speedRatio, 2.);
-        const actionDelta =
-            r2 * deltaTInSeconds * cycleDuration;
+        // const r2 = 1. + 0.7 * Math.pow(speedRatio, 2.);
+        // const actionDelta =
+        //     r2 * deltaTInSeconds * cycleDuration;
+
+        const minStepSize = 0.5;
+        const maxStepSize = 1.5;
+        const strideSize = Math.max(minStepSize, speedRatio * maxStepSize);
+        const animationDelta = .7 * distanceTravelled / strideSize;
+        const strideRatio = strideSize / maxStepSize;
 
         // Blend toward run.
-        const ratio = Math.pow(speedRatio, 0.5);
-        runningAction.setEffectiveWeight(ratio);
+        // const ratio = Math.pow(speedRatio, 0.5);
+        // runningAction.setEffectiveWeight(ratio);
+        runningAction.setEffectiveWeight(strideRatio);
 
         // Reduce other animations.
         this.updateOtherAnimationWeights(
-            ratio, 'Running', actions
+            strideRatio, 'Running', actions
         );
 
         // TODO smoothstep run palliers
@@ -240,7 +256,36 @@ let AnimationMixers = {
         // let newTime = time + actionDelta;
         // newTime = Math.max(newTime, maxTime);
         // mixer.setTime(newTime);
-        mixer.update(actionDelta);
+        if (animationComponent.idleTime > animationComponent.timeToIdle)
+        {
+            animationComponent.walkingAdvancement = 0;
+            mixer.setTime(0.25 * cycleDuration);
+        }
+
+        animationComponent.walkingAdvancement +=
+            animationDelta * cycleDuration * 0.5; // half anim = 1 step
+        animationComponent.walkingAdvancement %=
+            cycleDuration; // loop back
+        const advancement = animationComponent.walkingAdvancement;
+        const smoothed = this.doubleSmoothstep(advancement / cycleDuration);
+
+        mixer.setTime(
+            smoothed * cycleDuration
+        );
+    },
+
+    // 0 reach left, 1 pass, 2 reach right, 3 pass, 4 loop
+    doubleSmoothstep(tNormal)
+    {
+        assert(tNormal >= 0. && tNormal <= 1.,
+            'DSST: must normalize param.'
+        );
+        let t = tNormal < 0.5 ? 2 * tNormal : 2 * (tNormal - 0.5);
+        const x = this.clamp(t, 0.0, 1.0);
+        const smoothed = x * x * (3 - 2 * x);
+        let result = 0.5 * smoothed;
+        if (tNormal >= 0.5) result += 0.5;
+        return result;
     },
 
     updatePrepareJump(

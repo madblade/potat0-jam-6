@@ -46,6 +46,7 @@ let AnimationModel = {
         entity.idleBlendRatio = 1;
         entity.idleTime = 0.;
         entity.timeToIdle = .3;
+        entity.walkingAdvancement = 0.;
     },
 
     // v  Called at integration.

@@ -62,15 +62,19 @@ let Level0 = function(title, id)
                 ux.validateTask(); // goto next task
 
                 // add entity (id = 1)
-                backend.updateEntities(
+                const newEntities = {};
+                let k = 0;
+                for (let i = 1; i < 2; ++i)
+                    for (let j = 1; j < 2; ++j)
                     {
-                        1: {
-                            p: new Vector3(0, 0, 10),
+                        k++;
+                        newEntities[k] = {
+                            p: new Vector3(i, j, 10),
                             r: new Vector3(0, 0, 0),
                             k: 'ia'
-                        }
+                        };
                     }
-                );
+                backend.updateEntities(newEntities);
             }
         },
         {

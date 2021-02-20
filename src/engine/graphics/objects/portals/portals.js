@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { Screen }   from './screen';
+import { Screen }           from './screen';
 import {
     DoubleSide,
     LinearFilter,
@@ -14,7 +14,7 @@ import {
     PlaneBufferGeometry,
     ShaderMaterial,
     WebGLRenderTarget
-}                   from 'three';
+}                           from 'three';
 
 let PortalsModule = {
 

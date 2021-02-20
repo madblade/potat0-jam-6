@@ -7,7 +7,7 @@
 import extend                   from '../../../extend';
 
 import { Camera }               from './camera';
-import { WaterCameraModule }    from '../water/watercamera';
+import { WaterCameraModule }    from '../objects/water/watercamera';
 import {
     Matrix4,
     PerspectiveCamera,

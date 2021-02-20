@@ -102,7 +102,7 @@ let SelfObjectsModule = {
         selfModel.avatar = up;
         graphics.addToScene(selfModel.avatar, worldId);
 
-        this.updateHandItem();
+        // this.updateHandItem();
     },
 
     initMelee()
@@ -202,6 +202,7 @@ let SelfObjectsModule = {
         }
     },
 
+    /** @deprecated */
     updateHandItem()
     {
         let selfModel = this;

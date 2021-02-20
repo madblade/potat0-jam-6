@@ -16,7 +16,7 @@ import {
     createShadowCastingMaterial,
     getDynamicShadowVolumeGeometry
 }                                   from './shadow';
-import { ItemType }                 from '../../../model/backend/self/items';
+import { ItemType }                 from '../../../../model/backend/self/items';
 
 const debugChunks = false;
 

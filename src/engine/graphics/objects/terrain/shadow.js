@@ -4,7 +4,7 @@
  * Might need a bit of refactor.
  */
 
-import { ShadersModule }    from '../shaders/shaders';
+import { ShadersModule }    from '../../shaders/shaders';
 import { ShaderLib }        from 'three/src/renderers/shaders/ShaderLib';
 import { UniformsUtils }    from 'three/src/renderers/shaders/UniformsUtils';
 import {

@@ -8,14 +8,13 @@ import extend                   from '../../extend';
 
 // Base dependencies.
 import { CoreModule }           from './core';
-import { ControlsModule }       from './controls';
 import { LightModule }          from './light';
 import { MaterialsModule }      from './materials';
 import { MeshesModule }         from './meshes';
 import { TexturesModule }       from './textures';
-import { EntitiesModule }       from './entities/entities';
-import { ItemsGraphicsModule }  from './entities/items';
-import { PortalsModule }        from './portals/portals';
+import { EntitiesModule }       from './objects/entities/entities';
+import { ItemsGraphicsModule }  from './objects/entities/items';
+import { PortalsModule }        from './objects/portals/portals';
 import {
     CameraManager,
     CamerasModule
@@ -29,13 +28,13 @@ import {
     ScenesModule
 }                            from './render/scene';
 import { AnimationManager }  from './animations/animations';
-import { FacesModule }       from './terrain/chunks.voxels.faces';
-import { ChunksModule }      from './terrain/chunks';
-import { ChunksMeshModule }  from './terrain/chunks.mesh';
+import { FacesModule }       from './objects/terrain/chunks.voxels.faces';
+import { ChunksModule }      from './objects/terrain/chunks';
+import { ChunksMeshModule }  from './objects/terrain/chunks.mesh';
 import { ShadersModule }     from './shaders/shaders';
-import { SkyModule }         from './sky/skies';
+import { SkyModule }         from './objects/sky/skies';
 import { TextModule }        from './text/text';
-import { ChunksVoxelModule } from './terrain/chunks.voxels';
+import { ChunksVoxelModule } from './objects/terrain/chunks.voxels';
 
 let Graphics = function(app)
 {
@@ -98,7 +97,6 @@ let Graphics = function(app)
 };
 
 extend(Graphics.prototype, CoreModule);
-extend(Graphics.prototype, ControlsModule);
 extend(Graphics.prototype, LightModule);
 extend(Graphics.prototype, MaterialsModule);
 extend(Graphics.prototype, MeshesModule);

@@ -12,7 +12,7 @@ import { EffectComposer }           from 'three/examples/jsm/postprocessing/Effe
 import { RenderPass }               from 'three/examples/jsm/postprocessing/RenderPass';
 import { FXAAShader }               from 'three/examples/jsm/shaders/FXAAShader';
 import { UnrealBloomPass }          from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import { ShadowPass }               from './ShadowPass';
+import { ShadowPass }               from '../postprocessing/ShadowPass';
 import { SAOPass }                  from 'three/examples/jsm/postprocessing/SAOPass';
 import {
     ACESFilmicToneMapping,

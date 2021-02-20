@@ -61,6 +61,7 @@ let Level0 = function(title, id)
                 // backend.removeObject();
                 ux.validateTask(); // goto next task
 
+                // add entity (id = 1)
                 backend.updateEntities(
                     {
                         1: {

@@ -11,9 +11,9 @@
 
 'use strict';
 
-import { inherit }       from '../../../extend';
+import { inherit }       from '../../../../extend';
 
-import { ShadersModule } from '../shaders/shaders';
+import { ShadersModule } from '../../shaders/shaders';
 import {
     Color,
     FrontSide,

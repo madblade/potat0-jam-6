@@ -8,8 +8,8 @@ import { SkyFlat }          from './sky';
 import {
     LightDefaultColors,
     LightDefaultIntensities
-}                           from '../light';
-import { WorldType }        from '../../../model/backend/terrain/chunks';
+}                           from '../../light';
+import { WorldType }        from '../../../../model/backend/terrain/chunks';
 import {
     Mesh,
     MeshBasicMaterial,

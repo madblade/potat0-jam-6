@@ -4,7 +4,7 @@
 
 'use strict';
 
-import extend from '../../../extend';
+import extend from '../../../../extend';
 
 let Screen = function(screenId, mesh, renderTarget, worldId)
 {

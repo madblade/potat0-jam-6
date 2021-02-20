@@ -289,7 +289,7 @@ let CharacterResponseModule = {
         // Apply.
         if (correct)
         {
-            console.log('Correcting bump');
+            console.log('[Character response] Correcting bump.');
             nx = p1x + displacement.x;
             ny = p1y + displacement.y;
             nz = p1z + displacement.z;
@@ -332,6 +332,10 @@ let CharacterResponseModule = {
                 this.hasJustLanded = true;
                 this.isRecoveringFromLanding = true;
                 this._maxVZ = 0;
+            }
+            if (this.isFalling)
+            {
+                this.isFalling = false;
             }
         }
 

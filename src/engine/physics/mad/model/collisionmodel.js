@@ -77,7 +77,8 @@ let CollisionModel = function(
         // to be updated by setting .wantsToMove to true.
         this.isPreparingJump = false;
         this.timeSincePreparedJump = 0;
-        this.timeToPrepareJump = 0.1; // in s.
+        this.timeToPrepareJump = 0.2; // in s.
+        this.isFalling = false;
         this.isJumping = false;
         this.timeSinceJumpStarted = 0;
         this.timeSinceFallStarted = 0;
@@ -87,7 +88,7 @@ let CollisionModel = function(
         this.hasJustLanded = false;
         this.isRecoveringFromLanding = false;
         this.timeSinceHasLanded = 0;
-        this.timeToRecoverFromLanding = 0.3;
+        this.timeToRecoverFromLanding = .6;
 
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];

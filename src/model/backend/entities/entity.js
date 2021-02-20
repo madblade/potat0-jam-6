@@ -24,6 +24,8 @@ let Entity = function(id, graphicalComponent, worldId)
 
     // TODO init physics.
     this.graphicalComponent = graphicalComponent;
+    this.bounceAmount = 0;
+    this.originalZ = 0;
     this.animationComponent = Object.create(null);
     this.physicsEntity = null;
     this._r = new Vector3(0, 0, 0); // opti
@@ -94,6 +96,17 @@ extend(Entity.prototype, {
             '[SelfModel] Cannot get graphical component.'
         );
         return this.graphicalComponent.rotation.y;
+    },
+
+    setBounceAmount(amount)
+    {
+        this.bounceAmount = amount;
+        this.graphicalComponent.position.z = this.originalZ + amount;
+    },
+
+    getBounceAmount()
+    {
+        return this.bounceAmount;
     },
 
     getWorldId()

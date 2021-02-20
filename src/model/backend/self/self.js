@@ -43,6 +43,8 @@ let SelfModel = function(app)
     this.displayHandItem = false;
 
     this.avatar = null;
+    this.bounceAmount = 0; // bouncing animation
+    this.originalZ = 0;
     this.handItem = null;
     this.handItemWrapper = new Object3D();
     this.handItemWrapper.rotation.reorder('ZYX');

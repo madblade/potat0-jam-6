@@ -28,6 +28,7 @@ let SelfUpdateModule = {
         //     graphics.updateAnimation('yumi');
         // }
         p.copy(newP);
+        this.originalZ = p.z;
 
         // Update camera.
         clientModel.pushForLaterUpdate('camera-position', p);
@@ -80,6 +81,17 @@ let SelfUpdateModule = {
     {
         assert(!!this.avatar, '[SelfModel] Cannot get avatar.');
         return this.avatar.getInnerObject().rotation.y;
+    },
+
+    setBounceAmount(amount)
+    {
+        this.bounceAmount = amount;
+        this.avatar.position.z = this.originalZ + amount;
+    },
+
+    getBounceAmount()
+    {
+        return this.bounceAmount;
     },
 
     /** @deprecated */

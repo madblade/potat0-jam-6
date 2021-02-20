@@ -169,6 +169,7 @@ let EntitiesUpdateModule = {
 
         // let animate = p.x !== newP.x || p.y !== newP.y;
         p.copy(newP);
+        currentEntity.originalZ = p.z;
 
         // Update animation
         // const id = currentEntity.id;

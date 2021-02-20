@@ -11,7 +11,6 @@
 import { assert }  from '../../../extend';
 
 import { Vector2 } from 'three';
-import time        from '../../physics/mad/time';
 
 let AnimationMixers = {
 
@@ -196,6 +195,10 @@ let AnimationMixers = {
         if (idleBlendRatio < oldWeight) idleBlendRatio = oldWeight;
         idleAction.setEffectiveWeight(idleBlendRatio);
 
+        const ba = entityModel.getBounceAmount();
+        const newBa = idleBlendRatio < 1. ? ba / 2 : 0;
+        entityModel.setBounceAmount(newBa);
+
         // Reduce other animations.
         this.updateOtherAnimationWeights(
             idleBlendRatio, 'Idle', actions
@@ -233,8 +236,8 @@ let AnimationMixers = {
         // const actionDelta =
         //     r2 * deltaTInSeconds * cycleDuration;
 
-        const minStepSize = 0.5;
-        const maxStepSize = 1.5;
+        const minStepSize = .6;
+        const maxStepSize = 1.4;
         const strideSize = Math.max(minStepSize, speedRatio * maxStepSize);
         const animationDelta = .7 * distanceTravelled / strideSize;
         const strideRatio = strideSize / maxStepSize;
@@ -258,7 +261,7 @@ let AnimationMixers = {
         // mixer.setTime(newTime);
         if (animationComponent.idleTime > animationComponent.timeToIdle)
         {
-            animationComponent.walkingAdvancement = 0;
+            animationComponent.walkingAdvancement = 0.25 * cycleDuration;
             mixer.setTime(0.25 * cycleDuration);
         }
 
@@ -269,9 +272,34 @@ let AnimationMixers = {
         const advancement = animationComponent.walkingAdvancement;
         const smoothed = this.doubleSmoothstep(advancement / cycleDuration);
 
+        let bounceAmount = 0.1 * this.cycloidBounce(smoothed);
+        // Math.max(speedRatio, 0.5);
+        let cr = this.catmullRom4(
+            0, 2, 0, 0.2,
+            speedRatio
+        );
+        bounceAmount *= cr;
+        entityModel.setBounceAmount(bounceAmount);
+
         mixer.setTime(
             smoothed * cycleDuration
         );
+    },
+
+    // interpolation between 4 evenly-spaced points on a unit interval
+    catmullRom4(y0, y1, y2, y3, t)
+    {
+        const t2 = t * t;
+        const t3 = t * t2;
+        const a = 2 * t3 - 3 * t2 + 1;
+        const b = t3 - 2 * t2 + t;
+        const c = 1 - a;
+        const d = t3 - t2;
+        const p0y = y0; // starting point
+        const m0y = y1 - y0; // tangent at starting
+        const p1y = y3; // ending point
+        const m1y = y3 - y2; // tangent at ending
+        return a * p0y + b * m0y + c * p1y + d * m1y;
     },
 
     // 0 reach left, 1 pass, 2 reach right, 3 pass, 4 loop
@@ -286,6 +314,14 @@ let AnimationMixers = {
         let result = 0.5 * smoothed;
         if (tNormal >= 0.5) result += 0.5;
         return result;
+    },
+
+    // 0 reach left, 1 pass, 2 reach right, 3 pass, 4 loop
+    cycloidBounce(tNormal)
+    {
+        let t = tNormal * 2.; // scale to [0, 2]
+        t = (t - 0.5) * Math.PI; // offset a quarter, scale to function
+        return Math.pow(Math.abs(Math.sin(t)), 2.);
     },
 
     updatePrepareJump(

@@ -104,12 +104,20 @@ let AnimationMixers = {
 
         if (distanceTravelled > 0.00001)
         {
-            // TODO if idle time > limit idle time
-            //  then reset animation to start.
-            this.updateWalkRunCycle(
-                cm, distanceTravelled, entityModel,
-                animationComponent, mixer, deltaTInMillis
-            );
+            if (cm.onGround)
+            {
+                this.updateWalkRunCycle(
+                    cm, distanceTravelled, entityModel,
+                    animationComponent, mixer, deltaTInMillis
+                );
+            }
+            else
+            {
+                this.updateJump(
+                    cm, entityModel,
+                    animationComponent, mixer, deltaTInMillis
+                );
+            }
             animationComponent.idleTime = 0;
         }
         else
@@ -252,8 +260,6 @@ let AnimationMixers = {
             strideRatio, 'Running', actions
         );
 
-        // TODO smoothstep run palliers
-        // TODO bounce
         // const maxTime = cycleDuration;// * 4 / 6;
         // const time = mixer.time % cycleDuration;
         // let newTime = time + actionDelta;
@@ -369,11 +375,6 @@ let AnimationMixers = {
 
         const deltaTInSecs = deltaT / 1e3;
 
-        jumpingAction.setEffectiveWeight(1);
-        this.updateOtherAnimationWeights(
-            1, 'Jumping', actions
-        );
-
         const oldVZ = animationComponent.v1.z;
         const newVZ = animationComponent.v0.z;
         // if (oldVZ < 0 && newVZ > 0) {
@@ -392,6 +393,10 @@ let AnimationMixers = {
 
         if (cm.hasJustLanded || cm.isRecoveringFromLanding)
         {
+            jumpingAction.setEffectiveWeight(1);
+            this.updateOtherAnimationWeights(
+                1, 'Jumping', actions
+            );
             cm.hasJustLanded = false;
             cm.isRecoveringFromLanding = true;
 
@@ -418,8 +423,40 @@ let AnimationMixers = {
             return;
         }
 
-        if (startedDecelerating || continuedDecelerating)
+        if (newVZ > 0 && !cm.isJumping)
         {
+            // if (animationComponent.a0.z < 0) // hit ground
+            // {
+            //     cm.isFalling = false;
+            //     cm.hasJustLanded = true;
+            //     cm.isRecoveringFromLanding = true;
+            //     cm._maxVZ = 0;
+            //     actions['Falling'].setEffectiveWeight(0);
+            //     jumpingAction.setEffectiveWeight(1);
+            //     this.updateOtherAnimationWeights(
+            //         1, 'Jumping', actions
+            //     );
+            //     const start = 0.25 * cycleDuration;
+            //     mixer.setTime(start);
+            // } else {
+            // cm.isFalling = true;
+            const fallingAction = actions['Falling'];
+            let w = fallingAction.getEffectiveWeight();
+            w = Math.min(w + deltaTInSecs / cycleDuration, 1);
+            fallingAction.setEffectiveWeight(w);
+            this.updateOtherAnimationWeights(
+                w, 'Falling', actions
+            );
+            mixer.update(0);
+            // }
+            return;
+        }
+        else if (startedDecelerating || continuedDecelerating)
+        {
+            jumpingAction.setEffectiveWeight(1);
+            this.updateOtherAnimationWeights(
+                1, 'Jumping', actions
+            );
             cm.timeSinceFallStarted += deltaTInSecs;
             // from jumping upwards to falling
             const maxTime = 0.25 * cycleDuration;
@@ -433,6 +470,10 @@ let AnimationMixers = {
         }
 
         // other cases: it’s just starting to jump
+        jumpingAction.setEffectiveWeight(1);
+        this.updateOtherAnimationWeights(
+            1, 'Jumping', actions
+        );
         mixer.setTime(0);
     }
 

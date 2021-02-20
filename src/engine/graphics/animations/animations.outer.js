@@ -10,6 +10,8 @@
 
 'use strict';
 
+import { assert } from '../../../extend';
+
 let AnimationOuter = {
 
     updateEntityRotationAndTilt(
@@ -34,19 +36,18 @@ let AnimationOuter = {
             deltaTInSeconds
         );
 
-        // TODO only if on ground, reverse if in air
+        this.applyTiltFromVelocity(
+            entityModel,
+            animationComponent,
+            deltaTInSeconds
+        );
 
-        // this.applyTiltFromVelocity(
-        //     entityModel,
-        //     animationComponent,
-        //     deltaTInSeconds
-        // );
-
-        // this.applyTiltFromAcceleration(
-        //     entityModel,
-        //     animationComponent,
-        //     deltaTInSeconds
-        // );
+        if (!animationComponent.isJumping)
+            this.applyTiltFromAcceleration(
+                entityModel,
+                animationComponent,
+                deltaTInSeconds
+            );
     },
 
     applyRotationFromVelocity(
@@ -143,25 +144,29 @@ let AnimationOuter = {
         deltaTInSeconds
     )
     {
-        const maxVelocityTilt = 0.25 * Math.PI / 8;
+        let maxVelocityTilt = 0.25 * Math.PI / 8;
 
         const entity = animationComponent;
         const sm = entityModel;
         const pe = entityModel.physicsEntity;
+        assert(pe && pe.collisionModel,
+            '[Animations] Could not get entity collision model.'
+        );
+        const cm = pe.collisionModel;
         const pi = Math.PI;
 
         // Direct rotation.
         const v = entity.v0;
+        const s = cm.isJumping ? -1 : 1;
+        if (cm.isJumping) maxVelocityTilt *= 4;
+        const vx = s * v.x;
+        const vy = s * v.y;
         const oldTiltX = entity.velTilt.x;
         const oldTiltY = entity.velTilt.y;
-        const tet = Math.atan2(v.y, v.x) - pi / 2;
-        let norm = Math.sqrt(v.x * v.x + v.y * v.y);
-        if (pe && pe.collisionModel.maxSpeedInAir)
-            norm /= pe.collisionModel.maxSpeedInAir;
-        else
-            console.warn(
-                '[Animations] Could not get entity collision model.'
-            );
+        const tet = Math.atan2(vy, vx) - pi / 2;
+        let norm = Math.sqrt(vx * vx + vy * vy);
+
+        norm /= cm.maxSpeedInAir;
         norm = Math.min(norm, 1.);
         norm *= maxVelocityTilt;
 

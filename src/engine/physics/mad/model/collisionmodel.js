@@ -87,7 +87,7 @@ let CollisionModel = function(
         this.hasJustLanded = false;
         this.isRecoveringFromLanding = false;
         this.timeSinceHasLanded = 0;
-        this.timeToRecoverFromLanding = 0.6;
+        this.timeToRecoverFromLanding = 0.3;
 
         // Intelligent internals
         this._d = [!1, !1, !1, !1, !1, !1];

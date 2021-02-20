@@ -132,7 +132,9 @@ extend(Integrator.prototype, {
         // TODO [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
         // (self movement uses Euler integration!)
-        if (wv.manhattanLength() > 0) // max wv is ~ 1.1
+        // max wv is ~ 1.1
+        if (wv.manhattanLength() > 0)
+        // && !cm.isRecoveringFromLanding && !cm.isPreparingJump)
         {
             const selfIncrement = this._w2;
 

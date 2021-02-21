@@ -6,17 +6,19 @@
 
 import extend, { assert }   from '../../../extend';
 
-import { AnimationModel }  from './animations.model';
-import { AnimationOuter }  from './animations.outer';
-import { AnimationMixers } from './animations.mixers';
+import { $ }                from '../../../modules/polyfills/dom';
+
+import { AnimationModel }   from './animations.model';
+import { AnimationOuter }   from './animations.outer';
+import { AnimationMixers }  from './animations.mixers';
+import { TextModule }       from './text';
+import { FeedbackModule }   from './feedback';
+import { SecondaryModule }  from './secondary';
 import {
     AnimationMixer,
     Vector2,
     Vector3
-}                          from 'three';
-import { TextModule }      from './text';
-import { FeedbackModule }  from './feedback';
-import { SecondaryModule } from './secondary';
+}                           from 'three';
 
 let AnimationManager = function(graphics)
 {
@@ -117,6 +119,12 @@ extend(AnimationManager.prototype, {
         times.set(entityId, Date.now());
         this.setupMixer(entityId, mesh, mixer, entityModel);
     },
+
+    cleanup()
+    {
+        // remove all text labels
+        $('.text-label').empty().remove();
+    }
 
 });
 

@@ -28,6 +28,9 @@ let SelfObjectsModule = {
         animations.addSkinnedEntityAnimation(
             0, up, selfModel.animationComponent
         );
+        animations.addLabelledEntity(
+            'hello.', 0, selfModel
+        );
 
         // Change eye color.
         // TODO ik targets.

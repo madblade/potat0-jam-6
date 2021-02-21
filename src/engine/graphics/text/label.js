@@ -23,19 +23,34 @@ let Label = function(text)
     div.innerHTML = text;
     div.style.top = '-1000';
     div.style.left = '-1000';
+    div.style.zIndex = '2';
+    div.style.display = 'none';
     // let _this = this;
     // TODO [GAMEPLAY] bind text to physics camera and call
     //      updatePosition before every render.
+    document.body.appendChild(div);
 
     this.element = div;
-    this.parent = false;
+    this.parent = null;
     this.position = new Vector3(0, 0, 0);
     this.coords2D = new Vector2(0, 0);
 };
 
 extend(Label.prototype, {
 
-    setHTML(html) {
+    setText(newText)
+    {
+        this.text = newText;
+        this.setHTML(newText);
+    },
+
+    getText()
+    {
+        return this.text;
+    },
+
+    setHTML(html)
+    {
         this.element.innerHTML = html;
     },
 
@@ -44,12 +59,14 @@ extend(Label.prototype, {
         this.parent = object3d;
     },
 
-    updatePosition(camera)
+    updatePosition(camera, newPosition)
     {
-        if (parent)
+        if (!newPosition && this.parent)
         {
             this.position.copy(this.parent.position);
         }
+        if (newPosition)
+            this.position.copy(newPosition);
 
         const coords2D = this.get2DCoords(this.position, camera);
 

@@ -12,6 +12,7 @@ let FeedbackModule = {
         const mainCamera = graphics.cameraManager.mainCamera;
 
         // TODO Here manage shaking and other effects.
+        // (like camera lagging behind)
     },
 
 };

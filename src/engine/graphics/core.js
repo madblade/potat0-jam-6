@@ -255,6 +255,7 @@ let CoreModule = {
         this.sceneManager.cleanup();
         this.cameraManager.cleanup();
         this.rendererManager.cleanup();
+        this.animationManager.cleanup();
     },
 
     resize()

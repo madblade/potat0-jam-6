@@ -5,6 +5,7 @@
 'use strict';
 
 import extend               from '../extend';
+
 import { $ }                from '../modules/polyfills/dom';
 
 import { IngameState }      from './states/ingame';

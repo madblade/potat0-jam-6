@@ -26,8 +26,26 @@ let TextModule = {
                 return;
             }
 
-            label.updatePosition(camera);
+            const text = label.getText();
+            if (!text || text.length < 1) return;
+            const am = entity.animationComponent;
+            console.log(am.p0);
+            label.updatePosition(camera, am.p0);
         });
+    },
+
+    addLabelledEntity(initialText, entityId, entity)
+    {
+        const graphics = this.graphics;
+        const label = graphics.createTextLabel(initialText || 'no text');
+        // label.setParent(null);
+
+        const backend = graphics.app.model.backend;
+        const labelledEntities = backend.entityModel.labelledEntities;
+
+        labelledEntities.set(entityId, entity);
+        entity.textComponent = label;
+        return label;
     }
 
 };

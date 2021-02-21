@@ -6,14 +6,17 @@
 
 import extend, { assert }   from '../../../extend';
 
-import { AnimationModel }   from './animations.model';
-import { AnimationOuter }   from './animations.outer';
-import { AnimationMixers }  from './animations.mixers';
+import { AnimationModel }  from './animations.model';
+import { AnimationOuter }  from './animations.outer';
+import { AnimationMixers } from './animations.mixers';
 import {
     AnimationMixer,
     Vector2,
     Vector3
-}                           from 'three';
+}                          from 'three';
+import { TextModule }      from './text';
+import { FeedbackModule }  from './feedback';
+import { SecondaryModule } from './secondary';
 
 let AnimationManager = function(graphics)
 {
@@ -45,6 +48,10 @@ extend(AnimationManager.prototype, {
         // Skinned / morphed mixers + secondary physics update.
         this.updateAnimations(deltaT);
 
+        // IK / Secondary physics.
+        this.updateSecondaryAnimations(deltaT);
+
+        // Camera effects.
         this.updateCameraFeedback(deltaT);
 
         // Text element update.
@@ -111,42 +118,13 @@ extend(AnimationManager.prototype, {
         this.setupMixer(entityId, mesh, mixer, entityModel);
     },
 
-    updateCameraFeedback(deltaT)
-    {
-        const graphics = this.graphics;
-        const mainCamera = graphics.cameraManager.mainCamera;
-
-        // TODO Here manage shaking and other effects.
-    },
-
-    updateTextLabels(deltaT)
-    // TODO deltaT can be used for smooth feedback
-    {
-        const graphics = this.graphics;
-        const backend = graphics.app.model.backend;
-        const labelledEntities = backend.entityModel.labelledEntities;
-        const mainCameraWrapper = graphics.cameraManager.mainCamera;
-        const camera = mainCameraWrapper.getRecorder();
-
-        labelledEntities.forEach((entity, id) =>
-        {
-            const label = entity.textComponent;
-            if (!label && this._debug)
-            {
-                console.warn(
-                    `[Animations/Label] Labelled entity ${id} has no label.`
-                );
-                return;
-            }
-
-            label.updatePosition(camera);
-        });
-    }
-
 });
 
 extend(AnimationManager.prototype, AnimationModel);
 extend(AnimationManager.prototype, AnimationOuter);
 extend(AnimationManager.prototype, AnimationMixers);
+extend(AnimationManager.prototype, TextModule);
+extend(AnimationManager.prototype, FeedbackModule);
+extend(AnimationManager.prototype, SecondaryModule);
 
 export { AnimationManager };

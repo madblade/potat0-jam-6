@@ -146,7 +146,7 @@ let CoreModule = {
             return;
         }
 
-        // Emulate lower framerate
+        // Uncomment to emulate lower framerate
         // this.now = Date.now();
         // this.elapsed = this.now - (this.then || 0);
         // const fps = 120;
@@ -161,7 +161,8 @@ let CoreModule = {
         //   - intelligent component
         aiEngine.refresh();
 
-        // Update keyboard / mouse inputs.
+        // Update keyboard / mouse  inputs.
+        // (all inputs except from camera)
         clientModel.refresh();
 
         // Ping physics engines.
@@ -171,16 +172,16 @@ let CoreModule = {
         // bulletEngine holds all cosmetic entities mapped by name
         const deltaT = physicsEngine.refresh();
 
-        // Update controls for Touch/Gamepad devices.
-        // Note: camera cannot rotate bw/ this call and render.
-        controlsEngine.updateControlsDevice(deltaT);
-
         // Update model.
         // serverModel holds
         //   - all entities/chunks
         //   - out-of-date entities/chunks (input by physics)
         // Note: might want to manage chunk loading here
         serverModel.refresh();
+
+        // Update inputs for Touch/Gamepad devices.
+        // Note: camera cannot rotate bw/ this call and render.
+        controlsEngine.updateControlsDevice(deltaT);
 
         // Update camera state from direct user inputs.
         this.refreshMainCamera();
@@ -191,7 +192,7 @@ let CoreModule = {
         //   - list of labelled entities
         // Note: can modify zBounce bw/ model update and render.
         // Note: also manages animated feedback (e.g. camera shake).
-        animationEngine.updateAnimations(deltaT);
+        animationEngine.refresh(deltaT);
 
         // Render.
         this.render();

@@ -230,7 +230,13 @@ let AnimationMixers = {
         const strideRatio = strideSize / maxStepSize;
 
         // Blend toward run.
+        const oldWeight = runningAction.getEffectiveWeight();
         runningAction.setEffectiveWeight(strideRatio);
+        if (strideRatio < oldWeight && !cm.isRecoveringFromLanding
+            && !cm.isJumping)
+        {
+            actions['Idle'].setEffectiveWeight(1 - strideRatio);
+        }
 
         // Reduce other animations.
         if (!cm.isRecoveringFromLanding)

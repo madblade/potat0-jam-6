@@ -168,7 +168,8 @@ extend(MadEngine.prototype, {
     {
         // Compute adaptive time step.
         let relativeDt; // ms
-        if (this._variableDt) relativeDt = TimeUtils.getTimeSecNano(this._stamp)[1] / 1e6;
+        if (this._variableDt) relativeDt =
+            TimeUtils.getTimeSecNano(this._stamp)[1] / 1e6;
         else relativeDt = 16.7;
 
         // Reset stamp before performing physics update.

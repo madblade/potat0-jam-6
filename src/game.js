@@ -39,15 +39,15 @@ Game.Core = function()
 
     // Engine manages client-side rendering, audio, inputs/outputs
     this.engine = {
-        // TODO level transition & splash screen.
-        // TODO remove chunks and put heightmaps instead.
         graphics:     new Graphics(this),
         audio:        new AudioEngine(this),
         ai:           new AI(this),
         physics:      new Physics(this),
+        // TODO heightmap streaming
         // TODO put AI, Physics. Wire to server model.
-        controls:     new UI(this), // TODO add gamepad controller API
-        settings:     new Settings(this), // TODO custom settings
+        controls:     new UI(this),
+        settings:     new Settings(this),
+        // TODO graphics settings
         ux:           new UX(this),
     };
 
@@ -55,10 +55,6 @@ Game.Core = function()
     this.model = {
         levels:       new Levels(this),
         backend:      new BackEnd(this),
-        // TODO use existing model (or spix’s) here instead of loading & buffers
-        // TODO refactor chunks into heightmaps.
-        // TODO remove interpolation.
-        // TODO remove consistency loader entirely. Every level will be in memory.
         frontend:     new FrontEnd(this),
     };
 
@@ -155,6 +151,7 @@ extend(Game.Core.prototype, {
         this.model.frontend.cleanupFullModel();
         this.engine.graphics.cleanupFullGraphics();
         this.engine.physics.cleanupFullPhysics();
+        this.engine.ai.cleanupFullAI();
         this.state.cleanupDOM();
     },
 

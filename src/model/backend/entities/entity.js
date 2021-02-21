@@ -22,13 +22,23 @@ let Entity = function(id, graphicalComponent, worldId)
     this.inScene = false;
     this.helper = null;
 
-    // TODO init physics.
+    // Graphics
     this.graphicalComponent = graphicalComponent;
+    this.textComponent = null;
+
+    // Animations
+    this.animationComponent = Object.create(null);
     this.bounceAmount = 0;
     this.originalZ = 0;
-    this.animationComponent = Object.create(null);
+
+    // Physics
     this.physicsEntity = null;
-    this._r = new Vector3(0, 0, 0); // opti
+
+    // IA
+    this.intelligence = null;
+
+    // Cache
+    this._r = new Vector3(0, 0, 0);
 };
 
 extend(Entity.prototype, {

@@ -178,14 +178,19 @@ let CoreModule = {
         // Update model.
         // serverModel holds
         //   - all entities/chunks
-        //   - out-of-date entities/chunks input by physics
+        //   - out-of-date entities/chunks (input by physics)
         // Note: might want to manage chunk loading here
         serverModel.refresh();
+
+        // Update camera state from direct user inputs.
+        this.refreshMainCamera();
 
         // Update animation mixers.
         // animationEngine holds
         //   - list of mixers for skinned/morphed entities
-        // Note: can modify zBounce bw/ model update and render
+        //   - list of labelled entities
+        // Note: can modify zBounce bw/ model update and render.
+        // Note: also manages animated feedback (e.g. camera shake).
         animationEngine.updateAnimations(deltaT);
 
         // Render.
@@ -195,6 +200,16 @@ let CoreModule = {
         this.fps.update();
     },
 
+    refreshMainCamera()
+    {
+        // (Late) Refresh portal graphics.
+        this.processPortalUpdates();
+
+        // Refresh camera mouse movements.
+        let cameraManager = this.cameraManager;
+        cameraManager.refresh();
+    },
+
     render()
     {
         let sceneManager = this.sceneManager;
@@ -202,14 +217,10 @@ let CoreModule = {
         let rendererManager = this.rendererManager;
         let portals = this.app.model.backend.xModel.portals;
 
-        // Refresh portals.
-        this.processPortalUpdates();
-
-        // Refresh camera mouse movements.
-        cameraManager.refresh();
-
         // Perform rendering.
-        rendererManager.render(sceneManager, cameraManager, portals);
+        rendererManager.render(
+            sceneManager, cameraManager, portals
+        );
     },
 
     // Old method to ping bundled server.

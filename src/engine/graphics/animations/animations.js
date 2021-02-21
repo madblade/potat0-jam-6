@@ -26,6 +26,9 @@ let AnimationManager = function(graphics)
     // opt.
     this._r = new Vector3();
     this._xy = new Vector2();
+
+    // flags.
+    this._debug = true;
 };
 
 extend(AnimationManager.prototype, {
@@ -35,6 +38,17 @@ extend(AnimationManager.prototype, {
         this.mixers = new Map();
         this.times = new Map();
         this.clips = new Map();
+    },
+
+    refresh(deltaT)
+    {
+        // Skinned / morphed mixers + secondary physics update.
+        this.updateAnimations(deltaT);
+
+        this.updateCameraFeedback(deltaT);
+
+        // Text element update.
+        this.updateTextLabels(deltaT);
     },
 
     updateAnimations(deltaT)
@@ -96,6 +110,38 @@ extend(AnimationManager.prototype, {
         times.set(entityId, Date.now());
         this.setupMixer(entityId, mesh, mixer, entityModel);
     },
+
+    updateCameraFeedback(deltaT)
+    {
+        const graphics = this.graphics;
+        const mainCamera = graphics.cameraManager.mainCamera;
+
+        // TODO Here manage shaking and other effects.
+    },
+
+    updateTextLabels(deltaT)
+    // TODO deltaT can be used for smooth feedback
+    {
+        const graphics = this.graphics;
+        const backend = graphics.app.model.backend;
+        const labelledEntities = backend.entityModel.labelledEntities;
+        const mainCameraWrapper = graphics.cameraManager.mainCamera;
+        const camera = mainCameraWrapper.getRecorder();
+
+        labelledEntities.forEach((entity, id) =>
+        {
+            const label = entity.textComponent;
+            if (!label && this._debug)
+            {
+                console.warn(
+                    `[Animations/Label] Labelled entity ${id} has no label.`
+                );
+                return;
+            }
+
+            label.updatePosition(camera);
+        });
+    }
 
 });
 

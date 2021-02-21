@@ -60,7 +60,7 @@ let SelfModel = function(app)
     this.needsStartLoadingBow = false;
     this.needsStopLoadingBow = false;
 
-    // Interpolation-prediction
+    // Interpolation-prediction (online or high-latency physics)
     this.useInterpolation = false;
     if (this.useInterpolation)
         this.initInterpolation();

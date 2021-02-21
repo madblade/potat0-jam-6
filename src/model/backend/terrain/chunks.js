@@ -153,6 +153,7 @@ extend(ChunkModel.prototype, {
         let chunkUpdates = this.chunkUpdates;
         let reportedUpdates = [];
 
+        // Only loading / unloading atm.
         this.processChunkInput(chunkUpdates, reportedUpdates);
 
         this.chunkUpdates = reportedUpdates;

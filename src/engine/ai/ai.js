@@ -11,6 +11,8 @@ let AI = function(app)
     this.app = app;
 
     this.intelligentEntities = new Map();
+
+    this._debug = false;
 };
 
 extend(AI.prototype, {
@@ -20,13 +22,17 @@ extend(AI.prototype, {
         // console.log('IA update');
         const entities = this.intelligentEntities;
 
-        let updates = '';
         entities.forEach((e, id) =>
         {
-            updates += `${e}, ${id}`;
+            if (this._debug)
+                console.log(`${e}, ${id}`);
         });
-        console.log(updates);
     },
+
+    cleanupFullAI()
+    {
+        this.intelligentEntities.clear();
+    }
 
 });
 

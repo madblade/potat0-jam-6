@@ -1,7 +1,7 @@
 /**
  * (c) madblade 2021 all rights reserved
  *
- * Integration routines (leapfrog).
+ * Integration routines.
  */
 
 'use strict';
@@ -18,11 +18,14 @@ let Integrator = function(sweeper)
     this.sweeper = sweeper;
     this.physics = sweeper.physics;
 
-    // Internals / don’t reallocate.
+    // Internals / cache.
     this._w0 = new Vector3();
     this._w1 = new Vector3();
     this._w2 = new Vector3();
     this._vec20 = new Vector2();
+
+    // Flags
+    this._debug = true;
 };
 
 extend(Integrator.prototype, {
@@ -113,7 +116,8 @@ extend(Integrator.prototype, {
         let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
         if (dtr > 0.05)
         {
-            console.warn(`[Integrator] Large DT: ${dtr}.`);
+            if (this._debug)
+                console.warn(`[Integrator] Large DT: ${dtr}.`);
             dtr = 0.016;
         }
         const inWater = this.physics.isWater(p0);

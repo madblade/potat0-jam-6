@@ -206,7 +206,7 @@ extend(CameraManager.prototype, {
 
         if (i.isFirstPerson())
         {
-            cams.forEach(function(cam/*, cameraId*/) {
+            cams.forEach((cam/*, cameraId*/) => {
                 cam.setCameraPosition(x, y, z);
                 cam.setFirstPerson();
                 cam.addPositionTransform();
@@ -218,12 +218,12 @@ extend(CameraManager.prototype, {
                         this.clipOblique(mirror, mirrorCamera, localRecorder);
                     }
                 }
-            }.bind(this));
+            });
         }
 
         else if (i.isThirdPerson())
         {
-            cams.forEach(function(cam/*, cameraId*/) {
+            cams.forEach((cam/*, cameraId*/) => {
                 cam.setCameraPosition(x, y, z);
                 cam.setThirdPerson();
                 cam.addPositionTransform();
@@ -235,7 +235,7 @@ extend(CameraManager.prototype, {
                         this.clipOblique(mirror, mirrorCamera, localRecorder);
                     }
                 }
-            }.bind(this));
+            });
         }
     },
 

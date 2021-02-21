@@ -23,8 +23,12 @@ let EntityModel = function(app)
     this.entitiesOutdated = new Map();
     this.entitiesLoading = new Set();
     this.entitiesIngame = new Map();
-    this.entitiesNeedingInterpolation = new Map(); // (Could be used by Bullet)
+    this.entitiesNeedingInterpolation = new Map();
+    // ^  (Could be used by Bullet)
     // (We might want to put physical entities in a separate array)
+
+    // Text
+    this.labelledEntities = new Map();
 
     // Graphical component
     this.needsUpdate = false;

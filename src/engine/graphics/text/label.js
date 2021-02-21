@@ -24,7 +24,8 @@ let Label = function(text)
     div.style.top = '-1000';
     div.style.left = '-1000';
     // let _this = this;
-    // TODO [GAMEPLAY] bind text to physics camera and call updatePosition before every render.
+    // TODO [GAMEPLAY] bind text to physics camera and call
+    //      updatePosition before every render.
 
     this.element = div;
     this.parent = false;

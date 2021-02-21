@@ -169,20 +169,27 @@ extend(RendererManager.prototype, {
 
         const nbPortals = renderRegister.length;
         if (nbPortals > 0)
-            this.renderPortals(renderer, cameraManager, sceneManager, materials, renderRegister);
+            this.renderPortals(
+                renderer,
+                cameraManager, sceneManager,
+                materials, renderRegister
+            );
 
         // Lazy composer creation.
         // XXX refactor
-        const id = this.graphics.app.model.backend.selfModel.worldId.toString();
+        const backend = this.graphics.app.model.backend;
+        const id = backend.selfModel.worldId.toString();
         let composer;
         if (this.composers.has(id)) {
             composer = this.composers.get(id);
         } else {
-            const skies = this.graphics.app.model.backend.chunkModel.skies;
+            const skies = backend.chunkModel.skies;
             const s = skies.get(id);
             if (s && s.lights)
             {
-                composer = this.createMainComposer(renderer, mainScene, mainCamera, s.lights);
+                composer = this.createMainComposer(
+                    renderer, mainScene, mainCamera, s.lights
+                );
                 this.composers.set(id, composer);
             }
             else return;

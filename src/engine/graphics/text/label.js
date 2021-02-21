@@ -6,7 +6,10 @@
 
 import extend      from '../../../extend';
 
-import { Vector3 } from 'three';
+import {
+    Vector2,
+    Vector3
+}                   from 'three';
 
 let Label = function(text)
 {
@@ -26,6 +29,7 @@ let Label = function(text)
     this.element = div;
     this.parent = false;
     this.position = new Vector3(0, 0, 0);
+    this.coords2D = new Vector2(0, 0);
 };
 
 extend(Label.prototype, {
@@ -41,30 +45,36 @@ extend(Label.prototype, {
 
     updatePosition(camera)
     {
-        if (parent) {
+        if (parent)
+        {
             this.position.copy(this.parent.position);
         }
 
-        let coords2d = this.get2DCoords(this.position, camera);
+        const coords2D = this.get2DCoords(this.position, camera);
 
-        // Culling
-        if (coords2d.x < 0 || coords2d.y < 0 ||
-            coords2d.x > window.innerWidth ||
-            coords2d.y > window.innerHeight)
+        // Detect changes.
+        if (this.coords2D.manhattanDistanceTo(coords2D) === 0)
+            return;
+        this.coords2D.set(coords2D.x, coords2D.y);
+
+        // Culling.
+        if (coords2D.x < 0 || coords2D.y < 0 ||
+            coords2D.x > window.innerWidth ||
+            coords2D.y > window.innerHeight)
         {
             this.element.style.display = 'none';
         }
         else
         {
             this.element.style.display = 'block';
-            this.element.style.left = `${coords2d.x}px`;
-            this.element.style.top = `${coords2d.y}px`;
+            this.element.style.left = `${coords2D.x}px`;
+            this.element.style.top = `${coords2D.y}px`;
         }
     },
 
     get2DCoords(position, camera)
     {
-        let vector = position.project(camera);
+        const vector = position.project(camera);
         vector.x = (vector.x + 1) / 2 * window.innerWidth;
         vector.y = -(vector.y - 1) / 2 * window.innerHeight;
         return vector;

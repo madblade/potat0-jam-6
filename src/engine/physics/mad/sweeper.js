@@ -20,9 +20,10 @@ let Sweeper = function(mad)
     this.orderedObjectsByY = [];
     this.orderedObjectsByZ = [];
 
-    this.entitiesNeedingToMove = new Set();
+    this.entitiesNeedingToMove = new Set(); // can interact w/ one another
     this.dynamicEntities = new Set();
     this.potentialCollidingPairs = new Set();
+    this.projectiles = new Set(); // cannot interact w/ one another
 
     // Entity id must equal physics entity index in this array
     this.physicsEntities = [];

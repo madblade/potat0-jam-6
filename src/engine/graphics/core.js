@@ -146,29 +146,46 @@ let CoreModule = {
             return;
         }
 
-        // Ping AI
+        // Emulate lower framerate
+        // this.now = Date.now();
+        // this.elapsed = this.now - (this.then || 0);
+        // const fps = 120;
+        // const fpsInterval = 1000 / fps;
+        // if (this.elapsed > fpsInterval)
+        // {
+        //     this.then = this.now - (this.elapsed % fpsInterval);
+        // } else return;
+
+        // Ping AI components / compute their inputs.
+        // aiEngine holds
+        //   - intelligent component
         aiEngine.refresh();
 
-        // Emulate lower framerate
-        this.now = Date.now();
-        this.elapsed = this.now - (this.then || 0);
-        const fps = 120;
-        const fpsInterval = 1000 / fps;
-        if (this.elapsed > fpsInterval)
-        {
-            this.then = this.now - (this.elapsed % fpsInterval);
-        } else return;
-
-        // Ping physics engines.
-        const deltaT = physicsEngine.refresh();
-
         // Update controls for Touch/Gamepad devices.
+        // Note: camera cannot rotate bw/ this call and render.
         controlsEngine.updateControlsDevice(deltaT);
 
+        // Update keyboard mouse inputs.
+        clientModel.refresh();
+
+        // Ping physics engines.
+        // madEngine/sweeper holds
+        //   - out-of-date entities that can interact w/ one another
+        //   - projectiles that cannot interact w/ one another
+        // bulletEngine holds all cosmetic entities mapped by name
+        const deltaT = physicsEngine.refresh();
+
         // Update model.
+        // serverModel holds
+        //   - all entities/chunks
+        //   - out-of-date entities/chunks input by physics
+        // Note: might want to manage chunk loading here
         serverModel.refresh();
 
         // Update animation mixers.
+        // animationEngine holds
+        //   - list of mixers for skinned/morphed entities
+        // Note: can modify zBounce bw/ model update and render
         animationEngine.updateAnimations(deltaT);
 
         // Render.
@@ -176,9 +193,6 @@ let CoreModule = {
 
         // Bench.
         this.fps.update();
-
-        // Update client / camera.
-        clientModel.refresh();
     },
 
     render()

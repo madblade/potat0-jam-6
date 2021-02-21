@@ -203,8 +203,8 @@ extend(Integrator.prototype, {
         cm.velocity0.copy(cm.velocity1);
         cm.accelera0.copy(cm.accelera1);
 
-        const p = window.dh.sg1.position;
-        p.set(0, 0, Math.max(p.z, cm.position0.z));
+        // const p = window.dh.sg1.position;
+        // p.set(0, 0, Math.max(p.z, cm.position0.z));
 
         if (cm.isCharacter)
         {

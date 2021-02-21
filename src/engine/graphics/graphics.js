@@ -42,7 +42,7 @@ let Graphics = function(app)
     this.app = app;
 
     // User customizable settings.
-    this.settings = {}; // TODO [HIGH] bind graphics settings
+    this.settings = {};
     this.debug = false;
 
     // Properties.

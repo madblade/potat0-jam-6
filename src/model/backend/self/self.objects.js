@@ -32,8 +32,9 @@ let SelfObjectsModule = {
             'hello.', 0, selfModel
         );
 
+        // XXX Init IK targets here as well.
+
         // Change eye color.
-        // TODO ik targets.
         try
         {
             const inner = up.children[0];

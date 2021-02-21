@@ -19,7 +19,7 @@ extend(AI.prototype, {
 
     refresh()
     {
-        // console.log('IA update');
+        // XXX IA update / targets / cooldown / etc.
         const entities = this.intelligentEntities;
 
         entities.forEach((e, id) =>

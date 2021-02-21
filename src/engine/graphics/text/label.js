@@ -26,8 +26,8 @@ let Label = function(text)
     div.style.zIndex = '2';
     div.style.display = 'none';
     // let _this = this;
-    // TODO [GAMEPLAY] bind text to physics camera and call
-    //      updatePosition before every render.
+
+    // XXX put it into some outer div.
     document.body.appendChild(div);
 
     this.element = div;

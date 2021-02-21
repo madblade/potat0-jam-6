@@ -13,9 +13,11 @@ let GamepadActionModule = {
         let movementX = x * 2 * cameraMovingSpeed;
         let movementY = y * 1 * cameraMovingSpeed;
         if (Math.abs(movementX) > 0 || Math.abs(movementY) > 0)
+        {
             graphics.cameraManager.addCameraRotationEvent(
                 movementX, movementY, 0, 0
             );
+        }
     },
 
     stopMovePlayerFromLeftStickGamepad()

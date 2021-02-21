@@ -370,11 +370,24 @@ let AnimationMixers = {
             {
                 // blend to idle (might be walking too?)
                 const idleAction = actions['Idle'];
+                // const idleWeight = idleAction.getEffectiveWeight();
+                const runningAction = actions['Running'];
+                const runningWeight = runningAction.getEffectiveWeight();
                 const newWeight = (smoothed - 0.5) * 2;
-                idleAction.setEffectiveWeight(newWeight);
-                this.updateOtherAnimationWeights(
-                    newWeight, 'Idle', actions
-                );
+                if (runningWeight > 0.)
+                {
+                    runningAction.setEffectiveWeight(newWeight);
+                    this.updateOtherAnimationWeights(
+                        newWeight, 'Running', actions
+                    );
+                }
+                else
+                {
+                    idleAction.setEffectiveWeight(newWeight);
+                    this.updateOtherAnimationWeights(
+                        newWeight, 'Idle', actions
+                    );
+                }
                 mixer.update(0);
             }
 

@@ -173,6 +173,7 @@ extend(CameraManager.prototype, {
     },
 
     // Update.
+    // TODO manage camera smoothing here.
     updateCameraPosition(vector)
     {
         let sin = Math.sin;

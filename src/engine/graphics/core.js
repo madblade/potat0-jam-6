@@ -161,11 +161,7 @@ let CoreModule = {
         //   - intelligent component
         aiEngine.refresh();
 
-        // Update controls for Touch/Gamepad devices.
-        // Note: camera cannot rotate bw/ this call and render.
-        controlsEngine.updateControlsDevice(deltaT);
-
-        // Update keyboard mouse inputs.
+        // Update keyboard / mouse inputs.
         clientModel.refresh();
 
         // Ping physics engines.
@@ -174,6 +170,10 @@ let CoreModule = {
         //   - projectiles that cannot interact w/ one another
         // bulletEngine holds all cosmetic entities mapped by name
         const deltaT = physicsEngine.refresh();
+
+        // Update controls for Touch/Gamepad devices.
+        // Note: camera cannot rotate bw/ this call and render.
+        controlsEngine.updateControlsDevice(deltaT);
 
         // Update model.
         // serverModel holds

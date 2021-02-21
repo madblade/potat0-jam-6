@@ -29,7 +29,6 @@ let TextModule = {
             const text = label.getText();
             if (!text || text.length < 1) return;
             const am = entity.animationComponent;
-            console.log(am.p0);
             label.updatePosition(camera, am.p0);
         });
     },

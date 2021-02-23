@@ -41,7 +41,7 @@ let ChunksMeshModule = {
                         alpha: 1.0,
                         sunDirection: new Vector3(0., 0., 0.7),
                         sunColor: 0xffffff,
-                        waterColor: 0x7b8a99,
+                        waterColor: '#3c7385',
                         // distortionScale: 3.7,
                         distortionScale: 0.1,
                         size: 20.0,

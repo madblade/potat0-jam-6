@@ -68,7 +68,7 @@ void main() {
     float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
     float rf0 = 0.3;
     float reflectance = rf0 + ( 1.0 - rf0 ) * pow( abs( 1.0 - theta ), 5.0 );
-    vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;
+    vec3 scatter = 0.5 * pow(max( 0.0, dot( surfaceNormal, eyeDirection ) ), 0.1) * waterColor;
     vec3 albedo = mix(
     ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(),
     ( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ),

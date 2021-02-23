@@ -6,10 +6,11 @@
 
 import extend, { assert }               from '../../../extend';
 
-import { PlayerModule }                from './player';
-import { EntitiesInterpolationModule } from './entities.interpolate';
-import { EntitiesUpdateModule }        from './entities.update';
-import { ProjectileUpdateModule }      from './projectile';
+import { PlayerModule }                 from './player';
+import { ObjectsModule }                from './objects';
+import { EntitiesInterpolationModule }  from './entities.interpolate';
+import { EntitiesUpdateModule }         from './entities.update';
+import { ProjectileUpdateModule }       from './projectile';
 import {
     BoxBufferGeometry,
     MeshBasicMaterial,
@@ -42,6 +43,7 @@ let EntityModel = function(app)
 };
 
 extend(EntityModel.prototype, PlayerModule);
+extend(EntityModel.prototype, ObjectsModule);
 
 extend(EntityModel.prototype, {
 

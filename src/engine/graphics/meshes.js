@@ -278,6 +278,7 @@ let MeshesModule = {
         return clone;
     },
 
+    /** @deprecated */
     createGeometry(whatGeometry)
     {
         let geometry;
@@ -298,6 +299,7 @@ let MeshesModule = {
         return geometry;
     },
 
+    /** @deprecated */
     createMesh(geometry, material)
     {
         return new Mesh(geometry, material);

@@ -51,6 +51,27 @@ let Level0Objects = {
         const objects = [];
         const walls = this.generateDefaultWalls();
         objects.push(...walls);
+
+        const platforms = [
+            {
+                type: 'box',
+                position: [-10, 0, 1.5],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 0.5
+            },
+            {
+                type: 'box',
+                position: [-10, 5, 2.5],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 0.5
+            },
+        ];
+        objects.push(...platforms);
+
         this.objects = objects;
     }
 

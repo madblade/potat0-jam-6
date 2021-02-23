@@ -22,7 +22,7 @@ let Level0 = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, 0, 1.5],
+        position: [0, -10, 1.5],
         rotation: [0, 0, Math.PI]
     };
 
@@ -47,7 +47,7 @@ let Level0 = function(title, id)
                 const ne = {};
                 const idCup = backend
                     .entityModel
-                    .addNewBigCup(ne, 2, 2, 10, generated);
+                    .addNewBigCup(ne, 0, 0, 2, generated);
 
                 backend.updateEntities(ne);
             }

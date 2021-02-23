@@ -226,7 +226,7 @@ extend(CameraManager.prototype, {
         {
             cams.forEach((cam/*, cameraId*/) => {
                 cam.setCameraPosition(x, y, z);
-                cam.setThirdPerson();
+                // cam.setThirdPerson();
                 cam.addPositionTransform();
                 let mirrorCamera = cam.getRecorder();
                 if (mirrorCamera) {

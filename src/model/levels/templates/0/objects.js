@@ -1,8 +1,6 @@
 
 'use strict';
 
-import { Vector3 } from 'three';
-
 let Level0Objects = {
 
     generateDefaultWalls()
@@ -15,6 +13,9 @@ let Level0Objects = {
         return [
             {
                 type: 'box',
+                reflection: true,
+                image: true,
+                wall: true,
                 position: [0, mw2, wh2],
                 rotation: [0, 0, 0],
                 w: mapWidth,
@@ -23,6 +24,9 @@ let Level0Objects = {
             },
             {
                 type: 'box',
+                reflection: true,
+                image: true,
+                wall: true,
                 position: [0, -mw2, wh2],
                 rotation: [0, 0, 0],
                 w: mapWidth,
@@ -31,6 +35,9 @@ let Level0Objects = {
             },
             {
                 type: 'box',
+                reflection: true,
+                image: true,
+                wall: true,
                 position: [mw2, 0, wh2],
                 rotation: [0, 0, 0],
                 w: 2,
@@ -39,6 +46,9 @@ let Level0Objects = {
             },
             {
                 type: 'box',
+                reflection: true,
+                image: true,
+                wall: true,
                 position: [-mw2, 0, wh2],
                 rotation: [0, 0, 0],
                 w: 2,
@@ -57,6 +67,9 @@ let Level0Objects = {
         const platforms = [
             {
                 type: 'box',
+                reflection: true,
+                image: false,
+                platform: true,
                 position: [-10, 0, 1.5],
                 rotation: [0, 0, 0],
                 w: 1,
@@ -65,6 +78,9 @@ let Level0Objects = {
             },
             {
                 type: 'box',
+                reflection: true,
+                image: false,
+                platform: true,
                 position: [-10, 5, 2.5],
                 rotation: [0, 0, 0],
                 w: 1,

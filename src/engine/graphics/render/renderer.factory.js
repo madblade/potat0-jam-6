@@ -192,7 +192,7 @@ let RendererFactory = {
         let renderer = new WebGLRenderer({
             antialias: false,
             alpha: true,
-            logarithmicDepthBuffer: this.shadowVolumes
+            logarithmicDepthBuffer: true
             // precision: 'mediump'
         });
 

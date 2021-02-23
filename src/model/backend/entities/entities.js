@@ -14,8 +14,9 @@ import { ProjectileUpdateModule }       from './projectile';
 import {
     BoxBufferGeometry,
     MeshBasicMaterial,
+    MeshPhongMaterial,
     Vector3
-}                                      from 'three';
+} from 'three';
 
 let EntityModel = function(app)
 {
@@ -59,12 +60,16 @@ extend(EntityModel.prototype, {
                     const geo = new BoxBufferGeometry(
                         o.w, o.h, o.d, 2, 2, 2
                     );
-                    const mat = new MeshBasicMaterial(
-                        { wireframe: true, color: 0x000000 }
+                    let mat;
+                    if (o.wall) mat = new MeshPhongMaterial(
+                        { color: '#e5dddd' }
+                    );
+                    else if (o.platform) mat = new MeshBasicMaterial(
+                        { color: '#260f4c' }
                     );
                     const m = graphics.createMesh(geo, mat);
-                    m.userData.hasReflection = false;
-                    m.userData.hasPrimaryImage = true;
+                    m.userData.hasReflection = o.reflection;
+                    m.userData.hasPrimaryImage = o.image;
                     const p = o.position;
                     const r = o.rotation;
                     m.position.set(p[0], p[1], p[2]);
@@ -75,7 +80,6 @@ extend(EntityModel.prototype, {
                     break;
             }
         });
-        console.log('[Model/Entities] TODO bind entities to graphics and physics.');
     },
 
     refresh()

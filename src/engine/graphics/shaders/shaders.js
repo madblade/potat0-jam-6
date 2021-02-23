@@ -62,12 +62,18 @@ let ShadersModule = {
     // Footsteps
     getFootStepVertexShader()
     {
-        return FootStepVertex;
+        return `
+            #include <common>
+            ${FootStepVertex}
+        `;
     },
 
     getFootStepFragmentShader()
     {
-        return FootStepFragment;
+        return `
+            #include <common>
+            ${FootStepFragment}
+        `;
     },
 
     // Melee

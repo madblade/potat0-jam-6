@@ -8,16 +8,20 @@ import { Entity }           from './entity';
 import { ItemType }         from '../self/items';
 import { ShadersModule }    from '../../../engine/graphics/shaders/shaders';
 import {
+    // BackSide,
     BufferAttribute,
     BufferGeometry,
     DoubleSide,
     Line,
     LineDashedMaterial,
-    Mesh, MeshBasicMaterial,
-    Object3D, PlaneBufferGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    Object3D,
+    PlaneBufferGeometry,
     RingBufferGeometry,
-    ShaderMaterial
+    ShaderMaterial, UniformsLib
 } from 'three';
+import { UniformsUtils } from 'three/src/renderers/shaders/UniformsUtils';
 
 let ObjectsModule = {
 
@@ -80,18 +84,28 @@ let ObjectsModule = {
         const radius = 1.;
         const geometry = new PlaneBufferGeometry();
         const params = {
-            uniforms: {
-                time: { value: 0.0 },
-                radius: { value: radius },
-            },
+            uniforms: UniformsUtils.merge([
+                UniformsLib.common,
+                UniformsLib.specularmap,
+                UniformsLib.envmap,
+                UniformsLib.aomap,
+                UniformsLib.lightmap,
+                UniformsLib.fog,
+                {
+                    time: { value: 0.0 },
+                    radius: { value: radius },
+                }
+            ]),
             vertexShader: ShadersModule.getFootStepVertexShader(),
             fragmentShader: ShadersModule.getFootStepFragmentShader(),
             side: DoubleSide,
             transparent: true,
-            depthTest: false
+            // depthWrite: true,
+            // depthTest: false,
+            // wireframe: true
         };
         let material = new ShaderMaterial(params);
-        material = new MeshBasicMaterial({ color: 0xff0000 });
+        // material = new MeshBasicMaterial({ color: 0xff0000, side: DoubleSide, transparent: true });
 
         let footstepEffectMesh = new Mesh(
             geometry,
@@ -100,6 +114,7 @@ let ObjectsModule = {
         footstepEffectMesh.userData.bloom = false;
         footstepEffectMesh.userData.hasPrimaryImage = true;
         footstepEffectMesh.userData.hasReflection = false;
+        // footstepEffectMesh.renderOrder = 999;
         const wrapper = new Object3D();
         wrapper.add(footstepEffectMesh);
         wrapper.getMesh = () => footstepEffectMesh;

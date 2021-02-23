@@ -77,7 +77,7 @@ let Water = function(
             vertexShader: mirrorShader.vertexShader,
             uniforms: UniformsUtils.clone(mirrorShader.uniforms),
             lights: true,
-            transparent: true,
+            // transparent: true,
             side,
             fog,
             // wireframe: true

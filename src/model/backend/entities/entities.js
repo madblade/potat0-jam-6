@@ -13,6 +13,7 @@ import { EntitiesUpdateModule }         from './entities.update';
 import { ProjectileUpdateModule }       from './projectile';
 import {
     BoxBufferGeometry,
+    Mesh,
     MeshBasicMaterial,
     MeshPhongMaterial,
     Vector3
@@ -67,7 +68,7 @@ extend(EntityModel.prototype, {
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
                     );
-                    const m = graphics.createMesh(geo, mat);
+                    const m = new Mesh(geo, mat);
                     m.userData.hasReflection = o.reflection;
                     m.userData.hasPrimaryImage = o.image;
                     const p = o.position;

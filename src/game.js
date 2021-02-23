@@ -43,7 +43,6 @@ Game.Core = function()
         audio:        new AudioEngine(this),
         ai:           new AI(this),
         physics:      new Physics(this),
-        // TODO heightmap streaming / borders
         controls:     new UI(this),
         settings:     new Settings(this),
         // TODO graphics settings

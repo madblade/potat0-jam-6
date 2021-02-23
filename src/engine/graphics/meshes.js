@@ -99,14 +99,19 @@ let MeshesModule = {
     prepareBigCup(gltf)
     {
         let scene = SkeletonUtils.clone(gltf.scene);
-        let object = scene.children[0];
-        object.name = 'gltf0';
-        object.position.set(0, -0.15, 0.07);
-        object.scale.set(0.44, 0.44, 0.44);
+        let cup = scene.children[0];
+        let leftEye = scene.children[1];
+        let rightEye = scene.children[2];
+        cup.name = 'gltf0';
 
         let innerWrapper = new Object3D();
         innerWrapper.name = 'inner';
-        innerWrapper.add(object);
+        innerWrapper.add(cup);
+        innerWrapper.add(leftEye);
+        innerWrapper.add(rightEye);
+
+        innerWrapper.position.set(0, -0.5, 0);
+        innerWrapper.scale.set(0.4, 0.4, 0.4);
 
         let wrapper = new Object3D();
         wrapper.name = 'outer';

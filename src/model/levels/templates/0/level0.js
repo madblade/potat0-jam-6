@@ -42,6 +42,12 @@ let Level0 = function(title, id)
             {
                 ux.informPlayer('Go to checkpoint!');
                 // backend.addObject(); // static sphere to indicate objective
+
+                const ne = {};
+                backend
+                    .entityModel
+                    .addNewBigCup(ne, 2, 2, 10);
+                backend.updateEntities(ne);
             }
         },
         {

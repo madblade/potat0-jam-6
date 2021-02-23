@@ -195,7 +195,7 @@ let CoreModule = {
         animationEngine.refresh(deltaT);
 
         // Render.
-        this.render();
+        this.render(deltaT);
 
         // Bench.
         this.fps.update();
@@ -211,16 +211,15 @@ let CoreModule = {
         cameraManager.refresh();
     },
 
-    render()
+    render(deltaT)
     {
         let sceneManager = this.sceneManager;
         let cameraManager = this.cameraManager;
         let rendererManager = this.rendererManager;
-        let portals = this.app.model.backend.xModel.portals;
 
         // Perform rendering.
         rendererManager.render(
-            sceneManager, cameraManager, portals
+            sceneManager, cameraManager, deltaT
         );
     },
 

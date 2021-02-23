@@ -58,7 +58,7 @@ let RendererUpdates = {
         });
     },
 
-    updateFootsteps()
+    updateFootsteps(deltaT)
     {
         let sm = this.graphics.app.model.backend.selfModel;
         let footsteps = sm.footstepMeshes;
@@ -69,7 +69,11 @@ let RendererUpdates = {
             {
                 let fs = footsteps[i];
                 let us = fs.getMesh().material.uniforms;
-                // us.time.value += 0.1;
+                const deltaTInSecs = deltaT / 1e3;
+                // deltaT in seconds
+                const maxT = 1.; // max animation time
+                // time from 0 to 1
+                us.time.value += deltaTInSecs / maxT;
             }
         }
     },

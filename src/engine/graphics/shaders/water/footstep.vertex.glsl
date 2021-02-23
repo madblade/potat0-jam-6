@@ -10,12 +10,13 @@
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
-//uniform float time;
+uniform float time;
+varying vec3 vPosition;
+
 //varying vec2 vUv;
-//varying vec3 vPosition;
 void main()
 {
-//    vPosition = position;
+    vPosition = position;
 //    vUv = uv;
 
     #include <uv_vertex>

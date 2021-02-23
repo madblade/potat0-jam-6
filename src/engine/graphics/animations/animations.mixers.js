@@ -279,7 +279,7 @@ let AnimationMixers = {
         {
             // 0. check is on water
             if (cm.onWater) {
-                this.waterHit(entityModel, cm);
+                this.waterHit(entityModel, cm, deltaTInSeconds);
             }
         }
 
@@ -289,7 +289,7 @@ let AnimationMixers = {
         );
     },
 
-    waterHit(entityModel, cm)
+    waterHit(entityModel, cm) //, deltaTInSecs)
     {
         const fs = entityModel.footstepMeshes;
         const nbFS = fs.length;
@@ -297,7 +297,7 @@ let AnimationMixers = {
         const currentFS = fs[i];
         const mesh = currentFS.getMesh();
         let us = mesh.material.uniforms;
-        // us.time.value = 0.;
+        us.time.value = 0.;
         const p0 = cm.position0;
         mesh.position.set(
             p0.x, p0.y, p0.z - 0.7
@@ -382,7 +382,7 @@ let AnimationMixers = {
         {
             if (cm.hasJustLanded && cm.onWater)
             {
-                this.waterHit(entityModel, cm);
+                this.waterHit(entityModel, cm, deltaTInSecs);
             }
             cm.hasJustLanded = false;
             cm.isRecoveringFromLanding = true;

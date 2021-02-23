@@ -1,4 +1,7 @@
 
+uniform float time;
+varying vec3 vPosition;
+
 uniform vec3 diffuse;
 uniform float opacity;
 #ifndef FLAT_SHADED
@@ -43,7 +46,19 @@ void main() {
     reflectedLight.indirectDiffuse *= diffuseColor.rgb;
     vec3 outgoingLight = reflectedLight.indirectDiffuse;
     #include <envmap_fragment>
-    gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+//    gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+    vec3 center = vec3(0.);
+    float maxCircleRadius = 1.;
+    float currentCircleRadius = time * maxCircleRadius;
+    float fragmentDistanceToCenter = distance(center, vPosition);
+
+    float ifIAmSmallThenWhite = abs(currentCircleRadius - fragmentDistanceToCenter);
+
+    float toNaught = .05 - clamp(ifIAmSmallThenWhite, 0., .05);
+    float intensity = 2. * pow(toNaught, 2.);
+    gl_FragColor = vec4( 1., 1., 1., toNaught);
+
     #include <tonemapping_fragment>
     #include <encodings_fragment>
     #include <fog_fragment>

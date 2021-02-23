@@ -132,7 +132,7 @@ extend(RendererManager.prototype, {
         this.renderRegister = renderRegister;
     },
 
-    render(sceneManager, cameraManager)
+    render(sceneManager, cameraManager, deltaT)
     {
         if (this.stop) return;
         let renderer = this.renderer;
@@ -154,7 +154,7 @@ extend(RendererManager.prototype, {
         {
             this.updateSkies(mainCamera);
 
-            this.updateFootsteps();
+            this.updateFootsteps(deltaT);
 
             this.selectObjectsWithReflection(mainScene);
 

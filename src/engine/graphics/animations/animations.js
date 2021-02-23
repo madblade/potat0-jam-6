@@ -60,6 +60,11 @@ extend(AnimationManager.prototype, {
         this.updateTextLabels(deltaT);
     },
 
+    restore()
+    {
+        this.resetCameraFeedback();
+    },
+
     updateAnimations(deltaT)
     {
         const backend = this.graphics.app.model.backend;

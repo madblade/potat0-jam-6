@@ -197,6 +197,9 @@ let CoreModule = {
         // Render.
         this.render(deltaT);
 
+        // restore feedback / effects perturbation
+        animationEngine.restore();
+
         // Bench.
         this.fps.update();
     },

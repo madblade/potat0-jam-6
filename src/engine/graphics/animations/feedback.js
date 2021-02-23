@@ -11,11 +11,20 @@ let FeedbackModule = {
         const graphics = this.graphics;
         const mainCamera = graphics.cameraManager.mainCamera;
 
-        // TODO [CRIT] Here manage shaking and other effects.
         // (like camera lagging behind)
 
-        // correction camera vs wall
+        // TODO
+        //  0. save previous camera position @updateCameraPosition()
+        //  1. correction camera vs wall
+        //  2. smoothe camera position (go to target)
+
+        // XXX feedback shaking
     },
+
+    resetCameraFeedback()
+    {
+        // TODO revert camera position!
+    }
 
 };
 

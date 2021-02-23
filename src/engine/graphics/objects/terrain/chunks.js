@@ -7,6 +7,7 @@
 // import { VertexNormalsHelper }  from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {
     ArrowHelper,
+    AxesHelper,
     Mesh,
     MeshBasicMaterial,
     PlaneBufferGeometry,
@@ -79,12 +80,14 @@ let ChunksModule = {
         dh.sg3 = new Mesh(new SphereBufferGeometry(0.1),
             new MeshBasicMaterial({color:0x0000ff}));
         dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
+        dh.ah = new AxesHelper(5);
         window.dh = dh;
-        newMesh.add(dh.h);
-        newMesh.add(dh.s);
-        newMesh.add(dh.sg1);
-        newMesh.add(dh.sg2);
-        newMesh.add(dh.sg3);
+        newMesh.add(dh.ah);
+        // newMesh.add(dh.h);
+        // newMesh.add(dh.s);
+        // newMesh.add(dh.sg1);
+        // newMesh.add(dh.sg2);
+        // newMesh.add(dh.sg3);
     },
 
 };

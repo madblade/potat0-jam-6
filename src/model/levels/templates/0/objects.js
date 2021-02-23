@@ -5,38 +5,43 @@ let Level0Objects = {
 
     generateDefaultWalls()
     {
+        const mapWidth = 30;
+        const wallHeight = 10;
+
+        const mw2 = mapWidth / 2;
+        const wh2 = wallHeight / 2;
         return [
             {
                 type: 'box',
-                position: [0, 15, 5],
+                position: [0, mw2, wh2],
                 rotation: [0, 0, 0],
-                w: 30,
+                w: mapWidth,
                 h: 2,
-                d: 10
+                d: wallHeight
             },
             {
                 type: 'box',
-                position: [0, -15, 5],
+                position: [0, -mw2, wh2],
                 rotation: [0, 0, 0],
-                w: 30,
+                w: mapWidth,
                 h: 2,
-                d: 10
+                d: wallHeight
             },
             {
                 type: 'box',
-                position: [15, 0, 5],
+                position: [mw2, 0, wh2],
                 rotation: [0, 0, 0],
                 w: 2,
-                h: 30,
-                d: 10
+                h: mapWidth,
+                d: wallHeight
             },
             {
                 type: 'box',
-                position: [-15, 0, 5],
+                position: [-mw2, 0, wh2],
                 rotation: [0, 0, 0],
                 w: 2,
-                h: 30,
-                d: 10
+                h: mapWidth,
+                d: wallHeight
             },
         ];
     },

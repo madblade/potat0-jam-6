@@ -263,47 +263,61 @@ extend(Sweeper.prototype, {
         let nbIterations = 0;
         let b = false;
         let overlapping = [];
-        do {
-            // check x…
-            i = ix;
-            if (--i >= 0 && this.overlaps(axisX[i], center, delta, isStatic))
-                overlapping.push(axisX[i]);
-            else l[0] = true;
-            i = ix;
-            if (++i < axisX.length && this.overlaps(axisX[i], center, delta, isStatic))
-                overlapping.push(axisX[i]);
-            else l[1] = true;
-            // If left and right are out of range, no one else can overlap!
-            if (l[0] && l[1]) break;
 
-            // check y…
-            // redundancy is handled by the hashset check
-            i = iy;
-            if (--i >= 0 && this.overlaps(axisY[i], center, delta, isStatic))
-                overlapping.push(axisY[i]);
-            else l[2] = true;
-            i = iy;
-            if (++i < axisY.length && this.overlaps(axisY[i], center, delta, isStatic))
-                overlapping.push(axisY[i]);
-            else l[3] = true;
-            if (l[2] && l[3]) break;
+        if (!isStatic)
+        {
+            // dyn-to-dyn with comparable size
+            do {
+                // check x…
+                i = ix;
+                if (--i >= 0 && this.overlaps(axisX[i], center, delta, isStatic))
+                    overlapping.push(axisX[i]);
+                else l[0] = true;
+                i = ix;
+                if (++i < axisX.length && this.overlaps(axisX[i], center, delta, isStatic))
+                    overlapping.push(axisX[i]);
+                else l[1] = true;
+                // If left and right are out of range, no one else can overlap!
+                if (l[0] && l[1]) break;
 
-            // check z…
-            i = iz;
-            if (--i >= 0 && this.overlaps(axisZ[i], center, delta, isStatic))
-                overlapping.push(axisZ[i]);
-            else l[2] = true;
-            i = iz;
-            if (++i < axisZ.length && this.overlaps(axisZ[i], center, delta, isStatic))
-                overlapping.push(axisZ[i]);
-            else l[3] = true;
-            if (l[2] && l[3]) break;
+                // check y…
+                // redundancy is handled by the hashset check
+                i = iy;
+                if (--i >= 0 && this.overlaps(axisY[i], center, delta, isStatic))
+                    overlapping.push(axisY[i]);
+                else l[2] = true;
+                i = iy;
+                if (++i < axisY.length && this.overlaps(axisY[i], center, delta, isStatic))
+                    overlapping.push(axisY[i]);
+                else l[3] = true;
+                if (l[2] && l[3]) break;
 
-            b = l[4] && l[5];
+                // check z…
+                i = iz;
+                if (--i >= 0 && this.overlaps(axisZ[i], center, delta, isStatic))
+                    overlapping.push(axisZ[i]);
+                else l[2] = true;
+                i = iz;
+                if (++i < axisZ.length && this.overlaps(axisZ[i], center, delta, isStatic))
+                    overlapping.push(axisZ[i]);
+                else l[3] = true;
+                if (l[2] && l[3]) break;
+
+                b = l[4] && l[5];
+            }
+            while (!b && nbIterations++ < nbEntities / 2); // loop back if no axis is locked!
+
+            // n^2 collision with static
+            this.physicsEntities.forEach(otherEntity => {
+                if (!otherEntity.isStatic || otherEntity.isPlaceHolder) return;
+                if (this.overlaps(otherEntity, center, delta, isStatic))
+                    overlapping.push(otherEntity);
+            });
+
+            assert(nbIterations < 5, '[Sweeper] more than 5 iterations');
         }
-        while (!b && nbIterations++ < nbEntities / 2); // loop back if no axis is locked!
 
-        assert(nbIterations < 5, '[Sweeper] more than 5 iterations');
+
         return overlapping;
     },
 

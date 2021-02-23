@@ -128,15 +128,23 @@ extend(EntityModel.prototype, {
         // XXX [CLEANUP] graphical component and all meshes
     },
 
-    generateNewEntityID()
+    generateNewEntityID(entitiesAlreadyGenerated)
     {
         const ingame = this.entitiesIngame;
         const loading = this.entitiesLoading;
         let newID = 1;
         let tries = 0;
         const maxTries = 10000;
-        while (ingame.has(newID) && loading.has(newID) && ++tries < maxTries)
+        while (
+            (ingame.has(newID) || loading.has(newID) ||
+            ingame.has(newID.toString()) || loading.has(newID.toString()) ||
+            entitiesAlreadyGenerated && (entitiesAlreadyGenerated.indexOf(newID) > -1 ||
+            entitiesAlreadyGenerated.indexOf(newID.toString()) > -1)
+            ) && ++tries < maxTries
+        )
+        {
             newID++;
+        }
         if (tries >= maxTries) throw Error('[Entities] Too many entities.');
         return newID;
     },
@@ -144,6 +152,7 @@ extend(EntityModel.prototype, {
     addNewBigCup(newEntities, px, py, pz)
     {
         const newID = this.generateNewEntityID();
+        console.log(`NEW ID ${newID}`);
         newEntities[newID] = {
             p: new Vector3(px, py, pz),
             r: new Vector3(0, 0, 0),

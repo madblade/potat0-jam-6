@@ -300,7 +300,7 @@ let AnimationMixers = {
         us.time.value = 0.;
         const p0 = cm.position0;
         mesh.position.set(
-            p0.x, p0.y, p0.z - 0.7
+            p0.x, p0.y, p0.z - 0.7 + 0.001 * i
         );
 
         entityModel.currentFootStep++;

@@ -19,7 +19,7 @@ import {
 }                               from 'three';
 
 const DEFAULT_CAMERA = {
-    fov: 90,
+    fov: 75,
     aspect: window.innerWidth / window.innerHeight,
     near: 0.0001,
     far: 100000

@@ -271,9 +271,19 @@ let AnimationMixers = {
         bounceAmount *= cr;
         entityModel.setBounceAmount(bounceAmount);
 
+        const oldTime = mixer.time;
+        const newTime = smoothed * cycleDuration;
+        const normO = oldTime / cycleDuration;
+        const normN = newTime / cycleDuration;
+        if (normO < .25 && normN > .25 || normO < .75 && normN > .75)
+        {
+            // TODO 1. copy last plouf to foot
+            //   2. reset plouf time
+        }
+
         // Apply.
         mixer.setTime(
-            smoothed * cycleDuration
+            newTime
         );
     },
 

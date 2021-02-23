@@ -144,11 +144,13 @@ let SkyModule = {
         let phi = skyObject.phi || 0;
         let theta = this.theta;
 
-        phi %= 2 * Math.PI;
+        phi = Math.PI / 3.5;
+        theta = Math.PI / 8;
+        // phi %= 2 * Math.PI;
         // let dist = Math.max(0.1,
         // Math.min(Math.abs(Math.PI - phi),
         // Math.abs(phi)) / Math.PI); // in (0,1)
-        phi += 0.000101; // * dist;
+        // phi += 0.000101; // * dist;
         // phi = Math.PI / 2; // * dist;
         skyObject.phi = phi;
 

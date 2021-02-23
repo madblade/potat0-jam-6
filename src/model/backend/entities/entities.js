@@ -62,10 +62,10 @@ extend(EntityModel.prototype, {
                     );
                     let mat;
                     if (o.wall) mat = new MeshPhongMaterial(
-                        { color: '#e5dddd' }
+                        { color: '#d2d2d2' }
                     );
                     else if (o.platform) mat = new MeshBasicMaterial(
-                        { color: '#260f4c' }
+                        { color: '#797979' }
                     );
                     const m = graphics.createMesh(geo, mat);
                     m.userData.hasReflection = o.reflection;

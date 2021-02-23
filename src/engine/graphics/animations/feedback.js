@@ -13,6 +13,8 @@ let FeedbackModule = {
 
         // TODO [CRIT] Here manage shaking and other effects.
         // (like camera lagging behind)
+
+        // correction camera vs wall
     },
 
 };

@@ -32,6 +32,15 @@ let SelfObjectsModule = {
             'hello.', 0, selfModel
         );
 
+        // footsteps
+        this.footstepMeshes = [];
+        let em = this.app.model.backend.entityModel;
+        for (let i = 0; i < 4; ++i)
+        {
+            const meleeEffectMesh = em.createMeleeMesh();
+            this.footstepMeshes.push(meleeEffectMesh);
+        }
+
         // XXX Init IK targets here as well.
 
         // Change eye color.

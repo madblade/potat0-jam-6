@@ -43,7 +43,6 @@ let RendererUpdates = {
 
             if (obj.userData.hasPrimaryImage === true)
             {
-                console.log(obj.uuid);
                 obj.visible = true;
             }
             else
@@ -57,6 +56,22 @@ let RendererUpdates = {
         skies.forEach((sky, worldId) => {
             this.graphics.updateSunPosition(mainCamera, sky, worldId);
         });
+    },
+
+    updateFootsteps()
+    {
+        let sm = this.graphics.app.model.backend.selfModel;
+        let footsteps = sm.footstepMeshes;
+        if (!footsteps) return;
+        else
+        {
+            for (let i = 0; i < footsteps.length; ++i)
+            {
+                let fs = footsteps[i];
+                let us = fs.getMesh().material.uniforms;
+                us.time.value += 0.1;
+            }
+        }
     },
 
     updateWaterReflection(

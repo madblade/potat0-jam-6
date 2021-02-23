@@ -154,6 +154,8 @@ extend(RendererManager.prototype, {
         {
             this.updateSkies(mainCamera);
 
+            this.updateFootsteps();
+
             this.selectObjectsWithReflection(mainScene);
 
             if (this.waterReflection)

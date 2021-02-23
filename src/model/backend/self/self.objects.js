@@ -19,7 +19,7 @@ let SelfObjectsModule = {
         const worldId = selfModel.worldId;
 
         const up = graphics.loadReferenceMeshFromMemory(
-            'shiro', false, true
+            'tato', false, true
         );
         selfModel.avatar = up;
 

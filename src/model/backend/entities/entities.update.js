@@ -44,6 +44,14 @@ let EntitiesUpdateModule = {
                 this.loadSkeletalEntity(id, updatedEntity, entities);
                 break;
 
+            case 'bigcup':
+                this.loadBigCupEntity(id, updatedEntity, entities);
+                break;
+
+            case 'littlecup':
+                this.loadLittleCupEntity(id, updatedEntity, entities);
+                break;
+
             case 'projectile':
                 this.loadArrow(id, updatedEntity, entities);
                 break;

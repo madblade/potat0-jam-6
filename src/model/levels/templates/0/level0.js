@@ -71,7 +71,7 @@ let Level0 = function(title, id)
                         newEntities[k] = {
                             p: new Vector3(i, j, 10),
                             r: new Vector3(0, 0, 0),
-                            k: 'ia'
+                            k: 'bigcup'
                         };
                     }
                 backend.updateEntities(newEntities);

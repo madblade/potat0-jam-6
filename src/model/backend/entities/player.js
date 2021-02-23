@@ -223,7 +223,7 @@ let PlayerModule = {
     {
         const graphics = this.app.engine.graphics;
         const object3D = graphics.loadReferenceMeshFromMemory(
-            'shiro', false, true
+            'tato', false, true
         );
 
         // model
@@ -245,7 +245,40 @@ let PlayerModule = {
         // notify physics
         let physics = this.app.engine.physics;
         physics.addCharacterController(entity);
-    }
+    },
+
+    loadBigCupEntity(id, updatedEntity, entities)
+    {
+        const graphics = this.app.engine.graphics;
+        const object3D = graphics.loadReferenceMeshFromMemory(
+            'bigcup', false, true
+        );
+
+        // model
+        let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
+
+        // init animation with eyes target?
+        // const animations = graphics.animationManager;
+        // animations.addSkinnedEntityAnimation(
+        //     id, object3D, entity.animationComponent
+        // );
+
+        // add to graphics
+        graphics.addToScene(entity.getObject3D(), entity.getWorldId());
+
+        // update model
+        this.updateEntity(id, entity, updatedEntity, graphics, entities);
+        this.entitiesLoading.delete(id);
+
+        // notify physics
+        let physics = this.app.engine.physics;
+        physics.addCharacterController(entity);
+    },
+
+    loadLittleCupEntity(id, updatedEntity, entities)
+    {
+        // TODO [CRIT]
+    },
 
 };
 

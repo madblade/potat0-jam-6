@@ -4,7 +4,10 @@
 
 'use strict';
 
-import Shiro                from '../../assets/models/teishiro.glb';
+import Tato                 from '../../assets/models/tato-compact.glb';
+import BigCup               from '../../assets/models/bigcup.glb';
+import LittleCup            from '../../assets/models/littlecup.glb';
+import Axolotl              from '../../assets/models/axolotl.glb';
 import { ItemType }         from '../../model/backend/self/items';
 import { GLTFLoader }       from 'three/examples/jsm/loaders/GLTFLoader';
 import { SkeletonUtils }    from 'three/examples/jsm/utils/SkeletonUtils';
@@ -24,7 +27,10 @@ let MeshesModule = {
     {
         this.referenceMeshes = new Map();
         let meshesToLoad = new Map([
-            ['shiro', Shiro]
+            ['tato', Tato],
+            ['bigcup', BigCup],
+            ['littlecup', LittleCup],
+            ['axolotl', Axolotl]
         ]);
         this._nbMeshesToLoad = meshesToLoad.size;
 
@@ -44,9 +50,14 @@ let MeshesModule = {
     {
         const loadingState = this.app.state.getState('loading');
         loader.load(path, gltf => {
-            if (path === Shiro)
+            if (path === Tato)
             {
                 this.finalizeMainCharacter(gltf, successCallback);
+            }
+            else
+            {
+                // TODO [CRIT] finalize other meshes
+                successCallback();
             }
         }, () => {
             loadingState.notifyTaskName('mesh');
@@ -164,11 +175,11 @@ let MeshesModule = {
             );
 
         let clone;
-        if (id !== 'shiro') clone = cloneGeometry ? mesh.clone() : mesh;
+        if (id !== 'tato') clone = cloneGeometry ? mesh.clone() : mesh;
         // clone allows to reuse objects (but then the morph targets are reset)
         // so use only for arrows in this setup.
 
-        if (id === 'shiro')
+        if (id === 'tato')
         {
             clone = this.prepareMainCharacter(mesh);
         }

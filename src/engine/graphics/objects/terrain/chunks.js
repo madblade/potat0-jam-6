@@ -83,7 +83,7 @@ let ChunksModule = {
         dh.ah = new AxesHelper(5);
         window.dh = dh;
         // newMesh.add(dh.ah);
-        // newMesh.add(dh.h);
+        newMesh.add(dh.h);
         // newMesh.add(dh.s);
         // newMesh.add(dh.sg1);
         // newMesh.add(dh.sg2);

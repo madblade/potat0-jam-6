@@ -49,6 +49,7 @@ let ChunksModule = {
         const isWater = chunk.isWater;
         let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
         if (!isWater) newMesh.receiveShadow = true;
+        newMesh.userData.hasPrimaryImage = true;
 
         // debug
         newMesh.material = new MeshBasicMaterial({

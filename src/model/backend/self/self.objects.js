@@ -51,9 +51,9 @@ let SelfObjectsModule = {
             // eyes.material.color.set(0xffffff);
             // eyes.material.emissive.set(0xffffff);
             eyes.material = new MeshBasicMaterial({
-                color: 0xffffff,
+                color: '#7b9bbc',
             });
-            eyes.userData.bloom = true;
+            // eyes.userData.bloom = true;
         } catch (e)
         {
             console.error('[Self/Objetts] Invalid skeleton hierarchy.');

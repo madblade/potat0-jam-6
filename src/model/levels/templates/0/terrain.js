@@ -27,7 +27,8 @@ let Level0Terrain = {
             x: 0, y: 0, z: 0,
             nbSegmentsX, nbSegmentsY,
             widthX, widthY,
-            points, isWater: false
+            points,
+            isWater: true
         });
 
         this.terrain = {

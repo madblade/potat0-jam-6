@@ -25,6 +25,8 @@ let SkyModule = {
         // Mesh
         let sky = new SkyFlat();
         sky.scale.setScalar(450000);
+        sky.userData.hasPrimaryImage = true;
+        sky.userData.hasReflection = true;
 
         // Light
         let lights = this.createSkyLight(

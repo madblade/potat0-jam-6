@@ -77,7 +77,8 @@ extend(ChunkModel.prototype, {
         {
             let currentWorld = worlds[i];
             let wid = currentWorld.id;
-            this.worlds.set(wid, new Map()); // world id -> world = map[chunk id -> chunk]
+            this.worlds.set(wid, new Map());
+            // ^  world id -> world = map[chunk id -> chunk]
             // graphics.addScene(wid);
             if (currentWorld.sky === 'standard')
             {

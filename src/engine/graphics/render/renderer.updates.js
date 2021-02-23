@@ -24,6 +24,33 @@ let RendererUpdates = {
         }
     },
 
+    selectObjectsWithReflection(scene)
+    {
+        scene.traverse(obj => {
+            if (!obj.isMesh) return;
+
+            if (obj.userData.hasReflection === true) // enforce type
+                obj.visible = true;
+            else
+                obj.visible = false;
+        });
+    },
+
+    selectObjectsWithPrimaryImage(scene)
+    {
+        scene.traverse(obj => {
+            if (!obj.isMesh) return;
+
+            if (obj.userData.hasPrimaryImage === true)
+            {
+                console.log(obj.uuid);
+                obj.visible = true;
+            }
+            else
+                obj.visible = false;
+        });
+    },
+
     updateSkies(mainCamera)
     {
         let skies = this.graphics.app.model.backend.chunkModel.skies;
@@ -37,7 +64,8 @@ let RendererUpdates = {
     )
     {
         // get main
-        let currentWid = this.graphics.app.model.backend.selfModel.worldId.toString();
+        const backend = this.graphics.app.model.backend;
+        let currentWid = backend.selfModel.worldId.toString();
         if (currentWid === '-1')
             this.updateWaters(cameraManager, renderer, mainScene, mainCamera);
         else

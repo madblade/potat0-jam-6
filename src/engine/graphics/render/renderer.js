@@ -154,8 +154,12 @@ extend(RendererManager.prototype, {
         {
             this.updateSkies(mainCamera);
 
+            this.selectObjectsWithReflection(mainScene);
+
             if (this.waterReflection)
                 this.updateWaterReflection(cameraManager, renderer, mainScene, mainCamera, renderRegister);
+
+            this.selectObjectsWithPrimaryImage(mainScene);
 
             if (this.shadowVolumes)
                 this.updateShadows(cameraManager, renderer, mainScene, mainCamera);

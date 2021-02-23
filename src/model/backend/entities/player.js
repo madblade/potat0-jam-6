@@ -14,6 +14,10 @@ let PlayerModule = {
         const object3D = graphics.loadReferenceMeshFromMemory(
             'tato', false, true
         );
+        object3D.traverse(o => {
+            if (!o.isMesh) return;
+            o.userData.hasPrimaryImage = true;
+        });
 
         // model
         let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));

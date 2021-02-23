@@ -63,6 +63,8 @@ extend(EntityModel.prototype, {
                         { wireframe: true, color: 0x000000 }
                     );
                     const m = graphics.createMesh(geo, mat);
+                    m.userData.hasReflection = false;
+                    m.userData.hasPrimaryImage = true;
                     const p = o.position;
                     const r = o.rotation;
                     m.position.set(p[0], p[1], p[2]);

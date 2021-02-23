@@ -80,6 +80,11 @@ let MeshesModule = {
         object.name = 'gltf0';
         object.position.set(0, -0.15, 0.07);
         object.scale.set(0.44, 0.44, 0.44);
+        object.traverse(o => {
+            if (!o.isMesh) return;
+            o.userData.hasPrimaryImage = true;
+            o.userData.hasReflection = true;
+        });
 
         let innerWrapper = new Object3D();
         innerWrapper.name = 'inner';

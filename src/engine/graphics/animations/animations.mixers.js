@@ -303,6 +303,9 @@ let AnimationMixers = {
             p0.x, p0.y, p0.z - 0.7 + 0.001 * i
         );
 
+        const audio = this.graphics.app.engine.audio;
+        audio.playFootstepSound();
+
         entityModel.currentFootStep++;
         entityModel.currentFootStep %= nbFS;
     },

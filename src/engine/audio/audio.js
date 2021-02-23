@@ -177,6 +177,12 @@ extend(AudioEngine.prototype, {
         // validateAudio.play();
     },
 
+    playFootstepSound()
+    {
+        // TODO bind footstep
+        this.playMenuSound();
+    },
+
     playMenuSound()
     {
         this._resume();

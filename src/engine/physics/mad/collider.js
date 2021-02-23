@@ -226,6 +226,7 @@ extend(Collider.prototype, {
                 {
                     // Reset jump flag.
                     cm.onGround = false;
+                    cm.onWater = false;
                     // cm.isJumping = false;
                     mustStepDown = false;
                 }

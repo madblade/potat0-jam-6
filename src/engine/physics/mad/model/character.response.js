@@ -152,6 +152,9 @@ let CharacterResponseModule = {
                     liftR, gravityUp);
                 this.lift(displacement, false, readOnly);
             }
+
+        if (this.wasLifted && heightMap.isWater)
+            this.onWater = true;
     },
 
     bumpAgainstTrimesh(
@@ -417,6 +420,7 @@ let CharacterResponseModule = {
         if (!this.wasLiftedByAStaticObject && !this.wasLifted)
         {
             this.onGround = false;
+            this.onWater = false;
             this.wasOnGround = false;
             return;
         }

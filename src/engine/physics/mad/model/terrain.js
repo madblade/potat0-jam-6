@@ -18,11 +18,12 @@ const HeightMapConstants = {
 };
 
 // This does not extend CollisionModel.
-let HeightMapModel = function(i, j, nbVerticesX, nbVerticesY)
+let HeightMapModel = function(i, j, nbVerticesX, nbVerticesY, isWater)
 {
     this.isAnalytic = false; // the most efficient
     this.isHeightBuffer = false; // implicit triangulation
     this.isTrimeshMap = true; // default. explicit vertices, implicit world transform
+    this.isWater = isWater;
 
     this.isAxisAligned = false;
     this.x = i;

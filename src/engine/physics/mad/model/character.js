@@ -177,6 +177,7 @@ extend(CharacterCollisionModel.prototype, {
 
         // Heightmaps are checked after statics.
         this.onGround = this.wasLifted || this.wasLiftedByAStaticObject;
+        if (!this.onGround) this.onWater = false;
 
         if (!this.onGround && this.wasOnGround)
         {

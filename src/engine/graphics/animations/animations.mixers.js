@@ -277,14 +277,24 @@ let AnimationMixers = {
         const normN = newTime / cycleDuration;
         if (normO < .25 && normN > .25 || normO < .75 && normN > .75)
         {
-            // TODO 1. copy last plouf to foot
-            //   2. reset plouf time
+            // 0. check is on water
+            if (cm.onWater) {
+                this.waterHit();
+            }
         }
 
         // Apply.
         mixer.setTime(
             newTime
         );
+    },
+
+    waterHit()
+    {
+        // TODO
+        //   1. copy last plouf to foot
+        //   2. reset plouf time
+        console.log('water flop');
     },
 
     updatePrepareJump(
@@ -360,6 +370,10 @@ let AnimationMixers = {
 
         if (cm.hasJustLanded || cm.isRecoveringFromLanding)
         {
+            if (cm.hasJustLanded && cm.onWater)
+            {
+                this.waterHit();
+            }
             cm.hasJustLanded = false;
             cm.isRecoveringFromLanding = true;
 

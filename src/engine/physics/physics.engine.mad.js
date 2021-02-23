@@ -76,7 +76,8 @@ extend(MadEngine.prototype, {
 
         const nbVerticesX = heightMapOptions.nbSegmentsX + 1;
         const nbVerticesY = heightMapOptions.nbSegmentsY + 1;
-        const newMap = new HeightMapModel(i, j, nbVerticesX, nbVerticesY);
+        const isWater = heightMapOptions.isWater;
+        const newMap = new HeightMapModel(i, j, nbVerticesX, nbVerticesY, isWater);
 
         if (heightMapOptions.threeMesh)
         {

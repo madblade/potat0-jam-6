@@ -144,7 +144,7 @@ extend(ChunkModel.prototype, {
 
         // Add to physics.
         let physics = this.app.engine.physics;
-        physics.addHeightMap(graphicalChunk, chunk.nbSegmentsX, chunk.nbSegmentsY);
+        physics.addHeightMap(graphicalChunk, chunk.nbSegmentsX, chunk.nbSegmentsY, chunk.isWater);
     },
 
     refresh()

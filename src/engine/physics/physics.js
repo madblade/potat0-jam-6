@@ -45,13 +45,13 @@ extend(Physics.prototype, {
         return dt;
     },
 
-    addHeightMap(graphicalChunk, nbSegmentsX, nbSegmentsY)
+    addHeightMap(graphicalChunk, nbSegmentsX, nbSegmentsY, isWater)
     {
         // XXX Uncomment here to bench bullet physics
-        console.log(`[Physics] Should add ${graphicalChunk}.`);
+        // console.log(`[Physics] Should add ${graphicalChunk}.`);
         // this.bulletEngine.addHeightMap(graphicalChunk);
         this.madEngine.addHeightMap(0, 0, {
-            threeMesh: graphicalChunk, nbSegmentsX, nbSegmentsY
+            threeMesh: graphicalChunk, nbSegmentsX, nbSegmentsY, isWater
         });
     },
 

@@ -63,16 +63,21 @@ let Level0 = function(title, id)
 
                 // add entity (id = 1)
                 const newEntities = {};
-                let k = 0;
+                // let k = 0;
+                // const bigCupID =
+                backend.entityModel
+                    .addNewBigCup(newEntities, 0, 0, 10);
+
                 for (let i = 1; i < 2; ++i)
                     for (let j = 1; j < 2; ++j)
                     {
-                        k++;
-                        newEntities[k] = {
-                            p: new Vector3(i, j, 10),
-                            r: new Vector3(0, 0, 0),
-                            k: 'bigcup'
-                        };
+                        // TODO [CRIT] add little cups
+                        // k++;
+                        // newEntities[k] = {
+                        //     p: new Vector3(i, j, 10),
+                        //     r: new Vector3(0, 0, 0),
+                        //     k: 'bigcup'
+                        // };
                     }
                 backend.updateEntities(newEntities);
             }

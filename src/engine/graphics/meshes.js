@@ -57,7 +57,8 @@ let MeshesModule = {
             else
             {
                 // TODO [CRIT] finalize other meshes
-                successCallback();
+                if (successCallback)
+                    successCallback(gltf);
             }
         }, () => {
             loadingState.notifyTaskName('mesh');
@@ -89,6 +90,69 @@ let MeshesModule = {
         wrapper.name = 'outer';
         wrapper.add(innerWrapper);
         wrapper.userData.animations = gltf.animations;
+
+        wrapper.getInnerObject = () => innerWrapper;
+
+        return wrapper;
+    },
+
+    prepareBigCup(gltf)
+    {
+        let scene = SkeletonUtils.clone(gltf.scene);
+        let object = scene.children[0];
+        object.name = 'gltf0';
+        object.position.set(0, -0.15, 0.07);
+        object.scale.set(0.44, 0.44, 0.44);
+
+        let innerWrapper = new Object3D();
+        innerWrapper.name = 'inner';
+        innerWrapper.add(object);
+
+        let wrapper = new Object3D();
+        wrapper.name = 'outer';
+        wrapper.add(innerWrapper);
+
+        wrapper.getInnerObject = () => innerWrapper;
+
+        return wrapper;
+    },
+
+    prepareLittleCup(gltf)
+    {
+        let scene = SkeletonUtils.clone(gltf.scene);
+        let object = scene.children[0];
+        object.name = 'gltf0';
+        object.position.set(0, -0.15, 0.07);
+        object.scale.set(0.44, 0.44, 0.44);
+
+        let innerWrapper = new Object3D();
+        innerWrapper.name = 'inner';
+        innerWrapper.add(object);
+
+        let wrapper = new Object3D();
+        wrapper.name = 'outer';
+        wrapper.add(innerWrapper);
+
+        wrapper.getInnerObject = () => innerWrapper;
+
+        return wrapper;
+    },
+
+    prepareAxolotl(gltf)
+    {
+        let scene = SkeletonUtils.clone(gltf.scene);
+        let object = scene.children[0];
+        object.name = 'gltf0';
+        object.position.set(0, -0.15, 0.07);
+        object.scale.set(0.44, 0.44, 0.44);
+
+        let innerWrapper = new Object3D();
+        innerWrapper.name = 'inner';
+        innerWrapper.add(object);
+
+        let wrapper = new Object3D();
+        wrapper.name = 'outer';
+        wrapper.add(innerWrapper);
 
         wrapper.getInnerObject = () => innerWrapper;
 
@@ -175,13 +239,26 @@ let MeshesModule = {
             );
 
         let clone;
-        if (id !== 'tato') clone = cloneGeometry ? mesh.clone() : mesh;
+        // if (id !== 'tato') clone = cloneGeometry ? mesh.clone() : mesh;
         // clone allows to reuse objects (but then the morph targets are reset)
         // so use only for arrows in this setup.
 
-        if (id === 'tato')
+        switch (id)
         {
-            clone = this.prepareMainCharacter(mesh);
+            case 'tato':
+                clone = this.prepareMainCharacter(mesh);
+                break;
+            case 'bigcup':
+                clone = this.prepareBigCup(mesh);
+                break;
+            case 'littlecup':
+                clone = this.prepareLittleCup(mesh);
+                break;
+            case 'axolotl':
+                clone = this.prepareAxolotl(mesh);
+                break;
+            default:
+                clone = cloneGeometry ? mesh.clone() : mesh;
         }
 
         clone.rotation.reorder('ZYX');

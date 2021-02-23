@@ -236,7 +236,8 @@ extend(Integrator.prototype, {
         {
             const em = app.model.backend.entityModel;
             const updates = {};
-            updates[entity.entityId] = {
+            const originalId = entity.modelId;
+            updates[originalId] = {
                 p: cm.position0,
                 r: cm.rotation0,
                 w: -1,

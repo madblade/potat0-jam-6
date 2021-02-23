@@ -63,8 +63,8 @@ let AnimationMixers = {
             '[Mixers] Animation not properly initialized.'
         );
         const actions = animationComponent.actions;
-        assert('Walking' in actions,
-            '[Mixers] Walking animation not found.'
+        assert('Running' in actions,
+            '[Mixers] Running animation not found.'
         );
 
         const cm = entityModel.physicsEntity.collisionModel;

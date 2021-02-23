@@ -11,6 +11,7 @@ let PhysicsInputModule = {
     addCharacterController(entityModel)
     {
         const position = entityModel.position;
+        const originalId = entityModel.id;
         const options = {
             intelligent: true,
             static: false,
@@ -21,7 +22,7 @@ let PhysicsInputModule = {
             // lifterRadius: 0.00004
         };
 
-        const pe = this.addPhysicsEntity(position, options);
+        const pe = this.addPhysicsEntity(position, options, originalId);
         entityModel.physicsEntity = pe;
     },
 

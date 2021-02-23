@@ -120,10 +120,10 @@ extend(MadEngine.prototype, {
     //      'terrain'/analytic/axis-aligned/trimesh, 'character'
     //      static: bool
     //      intelligent: bool
-    addPhysicsEntity(center, options)
+    addPhysicsEntity(center, options, originalId)
     {
         let entityId = this.sweeper.reserveEntityId(); // from 0 to length
-        let entity = new PhysicsEntity(entityId, center);
+        let entity = new PhysicsEntity(entityId, center, originalId);
 
         let collisionModel;
         if (options.character)

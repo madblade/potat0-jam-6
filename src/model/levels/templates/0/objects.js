@@ -1,6 +1,8 @@
 
 'use strict';
 
+import { Vector3 } from 'three';
+
 let Level0Objects = {
 
     generateDefaultWalls()
@@ -73,7 +75,7 @@ let Level0Objects = {
         objects.push(...platforms);
 
         this.objects = objects;
-    }
+    },
 
 };
 

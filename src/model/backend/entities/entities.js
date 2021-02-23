@@ -11,8 +11,8 @@ import { EntitiesInterpolationModule } from './entities.interpolate';
 import { EntitiesUpdateModule }        from './entities.update';
 import {
     BoxBufferGeometry,
-    MeshBasicMaterial
-}                                      from 'three';
+    MeshBasicMaterial, Vector3
+} from 'three';
 import { ProjectileUpdateModule }      from './projectile';
 
 let EntityModel = function(app)
@@ -126,6 +126,30 @@ extend(EntityModel.prototype, {
         this.entitiesLoading.clear();
         this.needsUpdate = false;
         // XXX [CLEANUP] graphical component and all meshes
+    },
+
+    generateNewEntityID()
+    {
+        const ingame = this.entitiesIngame;
+        const loading = this.entitiesLoading;
+        let newID = 1;
+        let tries = 0;
+        const maxTries = 10000;
+        while (ingame.has(newID) && loading.has(newID) && ++tries < maxTries)
+            newID++;
+        if (tries >= maxTries) throw Error('[Entities] Too many entities.');
+        return newID;
+    },
+
+    addNewBigCup(newEntities, px, py, pz)
+    {
+        const newID = this.generateNewEntityID();
+        newEntities[newID] = {
+            p: new Vector3(px, py, pz),
+            r: new Vector3(0, 0, 0),
+            k: 'bigcup'
+        };
+        return newID;
     }
 
 });

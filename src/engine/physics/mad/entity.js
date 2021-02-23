@@ -13,10 +13,12 @@ import { Vector3 }        from 'three';
 // Generic entity that can collide.
 let PhysicsEntity = function(
     entityId,
-    center
+    center,
+    originalId
 )
 {
     this.entityId = entityId;
+    this.modelId = originalId;
     this.indexOnXArray = 0;
     this.indexOnYArray = 0;
     this.indexOnZArray = 0;

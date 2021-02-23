@@ -88,8 +88,8 @@ extend(Integrator.prototype, {
                 cm.timeSinceJumpStarted = 0;
                 cm.numberOfIterationsInAir = 0;
                 // const jumpHeight = 2.5; // 0.72 -> 6.969
-                const jumpHeight = 2.5; // 0.72 -> 6.969
-                const rh = jumpHeight - 1.969; // + 0.72;
+                const jumpHeight = 4.5; // 0.72 -> 6.969
+                const rh = jumpHeight - 1.969; // + 0.72;e
                 const targetA0 = 2 * rh / (relativeDt * relativeDt);
                 a0.z = targetA0 / 4;
                 // const targetV0 = 2 * rh / (relativeDt);

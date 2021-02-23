@@ -87,6 +87,11 @@ let GamepadActionModule = {
             const sm = this.app.state;
             sm.navigate('back'); // go up once
         }
+        else
+        {
+            let cm = this.app.model.frontend;
+            cm.triggerEvent('m', isPressed ? 'u' : 'ux');
+        }
     },
 
     crossButton(isPressed)

@@ -82,7 +82,7 @@ let ChunksModule = {
         dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
         dh.ah = new AxesHelper(5);
         window.dh = dh;
-        newMesh.add(dh.ah);
+        // newMesh.add(dh.ah);
         // newMesh.add(dh.h);
         // newMesh.add(dh.s);
         // newMesh.add(dh.sg1);

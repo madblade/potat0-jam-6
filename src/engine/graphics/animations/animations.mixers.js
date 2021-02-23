@@ -279,7 +279,7 @@ let AnimationMixers = {
         {
             // 0. check is on water
             if (cm.onWater) {
-                this.waterHit();
+                this.waterHit(entityModel, cm);
             }
         }
 
@@ -289,12 +289,22 @@ let AnimationMixers = {
         );
     },
 
-    waterHit()
+    waterHit(entityModel, cm)
     {
-        // TODO
-        //   1. copy last plouf to foot
-        //   2. reset plouf time
-        console.log('water flop');
+        const fs = entityModel.footstepMeshes;
+        const nbFS = fs.length;
+        const i = entityModel.currentFootStep;
+        const currentFS = fs[i];
+        const mesh = currentFS.getMesh();
+        let us = mesh.material.uniforms;
+        // us.time.value = 0.;
+        const p0 = cm.position0;
+        mesh.position.set(
+            p0.x, p0.y, p0.z - 0.7
+        );
+
+        entityModel.currentFootStep++;
+        entityModel.currentFootStep %= nbFS;
     },
 
     updatePrepareJump(
@@ -372,7 +382,7 @@ let AnimationMixers = {
         {
             if (cm.hasJustLanded && cm.onWater)
             {
-                this.waterHit();
+                this.waterHit(entityModel, cm);
             }
             cm.hasJustLanded = false;
             cm.isRecoveringFromLanding = true;

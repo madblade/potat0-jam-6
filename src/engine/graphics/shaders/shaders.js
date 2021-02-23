@@ -19,6 +19,8 @@ import SkyFlatVertex        from './sky/skyFlat.vertex.glsl';
 // Water
 import WaterFragment        from './water/water.fragment.glsl';
 import WaterVertex          from './water/water.vertex.glsl';
+import FootStepVertex       from './water/footstep.vertex.glsl';
+import FootStepFragment     from './water/footstep.fragment.glsl';
 import OceanFragment        from './water/ocean.fragment.glsl';
 import OceanVertex          from './water/ocean.vertex.glsl';
 
@@ -55,6 +57,17 @@ let ShadersModule = {
     getPortalFragmentShader()
     {
         return PortalFragment;
+    },
+
+    // Footsteps
+    getFootStepVertexShader()
+    {
+        return FootStepVertex;
+    },
+
+    getFootStepFragmentShader()
+    {
+        return FootStepFragment;
     },
 
     // Melee

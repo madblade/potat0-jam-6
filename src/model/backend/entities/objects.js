@@ -13,11 +13,11 @@ import {
     DoubleSide,
     Line,
     LineDashedMaterial,
-    Mesh,
-    Object3D,
+    Mesh, MeshBasicMaterial,
+    Object3D, PlaneBufferGeometry,
     RingBufferGeometry,
     ShaderMaterial
-}                           from 'three';
+} from 'three';
 
 let ObjectsModule = {
 
@@ -75,6 +75,38 @@ let ObjectsModule = {
     //
     // Unused.
 
+    createFootStepMesh()
+    {
+        const radius = 1.;
+        const geometry = new PlaneBufferGeometry();
+        const params = {
+            uniforms: {
+                time: { value: 0.0 },
+                radius: { value: radius },
+            },
+            vertexShader: ShadersModule.getFootStepVertexShader(),
+            fragmentShader: ShadersModule.getFootStepFragmentShader(),
+            side: DoubleSide,
+            transparent: true,
+            depthTest: false
+        };
+        let material = new ShaderMaterial(params);
+        material = new MeshBasicMaterial({ color: 0xff0000 });
+
+        let footstepEffectMesh = new Mesh(
+            geometry,
+            material
+        );
+        footstepEffectMesh.userData.bloom = false;
+        footstepEffectMesh.userData.hasPrimaryImage = true;
+        footstepEffectMesh.userData.hasReflection = false;
+        const wrapper = new Object3D();
+        wrapper.add(footstepEffectMesh);
+        wrapper.getMesh = () => footstepEffectMesh;
+
+        return wrapper;
+    },
+
     /** @deprecated */
     createMeleeMesh()
     {
@@ -104,7 +136,9 @@ let ObjectsModule = {
             ringGeometry,
             material
         );
-        meleeEffectMesh.userData.bloom = true;
+        meleeEffectMesh.userData.bloom = false;
+        meleeEffectMesh.userData.hasPrimaryImage = true;
+        meleeEffectMesh.userData.hasReflection = false;
 
         let wrapper = new Object3D();
         wrapper.position.set(0, 0, 0);

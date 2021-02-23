@@ -35,6 +35,8 @@ let SelfModel = function(app)
     // animation
     this.animationComponent = Object.create(null);
     this.physicsEntity = null; // link to physics.
+    this.footstepMeshes = [];
+    this.currentFootStep = 0;
 
     // Graphical component.
     this.worldNeedsUpdate = false;

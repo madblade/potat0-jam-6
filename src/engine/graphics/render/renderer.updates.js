@@ -69,7 +69,7 @@ let RendererUpdates = {
             {
                 let fs = footsteps[i];
                 let us = fs.getMesh().material.uniforms;
-                us.time.value += 0.1;
+                // us.time.value += 0.1;
             }
         }
     },

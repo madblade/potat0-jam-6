@@ -37,7 +37,8 @@ let SelfObjectsModule = {
         let em = this.app.model.backend.entityModel;
         for (let i = 0; i < 4; ++i)
         {
-            const meleeEffectMesh = em.createMeleeMesh();
+            const meleeEffectMesh = em.createFootStepMesh();
+            graphics.addToScene(meleeEffectMesh);
             this.footstepMeshes.push(meleeEffectMesh);
         }
 

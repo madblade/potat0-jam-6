@@ -43,10 +43,12 @@ let Level0 = function(title, id)
                 ux.informPlayer('Go to checkpoint!');
                 // backend.addObject(); // static sphere to indicate objective
 
+                const generated = [];
                 const ne = {};
-                backend
+                const idCup = backend
                     .entityModel
-                    .addNewBigCup(ne, 2, 2, 10);
+                    .addNewBigCup(ne, 2, 2, 10, generated);
+
                 backend.updateEntities(ne);
             }
         },
@@ -67,24 +69,22 @@ let Level0 = function(title, id)
                 // backend.removeObject();
                 ux.validateTask(); // goto next task
 
+                const em = backend.entityModel;
+
                 // add entity (id = 1)
+                const generatedIDs = [];
                 const newEntities = {};
                 // let k = 0;
                 // const bigCupID =
-                backend.entityModel
-                    .addNewBigCup(newEntities, 0, 0, 10);
+                em.addNewBigCup(newEntities, 0, 0, 10, generatedIDs);
 
-                for (let i = 1; i < 2; ++i)
-                    for (let j = 1; j < 2; ++j)
+                for (let i = 10; i < 15; ++i)
+                    for (let j = 10; j < 15; ++j)
                     {
                         // TODO [CRIT] add little cups
-                        // k++;
-                        // newEntities[k] = {
-                        //     p: new Vector3(i, j, 10),
-                        //     r: new Vector3(0, 0, 0),
-                        //     k: 'bigcup'
-                        // };
+                        em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
                     }
+
                 backend.updateEntities(newEntities);
             }
         },

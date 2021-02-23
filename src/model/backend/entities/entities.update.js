@@ -52,6 +52,10 @@ let EntitiesUpdateModule = {
                 this.loadLittleCupEntity(id, updatedEntity, entities);
                 break;
 
+            case 'axolotl':
+                this.loadAxolotl(id, updatedEntity, entities);
+                break;
+
             case 'projectile':
                 this.loadArrow(id, updatedEntity, entities);
                 break;

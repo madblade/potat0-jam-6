@@ -31,7 +31,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     this.bumperRadius = collisionSettings.bumperRadius || 1;
     this.lifterDelta = collisionSettings.lifterDelta || 0.2;
     this.maxRadius = Math.max(this.bumperRadius, this.lifterRadius);
-    // TODO leg raycast coordinates here + forward orientation (watch)
+    // XXX [IK] leg raycast coordinates here + forward orientation (watch)
 
     // Step down test
     this.bumperCenterTest = new Vector3();

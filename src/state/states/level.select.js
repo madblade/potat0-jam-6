@@ -38,18 +38,18 @@ let LevelSelectState = function(stateManager)
             </div>
         </div>
 
-        <div class="input-group">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="load-game-path" disabled>
-                <label class="custom-file-label" for="customFileLang">Import Save File (coming soon)</label>
-            </div>
+        <!-- <div class="input-group">-->
+        <!--     <div class="custom-file">-->
+        <!--         <input type="file" class="custom-file-input" id="load-game-path" disabled>-->
+        <!--         <label class="custom-file-label" for="customFileLang">Import Save File (coming soon)</label>-->
+        <!--     </div>-->
 
-            <div class="input-group-append mb-1">
-                <button class="btn btn-outline-light" id="button-load-game" style="float:none" disabled>
-                    Import
-                </button>
-            </div>
-        </div>
+        <!--     <div class="input-group-append mb-1">-->
+        <!--         <button class="btn btn-outline-light" id="button-load-game" style="float:none" disabled>-->
+        <!--             Import-->
+        <!--         </button>-->
+        <!--     </div>-->
+        <!-- </div>-->
 
         <div class="input-group">
             <button class="btn btn-outline-secondary btn-block" id="return">

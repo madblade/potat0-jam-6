@@ -4,16 +4,17 @@
 
 'use strict';
 
-import extend                          from '../../../extend';
+import extend, { assert }               from '../../../extend';
 
 import { PlayerModule }                from './player';
 import { EntitiesInterpolationModule } from './entities.interpolate';
 import { EntitiesUpdateModule }        from './entities.update';
+import { ProjectileUpdateModule }      from './projectile';
 import {
     BoxBufferGeometry,
-    MeshBasicMaterial, Vector3
-} from 'three';
-import { ProjectileUpdateModule }      from './projectile';
+    MeshBasicMaterial,
+    Vector3
+}                                      from 'three';
 
 let EntityModel = function(app)
 {
@@ -149,17 +150,31 @@ extend(EntityModel.prototype, {
         return newID;
     },
 
-    addNewBigCup(newEntities, px, py, pz)
+    addNewBigCup(newEntities, px, py, pz, alreadyGenerated)
     {
-        const newID = this.generateNewEntityID();
-        console.log(`NEW ID ${newID}`);
+        assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
+        const newID = this.generateNewEntityID(alreadyGenerated);
         newEntities[newID] = {
             p: new Vector3(px, py, pz),
             r: new Vector3(0, 0, 0),
             k: 'bigcup'
         };
+        alreadyGenerated.push(newID);
         return newID;
-    }
+    },
+
+    addNewLittleCup(newEntities, px, py, pz, alreadyGenerated)
+    {
+        assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
+        const newID = this.generateNewEntityID(alreadyGenerated);
+        newEntities[newID] = {
+            p: new Vector3(px, py, pz),
+            r: new Vector3(0, 0, 0),
+            k: 'littlecup'
+        };
+        alreadyGenerated.push(newID);
+        return newID;
+    },
 
 });
 

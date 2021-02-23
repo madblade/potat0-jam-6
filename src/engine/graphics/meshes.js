@@ -56,7 +56,6 @@ let MeshesModule = {
             }
             else
             {
-                // TODO [CRIT] finalize other meshes
                 if (successCallback)
                     successCallback(gltf);
             }

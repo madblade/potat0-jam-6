@@ -14,7 +14,7 @@ let SecondaryModule = {
 
     updateSecondaryAnimations() // deltaT)
     {
-        // TODO here manage IKs.
+        // XXX [IK] here manage IKs.
         this.mixers.forEach(m => {
             const iks = m.iks;
             if (iks)

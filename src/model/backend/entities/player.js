@@ -280,6 +280,10 @@ let PlayerModule = {
         // TODO [CRIT]
     },
 
+    loadAxolotl(id, updatedEntity, entities)
+    {
+    },
+
 };
 
 export { PlayerModule };

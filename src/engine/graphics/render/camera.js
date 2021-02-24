@@ -92,7 +92,8 @@ extend(Camera.prototype, {
     {
         let pitch = this.pitch;
         pitch.rotation.x += deltaX;
-        pitch.rotation.x = Math.max(0, Math.min(Math.PI, pitch.rotation.x));
+        console.log(pitch.rotation.x);
+        pitch.rotation.x = Math.max(0, Math.min(1.1 * Math.PI / 2, pitch.rotation.x));
     },
 
     rotateZ(deltaZ)

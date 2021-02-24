@@ -16,7 +16,7 @@ import {
     BoxGeometry,
     PlaneGeometry,
     Object3D,
-    Group, DoubleSide
+    Group, DoubleSide, TetrahedronBufferGeometry, MeshPhongMaterial
 } from 'three';
 
 let MeshesModule = {
@@ -103,22 +103,37 @@ let MeshesModule = {
 
     prepareBigCup(gltf)
     {
-        let scene = SkeletonUtils.clone(gltf.scene);
-        let cup = scene.children[0];
-        let leftEye = scene.children[1];
-        let rightEye = scene.children[2];
+        const scene = SkeletonUtils.clone(gltf.scene);
+        const cup = scene.children[0];
+        const leftEye = scene.children[1];
+        const rightEye = scene.children[2];
         cup.name = 'gltf0';
 
-        let innerWrapper = new Object3D();
+        const tetGeo = new TetrahedronBufferGeometry();
+        const phong = new MeshPhongMaterial(
+            {
+                color: '#703e9b'
+            }
+        );
+        const tetrahedronHelper = new Mesh(tetGeo, phong);
+        tetrahedronHelper.position.set(0, 3.5, 0);
+        tetrahedronHelper.rotation.set(
+            Math.PI / 5, 0, Math.PI / 4
+        );
+        tetrahedronHelper.scale.multiplyScalar(0.4);
+        // TODO update scale as player nears the cup
+
+        const innerWrapper = new Object3D();
         innerWrapper.name = 'inner';
         innerWrapper.add(cup);
         innerWrapper.add(leftEye);
         innerWrapper.add(rightEye);
+        innerWrapper.add(tetrahedronHelper);
 
         innerWrapper.position.set(0, -0.5, 0);
         innerWrapper.scale.set(0.4, 0.4, 0.4);
 
-        let wrapper = new Object3D();
+        const wrapper = new Object3D();
         wrapper.name = 'outer';
         wrapper.add(innerWrapper);
 

@@ -63,6 +63,11 @@ extend(EventComponent.prototype, {
 
     pushEvents()
     {
+        if (this.clientModel.app.model.backend.selfModel.locked)
+        {
+            return;
+        }
+
         let events = this.eventsToPush;
 
         let maxNumberOfEvents = this.maxNumberOfEventsPer16ms;

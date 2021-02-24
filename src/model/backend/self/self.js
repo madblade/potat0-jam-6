@@ -38,6 +38,9 @@ let SelfModel = function(app)
     this.footstepMeshes = [];
     this.currentFootStep = 0;
 
+    // prevent physics
+    this.locked = false;
+
     // Graphical component.
     this.worldNeedsUpdate = false;
     this.needsUpdate = false;
@@ -86,6 +89,14 @@ extend(SelfModel.prototype, {
         // Notify physics engine.
         let physics = this.app.engine.physics;
         physics.addCharacterController(this);
+
+        // Lock (prevent moving during title…)
+        this.locked = true;
+    },
+
+    unlock()
+    {
+        this.locked = false;
     },
 
     // Called every client frame.

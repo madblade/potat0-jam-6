@@ -35,8 +35,8 @@ let Level0 = function(title, id)
                 '<h3>thème: “le vrai objectif est caché”</h3>', // main
                 '<h1>Puddle Game</h1>', // main
             ],
-            fadeInTitle: 1, //1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1, //1000,  // time fade out each title
+            fadeInTitle: 500, //1000,   // for each title, time in milliseconds
+            fadeOutTitle: 500, //1000,  // time fade out each title
             keepTitle: 1, //2000,    // time to keep each title full brightness
             fadeOutSplash: 1, //3000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
@@ -52,6 +52,7 @@ let Level0 = function(title, id)
                         false, generated);
 
                 backend.updateEntities(ne);
+                backend.selfModel.unlock();
             }
         },
         {

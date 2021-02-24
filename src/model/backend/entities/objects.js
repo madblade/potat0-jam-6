@@ -36,10 +36,16 @@ let ObjectsModule = {
         let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
 
         // init animation with eyes target?
-        // const animations = graphics.animationManager;
+        const animations = graphics.animationManager;
         // animations.addSkinnedEntityAnimation(
         //     id, object3D, entity.animationComponent
         // );
+        animations.initializeEntityAnimation(entity.animationComponent,
+            entity.getTheta());
+        animations.addLabelledEntity(
+            'hi.', 0, entity
+        );
+
         object3D.traverse(o => {
             if (o.isMesh)
             {

@@ -73,6 +73,9 @@ extend(EntityModel.prototype, {
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
                     );
+                    else if (o.stone) mat = new MeshPhongMaterial(
+                        { color: '#727272' }
+                    );
                     const m = new Mesh(geo, mat);
                     m.userData.hasReflection = o.reflection;
                     m.userData.hasPrimaryImage = o.image;

@@ -64,6 +64,32 @@ let Level0Objects = {
         const walls = this.generateDefaultWalls();
         objects.push(...walls);
 
+        const placeHolders = [
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                stone: true,
+                position: [0, -12, 0.],
+                rotation: [0, 0, 0],
+                w: 2,
+                h: 2,
+                d: 0.2
+            },
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                stone: true,
+                position: [0, 0, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 0.5
+            },
+        ];
+        objects.push(...placeHolders);
+
         const platforms = [
             {
                 type: 'box',

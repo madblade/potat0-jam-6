@@ -22,7 +22,7 @@ let Level0 = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, -10, 1.5],
+        position: [0, -12, 1.5],
         rotation: [0, 0, Math.PI]
     };
 

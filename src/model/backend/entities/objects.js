@@ -40,6 +40,13 @@ let ObjectsModule = {
         // animations.addSkinnedEntityAnimation(
         //     id, object3D, entity.animationComponent
         // );
+        object3D.traverse(o => {
+            if (o.isMesh)
+            {
+                o.userData.bloom = true;
+                o.userData.hasPrimaryImage = true;
+            }
+        });
 
         // add to graphics
         graphics.addToScene(entity.getObject3D(), entity.getWorldId());
@@ -75,10 +82,6 @@ let ObjectsModule = {
     {
     },
 
-    //
-    //
-    // Unused.
-
     createFootStepMesh()
     {
         const radius = 1.;
@@ -100,12 +103,8 @@ let ObjectsModule = {
             fragmentShader: ShadersModule.getFootStepFragmentShader(),
             side: DoubleSide,
             transparent: true,
-            // depthWrite: true,
-            // depthTest: false,
-            // wireframe: true
         };
         let material = new ShaderMaterial(params);
-        // material = new MeshBasicMaterial({ color: 0xff0000, side: DoubleSide, transparent: true });
 
         let footstepEffectMesh = new Mesh(
             geometry,
@@ -114,13 +113,15 @@ let ObjectsModule = {
         footstepEffectMesh.userData.bloom = false;
         footstepEffectMesh.userData.hasPrimaryImage = true;
         footstepEffectMesh.userData.hasReflection = false;
-        // footstepEffectMesh.renderOrder = 999;
         const wrapper = new Object3D();
         wrapper.add(footstepEffectMesh);
         wrapper.getMesh = () => footstepEffectMesh;
 
         return wrapper;
     },
+
+    //
+    // Unused.
 
     /** @deprecated */
     createMeleeMesh()

@@ -321,7 +321,10 @@ let CharacterResponseModule = {
 
         if (l > 0.)
         {
-            if (byAStaticObject) this.wasLiftedByAStaticObject = true;
+            if (byAStaticObject) {
+                this.wasLiftedByAStaticObject = true;
+                this.onWater = false;
+            }
             else this.wasLifted = true;
             this.velocity1.z = 0;
             // ^ Reset velocity orthogonal to gravity
@@ -424,6 +427,7 @@ let CharacterResponseModule = {
             this.wasOnGround = false;
             return;
         }
+        if (this.wasLiftedByAStaticObject) this.onWater = false;
 
         // console.log('apply step down');
         this.position1.z -= this.stepDownHeight;

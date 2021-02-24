@@ -8,10 +8,12 @@ let RendererUpdates = {
 
     darkenNonBloomed(obj, materials)
     {
-        if (obj.isMesh && obj.userData.bloom !== true)
+        if (!obj.isMesh) return;
+        if (obj.userData.bloom !== true)
         {
             materials[obj.uuid] = obj.material;
             obj.material = this.darkMaterial;
+            if (obj.userData.isMC) obj.visible = false;
         }
     },
 
@@ -21,6 +23,7 @@ let RendererUpdates = {
         {
             obj.material = materials[obj.uuid];
             delete materials[obj.uuid];
+            if (obj.userData.isMC) obj.visible = true;
         }
     },
 

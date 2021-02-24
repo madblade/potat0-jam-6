@@ -57,8 +57,8 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
             wireframe: true
         })
     );
-    e.physics.app.engine.graphics.addToScene(this.lifterHelper, '-1');
-    e.physics.app.engine.graphics.addToScene(this.bumperHelper, '-1');
+    // e.physics.app.engine.graphics.addToScene(this.lifterHelper, '-1');
+    // e.physics.app.engine.graphics.addToScene(this.bumperHelper, '-1');
 
     // Internals
     this._w1 = new Vector3();

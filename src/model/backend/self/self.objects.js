@@ -37,9 +37,9 @@ let SelfObjectsModule = {
         let em = this.app.model.backend.entityModel;
         for (let i = 0; i < 4; ++i)
         {
-            const meleeEffectMesh = em.createFootStepMesh();
-            graphics.addToScene(meleeEffectMesh);
-            this.footstepMeshes.push(meleeEffectMesh);
+            const footstepMesh = em.createFootStepMesh();
+            graphics.addToScene(footstepMesh);
+            this.footstepMeshes.push(footstepMesh);
         }
 
         // XXX Init IK targets here as well.

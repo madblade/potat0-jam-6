@@ -32,6 +32,7 @@ let Level0 = function(title, id)
             titles: [
                 '<h3>madblade présente</h3>', // after, sub
                 '<h3>fait pour la <b>Potat0 Game Jam</b> No.6</h3>avec m&alpha;dengine',
+                '<h3>thème: “le vrai objectif est caché”</h3>', // main
                 '<h1>Puddle Game</h1>', // main
             ],
             fadeInTitle: 1, //1000,   // for each title, time in milliseconds

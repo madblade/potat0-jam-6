@@ -42,16 +42,20 @@ let FeedbackModule = {
         const newCP = this.newCameraPosition;
         if (currentCP.manhattanDistanceTo(newCP) > 0.)
         {
-            const ratioTo60FPS = Math.min(deltaT / 16., 2.);
+            const ratioTo60FPS = Math.min(deltaT / 16., 4.);
             // const delta = ratioTo60FPS;
             // progress 10% each 16ms.
             const vecToTarget = this._w0;
             vecToTarget.set(
-                ratioTo60FPS * 0.4 * (newCP.x - currentCP.x),
-                ratioTo60FPS * 0.4 * (newCP.y - currentCP.y),
+                ratioTo60FPS * 0.2 * (newCP.x - currentCP.x),
+                ratioTo60FPS * 0.2 * (newCP.y - currentCP.y),
                 ratioTo60FPS * 0.1 * (newCP.z - currentCP.z),
             );
-            currentCP.add(vecToTarget);
+            currentCP.set(
+                newCP.x,
+                newCP.y,
+                currentCP.z + vecToTarget.z
+            );
         }
 
         // XXX feedback shaking exactly here
@@ -103,7 +107,6 @@ let FeedbackModule = {
 
     resetCameraFeedback()
     {
-        // TODO revert camera position!
         const graphics = this.graphics;
         const manager = graphics.cameraManager;
         const mainCamera = manager.mainCamera;

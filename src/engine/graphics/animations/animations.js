@@ -52,6 +52,9 @@ let AnimationManager = function(graphics)
     this._e = new Euler();
     this._r = new Vector3();
     this._xy = new Vector2();
+    this._mvpp = new Vector3(0, 0, 0);
+    this._mvpq = new Quaternion();
+    this._mvps = new Vector3(0, 0, 0);
 
     // flags.
     this._debug = true;

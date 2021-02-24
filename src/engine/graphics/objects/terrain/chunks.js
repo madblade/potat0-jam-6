@@ -84,11 +84,14 @@ let ChunksModule = {
         dh.sg3 = new Mesh(new SphereBufferGeometry(0.1),
             new MeshBasicMaterial({color:0xff0000}));
         dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
+        dh.h2 = new ArrowHelper(dh.v, dh.o, 1, 0xffff00);
         dh.ah = new AxesHelper(5);
         window.dh = dh;
         // newMesh.add(dh.ah);
-        // newMesh.add(dh.h);
-        // dh.h.traverse(o => {if (o.isMesh) o.userData.hasPrimaryImage = true; });
+        newMesh.add(dh.h);
+        newMesh.add(dh.h2);
+        dh.h.traverse(o => {if (o.isMesh) o.userData.hasPrimaryImage = true; });
+        dh.h2.traverse(o => {if (o.isMesh) o.userData.hasPrimaryImage = true; });
         // newMesh.add(dh.s);
         // newMesh.add(dh.sg1);
         // dh.sg1.userData.hasPrimaryImage = true;

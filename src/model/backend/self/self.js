@@ -99,6 +99,11 @@ extend(SelfModel.prototype, {
         this.locked = false;
     },
 
+    lock()
+    {
+        this.locked = true;
+    },
+
     // Called every client frame.
     refresh()
     {

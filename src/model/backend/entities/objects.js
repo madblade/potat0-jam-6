@@ -42,9 +42,11 @@ let ObjectsModule = {
         // );
         animations.initializeEntityAnimation(entity.animationComponent,
             entity.getTheta());
-        animations.addLabelledEntity(
-            'hi.', id, entity
-        );
+
+        if (updatedEntity.t)
+            animations.addLabelledEntity(
+                updatedEntity.t, id, entity
+            );
 
         object3D.traverse(o => {
             if (o.isMesh)

@@ -28,9 +28,9 @@ let SelfObjectsModule = {
         animations.addSkinnedEntityAnimation(
             0, up, selfModel.animationComponent
         );
-        animations.addLabelledEntity(
-            'hello.', 0, selfModel
-        );
+        // animations.addLabelledEntity(
+        //     'hello.', 0, selfModel
+        // );
 
         // footsteps
         this.footstepMeshes = [];

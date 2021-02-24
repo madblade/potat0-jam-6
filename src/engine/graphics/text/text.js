@@ -3,10 +3,13 @@ import { Title } from './Title';
 
 let TextModule = {
 
-    createTextLabel(text)
+    createTextLabel(textSequence)
     {
-        if (!text) text = 'hi there!';
-        return new Label(text);
+        if (!textSequence) textSequence = {
+            direct: true,
+            text: 'Je crois qu’on m’a oubliée.'
+        };
+        return new Label(textSequence);
     },
 
     createTitleLabel(text)

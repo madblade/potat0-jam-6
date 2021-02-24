@@ -35,10 +35,10 @@ let TextModule = {
         });
     },
 
-    addLabelledEntity(initialText, entityId, entity)
+    addLabelledEntity(textSequence, entityId, entity)
     {
         const graphics = this.graphics;
-        const label = graphics.createTextLabel(initialText || 'no text');
+        const label = graphics.createTextLabel(textSequence);
         // label.setParent(null);
 
         const backend = graphics.app.model.backend;

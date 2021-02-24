@@ -45,14 +45,37 @@ let Level0 = function(title, id)
                 // backend.addObject(); // static sphere to indicate objective
 
                 const generated = [];
-                const ne = {};
-                const idCup = backend
-                    .entityModel
-                    .addNewBigCup(ne, 0, 0, 0.6,
-                        false, generated);
+                const ne = {}; // new entities
 
+                const textSequence = [
+                    {
+                        direct: true,
+                        text: 'Oh salut!'
+                    },
+                    {
+                        direct: true,
+                        text: 'Tu dois être le joueur…'
+                    },
+                    {
+                        direct: true,
+                        text: 'Et je suppose que je suis l’objectif ?'
+                    },
+                    {
+                        direct: false,
+                        text: 'Tu vas bien ?'
+                    }
+                ];
+                const bigCup = backend.entityModel.makeNewBigCup(
+                    0, 0, 0.6, false,
+                    textSequence
+                );
+                const idCup = backend.entityModel
+                    .addNewBigCup(ne, bigCup, generated);
+
+                // apply
                 backend.updateEntities(ne);
-                backend.selfModel.unlock(); // DON’T FORGET
+                // DON’T FORGET TO UNLOCK
+                backend.selfModel.unlock();
             }
         },
         {

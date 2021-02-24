@@ -11,9 +11,16 @@ import {
     Vector3
 }                   from 'three';
 
-let Label = function(text)
+let Label = function(textSequence)
 {
-    this.text = text;
+    this.textSequence = textSequence;
+    this.textIndex = 0;
+    if (textSequence.length < 1)
+        throw Error('[Label] Must have a text sequence with TEXT INSIDE.');
+
+    const firstText = textSequence[0];
+    const text = firstText.text;
+    this.text = text || 'Allo?';
 
     let div = document.createElement('div');
     div.className = 'text-label';

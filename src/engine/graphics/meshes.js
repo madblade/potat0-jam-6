@@ -84,6 +84,7 @@ let MeshesModule = {
             if (!o.isMesh) return;
             o.userData.hasPrimaryImage = true;
             o.userData.hasReflection = true;
+            o.userData.bloom = true;
         });
 
         let innerWrapper = new Object3D();

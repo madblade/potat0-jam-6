@@ -131,7 +131,7 @@ let RendererFactory = {
             1.5, 0.4, 0.85);
         bloomPass.exposure = 0.5;
         bloomPass.threshold = 0.; // 0.3
-        bloomPass.strength = 1.0;
+        bloomPass.strength = .5;
         bloomPass.radius = 0;
         let bloomComposer = new EffectComposer(renderer);
         bloomComposer.renderTarget1.stencilBuffer = true;

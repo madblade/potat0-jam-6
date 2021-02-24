@@ -85,7 +85,7 @@ let Level0Objects = {
                 rotation: [0, 0, 0],
                 w: 1,
                 h: 1,
-                d: 0.5
+                d: 0.2
             },
         ];
         objects.push(...placeHolders);

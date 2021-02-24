@@ -11,11 +11,8 @@ let RendererUpdates = {
         if (!obj.isMesh) return;
         if (obj.userData.bloom !== true)
         {
-            // if (!obj.hasPrimaryImage)
-            // {
             materials[obj.uuid] = obj.material;
             obj.material = this.darkMaterial;
-            // }
         }
     },
 

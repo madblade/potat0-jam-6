@@ -169,14 +169,15 @@ extend(EntityModel.prototype, {
         return newID;
     },
 
-    addNewBigCup(newEntities, px, py, pz, alreadyGenerated)
+    addNewBigCup(newEntities, px, py, pz, bloom, alreadyGenerated)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
         newEntities[newID] = {
             p: new Vector3(px, py, pz),
             r: new Vector3(0, 0, 0),
-            k: 'bigcup'
+            k: 'bigcup',
+            b: bloom
         };
         alreadyGenerated.push(newID);
         return newID;

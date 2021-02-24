@@ -93,8 +93,8 @@ let Level0Objects = {
         const cupCM = {
             type: 'box',
             reflection: false,
-            image: true,
-            stone: true,
+            image: false,
+            platform: true,
             position: [0, 0, 0.5],
             rotation: [0, 0, 0],
             w: 0.5,

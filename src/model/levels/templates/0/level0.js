@@ -48,7 +48,8 @@ let Level0 = function(title, id)
                 const ne = {};
                 const idCup = backend
                     .entityModel
-                    .addNewBigCup(ne, 0, 0, 2, generated);
+                    .addNewBigCup(ne, 0, 0, 0.6,
+                        false, generated);
 
                 backend.updateEntities(ne);
             }

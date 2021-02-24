@@ -43,7 +43,8 @@ let ObjectsModule = {
         object3D.traverse(o => {
             if (o.isMesh)
             {
-                o.userData.bloom = true;
+                if (updatedEntity.b)
+                    o.userData.bloom = true;
                 o.userData.hasPrimaryImage = true;
             }
         });
@@ -56,8 +57,8 @@ let ObjectsModule = {
         this.entitiesLoading.delete(id);
 
         // notify physics
-        let physics = this.app.engine.physics;
-        physics.addCharacterController(entity);
+        // let physics = this.app.engine.physics;
+        // physics.addCharacterController(entity);
     },
 
     loadLittleCupEntity(id, updatedEntity, entities)

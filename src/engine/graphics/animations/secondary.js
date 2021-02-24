@@ -86,70 +86,56 @@ let SecondaryModule = {
         {
             const pi = Math.PI;
             const pi2 = pi / 2;
-            const ac = sm.animationComponent;
-            const idleTime = ac.idleTime;
-            const timeToIdle = ac.timeToIdle;
-            // if (idleTime > timeToIdle)// &&
-            // idleTime < 2 * timeToIdle)
+
+            // get head
+            const headBone = av
+                .children[0].children[0].children[0]
+                .children[0].children[0].children[0]
+                .children[0].children[0];
+
+            // compute delta between character rot
+            // and where he should look at
+            const er = sm.getRotation();
+
+            const v2 = this._xy;
+            v2.set(mainLookerDelta.x, mainLookerDelta.y)
+                .normalize();
+            // const v3 = this._w0;
+            // v3.set(v2.x, v2.y, 0);
+            // window.dh.h.setDirection(v3);
+            let modelTheta = er.z - pi2;
+            if (modelTheta > pi) modelTheta -= 2 * pi;
+            else if (modelTheta < -pi) modelTheta += 2 * pi;
+
+            // v3.set(Math.cos(modelTheta), Math.sin(modelTheta), 0);
+            // window.dh.h2.setDirection(v3);
+
+            let yOTarget = Math.atan2(v2.y, v2.x);
+            if (yOTarget > pi) yOTarget -= 2 * pi;
+            else if (yOTarget < -pi) yOTarget += 2 * pi;
+
+            let target;
+            const deltaTheta = Math.abs(yOTarget - modelTheta);
+            if (deltaTheta < Math.PI / 2)
             {
-                const progress = (idleTime - timeToIdle) /
-                    timeToIdle;
-
-                // rotate head of progress
-                const headBone = av
-                    .children[0].children[0].children[0]
-                    .children[0].children[0].children[0]
-                    .children[0].children[0];
-
-                const er = sm.getRotation();
-
-                const v2 = this._xy;
-                v2.set(mainLookerDelta.x, mainLookerDelta.y)
-                    .normalize();
-                const v3 = this._w0;
-                v3.set(v2.x, v2.y, 0);
-                window.dh.h.setDirection(v3);
-                let modelTheta = er.z - pi2;
-                if (modelTheta > pi) modelTheta -= 2 * pi;
-                else if (modelTheta < -pi) modelTheta += 2 * pi;
-
-                v3.set(Math.cos(modelTheta), Math.sin(modelTheta), 0);
-                window.dh.h2.setDirection(v3);
-
-                let yOTarget = Math.atan2(v2.y, v2.x);
-                if (yOTarget > pi) yOTarget -= 2 * pi;
-                else if (yOTarget < -pi) yOTarget += 2 * pi;
-
-                // er.x = up, er.z = theta
-
-                // headBone.rotation.y = -euler.x;
-                // x == vertical, y == horizontal
-                // headBone.rotation.x += er.y; //er.x - Math.PI / 2;
-
-                const deltaTheta = Math.abs(yOTarget - modelTheta);
-                // console.log(deltaTheta);
-                // console.log(deltaTheta);
-                if (deltaTheta < Math.PI / 2)
-                {
-                    // console.log('yah');
-                    headBone.rotation.y = yOTarget - modelTheta;
-                }
-                else
-                {
-                    // console.log('nah');
-                    headBone.rotation.y = 0;
-                }
-                // console.log(Math.abs(yOTarget - er.z));
-                // headBone.rotation.y = diff + Math.PI / 2;
-
-                // headBone.rotation.y = er.z; //er.x - Math.PI / 2;
+                // only look at it if it’s in a reasonable angle
+                target = yOTarget - modelTheta;
             }
-            // else
+            else
+            {
+                target = 0;
+            }
+
+            // asymptotic 10% timescale independent
+            headBone.rotation.y = .9 * headBone.rotation.y +
+                .1 * target;
+
             // {
             //     x = 0.01734646181511995
             //     y = 0.
             //     z = 0.
             // }
+            // [XXX] rotate head vertically too
         }
     },
 

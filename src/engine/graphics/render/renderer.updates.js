@@ -11,19 +11,21 @@ let RendererUpdates = {
         if (!obj.isMesh) return;
         if (obj.userData.bloom !== true)
         {
+            // if (!obj.hasPrimaryImage)
+            // {
             materials[obj.uuid] = obj.material;
             obj.material = this.darkMaterial;
-            if (obj.userData.isMC) obj.visible = false;
+            // }
         }
     },
 
     restoreMaterial(obj, materials)
     {
+        if (!obj.isMesh) return;
         if (materials[obj.uuid])
         {
             obj.material = materials[obj.uuid];
             delete materials[obj.uuid];
-            if (obj.userData.isMC) obj.visible = true;
         }
     },
 

@@ -16,8 +16,8 @@ import {
     BoxGeometry,
     PlaneGeometry,
     Object3D,
-    Group
-}                           from 'three';
+    Group, DoubleSide
+} from 'three';
 
 let MeshesModule = {
 

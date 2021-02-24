@@ -90,6 +90,19 @@ let Level0Objects = {
         ];
         objects.push(...placeHolders);
 
+        const cupCM = {
+            type: 'box',
+            reflection: false,
+            image: true,
+            stone: true,
+            position: [0, 0, 0.5],
+            rotation: [0, 0, 0],
+            w: 0.5,
+            h: 0.5,
+            d: 2
+        };
+        objects.push(cupCM);
+
         const platforms = [
             {
                 type: 'box',

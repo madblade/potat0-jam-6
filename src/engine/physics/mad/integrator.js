@@ -229,8 +229,8 @@ extend(Integrator.prototype, {
         {
             const sm = app.model.backend.selfModel;
             sm.updateSelf(cm.position0, cm.rotation0, -1);
-            cm.lifterHelper.position.copy(cm.lifterCenter);
-            cm.bumperHelper.position.copy(cm.bumperCenter);
+            // cm.lifterHelper.position.copy(cm.lifterCenter);
+            // cm.bumperHelper.position.copy(cm.bumperCenter);
         }
         else
         {
@@ -250,8 +250,8 @@ extend(Integrator.prototype, {
                     `[Integrator] Entity ${entity.entityId} is dynamic but not a character.`
                 );
             }
-            cm.lifterHelper.position.copy(cm.lifterCenter);
-            cm.bumperHelper.position.copy(cm.bumperCenter);
+            // cm.lifterHelper.position.copy(cm.lifterCenter);
+            // cm.bumperHelper.position.copy(cm.bumperCenter);
         }
     },
 

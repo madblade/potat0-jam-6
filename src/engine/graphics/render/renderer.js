@@ -17,8 +17,8 @@ import {
     MeshBasicMaterial,
     Scene,
     PlaneBufferGeometry,
-    Mesh
-}                                  from 'three';
+    Mesh, FrontSide, BackSide
+} from 'three';
 
 let RendererManager = function(graphicsEngine)
 {
@@ -94,7 +94,12 @@ let RendererManager = function(graphicsEngine)
 
     // Bloom
     this.darkMaterial = new MeshBasicMaterial(
-        { color: 'black', side: DoubleSide, morphTargets: true }
+        {
+            color: 'black',
+            side: FrontSide,
+            skinning: true,
+            flatShading: true
+        }
     );
     this.darkWater = new MeshBasicMaterial(
         { color: 'black', side: DoubleSide, morphTargets: true }

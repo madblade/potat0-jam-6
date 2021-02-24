@@ -28,7 +28,7 @@ let Label = function(text)
     // let _this = this;
 
     // XXX put it into some outer div.
-    // document.body.appendChild(div);
+    document.body.appendChild(div);
 
     this.element = div;
     this.parent = null;

@@ -177,6 +177,7 @@ extend(Camera.prototype, {
 
         up.position.x = x;
         up.position.y = y;
+        // console.log(z);
         up.position.z = z;
     },
 

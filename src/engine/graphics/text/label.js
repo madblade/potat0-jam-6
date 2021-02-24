@@ -85,8 +85,8 @@ extend(Label.prototype, {
         else
         {
             this.element.style.display = 'block';
-            this.element.style.left = `${coords2D.x}px`;
-            this.element.style.top = `${coords2D.y}px`;
+            this.element.style.left = `${Math.floor(coords2D.x)}px`;
+            this.element.style.top = `${Math.floor(coords2D.y)}px`;
         }
     },
 

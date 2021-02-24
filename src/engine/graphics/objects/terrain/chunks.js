@@ -7,13 +7,13 @@
 // import { VertexNormalsHelper }  from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {
     ArrowHelper,
-    AxesHelper,
+    AxesHelper, DoubleSide,
     Mesh,
     MeshBasicMaterial,
     PlaneBufferGeometry,
     SphereBufferGeometry,
     Vector3
-}                               from 'three';
+} from 'three';
 
 let ChunksModule = {
 
@@ -77,18 +77,25 @@ let ChunksModule = {
         dh.sg1 = new Mesh(new SphereBufferGeometry(0.1),
             new MeshBasicMaterial({color:0x0000ff}));
         dh.sg2 = new Mesh(new SphereBufferGeometry(0.1),
-            new MeshBasicMaterial({color:0x0000ff}));
+            new MeshBasicMaterial({
+                color:0x00ff00, side: DoubleSide,
+                wireframe: true
+            }));
         dh.sg3 = new Mesh(new SphereBufferGeometry(0.1),
-            new MeshBasicMaterial({color:0x0000ff}));
+            new MeshBasicMaterial({color:0xff0000}));
         dh.h = new ArrowHelper(dh.v, dh.o, 1, 0x00ffff);
         dh.ah = new AxesHelper(5);
         window.dh = dh;
         // newMesh.add(dh.ah);
         // newMesh.add(dh.h);
+        // dh.h.traverse(o => {if (o.isMesh) o.userData.hasPrimaryImage = true; });
         // newMesh.add(dh.s);
         // newMesh.add(dh.sg1);
+        // dh.sg1.userData.hasPrimaryImage = true;
         // newMesh.add(dh.sg2);
+        // dh.sg2.userData.hasPrimaryImage = true;
         // newMesh.add(dh.sg3);
+        // dh.sg3.userData.hasPrimaryImage = true;
     },
 
 };

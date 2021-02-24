@@ -207,7 +207,7 @@ extend(CameraManager.prototype, {
         }
     },
 
-    refresh(deltaT)
+    refresh() // deltaT)
     {
         let incoming = this.incomingRotationEvents;
         if (incoming.length < 1) return;

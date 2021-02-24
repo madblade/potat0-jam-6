@@ -12,7 +12,7 @@ import { EntitiesInterpolationModule }  from './entities.interpolate';
 import { EntitiesUpdateModule }         from './entities.update';
 import { ProjectileUpdateModule }       from './projectile';
 import {
-    BoxBufferGeometry,
+    BoxBufferGeometry, DoubleSide,
     Mesh,
     MeshBasicMaterial,
     MeshPhongMaterial,
@@ -53,6 +53,11 @@ extend(EntityModel.prototype, {
     {
         let graphics = this.app.engine.graphics;
         let physics = this.app.engine.physics;
+
+        // reset walls
+        let animationManager = graphics.animationManager;
+        animationManager.resetRaycastables();
+
         let objects = level.getObjects();
         objects.forEach(o => {
             switch (o.type)
@@ -63,7 +68,7 @@ extend(EntityModel.prototype, {
                     );
                     let mat;
                     if (o.wall) mat = new MeshPhongMaterial(
-                        { color: '#d2d2d2' }
+                        { color: '#d2d2d2', side: DoubleSide }
                     );
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
@@ -78,6 +83,8 @@ extend(EntityModel.prototype, {
                     m.updateMatrixWorld();
                     graphics.addToScene(m, '-1');
                     physics.addStaticMesh(m);
+                    if (o.wall)
+                        animationManager.addRaycastable(m);
                     break;
             }
         });

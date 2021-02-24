@@ -13,8 +13,8 @@ let GamepadActionModule = {
 
         let movementX = x;
         let movementY = y;
-        movementX = Math.sign(x) * Math.pow(Math.abs(movementX), 3.);
-        movementY = Math.sign(y) * Math.pow(Math.abs(movementY), 3.);
+        movementX = Math.sign(x) * Math.pow(Math.abs(movementX), 2.);
+        movementY = Math.sign(y) * Math.pow(Math.abs(movementY), 2.);
         movementX *= 2 * cameraMovingSpeed;
         movementY *= 1.1 * cameraMovingSpeed;
 
@@ -24,17 +24,6 @@ let GamepadActionModule = {
                 movementX, movementY, 0, 0, dtMillis
             );
         }
-    },
-
-    smstp(end1, end2, t)
-    {
-        const x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
-        return x * x * (3 - 2 * x);
-    },
-
-    clamp(t, low, high)
-    {
-        return Math.min(high, Math.max(low, t));
     },
 
     stopMovePlayerFromLeftStickGamepad()

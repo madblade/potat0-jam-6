@@ -281,8 +281,10 @@ let CoreModule = {
     {
         let selfModel = this.app.model.backend.selfModel;
         let worldId = selfModel.worldId;
-        this.cameraManager.mainCamera.setThirdPerson();
-        this.addToScene(this.cameraManager.mainCamera.get3DObject(), worldId);
+        const mainCamera = this.cameraManager.mainCamera;
+        mainCamera.setThirdPerson();
+        this.animationManager.currentCameraPosition.copy(mainCamera.getCameraPosition());
+        this.addToScene(mainCamera.get3DObject(), worldId);
         this.addToScene(this.cameraManager.mainRaycasterCamera.get3DObject(), worldId);
         // this.addToScene(this.cameraManager.waterCameraHelper, worldId);
     },

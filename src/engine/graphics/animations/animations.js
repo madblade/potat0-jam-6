@@ -29,6 +29,8 @@ let AnimationManager = function(graphics)
     this.clips = new Map();
 
     // feedback.
+    this.currentCameraPosition = new Vector3(0, 0, 0);
+    this._w0 = new Vector3(0, 0, 0);
     this.oldCameraPosition = new Vector3(0, 0, 0);
     this.newCameraPosition = new Vector3(0, 0, 0);
     this.oldPitchRotationX = 0;

@@ -57,13 +57,14 @@ let CameraManager = function(graphicsEngine)
     // this.waterCameraHelper = new CameraHelper(this.mainCamera.cameraObject);
 
     // Optimization
+    this._renderPortals = false;
     this.incomingRotationEvents = [];
     this.oldTheta0 = 0;
     this.oldTheta1 = 0;
     this.correctSpikes = false;
     this._r = new Vector4(0, 0, 0, 0);
     this._rotation = [0, 0, 0, 0];
-    this._acc = [0, 0, 0, 0];
+    this._acc = [0, 0, 0, 0, 0]; // last is deltaT
 };
 
 // Factory.
@@ -78,7 +79,7 @@ extend(CameraManager.prototype, {
         return new Camera(
             this.mainFOV,
             this.mainAspect,
-            forRaycaster ? 1 : this.mainNear,
+            forRaycaster ? 0.1 : this.mainNear,
             this.mainFar,
             worldId);
     },
@@ -224,40 +225,45 @@ extend(CameraManager.prototype, {
 
         else if (i.isThirdPerson())
         {
+            const rp = this._renderPortals;
             cams.forEach((cam/*, cameraId*/) => {
                 cam.setCameraPosition(x, y, z);
                 // cam.setThirdPerson();
-                cam.addPositionTransform();
-                let mirrorCamera = cam.getRecorder();
-                if (mirrorCamera) {
-                    let screen = cam.getScreen();
-                    if (screen) {
-                        let mirror = screen.getMesh();
-                        this.clipOblique(mirror, mirrorCamera, localRecorder);
+
+                if (rp)
+                {
+                    cam.addPositionTransform();
+                    let mirrorCamera = cam.getRecorder();
+                    if (mirrorCamera) {
+                        let screen = cam.getScreen();
+                        if (screen) {
+                            let mirror = screen.getMesh();
+                            this.clipOblique(mirror, mirrorCamera, localRecorder);
+                        }
                     }
                 }
             });
         }
     },
 
-    addCameraRotationEvent(relX, relY, absX, absY)
+    addCameraRotationEvent(relX, relY, absX, absY, deltaTMillis)
     {
-        this.incomingRotationEvents.push([relX, relY, absX, absY]);
+        this.incomingRotationEvents.push([relX, relY, absX, absY, deltaTMillis]);
     },
 
-    accumulateRotationEvents(incoming, accumulator)
+    accumulateRotationEvents(incoming, accumulator, dt)
     {
         for (let i = 0, l = incoming.length; i < l; ++i)
         {
             let inc = incoming[i];
-            accumulator[0] += inc[0];
-            accumulator[1] += inc[1];
-            accumulator[2] += inc[2];
-            accumulator[3] += inc[3];
+            accumulator[0] += dt * inc[0];
+            accumulator[1] += dt * inc[1];
+            accumulator[2] += dt * inc[2];
+            accumulator[3] += dt * inc[3];
         }
     },
 
-    refresh()
+    refresh(deltaT)
     {
         let incoming = this.incomingRotationEvents;
         if (incoming.length < 1) return;
@@ -266,20 +272,23 @@ extend(CameraManager.prototype, {
         acc.fill(0);
 
         // FF, as anyone with sanity would do.
+        let dtInSecs = deltaT / 1e3;
         if (incoming.length === 1)
         {
+            // console.log('inc small');
             let inc = incoming[0];
-            acc[0] = inc[0];
-            acc[1] = inc[1];
-            acc[2] = inc[2];
-            acc[3] = inc[3];
+            acc[0] = inc[0] * dtInSecs;
+            acc[1] = inc[1] * dtInSecs;
+            acc[2] = inc[2] * dtInSecs;
+            acc[3] = inc[3] * dtInSecs;
+            // acc[4] = inc[4]; // deltaT
         }
 
         // Chrome (there is a bug in Chrome for that! insane.)
         else if (incoming.length > 1)
         {
             let spikeDetected = false;
-            this.accumulateRotationEvents(incoming, acc);
+            this.accumulateRotationEvents(incoming, acc, dtInSecs);
 
             if (this.correctSpikes)
             {
@@ -323,7 +332,7 @@ extend(CameraManager.prototype, {
 
         const rotation = this._rotation;
         rotation.fill(0);
-        this.moveCameraFromMouse(acc[0], acc[1], acc[2], acc[3], rotation);
+        this.updateCameraRotation(acc[0], acc[1], acc[2], acc[3], rotation);
 
         // Here we could perform additional filtering
         if (rotation)
@@ -435,19 +444,13 @@ extend(CameraManager.prototype, {
     setAbsRotation(theta0, theta1)
     {
         let camera = this.mainCamera;
-        let raycasterCamera = this.mainRaycasterCamera;
+        // let raycasterCamera = this.mainRaycasterCamera;
         theta1 = Math.max(0, Math.min(Math.PI, theta1));
 
-        // | this line is unsafe
-        // V
+        // v  Direct camera update, do not use for multiplayer.
         camera.setUpRotation(theta1, 0, theta0);
-        // because the camera rotation has changed since the last update,
-        // therefore the new angle set here is outdated
-        // resulting in camera jitters whenever this is called
-        // (for variable gravity or on the edge of 3D worlds)
-        // Solution: client-wise gravity computation (milestone).
 
-        raycasterCamera.setUpRotation(theta1, 0, theta0);
+        // raycasterCamera.setUpRotation(theta1, 0, theta0);
     },
 
     setRelRotation(theta0, theta1)
@@ -462,12 +465,12 @@ extend(CameraManager.prototype, {
         camera.setXRotation(theta1);
     },
 
-    moveCameraFromMouse(relX, relY, absX, absY, result)
+    updateCameraRotation(relX, relY, absX, absY, result)
     {
         // Rotate main camera.
         let camera = this.mainCamera;
-        camera.rotateZ(-relX * 0.002);
-        camera.rotateX(-relY * 0.002);
+        camera.rotateZ(-relX);
+        camera.rotateX(-relY);
         let rotationZ = camera.getZRotation();
         let rotationX = camera.getXRotation();
 
@@ -477,10 +480,11 @@ extend(CameraManager.prototype, {
         let theta1 = up.x;
 
         // Rotate raycaster camera.
-        let raycasterCamera = this.mainRaycasterCamera;
-        raycasterCamera.setZRotation(rotationZ);
-        raycasterCamera.setXRotation(rotationX);
+        // let raycasterCamera = this.mainRaycasterCamera;
+        // raycasterCamera.setZRotation(rotationZ);
+        // raycasterCamera.setXRotation(rotationX);
 
+        // v  This is to rotate the global Z of camera.
         if (absX !== 0 || absY !== 0)
         {
             // Add angles.
@@ -492,10 +496,11 @@ extend(CameraManager.prototype, {
         }
 
         // Apply transform to portals.
-        this.updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0);
+        if (this._renderPortals)
+            this.updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0);
 
         // Apply transform to local model.
-        this.graphicsEngine.app.model.backend.selfModel.cameraMoved(this.mainCamera);
+        // this.graphicsEngine.app.model.backend.selfModel.cameraMoved(this.mainCamera);
 
         // drunken controls: tmpQuaternion.set(- movementY * 0.002, - movementX * 0.002, 0, 1).normalize();
         // camera.quaternion.multiply(tmpQuaternion);
@@ -510,7 +515,7 @@ extend(CameraManager.prototype, {
     updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0)
     {
         let localRecorder = camera.getRecorder();
-        this.subCameras.forEach(function(subCamera) //, cameraId
+        this.subCameras.forEach(subCamera => //, cameraId
         {
             // remark. shouldn’t i clip after having rotated?
             subCamera.setZRotation(rotationZ);
@@ -524,7 +529,7 @@ extend(CameraManager.prototype, {
             if (mirrorCamera) {
                 this.clipOblique(mirror, mirrorCamera, localRecorder);
             }
-        }.bind(this));
+        });
     },
 
     resize(width, height)

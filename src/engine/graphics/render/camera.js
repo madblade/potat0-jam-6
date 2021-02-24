@@ -224,7 +224,7 @@ extend(Camera.prototype, {
     {
         let p = this.cameraObject.position;
         p.set(0, 0, 2);
-        let r = this.setXRotation(Math.PI / 3);
+        this.setXRotation(Math.PI / 3);
     },
 
     getCameraForwardVector()

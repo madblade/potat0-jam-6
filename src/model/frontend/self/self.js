@@ -139,9 +139,8 @@ extend(SelfComponent.prototype, {
     {
         let graphicsEngine = this.clientModel.app.engine.graphics;
         // XXX [PERF] only once per iteration.
-        //console.log('camera autoupdate');
-        //graphicsEngine.cameraManager.updateCameraPosition(data);
-        graphicsEngine.cameraManager.moveCameraFromMouse(0, 0, 0, 0);
+        // graphicsEngine.cameraManager.updateCameraPosition(data);
+        graphicsEngine.cameraManager.updateCameraRotation(0, 0, 0, 0);
     },
 
     /** @deprecated */ // we only use third person

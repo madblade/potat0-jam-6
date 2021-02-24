@@ -70,16 +70,16 @@ let ListenerModule = {
 
                 // This is for camera wrapper testing, should be disabled server-wise.
                 case k.padFour:     // Left
-                    graphics.cameraManager.addCameraRotationEvent(0, 0, 0.1 * Math.PI / 2, 0);
+                    graphics.cameraManager.addCameraRotationEvent(10, 0, 0, 0, 100);
                     break;
                 case k.padSix:      // Right
-                    graphics.cameraManager.addCameraRotationEvent(0, 0, 0.1 * -Math.PI / 2, 0);
+                    graphics.cameraManager.addCameraRotationEvent(-10, 0, 0, 0, 100);
                     break;
                 case k.padFive:     // Down
-                    graphics.cameraManager.addCameraRotationEvent(0, 0, 0, 0.1 * -Math.PI / 2);
+                    graphics.cameraManager.addCameraRotationEvent(0, 10, 0, 0, 100);
                     break;
                 case k.padEight:    // Up
-                    graphics.cameraManager.addCameraRotationEvent(0, 0, 0, 0.1 * Math.PI / 2);
+                    graphics.cameraManager.addCameraRotationEvent(0, -10, 0, 0, 100);
                     break;
 
                 case k.enter:

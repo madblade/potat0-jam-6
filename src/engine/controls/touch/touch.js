@@ -81,7 +81,7 @@ let TouchModule = {
         }
     },
 
-    updateControlsTouchDevice()
+    updateControlsTouchDevice(deltaT)
     {
         if (!this.isTouch) return;
         if (!this.touchControlsEnabled) return;
@@ -90,7 +90,7 @@ let TouchModule = {
         this.touchWidgetControls.animate();
 
         // Right stick: camera movement
-        this.rotateCameraFromRightStickTouch();
+        this.rotateCameraFromRightStickTouch(deltaT);
 
         // Left stick: player movement
         this.movePlayerFromLeftStickTouch();

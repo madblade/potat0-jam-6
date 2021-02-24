@@ -12,7 +12,7 @@ let SelfUpdateModule = {
     {
         let register = this.app.register;
         let graphics = this.app.engine.graphics;
-        let clientModel = this.app.model.frontend;
+        // let clientModel = this.app.model.frontend;
         let handItemWrapper = this.handItemWrapper;
         // const id = this.entityId;
 
@@ -31,7 +31,7 @@ let SelfUpdateModule = {
         this.originalZ = p.z;
 
         // Update camera.
-        clientModel.pushForLaterUpdate('camera-position', p);
+        // clientModel.pushForLaterUpdate('camera-position', p);
         graphics.cameraManager.updateCameraPosition(p);
 
         let handItem = this.handItem;

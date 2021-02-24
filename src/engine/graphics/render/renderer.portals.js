@@ -42,7 +42,7 @@ let RendererPortals = {
 
         let stencilCamera = cameraManager.stencilCamera;
         this.stencilScene.updateMatrixWorld();
-        this.graphics.cameraManager.moveCameraFromMouse(0, 0, 0, 0);
+        this.graphics.cameraManager.updateCameraRotation(0, 0, 0, 0);
 
         let worlds = this.graphics.app.model.backend.chunkModel.worlds;
         let pathId;

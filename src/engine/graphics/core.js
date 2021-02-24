@@ -182,9 +182,10 @@ let CoreModule = {
         // Update inputs for Touch/Gamepad devices.
         // Note: camera cannot rotate bw/ this call and render.
         controlsEngine.updateControlsDevice(deltaT);
+        controlsEngine.stamp();
 
         // Update camera state from direct user inputs.
-        this.refreshMainCamera();
+        this.refreshMainCamera(deltaT);
 
         // Update animation mixers.
         // animationEngine holds
@@ -197,21 +198,21 @@ let CoreModule = {
         // Render.
         this.render(deltaT);
 
-        // restore feedback / effects perturbation
+        // Restore feedback / perturbation effects.
         animationEngine.restore();
 
         // Bench.
         this.fps.update();
     },
 
-    refreshMainCamera()
+    refreshMainCamera(deltaT)
     {
         // (Late) Refresh portal graphics.
         this.processPortalUpdates();
 
         // Refresh camera mouse movements.
         let cameraManager = this.cameraManager;
-        cameraManager.refresh();
+        cameraManager.refresh(deltaT);
     },
 
     render(deltaT)

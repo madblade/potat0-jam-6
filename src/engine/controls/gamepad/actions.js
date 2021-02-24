@@ -8,14 +8,15 @@ let GamepadActionModule = {
         let graphics = this.app.engine.graphics;
 
         // dt ~ 16.7 for 60Hz, 7 for 144Hz
-        const cameraMovingSpeed = dtMillis / 2;
+        const cameraMovingSpeed = graphics.stickCameraSpeed;
+        // 0.5 * dtMillis;
 
         let movementX = x * 2 * cameraMovingSpeed;
         let movementY = y * 1 * cameraMovingSpeed;
         if (Math.abs(movementX) > 0 || Math.abs(movementY) > 0)
         {
             graphics.cameraManager.addCameraRotationEvent(
-                movementX, movementY, 0, 0
+                movementX, movementY, 0, 0, dtMillis
             );
         }
     },

@@ -56,14 +56,14 @@ let TouchListenerModule = {
         }
     },
 
-    rotateCameraFromRightStickTouch()
+    rotateCameraFromRightStickTouch(deltaT)
     {
         let graphics = this.app.engine.graphics;
         let movementX = this.touch.rightX * 12;
         let movementY = this.touch.rightY * 16;
         if (Math.abs(movementX) > 0 || Math.abs(movementY) > 0)
             graphics.cameraManager.addCameraRotationEvent(
-                movementX, movementY, 0, 0
+                movementX, movementY, 0, 0, deltaT
             );
     },
 

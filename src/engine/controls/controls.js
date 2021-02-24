@@ -52,6 +52,9 @@ let UI = function(app)
     if (!this.isTouch) {
         this.settings.language = ''; // expose keyboard layout settings
     }
+
+    // internal
+    this._stamp = Date.now();
 };
 
 extend(UI.prototype, {
@@ -92,6 +95,17 @@ extend(UI.prototype, {
             this.stopMouseListeners();
         }
         this.stopWindowListeners();
+    },
+
+    stamp()
+    {
+        this._stamp = Date.now();
+        return this._stamp;
+    },
+
+    now()
+    {
+        return this._stamp;
     },
 
     requestStartControls()

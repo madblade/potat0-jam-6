@@ -174,30 +174,20 @@ extend(CameraManager.prototype, {
     },
 
     // Update.
-    // TODO manage camera smoothing here.
     updateCameraPosition(vector)
     {
-        let sin = Math.sin;
-        let cos = Math.cos;
-        // let PI = Math.PI;
+        let x = vector.x;
+        let y = vector.y;
+        let z = vector.z;
+        const cam = this.mainCamera;
 
-        // XXX [PERF] switch to quaternion (also server-side)
-        let up = this.mainCamera.get3DObject().rotation;
-        let theta0 = up.z;
-        let theta1 = up.x;
-        let f = 0; // 1.6;
-        let upVector = [
-            f * sin(theta1) * cos(theta0), // theta0 - PI / 2),
-            f * sin(theta1) * sin(theta0), // theta0 - PI / 2),
-            f * cos(theta1)
-        ];
-
-        let x = vector.x + upVector[0];
-        let y = vector.y + upVector[1];
-        let z = vector.z + upVector[2];
-
-        console.log('new pos');
-        this.mainCamera.setCameraPosition(x, y, z);
+        // Save old.
+        let animationManager = this.graphicsEngine.animationManager;
+        animationManager.saveOldPosition(cam.getCameraPosition());
+        // Do update.
+        cam.setCameraPosition(x, y, z);
+        // Save new.
+        animationManager.saveNewPosition(cam.getCameraPosition());
     },
 
     addCameraRotationEvent(relX, relY, absX, absY, deltaTMillis)
@@ -284,16 +274,16 @@ extend(CameraManager.prototype, {
         // Flush.
         this.incomingRotationEvents.length = 0;
 
-        const rotation = this._rotation;
-        rotation.fill(0);
-        this.updateCameraRotation(acc[0], acc[1], acc[2], acc[3], rotation);
+        // const rotation = this._rotation;
+        // rotation.fill(0);
+        this.updateCameraRotation(acc[0], acc[1], acc[2], acc[3]); //, rotation);
 
         // Here we could perform additional filtering
-        if (rotation)
-        {
-            let clientModel = this.graphicsEngine.app.model.frontend;
-            clientModel.triggerEvent('r', rotation);
-        }
+        // if (rotation)
+        // {
+        //     let clientModel = this.graphicsEngine.app.model.frontend;
+        //     clientModel.triggerEvent('r', rotation);
+        // }
     },
 
     clipOblique(mirror, mirrorCamera, localRecorder)
@@ -423,11 +413,19 @@ extend(CameraManager.prototype, {
     {
         // Rotate main camera.
         let camera = this.mainCamera;
-        console.log('new rot');
-        camera.rotateZ(-relX);
-        camera.rotateX(-relY);
+
+        // Save rotation for animation / effects.
+        let animationManager = this.graphicsEngine.animationManager;
         let rotationZ = camera.getZRotation();
         let rotationX = camera.getXRotation();
+        animationManager.saveOldRotation(rotationX, rotationZ);
+        // Do rotate.
+        camera.rotateZ(-relX);
+        camera.rotateX(-relY);
+        // Save new rotation.
+        rotationZ = camera.getZRotation();
+        rotationX = camera.getXRotation();
+        animationManager.saveNewRotation(rotationX, rotationZ);
 
         // Current up vector -> angles.
         let up = camera.get3DObject().rotation;
@@ -451,8 +449,8 @@ extend(CameraManager.prototype, {
         }
 
         // Apply transform to portals.
-        if (this._renderPortals)
-            this.updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0);
+        // if (this._renderPortals)
+        //     this.updateCameraPortals(camera, rotationZ, rotationX, theta1, theta0);
 
         // Apply transform to local model.
         // this.graphicsEngine.app.model.backend.selfModel.cameraMoved(this.mainCamera);

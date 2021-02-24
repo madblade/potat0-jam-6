@@ -28,6 +28,16 @@ let AnimationManager = function(graphics)
     this.times = new Map();
     this.clips = new Map();
 
+    // feedback.
+    this.oldCameraPosition = new Vector3(0, 0, 0);
+    this.newCameraPosition = new Vector3(0, 0, 0);
+    this.oldPitchRotationX = 0;
+    this.oldYawRotationZ = 0;
+    this.newPitchRotationX = 0;
+    this.newYawRotationZ = 0;
+    this.trauma = 0;
+    this.decayRate = 0;
+
     // opt.
     this._r = new Vector3();
     this._xy = new Vector2();

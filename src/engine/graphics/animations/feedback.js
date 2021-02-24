@@ -6,17 +6,40 @@
 
 let FeedbackModule = {
 
+    saveOldRotation(oldPitchRotationX, oldYawRotationZ)
+    {
+        this.oldPitchRotationX = oldPitchRotationX;
+        this.oldYawRotationZ = oldYawRotationZ;
+    },
+
+    saveNewRotation(newPitchRotationX, newYawRotationZ)
+    {
+        this.newPitchRotationX = newPitchRotationX;
+        this.newYawRotationZ = newYawRotationZ;
+    },
+
+    saveOldPosition(oldPosition)
+    {
+        this.oldCameraPosition.copy(oldPosition);
+    },
+
+    saveNewPosition(newPosition)
+    {
+        this.newCameraPosition.copy(newPosition);
+    },
+
     updateCameraFeedback(deltaT)
     {
         const graphics = this.graphics;
-        const mainCamera = graphics.cameraManager.mainCamera;
+        const manager = graphics.cameraManager;
+        const mainCamera = manager.mainCamera;
+        const raycastCamera = manager.mainRaycasterCamera;
 
         // (like camera lagging behind)
 
         // TODO
-        //  0. save previous camera position @updateCameraPosition()
-        //  1. correction camera vs wall
-        //  2. smoothe camera position (go to target)
+        //  1. smoothing camera position (go to target)
+        //  2. correction camera vs wall
 
         // XXX feedback shaking
     },

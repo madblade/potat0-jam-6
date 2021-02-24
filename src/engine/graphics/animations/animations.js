@@ -16,11 +16,12 @@ import { FeedbackModule }   from './feedback';
 import { SecondaryModule }  from './secondary';
 import {
     AnimationMixer,
+    Euler,
     Quaternion,
     Raycaster,
     Vector2,
     Vector3
-} from 'three';
+}                           from 'three';
 
 let AnimationManager = function(graphics)
 {
@@ -32,8 +33,6 @@ let AnimationManager = function(graphics)
 
     // feedback.
     this.currentCameraPosition = new Vector3(0, 0, 0);
-    this._w0 = new Vector3(0, 0, 0);
-    this._w1 = new Vector3(0, 0, 0);
     this._q = new Quaternion();
     this.oldCameraPosition = new Vector3(0, 0, 0);
     this.newCameraPosition = new Vector3(0, 0, 0);
@@ -47,6 +46,9 @@ let AnimationManager = function(graphics)
     this.raycaster = new Raycaster();
 
     // opt.
+    this._w0 = new Vector3(0, 0, 0);
+    this._w1 = new Vector3(0, 0, 0);
+    this._e = new Euler();
     this._r = new Vector3();
     this._xy = new Vector2();
 
@@ -75,7 +77,7 @@ extend(AnimationManager.prototype, {
         this.updateCameraFeedback(deltaT);
 
         // Text element update.
-        // this.updateTextLabels(deltaT);
+        this.updateTextLabels(deltaT);
     },
 
     restore()

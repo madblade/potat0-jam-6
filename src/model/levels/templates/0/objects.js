@@ -99,7 +99,7 @@ let Level0Objects = {
             rotation: [0, 0, 0],
             w: 0.5,
             h: 0.5,
-            d: 2
+            d: 1.15
         };
         objects.push(cupCM);
 

@@ -43,6 +43,7 @@ let ObjectsModule = {
         object3D.traverse(o => {
             if (o.isMesh)
             {
+                o.material.flatShading = false;
                 if (updatedEntity.b)
                     o.userData.bloom = true;
                 o.userData.hasPrimaryImage = true;
@@ -55,6 +56,7 @@ let ObjectsModule = {
         // update model
         this.updateEntity(id, entity, updatedEntity, graphics, entities);
         this.entitiesLoading.delete(id);
+        this.lookers.set(id, entity);
 
         // notify physics
         // let physics = this.app.engine.physics;

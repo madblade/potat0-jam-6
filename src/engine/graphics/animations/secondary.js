@@ -33,6 +33,37 @@ let SecondaryModule = {
                 );
             }
         });
+
+        const backend = this.graphics.app.model.backend;
+
+        // IK MC head
+        const sm = backend.selfModel;
+        const ep = sm.position;
+
+        // IK cup eyes
+        const em = backend.entityModel;
+        const lookers = em.lookers;
+        lookers.forEach(l =>
+        {
+            const gc = l.graphicalComponent;
+            const outer = gc.children[0];
+            const leftEye = outer.children[1];
+            const rightEye = outer.children[2];
+            const mp = this._w0;
+            mp.copy(leftEye.position)
+                .add(rightEye.position)
+                .multiplyScalar(0.2);
+            const delta = this._w1;
+            delta.copy(ep)
+                .addScaledVector(mp, -1);
+            delta.normalize();
+
+            const euler = this._e;
+            euler.setFromVector3(delta);
+            leftEye.rotation.z = -euler.x;
+            leftEye.rotation.x = Math.PI / 2 - euler.z;
+            rightEye.rotation.copy(leftEye.rotation);
+        });
     },
 
     createIKSolver(listOfBones, constraints, objectMixer)

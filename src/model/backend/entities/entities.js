@@ -31,6 +31,9 @@ let EntityModel = function(app)
     // ^  (Could be used by Bullet)
     // (We might want to put physical entities in a separate array)
 
+    this.lookers = new Map();
+    // ^  Invokers of the animations/secondary/lookAtPlayer behaviour.
+
     // Text
     this.labelledEntities = new Map();
 
@@ -144,6 +147,7 @@ extend(EntityModel.prototype, {
         this.entitiesIngame.clear();
         this.entitiesOutdated.clear();
         this.entitiesLoading.clear();
+        this.lookers.clear();
         this.needsUpdate = false;
         // XXX [CLEANUP] graphical component and all meshes
     },

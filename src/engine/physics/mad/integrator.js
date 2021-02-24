@@ -114,7 +114,7 @@ extend(Integrator.prototype, {
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
-        if (dtr > 0.05)
+        if (dtr > 0.1)
         {
             if (this._debug)
                 console.warn(`[Integrator] Large DT: ${dtr}.`);

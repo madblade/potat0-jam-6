@@ -11,14 +11,30 @@ let GamepadActionModule = {
         // 0.5 * dtMillis;
         const cameraMovingSpeed = graphics.stickCameraSpeed;
 
-        let movementX = x * 2 * cameraMovingSpeed;
-        let movementY = y * 1 * cameraMovingSpeed;
+        let movementX = x;
+        let movementY = y;
+        movementX = Math.sign(x) * Math.pow(Math.abs(movementX), 3.);
+        movementY = Math.sign(y) * Math.pow(Math.abs(movementY), 3.);
+        movementX *= 2 * cameraMovingSpeed;
+        movementY *= 1.1 * cameraMovingSpeed;
+
         if (Math.abs(movementX) > 0 || Math.abs(movementY) > 0)
         {
             graphics.cameraManager.addCameraRotationEvent(
                 movementX, movementY, 0, 0, dtMillis
             );
         }
+    },
+
+    smstp(end1, end2, t)
+    {
+        const x = this.clamp((t - end1) / (end2 - end1), 0.0, 1.0);
+        return x * x * (3 - 2 * x);
+    },
+
+    clamp(t, low, high)
+    {
+        return Math.min(high, Math.max(low, t));
     },
 
     stopMovePlayerFromLeftStickGamepad()

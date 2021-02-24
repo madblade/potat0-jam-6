@@ -215,8 +215,12 @@ extend(CameraManager.prototype, {
         const acc = this._acc;
         acc.fill(0);
 
+        let dtInSecs = 16. / 1e3;
+        // larger dt => larger rotation BUT also larger
+        // movementX / movementY
+        // so no need to timescale again…
+
         // FF, as anyone with sanity would do.
-        let dtInSecs = deltaT / 1e3;
         if (incoming.length === 1)
         {
             // console.log('inc small');
@@ -274,16 +278,16 @@ extend(CameraManager.prototype, {
         // Flush.
         this.incomingRotationEvents.length = 0;
 
-        // const rotation = this._rotation;
+        const rotation = this._rotation;
         // rotation.fill(0);
-        this.updateCameraRotation(acc[0], acc[1], acc[2], acc[3]); //, rotation);
+        this.updateCameraRotation(acc[0], acc[1], acc[2], acc[3], rotation);
 
         // Here we could perform additional filtering
-        // if (rotation)
-        // {
-        //     let clientModel = this.graphicsEngine.app.model.frontend;
-        //     clientModel.triggerEvent('r', rotation);
-        // }
+        if (rotation)
+        {
+            let clientModel = this.graphicsEngine.app.model.frontend;
+            clientModel.triggerEvent('r', rotation);
+        }
     },
 
     clipOblique(mirror, mirrorCamera, localRecorder)

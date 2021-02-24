@@ -43,7 +43,7 @@ let ObjectsModule = {
         animations.initializeEntityAnimation(entity.animationComponent,
             entity.getTheta());
         animations.addLabelledEntity(
-            'hi.', 0, entity
+            'hi.', id, entity
         );
 
         object3D.traverse(o => {

@@ -11,6 +11,8 @@ let TextModule = {
     {
         const graphics = this.graphics;
         const backend = graphics.app.model.backend;
+        if (backend.selfModel.locked) return;
+
         const labelledEntities = backend.entityModel.labelledEntities;
         const mainCameraWrapper = graphics.cameraManager.mainCamera;
         const camera = mainCameraWrapper.getRecorder();

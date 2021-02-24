@@ -35,12 +35,12 @@ let SecondaryModule = {
         });
 
         const backend = this.graphics.app.model.backend;
-
-        // IK MC head
         const sm = backend.selfModel;
         const ep = sm.position;
 
         // IK cup eyes
+        let mainLookerFound = false;
+        const mainLookerDelta = this._w2;
         const em = backend.entityModel;
         const lookers = em.lookers;
         lookers.forEach(l =>
@@ -58,12 +58,61 @@ let SecondaryModule = {
                 .addScaledVector(mp, -1);
             delta.normalize();
 
+            if (!mainLookerFound)
+            {
+                mainLookerDelta.copy(delta).negate();
+                mainLookerFound = true;
+            }
+
             const euler = this._e;
             euler.setFromVector3(delta);
             leftEye.rotation.z = -euler.x;
             leftEye.rotation.x = Math.PI / 2 - euler.z;
             rightEye.rotation.copy(leftEye.rotation);
         });
+
+        // IK MC head
+        const av = sm.avatar;
+        if (av)
+        {
+            const ac = sm.animationComponent;
+            const idleTime = ac.idleTime;
+            const timeToIdle = ac.timeToIdle;
+            // if (idleTime > timeToIdle)// &&
+            // idleTime < 2 * timeToIdle)
+            {
+                const progress = (idleTime - timeToIdle) /
+                    timeToIdle;
+                // rotate head of progress
+                const headBone = av
+                    .children[0].children[0].children[0]
+                    .children[0].children[0].children[0]
+                    .children[0].children[0];
+
+                const yOTarget = Math.atan2(
+                    mainLookerDelta.y,
+                    mainLookerDelta.x);
+
+                const er = sm.getRotation();
+                // er.x = up, er.z = theta
+
+                // headBone.rotation.y = -euler.x;
+                // x == vertical, y == horizontal
+                // headBone.rotation.x += er.y; //er.x - Math.PI / 2;
+
+                const diff = yOTarget - er.z;
+                // console.log(Math.abs(yOTarget - er.z));
+                // headBone.rotation.y = diff + Math.PI / 2;
+
+                // headBone.rotation.y = er.z; //er.x - Math.PI / 2;
+            }
+            // else
+            // {
+            //     x = 0.01734646181511995
+            //     y = 0.
+            //     z = 0.
+            // }
+        }
     },
 
     createIKSolver(listOfBones, constraints, objectMixer)

@@ -48,6 +48,7 @@ let AnimationManager = function(graphics)
     // opt.
     this._w0 = new Vector3(0, 0, 0);
     this._w1 = new Vector3(0, 0, 0);
+    this._w2 = new Vector3(0, 0, 0);
     this._e = new Euler();
     this._r = new Vector3();
     this._xy = new Vector2();

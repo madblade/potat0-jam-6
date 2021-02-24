@@ -182,7 +182,7 @@ let CoreModule = {
         // Update inputs for Touch/Gamepad devices.
         // Note: camera cannot rotate bw/ this call and render.
         controlsEngine.updateControlsDevice(deltaT);
-        controlsEngine.stamp();
+        // controlsEngine.stamp();
 
         // Update camera state from direct user inputs.
         this.refreshMainCamera(deltaT);

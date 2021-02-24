@@ -181,12 +181,6 @@ extend(CameraManager.prototype, {
         let cos = Math.cos;
         // let PI = Math.PI;
 
-        let cams = [this.mainCamera, this.mainRaycasterCamera];
-        this.subCameras.forEach(function(cam) { cams.push(cam); });
-        let localRecorder = this.mainCamera.getRecorder();
-
-        let i = this.graphicsEngine.getCameraInteraction();
-
         // XXX [PERF] switch to quaternion (also server-side)
         let up = this.mainCamera.get3DObject().rotation;
         let theta0 = up.z;
@@ -201,49 +195,9 @@ extend(CameraManager.prototype, {
         let x = vector.x + upVector[0];
         let y = vector.y + upVector[1];
         let z = vector.z + upVector[2];
-        // let x = vector[0];
-        // let y = vector[1];
-        // let z = vector[2] + 1.6;
-        //let z = vector[2];
 
-        if (i.isFirstPerson())
-        {
-            cams.forEach((cam/*, cameraId*/) => {
-                cam.setCameraPosition(x, y, z);
-                cam.setFirstPerson();
-                cam.addPositionTransform();
-                let mirrorCamera = cam.getRecorder();
-                if (mirrorCamera) {
-                    let screen = cam.getScreen();
-                    if (screen) {
-                        let mirror = screen.getMesh();
-                        this.clipOblique(mirror, mirrorCamera, localRecorder);
-                    }
-                }
-            });
-        }
-
-        else if (i.isThirdPerson())
-        {
-            const rp = this._renderPortals;
-            cams.forEach((cam/*, cameraId*/) => {
-                cam.setCameraPosition(x, y, z);
-                // cam.setThirdPerson();
-
-                if (rp)
-                {
-                    cam.addPositionTransform();
-                    let mirrorCamera = cam.getRecorder();
-                    if (mirrorCamera) {
-                        let screen = cam.getScreen();
-                        if (screen) {
-                            let mirror = screen.getMesh();
-                            this.clipOblique(mirror, mirrorCamera, localRecorder);
-                        }
-                    }
-                }
-            });
-        }
+        console.log('new pos');
+        this.mainCamera.setCameraPosition(x, y, z);
     },
 
     addCameraRotationEvent(relX, relY, absX, absY, deltaTMillis)
@@ -469,6 +423,7 @@ extend(CameraManager.prototype, {
     {
         // Rotate main camera.
         let camera = this.mainCamera;
+        console.log('new rot');
         camera.rotateZ(-relX);
         camera.rotateX(-relY);
         let rotationZ = camera.getZRotation();

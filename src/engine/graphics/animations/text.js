@@ -34,6 +34,7 @@ let TextModule = {
             const text = label.getText();
             if (!text || text.length < 1) return;
             const am = entity.animationComponent;
+            label.advanceTime(deltaT);
             label.updatePosition(camera, am.p0);
         });
     },

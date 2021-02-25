@@ -18,6 +18,11 @@ let Label = function(textSequence)
     if (textSequence.length < 1)
         throw Error('[Label] Must have a text sequence with TEXT INSIDE.');
 
+    this.time = 0;
+    this.fadeInTime = 100; // ms
+    this.fadeOutTime = 500; // ms
+    this.displayTime = 3000; // ms
+
     const firstText = textSequence[0];
     const text = firstText.text;
     this.text = text || 'Allo?';
@@ -67,6 +72,7 @@ extend(Label.prototype, {
             this.textIndex = ti;
             const nextText = ts[ti].text;
             this.setText(nextText);
+            this.resetTime();
         }
     },
 
@@ -80,7 +86,18 @@ extend(Label.prototype, {
             this.textIndex = ti;
             const nextText = ts[ti].text;
             this.setText(nextText);
+            this.resetTime();
         }
+    },
+
+    advanceTime(deltaT)
+    {
+        this.time += deltaT;
+    },
+
+    resetTime()
+    {
+        this.time = 0;
     },
 
     setHTML(html)
@@ -104,9 +121,45 @@ extend(Label.prototype, {
 
         const coords2D = this.get2DCoords(this.position, camera);
 
+        // Fade out.
+        // const cts = this.textSequence[this.textIndex];
+        const fadeIn = this.fadeInTime;
+        const fadeOut = this.fadeOutTime;
+        const displayTime = this.displayTime;
+        const t = this.time;
+        let newOpacity = 0;
+        if (t < fadeIn)
+        {
+            newOpacity = t / fadeIn;
+        }
+        else if (t < fadeIn + displayTime)
+        {
+            // nothing
+            newOpacity = 1;
+        }
+        else if (t < fadeIn + displayTime + fadeOut)
+        {
+            newOpacity = 1 - (t - displayTime - fadeIn) / fadeOut;
+        }
+        else
+        {
+            newOpacity = 0;
+        }
+
+        // transparency culling
+        if (newOpacity === 0)
+        {
+            this.element.style.display = 'none';
+            return;
+        }
+        // console.log(Math.floor(newOpacity * 100));
+        this.element.style.opacity = `${Math.floor(newOpacity * 100)}%`;
+
         // Detect changes.
         if (this.coords2D.manhattanDistanceTo(coords2D) === 0)
+        {
             return;
+        }
         this.coords2D.set(coords2D.x, coords2D.y);
 
         // Culling.

@@ -10,7 +10,7 @@ let SelfUpdateModule = {
 
     updatePosition(newP, avatar)
     {
-        let register = this.app.register;
+        // let register = this.app.register;
         let graphics = this.app.engine.graphics;
         // let clientModel = this.app.model.frontend;
         let handItemWrapper = this.handItemWrapper;
@@ -19,7 +19,8 @@ let SelfUpdateModule = {
         let p = avatar.position;
 
         // Notify modules.
-        register.updateSelfState({ position: [p.x, p.y, p.z] });
+        // register.updateSelfState({ position: [p.x, p.y, p.z] });
+        // no need for modules rn
 
         // Update animation.
         // const animate = p.x !== newP.x || p.y !== newP.y;
@@ -34,11 +35,31 @@ let SelfUpdateModule = {
         // clientModel.pushForLaterUpdate('camera-position', p);
         graphics.cameraManager.updateCameraPosition(p);
 
-        let handItem = this.handItem;
-        if (handItem && handItemWrapper) {
-            let mc = graphics.cameraManager.mainCamera;
-            handItemWrapper.position.copy(mc.up.position);
+        // let handItem = this.handItem;
+        // if (handItem && handItemWrapper) {
+        //     let mc = graphics.cameraManager.mainCamera;
+        //     handItemWrapper.position.copy(mc.up.position);
+        // }
+
+        // update cup helper
+        const em = this.app.model.backend.entityModel;
+        const hid = em.helperCupID;
+        if (hid < 0) return;
+        const mainHelper = em.lookers.get(hid.toString());
+        if (!mainHelper) return;
+        const gc = mainHelper.graphicalComponent;
+        let hp;
+        if (!gc || !(hp = gc.position)) return;
+        const d = hp.distanceTo(p) / 3;
+        const tetrahedron = gc.children[0].children[3];
+        let ns;
+        if (d < 1)
+        {
+            // selectable
+            ns = 0.8 * Math.min(Math.sqrt(1 - d), 0.5);
         }
+        else ns = 0.001;
+        tetrahedron.scale.set(ns, ns, ns);
     },
 
     setRotation(r, avatar)

@@ -33,6 +33,8 @@ let EntityModel = function(app)
 
     this.lookers = new Map();
     // ^  Invokers of the animations/secondary/lookAtPlayer behaviour.
+    this.helperCupID = -1;
+    // ^  Tutorial / help entity id.
 
     // Text
     this.labelledEntities = new Map();
@@ -148,6 +150,7 @@ extend(EntityModel.prototype, {
         this.entitiesOutdated.clear();
         this.entitiesLoading.clear();
         this.lookers.clear();
+        this.helperCupID = -1;
         this.needsUpdate = false;
         // XXX [CLEANUP] graphical component and all meshes
     },
@@ -191,6 +194,11 @@ extend(EntityModel.prototype, {
         newEntities[newID] = bigCup;
         alreadyGenerated.push(newID);
         return newID;
+    },
+
+    setHelperCupID(id)
+    {
+        this.helperCupID = id;
     },
 
     addNewLittleCup(newEntities, px, py, pz, alreadyGenerated)

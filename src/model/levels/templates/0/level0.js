@@ -71,6 +71,7 @@ let Level0 = function(title, id)
                 );
                 const idCup = backend.entityModel
                     .addNewBigCup(ne, bigCup, generated);
+                backend.entityModel.setHelperCupID(idCup);
 
                 // apply
                 backend.updateEntities(ne);

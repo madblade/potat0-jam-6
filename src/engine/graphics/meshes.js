@@ -16,7 +16,9 @@ import {
     BoxGeometry,
     PlaneGeometry,
     Object3D,
-    Group, DoubleSide, TetrahedronBufferGeometry, MeshPhongMaterial
+    Group,
+    TetrahedronBufferGeometry,
+    MeshPhongMaterial
 } from 'three';
 
 let MeshesModule = {
@@ -120,8 +122,7 @@ let MeshesModule = {
         tetrahedronHelper.rotation.set(
             Math.PI / 5, 0, Math.PI / 4
         );
-        tetrahedronHelper.scale.multiplyScalar(0.4);
-        // TODO update scale as player nears the cup
+        tetrahedronHelper.scale.multiplyScalar(0.001);
 
         const innerWrapper = new Object3D();
         innerWrapper.name = 'inner';

@@ -116,7 +116,7 @@ let SecondaryModule = {
 
             let target;
             const deltaTheta = Math.abs(yOTarget - modelTheta);
-            if (deltaTheta < Math.PI / 2)
+            if (deltaTheta < Math.PI / 3)
             {
                 // only look at it if it’s in a reasonable angle
                 target = yOTarget - modelTheta;

@@ -19,7 +19,15 @@ let UI = function(app)
     this.app = app;
 
     // User customizable settings.
-    this.settings = {};
+    this.settings = {
+        mouseCameraSpeed: .125,
+        maxMouseSpeed: .5,
+        minMouseSpeed: .125 / 4.,
+
+        stickCameraSpeed: 2.,
+        maxStickSpeed: 8.,
+        minStickSpeed: .5,
+    };
 
     // Mouse on desktop.
     this.threeControlsEnabled = false;

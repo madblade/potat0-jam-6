@@ -12,7 +12,7 @@ import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let ControlsMenu = function(settingsModule)
 {
-    const nbNavigableObjects = 2;
+    const nbNavigableObjects = 3;
     GamepadNavigable.call(this, nbNavigableObjects);
 
     this.settingsModule = settingsModule;
@@ -26,10 +26,41 @@ extend(ControlsMenu.prototype, {
     {
         // XXX put controlsSettings in this object
         const controlsSettings = this.settingsModule.controlsSettings;
+        const ga = this.settingsModule.gamepadActive;
+        const ai = this.activeItem;
 
         let content = `
             <div class="container">
             <table class="table table border rounded noselect" style="width:100%">
+        `;
+
+        content += `
+            <tr id="mouse-speed-wrapper"
+                class="camspeed-control-wrapper ${this.hl(ga, ai, 0)}"><td>Sensibilité (Souris)</td>
+            <td>
+            <div class="row mt-3">
+                <div class="input-group mb-1 center-block col-12 slider-container">
+                    <div class="col-12 input-group-append flex-fill">
+                        <input type="range" min="0" max="100" value="50" class="slider"
+                            id="mouse-speed-controller">
+                    </div>
+                </div>
+            </div>
+            </td></tr>
+
+            <tr id="gamepad-speed-wrapper"
+                class="camspeed-control-wrapper ${this.hl(ga, ai, 1)}"><td>Sensibilité (Manette)</td>
+            <td>
+            <div class="row mt-3">
+                <div class="camspeed-control-wrapper
+                        input-group mb-1 center-block col-12 slider-container">
+                    <div class="col-12 input-group-append flex-fill">
+                        <input type="range" min="0" max="100" value="50" class="slider"
+                            id="gamepad-speed-controller">
+                    </div>
+                </div>
+            </div>
+            </td></tr>
         `;
 
         if (controlsSettings.hasOwnProperty('language')) {
@@ -50,6 +81,11 @@ extend(ControlsMenu.prototype, {
             </div>`;
 
         return content;
+    },
+
+    hl(ga, ai, i) // highlight
+    {
+        return ga && ai === i ? 'gamepad-selected' : '';
     },
 
     listen()
@@ -88,12 +124,40 @@ extend(ControlsMenu.prototype, {
 
     selectItems()
     {
-        return [];
+        return [
+            $('#mouse-speed-wrapper'),
+            $('#gamepad-speed-wrapper'),
+            $('#return')
+        ];
     },
 
     navigate(options)
     {
         this.super.navigate.call(this, options);
+
+        const app = this.settingsModule.app;
+        const uiSettings = app.engine.controls.settings;
+        if (this.activeItem === 0) // mouse
+        {
+            const camSpeedControl = $('#mouse-speed-controller');
+            if (options === 'right' || options === 'left') // slider
+            {
+                const mouseSpeed = uiSettings.mouseCameraSpeed;
+                const maxMouseSpeed = uiSettings.maxMouseSpeed;
+                const minMouseSpeed = uiSettings.minMouseSpeed;
+
+                // normalized gui
+                const newSpeed =
+                    options === 'right' ?
+                        Math.min(mouseSpeed * 1.1, maxMouseSpeed) :
+                        Math.max(mouseSpeed / 1.1, minMouseSpeed);
+                uiSettings.mouseCameraSpeed = newSpeed;
+
+                let speedGUI = (newSpeed - minMouseSpeed) / (maxMouseSpeed - minMouseSpeed);
+                speedGUI = Math.log(1 + 16 * speedGUI) / Math.log(17);
+                camSpeedControl.val(Math.floor(speedGUI * 100));
+            }
+        }
     }
 
 });

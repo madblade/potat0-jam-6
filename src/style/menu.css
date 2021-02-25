@@ -54,6 +54,16 @@
     color: rgba(217, 83, 79, 0.7);
 }
 
+/* Gameplay */
+
+.camspeed-control-wrapper {
+    border-radius: 5px;
+}
+
+tr.camspeed-control-wrapper.gamepad-selected {
+    background-color: #413786;
+}
+
 /* Audio */
 
 .slider-container {

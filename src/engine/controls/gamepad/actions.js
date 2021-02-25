@@ -9,7 +9,7 @@ let GamepadActionModule = {
 
         // dt ~ 16.7 for 60Hz, 7 for 144Hz
         // 0.5 * dtMillis;
-        const cameraMovingSpeed = graphics.stickCameraSpeed;
+        const cameraMovingSpeed = this.settings.stickCameraSpeed;
 
         let movementX = x;
         let movementY = y;

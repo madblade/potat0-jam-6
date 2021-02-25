@@ -60,8 +60,6 @@ let Graphics = function(app)
 
     // Interaction.
     this.controls =     null;
-    this.mouseCameraSpeed = .125;
-    this.stickCameraSpeed = 2.;
 
     // Loading.
     this.loadingManager = null;

@@ -14,8 +14,7 @@ let FirstPersonModule = {
         let movementY = event.movementY;
         // || event.mozMovementY || event.webkitMovementY || 0;
 
-        const graphics = this.app.engine.graphics;
-        const mouseSpeed = graphics.mouseCameraSpeed;
+        const mouseSpeed = this.settings.mouseCameraSpeed;
 
         movementX *= mouseSpeed;
         movementY *= mouseSpeed;

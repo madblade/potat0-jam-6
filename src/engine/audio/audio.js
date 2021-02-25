@@ -171,6 +171,7 @@ extend(AudioEngine.prototype, {
 
     playMusic()
     {
+        // too lazy to do it beautifully
         const i1 = this.musicMap.get('ambience-1');
         const i2 = this.musicMap.get('ambience-2');
         const i3 = this.musicMap.get('ambience-3');
@@ -203,11 +204,20 @@ extend(AudioEngine.prototype, {
         a1.play();
     },
 
+    stopMusic()
+    {
+        this.musicMap.forEach(k => {
+            const a1 = this.musicSources[k];
+            if (a1.isPlaying && a1.hasPlaybackControl) a1.pause();
+        });
+    },
+
     muteMusic()
     {
         this.isMusicMute = true;
         const m = this.musicSources;
         m.forEach(s => s.setVolume(0));
+        this.stopMusic();
     },
 
     unmuteMusic()
@@ -216,6 +226,7 @@ extend(AudioEngine.prototype, {
         const m = this.musicSources;
         const volume = this.settings.globalVolume;
         m.forEach(s => s.setVolume(volume));
+        this.playMusic();
     },
 
     setVolume(volume) // volume should be in [0, 1]
@@ -251,7 +262,6 @@ extend(AudioEngine.prototype, {
 
     playJumpSound()
     {
-        this.playMusic();
         // TODO
         console.log('jump');
         this.playMenuSound();

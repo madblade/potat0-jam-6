@@ -81,6 +81,8 @@ let Level0 = function(title, id)
                 backend.updateEntities(ne);
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
+
+                ux.app.engine.audio.playMusic();
             }
         },
         {

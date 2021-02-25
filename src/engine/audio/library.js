@@ -14,6 +14,7 @@ import SelectSound          from '../../assets/audio/menu.select.wav';
 import PickupSound          from '../../assets/audio/pickup.wav';
 
 // sfx local
+import JumpSound            from '../../assets/audio/movement/jump.mp3';
 import FootStepHard1        from '../../assets/audio/movement/footstep-hard-1.mp3';
 import FootStepHard2        from '../../assets/audio/movement/footstep-hard-2.mp3';
 import FootStepHard3        from '../../assets/audio/movement/footstep-hard-3.mp3';
@@ -63,6 +64,8 @@ const SFXLibrary = {
         ['footstep-puddle-2', FootStepPuddle2],
         ['footstep-puddle-3', FootStepPuddle3],
         ['footstep-puddle-4', FootStepPuddle4],
+
+        ['jump', JumpSound],
     ],
 
 };

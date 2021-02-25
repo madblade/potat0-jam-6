@@ -123,6 +123,8 @@ let Level0 = function(title, id)
                     }
 
                 backend.updateEntities(newEntities);
+
+                ux.app.engine.audio.playCredits();
             }
         },
         {

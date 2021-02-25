@@ -169,6 +169,14 @@ extend(AudioEngine.prototype, {
         m.forEach(s => s.setVolume(volume));
     },
 
+    playCredits()
+    {
+        this.stopMusic();
+        const i1 = this.musicMap.get('credits');
+        const a1 = this.musicSources[i1];
+        a1.play();
+    },
+
     playMusic()
     {
         // too lazy to do it beautifully

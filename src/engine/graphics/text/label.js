@@ -15,6 +15,7 @@ let Label = function(textSequence)
 {
     this.textSequence = textSequence;
     this.textIndex = 0;
+    this.unlockedTextIndex = 0;
     if (textSequence.length < 1)
         throw Error('[Label] Must have a text sequence with TEXT INSIDE.');
 
@@ -69,8 +70,17 @@ extend(Label.prototype, {
         if (ti < nbT)
         {
             // display next text
+            const newSeqElt = ts[ti];
+            if (!newSeqElt.direct && this.unlockedTextIndex < ti)
+            {
+                const timeToWaitBefore = newSeqElt.timeToWaitBefore;
+                if (this.time < timeToWaitBefore + this.displayTime)
+                    return;
+            }
+
             this.textIndex = ti;
-            const nextText = ts[ti].text;
+            this.unlockedTextIndex = Math.max(this.unlockedTextIndex, ti);
+            const nextText = newSeqElt.text;
             this.setText(nextText);
             this.resetTime();
         }
@@ -88,6 +98,16 @@ extend(Label.prototype, {
             this.setText(nextText);
             this.resetTime();
         }
+    },
+
+    setTextSequence(newTextSequence)
+    {
+        this.textSequence = newTextSequence;
+        this.textIndex = 0;
+        const nextText = this.textSequence[this.textIndex].text;
+        this.unlockedTextIndex = 0;
+        this.setText(nextText);
+        this.resetTime();
     },
 
     advanceTime(deltaT)

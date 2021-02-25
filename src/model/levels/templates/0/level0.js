@@ -61,8 +61,12 @@ let Level0 = function(title, id)
                         text: 'Et je suppose que je suis l’objectif ?'
                     },
                     {
-                        direct: false,
+                        direct: true,
                         text: 'Tu vas bien ?'
+                    },
+                    {
+                        timeToWaitBefore: 2000,
+                        text: 'Bon.'
                     }
                 ];
                 const bigCup = backend.entityModel.makeNewBigCup(

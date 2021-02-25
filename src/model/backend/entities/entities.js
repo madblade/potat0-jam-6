@@ -201,6 +201,18 @@ extend(EntityModel.prototype, {
         this.helperCupID = id;
     },
 
+    setHelperCupTextSequence(newTextSequence)
+    {
+        const id = this.helperCupID;
+        assert(id !== -1, '[Entities] Cannot feed text.');
+        if (id < 0) return;
+        const c = this.lookers.get(id.toString());
+        const tc = c.textComponent;
+        assert(!!tc, '[Entities] Cannot feed text.');
+        if (!tc) return;
+        tc.setTextSequence(newTextSequence);
+    },
+
     talkToHelperCup()
     {
         const id = this.helperCupID;

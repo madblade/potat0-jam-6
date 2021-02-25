@@ -64,7 +64,7 @@ extend(LoadingState.prototype, {
     notifyTaskName(taskName)
     {
         if (this.taskElement)
-            this.taskElement.html(`Chargement des fichiers "${taskName}"…`);
+            this.taskElement.html(`Chargement des fichiers “${taskName}”…`);
     },
 
     notifyProgress(url, itemsLoaded, itemsTotal)

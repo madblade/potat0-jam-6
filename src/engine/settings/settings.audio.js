@@ -26,6 +26,8 @@ extend(AudioMenu.prototype, {
     {
         const ga = this.settingsModule.gamepadActive;
         const ai = this.activeItem;
+        const audio = this.settingsModule.app.engine.audio;
+        const isMusicMute = audio.isMusicMute;
 
         let content = `
             <div class="container">
@@ -48,7 +50,7 @@ extend(AudioMenu.prototype, {
                 <td>Musique</td>
                 <td>
                     <label class="w3switch">
-                        <input type="checkbox" id="switch-music">
+                        <input type="checkbox" id="switch-music" ${isMusicMute ? '' : 'checked'}>
                         <span class="w3slider w3round"></span>
                     </label>
                 </td>

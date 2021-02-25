@@ -30,6 +30,7 @@ let AudioEngine = function(app)
     this.listener = new AudioListener();
     // A number of global audio sources.
     this.audioSources = [];
+    this.musicSources = [];
     // A number of positional audio sources.
     this.positionalAudioSources = [];
 
@@ -39,7 +40,7 @@ let AudioEngine = function(app)
     this.sounds = {
         sfx: library.global.map(i => i[1]), // [1] === urls
         positionalSfx: library.positional.map(i => i[1]),
-        music: []
+        music: library.music.map(i => i[1])
     };
     // Sound name -> index of sound in audioSources array
     this.soundMap = new Map(
@@ -52,6 +53,12 @@ let AudioEngine = function(app)
             [i[0], index]
         )
     );
+    this.musicMap = new Map(
+        library.music.map((i, index) =>
+            [i[0], index] // [0] === name, index === in sources array
+        )
+    );
+    this.isMusicMute = false;
 
     // Loading.
     this.nbSoundsToLoad = this.sounds.sfx.length +
@@ -61,6 +68,12 @@ let AudioEngine = function(app)
 
     // Notes generator
     this.notesEngine = new Notes(this);
+
+    // misc
+    this.waterFootstep = 0;
+    this.nbWaterFootsteps = 4;
+    this.footstep = 0;
+    this.nbFootsteps = 8;
 };
 
 extend(AudioEngine.prototype, {
@@ -80,16 +93,16 @@ extend(AudioEngine.prototype, {
         const tunes = this.sounds.music;
 
         this.loadAudios(sfxs, true);
-        this.loadAudios(tunes, true);
+        this.loadAudios(tunes, true, true);
         this.loadAudios(psfxs, false);
     },
 
-    loadAudios(lib, isGlobal)
+    loadAudios(lib, isGlobal, isMusic)
     {
         const globalListener = this.listener;
         const defaultVolume = this.settings.globalVolume;
         const loadingState = this.app.state.getState('loading');
-        lib.forEach(sfx =>
+        lib.forEach((sfx, id) =>
         {
             this.audioLoader.load(sfx,  buffer =>
             {
@@ -99,10 +112,13 @@ extend(AudioEngine.prototype, {
                 audio.setBuffer(buffer);
                 audio.setVolume(defaultVolume);
                 // force volume to 0
-                audio.gain.gain.setValueAtTime(0.00001, globalListener.context.currentTime);
-                isGlobal ?
-                    this.audioSources.push(audio) :
-                    this.positionalAudioSources.push(audio);
+                audio.gain.gain.setValueAtTime(0.00001,
+                    globalListener.context.currentTime
+                );
+                isMusic ? this.musicSources[id] = audio :
+                    isGlobal ?
+                        this.audioSources[id] = audio :
+                        this.positionalAudioSources[id] = audio;
                 this.nbSoundsLoadedOrError++;
             }, () => {
                 loadingState.notifyTaskName('audio');
@@ -133,8 +149,10 @@ extend(AudioEngine.prototype, {
         this.settings.mute = true;
         const p = this.positionalAudioSources;
         const a = this.audioSources;
+        const m = this.musicSources;
         a.forEach(s => s.setVolume(0));
         p.forEach(s => s.setVolume(0));
+        m.forEach(s => s.setVolume(0));
         this.notesEngine.mainVoiceMaxVolume = 0;
         this.notesEngine.mainVoice.setVolume(0);
     },
@@ -144,19 +162,64 @@ extend(AudioEngine.prototype, {
         this.settings.mute = false;
         const p = this.positionalAudioSources;
         const a = this.audioSources;
+        const m = this.musicSources;
         const volume = this.settings.globalVolume;
         a.forEach(s => s.setVolume(volume));
         p.forEach(s => s.setVolume(volume));
+        m.forEach(s => s.setVolume(volume));
+    },
+
+    playMusic()
+    {
+        const i1 = this.musicMap.get('ambience-1');
+        const i2 = this.musicMap.get('ambience-2');
+        const i3 = this.musicMap.get('ambience-3');
+        const i4 = this.musicMap.get('ambience-4');
+        const a1 = this.musicSources[i1];
+        const a2 = this.musicSources[i2];
+        const a3 = this.musicSources[i3];
+        const a4 = this.musicSources[i4];
+        a1.currentTime = 0;
+        a1.onEnded = () => {
+            a1.isPlaying = false;
+            a2.isPlaying = false;
+            a2.currentTime = 0;
+            a2.play();
+        };
+        a2.onEnded = () => {
+            a2.isPlaying = false;
+            a3.isPlaying = false;
+            a3.currentTime = 0;
+            a3.play();
+        };
+        a3.onEnded = () => {
+            a3.isPlaying = false;
+            a4.isPlaying = false;
+            a4.currentTime = 0;
+            a4.play();
+        };
+        a4.onEnded = () => {
+            a4.isPlaying = false;
+            a1.isPlaying = false;
+            a1.currentTime = 0;
+            a1.play();
+        };
+        a1.play();
     },
 
     muteMusic()
     {
-        // TODO
+        this.isMusicMute = true;
+        const m = this.musicSources;
+        m.forEach(s => s.setVolume(0));
     },
 
     unmuteMusic()
     {
-        // TODO
+        this.isMusicMute = false;
+        const m = this.musicSources;
+        const volume = this.settings.globalVolume;
+        m.forEach(s => s.setVolume(volume));
     },
 
     setVolume(volume) // volume should be in [0, 1]
@@ -169,9 +232,12 @@ extend(AudioEngine.prototype, {
         this.settings.globalVolume = volume;
         const p = this.positionalAudioSources;
         const a = this.audioSources;
+        const m = this.musicSources;
         a.forEach(s => s.setVolume(volume));
         p.forEach(s => s.setVolume(volume));
-        this.notesEngine.mainVoiceMaxVolume = volume;
+        m.forEach(s => s.setVolume(volume));
+        this.notesEngine.mainVoiceMaxVolume = volume / 2;
+        // ^  this can be annoying so…
     },
 
     getVolume()
@@ -189,12 +255,15 @@ extend(AudioEngine.prototype, {
 
     playJumpSound()
     {
+        this.playMusic();
+        // TODO
         console.log('jump');
         this.playMenuSound();
     },
 
     playFootstepWaterSound()
     {
+        // TODO
         console.log('water');
         this.playMenuSound();
     },

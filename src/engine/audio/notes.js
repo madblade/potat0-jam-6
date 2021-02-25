@@ -93,6 +93,7 @@ extend(Notes.prototype, {
 
         const frequency = howToSing[0];
         const sustain = howToSing[1];
+        const sustainFactor = 1e3 * 0.5;
 
         const audioContext = listener.context;
         const currentTime = audioContext.currentTime;
@@ -106,7 +107,7 @@ extend(Notes.prototype, {
             {
                 this.mainVoice.setVolume(this.mainVoiceMaxVolume);
                 this.singRemainingText(textRemainder, threeAudio, listener, singingHandle);
-            }, sustain * 1e3
+            }, sustain * sustainFactor
             );
         }
         else
@@ -115,7 +116,7 @@ extend(Notes.prototype, {
             {
                 this.mainVoice.setVolume(0.);
                 this.fadeOutVolumeIfFirefox(audioContext);
-            }, sustain * 1e3);
+            }, sustain * sustainFactor);
         }
     },
 

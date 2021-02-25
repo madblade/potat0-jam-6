@@ -107,6 +107,24 @@ let GamepadActionModule = {
             // menu click
             const sm = this.app.state;
             sm.navigate('enter'); // go up once
+            return;
+        }
+
+        if (this.threeControlsEnabled && isPressed)
+        {
+            const backend = this.app.model.backend;
+            if (backend.selfModel.canTalkToCup)
+                backend.entityModel.talkToHelperCup();
+        }
+    },
+
+    triangleButton(isPressed)
+    {
+        if (this.threeControlsEnabled && isPressed)
+        {
+            const backend = this.app.model.backend;
+            if (backend.selfModel.canTalkToCup)
+                backend.entityModel.untalkToHelperCup();
         }
     }
 

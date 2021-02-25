@@ -211,6 +211,7 @@ extend(GamepadControls.prototype, {
             case 2: // square
                 break;
             case 3: // triangle
+                controlsEngine.triangleButton(pressed);
                 break;
             case 4: // L1
                 break;

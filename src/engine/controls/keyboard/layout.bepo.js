@@ -16,19 +16,19 @@ let LayoutBEPO = {
             arrowLeft: 37,
 
             // Left hand directional controls.
-            leftHandUp: 90,     // Z
-            leftHandLeft: 81,   // Q
-            leftHandDown: 83,   // S
-            leftHandRight: 68,  // D
+            leftHandUp: 186,    // É
+            leftHandLeft: 65,   // A
+            leftHandDown: 85,   // U
+            leftHandRight: 73,  // I
 
             // Left hand advanced controls.
-            leftHandNorthWest: 65,     // A
-            leftHandNorthEast: 69,     // E
-            leftHandNorthEast2: 82,    // R
-            leftHandEast2: 70,         // F
-            leftHandSouthWest: 87,     // W
-            leftHandSouth: 88,         // X
-            leftHandSouthEast: 67,     // C
+            leftHandNorthWest: 66,     // b
+            leftHandNorthEast: 80,     // p
+            leftHandNorthEast2: 79,    // o
+            leftHandEast2: 69,         // e
+            leftHandSouthWest: 221,    // à
+            leftHandSouth: 89,         // y
+            leftHandSouthEast: 88,     // x
 
             // Modifiers.
             alt: 18,
@@ -82,23 +82,23 @@ let LayoutBEPO = {
             leftHandEast3: 71,          // G
             leftHandSouthEast3: 86,     // V
 
-            rightHandUp: 73,            // I
-            rightHandDown: 75,          // K
-            rightHandLeft: 74,          // J
-            rightHandLeft2: 72,         // H
-            rightHandRight: 76,         // L
-            rightHandRight2: 77,        // M
-            rightHandSouth: 190,        // .
+            rightHandUp: 68,            // I
+            rightHandDown: 83,          // K
+            rightHandLeft: 84,          // J
+            rightHandLeft2: 67,         // H
+            rightHandRight: 82,         // L
+            rightHandRight2: 78,        // M
+            rightHandSouth: 71,         // .
 
-            rightHandNorthWest: 85,     // U
-            rightHandNorthWest2: 89,    // Y
-            rightHandNorthEast: 79,     // O
-            rightHandNorthEast2: 80,    // P
-            rightHandSouthWest: 188,    // ,
-            rightHandSouthWest2: 78,    // N
-            rightHandSouthWest3: 66,    // B
-            rightHandSouthEast: 191,    // /
-            rightHandSouthEast2: 223    // ß
+            rightHandNorthWest: 86,     // U
+            rightHandNorthWest2: 219,   // Y
+            rightHandNorthEast: 76,     // O
+            rightHandNorthEast2: 74,    // P
+            rightHandSouthWest: 81,     // ,
+            rightHandSouthWest2: 192,   // N
+            rightHandSouthWest3: 75,    // B
+            rightHandSouthEast: 72,     // /
+            rightHandSouthEast2: 70     // ß
 
         });
     }

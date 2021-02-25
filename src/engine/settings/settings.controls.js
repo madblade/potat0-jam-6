@@ -90,9 +90,41 @@ extend(ControlsMenu.prototype, {
 
     listen()
     {
+        // Init control graphics from model.
         const sm = this.settingsModule;
-        let controlsEngine = sm.controlsEngine;
+        const app = sm.app;
+        const uiSettings = app.engine.controls.settings;
+        const mouseSpeedControl = $('#mouse-speed-controller');
+        const gamepadSpeedControl = $('#gamepad-speed-controller');
+        const mouseSpeed = uiSettings.mouseCameraSpeed;
+        const maxMouseSpeed = uiSettings.maxMouseSpeed;
+        const minMouseSpeed = uiSettings.minMouseSpeed;
+        const stickSpeed = uiSettings.stickCameraSpeed;
+        const maxStickSpeed = uiSettings.maxStickSpeed;
+        const minStickSpeed = uiSettings.minStickSpeed;
+        let speedGUI = (stickSpeed - minStickSpeed) / (maxStickSpeed - minStickSpeed);
+        speedGUI = Math.log(1 + 16 * speedGUI) / Math.log(17);
+        gamepadSpeedControl.val(Math.floor(speedGUI * 100));
+        speedGUI = (mouseSpeed - minMouseSpeed) / (maxMouseSpeed - minMouseSpeed);
+        speedGUI = Math.log(1 + 16 * speedGUI) / Math.log(17);
+        mouseSpeedControl.val(Math.floor(speedGUI * 100));
 
+        // listen sliders
+        mouseSpeedControl.on('input change', i => {
+            let newSpeed = parseInt(i.target.value, 10);
+            const p = newSpeed / 100.;
+            newSpeed = minMouseSpeed * (Math.pow(2, p / 0.25));
+            uiSettings.mouseCameraSpeed = newSpeed;
+        });
+        gamepadSpeedControl.on('input change', i => {
+            let newSpeed = parseInt(i.target.value, 10);
+            const p = newSpeed / 100.;
+            newSpeed = minStickSpeed * (Math.pow(2, p / 0.25));
+            uiSettings.stickCameraSpeed = newSpeed;
+        });
+
+        // listen language
+        let controlsEngine = sm.controlsEngine;
         if (sm.controlsSettings.hasOwnProperty('language')) {
             let l = $('#language');
             l.change(function() {
@@ -118,6 +150,8 @@ extend(ControlsMenu.prototype, {
             $('#language').off('change');
         }
         $('#return').off('click');
+        $('#mouse-speed-controller').off('input change');
+        $('#gamepad-speed-controller').off('input change');
     },
 
     // Navigaton
@@ -154,6 +188,27 @@ extend(ControlsMenu.prototype, {
                 uiSettings.mouseCameraSpeed = newSpeed;
 
                 let speedGUI = (newSpeed - minMouseSpeed) / (maxMouseSpeed - minMouseSpeed);
+                speedGUI = Math.log(1 + 16 * speedGUI) / Math.log(17);
+                camSpeedControl.val(Math.floor(speedGUI * 100));
+            }
+        }
+        else if (this.activeItem === 1) // gamepad
+        {
+            const camSpeedControl = $('#gamepad-speed-controller');
+            if (options === 'right' || options === 'left') // slider
+            {
+                const stickSpeed = uiSettings.stickCameraSpeed;
+                const maxSpeed = uiSettings.maxStickSpeed;
+                const minSpeed = uiSettings.minStickSpeed;
+
+                // normalized gui
+                const newSpeed =
+                    options === 'right' ?
+                        Math.min(stickSpeed * 1.1, maxSpeed) :
+                        Math.max(stickSpeed / 1.1, minSpeed);
+                uiSettings.stickCameraSpeed = newSpeed;
+
+                let speedGUI = (newSpeed - minSpeed) / (maxSpeed - minSpeed);
                 speedGUI = Math.log(1 + 16 * speedGUI) / Math.log(17);
                 camSpeedControl.val(Math.floor(speedGUI * 100));
             }

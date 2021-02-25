@@ -16,7 +16,7 @@ let LoadingState = function(stateManager)
         <div class="container"> <div class="col-12">
 
             <div class="flex-fill title noselect loading-menu">
-                <p>Loading…</p>
+                <p>Chargement…</p>
             </div>
             <div class="flex-fill loading-menu" id="loading-task"></div>
             <div class="flex-fill progress">
@@ -64,7 +64,7 @@ extend(LoadingState.prototype, {
     notifyTaskName(taskName)
     {
         if (this.taskElement)
-            this.taskElement.html(`Loading ${taskName} files…`);
+            this.taskElement.html(`Chargement des fichiers "${taskName}"…`);
     },
 
     notifyProgress(url, itemsLoaded, itemsTotal)

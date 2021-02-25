@@ -33,7 +33,7 @@ let LevelSelectState = function(stateManager)
             <div class="input-group-append mb-1">
                 <button class="btn btn-outline-light"
                     id="button-resume" style="float:none">
-                    Load
+                    Charger
                 </button>
             </div>
         </div>
@@ -53,7 +53,7 @@ let LevelSelectState = function(stateManager)
 
         <div class="input-group">
             <button class="btn btn-outline-secondary btn-block" id="return">
-                Back
+                Retour
             </button>
         </div>
     </div>
@@ -113,7 +113,7 @@ extend(LevelSelectState.prototype, {
                             <div class="input-group-append mb-1">
                                 <button class="btn btn-outline-light level-join"
                                     id="button-join-level-${l}" style="float:none"  ${enabled ? '' : 'disabled'}>
-                                    Load
+                                    Charger
                                 </button>
                             </div>
                         </div>

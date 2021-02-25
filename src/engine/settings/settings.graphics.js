@@ -36,7 +36,7 @@ extend(GraphicsMenu.prototype, {
         }
 
         content += `
-            <tr id="return"><td>Return</td></tr>
+            <tr id="return"><td>Retour</td></tr>
             </table>
             </div>`;
 

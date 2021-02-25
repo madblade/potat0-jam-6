@@ -35,16 +35,17 @@ extend(ControlsMenu.prototype, {
         if (controlsSettings.hasOwnProperty('language')) {
             let language = `
                 <select id="language" class="form-control">
-                    <option value="default">Choose your layout:</option>
-                    <option value="en">en</option>
-                    <option value="fr">fr</option>
+                    <!-- <option value="default">Disposition clavier</option>-->
+                    <option value="fr">AZERTY</option>
+                    <option value="en">QWERTY</option>
+                    <option value="bp">BÉPO</option>
                 </select>`;
 
-            content += `<tr><td>Keyboard layout</td><td>${language}</td></tr>`;
+            content += `<tr><td>Disposition Clavier</td><td>${language}</td></tr>`;
         }
 
         content += `
-            <tr id="return"><td colspan="2">Return</td></tr>
+            <tr id="return"><td colspan="2">Retour</td></tr>
             </table>
             </div>`;
 

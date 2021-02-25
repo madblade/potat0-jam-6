@@ -41,7 +41,7 @@ extend(AudioMenu.prototype, {
                 </div>
             </div>
             <table class="table table border rounded noselect" style="width:100%">
-                <tr id="return"><td>Return</td></tr>
+                <tr id="return"><td>Retour</td></tr>
         `;
 
         // for (let s in audioSettings) {

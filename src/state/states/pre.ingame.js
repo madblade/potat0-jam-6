@@ -16,7 +16,7 @@ let PreIngameState = function(stateManager)
     this.stateName = 'preingame';
     this.html = `
         <table class="table border rounded noselect" style="width:100%">
-            <tr id="request-pl"><td>Click to play</td></tr>
+            <tr id="request-pl"><td>Cliquez ici pour jouer</td></tr>
         </table>
     `;
 };

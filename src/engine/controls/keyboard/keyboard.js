@@ -10,6 +10,7 @@ import { ListenerModule }   from './listeners';
 import { KeysModule }       from './keys';
 import { LayoutAZERTY }     from './layout.azerty';
 import { LayoutQWERTY }     from './layout.qwerty';
+import { LayoutBEPO }       from './layout.bepo';
 import { LayoutCustom }     from './layout.custom';
 
 let KeyboardModule = {
@@ -64,6 +65,7 @@ let KeyboardModule = {
             case 'en':
             case 'en-US':
             case 'en-GB':
+            case 'bp':
                 this.keyControls = this.getKeyControls(newLayout);
                 break;
             case 'custom':
@@ -81,6 +83,7 @@ let KeyboardModule = {
 extend(KeyboardModule, ListenerModule);
 extend(KeyboardModule, KeysModule);
 extend(KeyboardModule, LayoutAZERTY);
+extend(KeyboardModule, LayoutBEPO);
 extend(KeyboardModule, LayoutQWERTY);
 extend(KeyboardModule, LayoutCustom);
 

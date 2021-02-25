@@ -29,11 +29,11 @@ extend(HomeMenu.prototype, {
         return `
             <div class="container">
                 <table class="table border rounded noselect" style="width:100%">
-                <tr ${this.hl(ga, ai, 0)} id="home"><td>Back to Main Menu</td></tr>
-                <tr ${this.hl(ga, ai, 1)} id="graphics"><td>Graphics</td></tr>
+                <tr ${this.hl(ga, ai, 0)} id="home"><td>Retour à l’Écran Titre</td></tr>
+                <tr ${this.hl(ga, ai, 1)} id="graphics"><td>Graphismes</td></tr>
                 <tr ${this.hl(ga, ai, 2)} id="gameplay"><td>Gameplay</td></tr>
                 <tr ${this.hl(ga, ai, 3)} id="audio"><td>Audio</td></tr>
-                <tr ${this.hl(ga, ai, 4)} id="return"><td>Resume Game</td></tr>
+                <tr ${this.hl(ga, ai, 4)} id="return"><td>Retour au Jeu</td></tr>
                 </table>
             </div>
         `;

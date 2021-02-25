@@ -43,26 +43,10 @@ extend(MainMenuState.prototype, {
         return `
             <div class="col-12"><div class="col-12">
 
-            <div class="input-group mb-1 center-block" id="play-quick">
-                <div class="input-group-append flex-fill">
-                    <button id="button-play"
-                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 0)}"
-                        type="button">New Game</button>
-                </div>
-            </div>
-
-            <div class="input-group mb-1 center-block" id="load">
-                <div class="input-group-append flex-fill">
-                    <button id="button-load"
-                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 1)}"
-                        type="button">Load</button>
-                </div>
-            </div>
-
             <div class="row mt-3">
                 <div class="col-4"></div>
                 <div id="volume-control-wrapper"
-                    class="input-group mb-1 center-block col-4 slider-container ${this.hl(ga, ai, 2)}">
+                    class="input-group mb-1 center-block col-4 slider-container ${this.hl(ga, ai, 0)}">
                     <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
                     <div class="col-10 input-group-append flex-fill">
                         <input type="range" min="0" max="100" value="0" class="slider"
@@ -70,6 +54,23 @@ extend(MainMenuState.prototype, {
                     </div>
                 </div>
             </div>
+
+            <div class="input-group mb-1 center-block" id="play-quick">
+                <div class="input-group-append flex-fill">
+                    <button id="button-play"
+                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 1)}"
+                        type="button">Nouvelle Partie</button>
+                </div>
+            </div>
+
+            <div class="input-group mb-1 center-block" id="load">
+                <div class="input-group-append flex-fill">
+                    <button id="button-load"
+                        class="btn btn-outline-secondary flex-fill ${this.hl(ga, ai, 2)}"
+                        type="button">Charger</button>
+                </div>
+            </div>
+
 
             <div class="row mt-3" id="gamepad-detector">
                 ${this.getDetectGamepadHTML(ga)}
@@ -90,7 +91,7 @@ extend(MainMenuState.prototype, {
                     </span>
                 </div>
                 <div class="col-9 input-group-append flex-fill">
-                    Gamepad detected!
+                    Manette détectée.
                 </div>
             </div>
             ` : `
@@ -103,7 +104,7 @@ extend(MainMenuState.prototype, {
                         </span>
                     </div>
                     <div class="col-9 input-group-append flex-fill">
-                        No gamepad detected.
+                        Aucune manette détectée.
                     </div>
                 </div>
             `;
@@ -198,9 +199,9 @@ extend(MainMenuState.prototype, {
     selectItems()
     {
         return [
+            $('#volume-control-wrapper'),
             $('#button-play'),
             $('#button-load'),
-            $('#volume-control-wrapper')
         ];
     },
 
@@ -209,7 +210,7 @@ extend(MainMenuState.prototype, {
         this.super.navigate.call(this, navigationOptions);
 
         // manage audio
-        if (this.activeItem === 2) // vol control
+        if (this.activeItem === 0) // vol control
         {
             const app = this.stateManager.app;
             const audio = app.engine.audio;

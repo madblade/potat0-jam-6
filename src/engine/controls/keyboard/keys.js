@@ -25,6 +25,10 @@ let KeysModule = {
                 keyControls = this.getAZERTY();
                 break;
 
+            case 'bp':
+                keyControls = this.getBEPO();
+                break;
+
             default:
                 console.log('Invalid keyboard layout. Switching to English as default.');
                 keyControls = this.getQWERTY();

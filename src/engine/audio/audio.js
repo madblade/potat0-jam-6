@@ -182,25 +182,21 @@ extend(AudioEngine.prototype, {
         a1.currentTime = 0;
         a1.onEnded = () => {
             a1.isPlaying = false;
-            a2.isPlaying = false;
             a2.currentTime = 0;
             a2.play();
         };
         a2.onEnded = () => {
             a2.isPlaying = false;
-            a3.isPlaying = false;
             a3.currentTime = 0;
             a3.play();
         };
         a3.onEnded = () => {
             a3.isPlaying = false;
-            a4.isPlaying = false;
             a4.currentTime = 0;
             a4.play();
         };
         a4.onEnded = () => {
             a4.isPlaying = false;
-            a1.isPlaying = false;
             a1.currentTime = 0;
             a1.play();
         };

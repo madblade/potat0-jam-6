@@ -70,9 +70,9 @@ let AudioEngine = function(app)
     this.notesEngine = new Notes(this);
 
     // misc
-    this.waterFootstep = 0;
-    this.nbWaterFootsteps = 4;
-    this.footstep = 0;
+    this.currentWaterFootstep = 0;
+    this.nbWaterFootsteps = 2;
+    this.currentFootstep = 0;
     this.nbFootsteps = 8;
 };
 
@@ -269,9 +269,15 @@ extend(AudioEngine.prototype, {
 
     playFootstepWaterSound()
     {
-        // TODO
-        console.log('water');
-        this.playMenuSound();
+        let c = this.currentWaterFootstep;
+        let id = `footstep-puddle-${c + 1}`;
+        const audioIndex = this.positionalSoundMap.get(id);
+        const audio = this.positionalAudioSources[audioIndex];
+        audio.play();
+
+        c++;
+        c %= this.nbWaterFootsteps;
+        this.currentWaterFootstep = c;
     },
 
     playFootstepSound()

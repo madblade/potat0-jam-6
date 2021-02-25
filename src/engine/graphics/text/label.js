@@ -4,9 +4,10 @@
 
 'use strict';
 
-import extend      from '../../../extend';
+import extend       from '../../../extend';
 
 import {
+    Matrix4,
     Vector2,
     Vector3
 }                   from 'three';
@@ -47,6 +48,10 @@ let Label = function(textSequence)
     this.parent = null;
     this.position = new Vector3(0, 0, 0);
     this.coords2D = new Vector2(0, 0);
+
+    // opti
+    this._w = new Vector3(0, 0, 0);
+    this._m = new Matrix4();
 };
 
 extend(Label.prototype, {
@@ -199,9 +204,22 @@ extend(Label.prototype, {
 
     get2DCoords(position, camera)
     {
+        // detect facing backward
+        const mi = this._m;
+        const p2 = this._w;
+        mi.copy(camera.matrixWorld).invert();
+        p2.copy(position).applyMatrix4(mi);
+
         const vector = position.project(camera);
         vector.x = (vector.x + 1) / 2 * window.innerWidth;
         vector.y = -(vector.y - 1) / 2 * window.innerHeight;
+        if (p2.z > 0)
+        {
+            // set off screen
+            vector.x = window.innerWidth * 2;
+            vector.y = window.innerHeight * 2;
+        }
+
         return vector;
     }
 });

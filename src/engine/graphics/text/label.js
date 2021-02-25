@@ -56,6 +56,33 @@ extend(Label.prototype, {
         return this.text;
     },
 
+    stepTextSequence()
+    {
+        const ts = this.textSequence;
+        const nbT = ts.length;
+        const ti = this.textIndex + 1;
+        if (ti < nbT)
+        {
+            // display next text
+            this.textIndex = ti;
+            const nextText = ts[ti].text;
+            this.setText(nextText);
+        }
+    },
+
+    unstepTextSequence()
+    {
+        const ts = this.textSequence;
+        const ti = this.textIndex - 1;
+        if (ti >= 0)
+        {
+            // display next text
+            this.textIndex = ti;
+            const nextText = ts[ti].text;
+            this.setText(nextText);
+        }
+    },
+
     setHTML(html)
     {
         this.element.innerHTML = html;

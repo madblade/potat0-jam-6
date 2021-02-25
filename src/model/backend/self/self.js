@@ -40,6 +40,7 @@ let SelfModel = function(app)
 
     // prevent physics
     this.locked = false;
+    this.canTalkToCup = false;
 
     // Graphical component.
     this.worldNeedsUpdate = false;
@@ -91,7 +92,7 @@ extend(SelfModel.prototype, {
         physics.addCharacterController(this);
 
         // Lock (prevent moving during title…)
-        this.locked = true;
+        this.lock();
     },
 
     unlock()
@@ -249,6 +250,9 @@ extend(SelfModel.prototype, {
         this.position.set(0, 0, 0);
         this.rotation.set(0, 0, 0, 0);
         this.inventoryModel.reset();
+
+        this.locked = false;
+        this.canTalkToCup = false;
 
         // Graphical component.
         this.worldNeedsUpdate = false;

@@ -44,21 +44,38 @@ let SelfUpdateModule = {
         // update cup helper
         const em = this.app.model.backend.entityModel;
         const hid = em.helperCupID;
-        if (hid < 0) return;
+        if (hid < 0)
+        {
+            this.canTalkToCup = false;
+            return;
+        }
         const mainHelper = em.lookers.get(hid.toString());
-        if (!mainHelper) return;
+        if (!mainHelper)
+        {
+            this.canTalkToCup = false;
+            return;
+        }
         const gc = mainHelper.graphicalComponent;
         let hp;
-        if (!gc || !(hp = gc.position)) return;
+        if (!gc || !(hp = gc.position))
+        {
+            this.canTalkToCup = false;
+            return;
+        }
         const d = hp.distanceTo(p) / 3;
         const tetrahedron = gc.children[0].children[3];
         let ns;
         if (d < 1)
         {
             // selectable
+            this.canTalkToCup = true;
             ns = 0.8 * Math.min(Math.sqrt(1 - d), 0.5);
         }
-        else ns = 0.001;
+        else
+        {
+            this.canTalkToCup = false;
+            ns = 0.001;
+        }
         tetrahedron.scale.set(ns, ns, ns);
     },
 

@@ -223,36 +223,44 @@ let ListenerModule = {
 
     requestMainHandItemAction(isButtonUp)
     {
-        let clientSelfModel = this.app.model.frontend.selfComponent;
-        let activeItemID = clientSelfModel.getCurrentItemID();
-
-        if (!isButtonUp && ItemsModelModule.isItemX(activeItemID))
-            this.requestAddBlock(false);
-        else if (!isButtonUp &&
-            (ItemsModelModule.isItemNaught(activeItemID) ||
-            ItemsModelModule.isItemBlock(activeItemID))
-        )
-        {
-            this.requestDelBlock();
-        }
-
-        else if (!ItemsModelModule.isItemIDSupported(activeItemID))
-            console.warn('[Mouse/Listener] Item ID unsupported.');
-        else if (ItemsModelModule.isItemUseable(activeItemID))
-            this.requestItemUse(isButtonUp, false);
+        // let clientSelfModel = this.app.model.frontend.selfComponent;
+        // let activeItemID = clientSelfModel.getCurrentItemID();
+        //
+        // if (!isButtonUp && ItemsModelModule.isItemX(activeItemID))
+        //     this.requestAddBlock(false);
+        // else if (!isButtonUp &&
+        //     (ItemsModelModule.isItemNaught(activeItemID) ||
+        //     ItemsModelModule.isItemBlock(activeItemID))
+        // )
+        // {
+        //     this.requestDelBlock();
+        // }
+        //
+        // else if (!ItemsModelModule.isItemIDSupported(activeItemID))
+        //     console.warn('[Mouse/Listener] Item ID unsupported.');
+        // else if (ItemsModelModule.isItemUseable(activeItemID))
+        //     this.requestItemUse(isButtonUp, false);
+        const backend = this.app.model.backend;
+        if (!isButtonUp)
+            if (backend.selfModel.canTalkToCup)
+                backend.entityModel.talkToHelperCup();
     },
 
     requestSecondaryHandItemAction(isButtonUp)
     {
-        let clientSelfModel = this.app.model.frontend.selfComponent;
-        let activeItemID = clientSelfModel.getCurrentItemID();
-
-        if (!ItemsModelModule.isItemIDSupported(activeItemID))
-            console.warn('[Mouse/Listener] Item ID unsupported.');
-        else if (ItemsModelModule.isItemPlaceable(activeItemID) && !isButtonUp)
-            this.requestAddBlock(true);
-        else if (ItemsModelModule.isItemUseable(activeItemID))
-            this.requestItemUse(isButtonUp, true);
+        // let clientSelfModel = this.app.model.frontend.selfComponent;
+        // let activeItemID = clientSelfModel.getCurrentItemID();
+        //
+        // if (!ItemsModelModule.isItemIDSupported(activeItemID))
+        //     console.warn('[Mouse/Listener] Item ID unsupported.');
+        // else if (ItemsModelModule.isItemPlaceable(activeItemID) && !isButtonUp)
+        //     this.requestAddBlock(true);
+        // else if (ItemsModelModule.isItemUseable(activeItemID))
+        //     this.requestItemUse(isButtonUp, true);
+        const backend = this.app.model.backend;
+        if (!isButtonUp)
+            if (backend.selfModel.canTalkToCup)
+                backend.entityModel.untalkToHelperCup();
     },
 
     onLeftMouseUp()

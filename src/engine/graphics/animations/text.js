@@ -43,6 +43,7 @@ let TextModule = {
     {
         const graphics = this.graphics;
         const label = graphics.createTextLabel(textSequence);
+        label.bindAudio(graphics.app.engine.audio);
         // label.setParent(null);
 
         const backend = graphics.app.model.backend;

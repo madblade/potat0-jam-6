@@ -178,13 +178,16 @@ extend(EntityModel.prototype, {
 
     makeNewBigCup(px, py, pz, bloom, textSequence)
     {
-        return {
+        const bc = {
             p: new Vector3(px, py, pz),
             r: new Vector3(0, 0, 0),
             k: 'bigcup',
             b: bloom,
-            t: textSequence
         };
+        if (textSequence)
+            bc.t = textSequence;
+
+        return bc;
     },
 
     addNewBigCup(newEntities, bigCup, alreadyGenerated)

@@ -107,8 +107,11 @@ let Level0 = function(title, id)
                 const newEntities = {};
                 // let k = 0;
                 // const bigCupID =
-                em.addNewBigCup(newEntities, 0, 0, 10,
-                    false, generatedIDs);
+
+                const bigCup = backend.entityModel.makeNewBigCup(
+                    0, 0, 10, false,
+                );
+                em.addNewBigCup(newEntities, bigCup, generatedIDs);
 
                 for (let i = 10; i < 15; ++i)
                     for (let j = 10; j < 15; ++j)

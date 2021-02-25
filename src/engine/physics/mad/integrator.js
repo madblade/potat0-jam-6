@@ -98,6 +98,10 @@ extend(Integrator.prototype, {
                 // sumOfForces.z = targetA1 / 2;
                 // sumOfForces.z = targetA0 / 2;
                 // ^  we don’t know how much the next dt is gonna be :(
+
+                // only the player can jump, so let’s call audio here
+                const audio = this.physics.physics.app.engine.audio;
+                audio.playJumpSound();
             }
         }
         const wv = cm.wantedVelocity;

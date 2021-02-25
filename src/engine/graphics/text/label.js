@@ -87,8 +87,18 @@ extend(Label.prototype, {
             this.unlockedTextIndex = Math.max(this.unlockedTextIndex, ti);
             const nextText = newSeqElt.text;
             this.setText(nextText);
+
+            // only cup can talk, so let’s make her talk
+            if (this.audioEngine)
+                this.audioEngine.playTextFromPosition(nextText, this.position);
+
             this.resetTime();
         }
+    },
+
+    bindAudio(audioEngine)
+    {
+        this.audioEngine = audioEngine;
     },
 
     unstepTextSequence()

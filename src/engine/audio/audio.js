@@ -187,9 +187,22 @@ extend(AudioEngine.prototype, {
         // validateAudio.play();
     },
 
+    playJumpSound()
+    {
+        console.log('jump');
+        this.playMenuSound();
+    },
+
+    playFootstepWaterSound()
+    {
+        console.log('water');
+        this.playMenuSound();
+    },
+
     playFootstepSound()
     {
         // TODO bind footstep
+        console.log('ground');
         this.playMenuSound();
     },
 
@@ -199,6 +212,11 @@ extend(AudioEngine.prototype, {
         const audioIndex = this.soundMap.get('menu');
         const menuAudio = this.audioSources[audioIndex];
         menuAudio.play();
+    },
+
+    playTextFromPosition(text, position)
+    {
+        this.playText(text);
     },
 
     playText(text, audioSource)

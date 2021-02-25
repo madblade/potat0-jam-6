@@ -281,12 +281,20 @@ let AnimationMixers = {
             if (cm.onWater) {
                 this.waterHit(entityModel, cm, deltaTInSeconds);
             }
+            else
+                this.groundHit(entityModel, cm, deltaTInSeconds);
         }
 
         // Apply.
         mixer.setTime(
             newTime
         );
+    },
+
+    groundHit() // entityModel, cm, deltaTInSecs)
+    {
+        const audio = this.graphics.app.engine.audio;
+        audio.playFootstepSound();
     },
 
     waterHit(entityModel, cm) //, deltaTInSecs)
@@ -303,11 +311,11 @@ let AnimationMixers = {
             p0.x, p0.y, p0.z - 0.7 + 0.001 * i
         );
 
-        const audio = this.graphics.app.engine.audio;
-        audio.playFootstepSound();
-
         entityModel.currentFootStep++;
         entityModel.currentFootStep %= nbFS;
+
+        const audio = this.graphics.app.engine.audio;
+        audio.playFootstepWaterSound();
     },
 
     updatePrepareJump(
@@ -383,9 +391,12 @@ let AnimationMixers = {
 
         if (cm.hasJustLanded || cm.isRecoveringFromLanding)
         {
-            if (cm.hasJustLanded && cm.onWater)
+            if (cm.hasJustLanded)
             {
-                this.waterHit(entityModel, cm, deltaTInSecs);
+                if (cm.onWater)
+                    this.waterHit(entityModel, cm, deltaTInSecs);
+                else
+                    this.groundHit(entityModel, cm, deltaTInSecs);
             }
             cm.hasJustLanded = false;
             cm.isRecoveringFromLanding = true;

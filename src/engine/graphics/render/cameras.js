@@ -62,6 +62,8 @@ let CameraManager = function(graphicsEngine)
     this.oldTheta0 = 0;
     this.oldTheta1 = 0;
     this.correctSpikes = false;
+    this.smartAccumulation = true;
+    this._debug = false;
     this._r = new Vector4(0, 0, 0, 0);
     this._rotation = [0, 0, 0, 0];
     this._acc = [0, 0, 0, 0, 0]; // last is deltaT
@@ -195,15 +197,84 @@ extend(CameraManager.prototype, {
         this.incomingRotationEvents.push([relX, relY, absX, absY, deltaTMillis]);
     },
 
+    // _mm2()
+    // {
+    //     if (!this._m) this._m = [0, 0, 0, 0];
+    //     else
+    //     {
+    //         const m = this._m;
+    //         m[0] = m[1] = m[2] = m[3] = 0;
+    //     }
+    //     if (!this._m2) this._m2 = [0, 0, 0, 0];
+    //     else
+    //     {
+    //         const m = this._m2;
+    //         m[0] = m[1] = m[2] = m[3] = 0;
+    //     }
+    // },
+
     accumulateRotationEvents(incoming, accumulator, dt)
     {
+        if (this.smartAccumulation && incoming.length > 2)
+        {
+            // this._mm2();
+            // const m = this._m;
+            // const m2 = this._m2;
+
+            const dbg = this._debug;
+            // correction by neighborhood
+            for (let i = 0, l = incoming.length; i < l; ++i)
+            {
+                let inc = incoming[i];
+                let next;
+                let next2;
+                if (i === 0)
+                {
+                    next = incoming[i + 1];
+                    next2 = incoming[i + 2];
+                }
+                else if (i === l - 1)
+                {
+                    next = incoming[i - 1];
+                    next2 = incoming[i - 2];
+                }
+                else
+                {
+                    next = incoming[i + 1];
+                    next2 = incoming[i - 1];
+                }
+
+                for (let j = 0; j < 4; ++j)
+                {
+                    const mj = Math.abs(next[j]) + 1;
+                    const m2j = Math.abs(next2[j]) + 1;
+                    const ij = Math.abs(inc[j]) + 1;
+                    if (ij > 20 * mj && ij > 20 * m2j)
+                    {
+                        if (dbg)
+                            console.log(`[Cameras] Smart accumulation corrected ${ij},${mj},${m2j}.`);
+                        inc[j] = 0; // mj[j];
+                    }
+                }
+            }
+
+            for (let i = 0, l = incoming.length; i < l; ++i)
+            {
+                let inc = incoming[i];
+                for (let j = 0; j < 4; ++j)
+                {
+                    accumulator[j] += dt * inc[j];
+                }
+            }
+
+            return;
+        }
+
         for (let i = 0, l = incoming.length; i < l; ++i)
         {
             let inc = incoming[i];
-            accumulator[0] += dt * inc[0];
-            accumulator[1] += dt * inc[1];
-            accumulator[2] += dt * inc[2];
-            accumulator[3] += dt * inc[3];
+            for (let j = 0; j < 4; ++j)
+                accumulator[j] += dt * inc[j];
         }
     },
 

@@ -84,6 +84,79 @@ tr.camspeed-control-wrapper.gamepad-selected {
     background-color: #413786;
 }
 
+#settings-audio-volume {
+    padding: 0;
+}
+
+#settings-inner-audio-volume {
+    margin-bottom: 0.5rem;
+}
+
+/* w3schools switch */
+
+/* The switch - the box around the slider */
+.w3switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+}
+
+/* Hide default HTML checkbox */
+.w3switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.w3slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .2s;
+    transition: .2s;
+}
+
+.w3slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .2s;
+    transition: .2s;
+}
+
+input:checked + .w3slider {
+    background-color: #2196F3;
+}
+
+input:focus + .w3slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .w3slider:before {
+    -webkit-transform: translateX(13px);
+    -ms-transform: translateX(13px);
+    transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.w3slider.w3round {
+    border-radius: 17px;
+}
+
+.w3slider.w3round:before {
+    border-radius: 50%;
+}
+
 /* Level select */
 
 .btn-outline-light.gamepad-selected {

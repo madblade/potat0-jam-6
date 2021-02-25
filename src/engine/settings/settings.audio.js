@@ -29,22 +29,42 @@ extend(AudioMenu.prototype, {
 
         let content = `
             <div class="container">
-            <div class="row mt-3">
-                <div class="col-4"></div>
-                <div id="volume-control-wrapper"
-                    class="input-group mb-1 center-block col-4 slider-container ${this.hl(ga, ai, 0)}">
-                    <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
-                    <div class="col-10 input-group-append flex-fill">
-                        <input type="range" min="0" max="100" value="0" class="slider"
-                            id="main-volume-controller">
+            <table class="table table border rounded noselect" style="width:100%">
+                <tr><td colspan="2" id="settings-audio-volume">
+                <div class="row mt-3" id="settings-inner-audio-volume">
+                    <div class="col-4"></div>
+                    <div id="volume-control-wrapper"
+                        class="input-group mb-1 center-block col-4 slider-container ${this.hl(ga, ai, 0)}">
+                        <div class="col-2" id="volume-status"><i class="fas fa-volume-mute fa-2x"></i></div>
+                        <div class="col-10 input-group-append flex-fill">
+                            <input type="range" min="0" max="100" value="0" class="slider"
+                                id="main-volume-controller">
+                        </div>
                     </div>
                 </div>
-            </div>
+                </td></tr>
 
-            <!-- TODO music -->
+                <tr>
+                <td>Musique</td>
+                <td>
+                    <label class="w3switch">
+                        <input type="checkbox" id="switch-music">
+                        <span class="w3slider w3round"></span>
+                    </label>
+                </td>
+                </tr>
 
-            <table class="table table border rounded noselect" style="width:100%">
-                <tr id="return"><td>Retour</td></tr>
+                <!-- <tr>-->
+                <!-- <td>Effets</td>-->
+                <!-- <td>-->
+                <!--     <label class="w3switch">-->
+                <!--         <input type="checkbox" id="switch-effects">-->
+                <!--         <span class="w3slider w3round"></span>-->
+                <!--     </label>-->
+                <!-- </td>-->
+                <!-- </tr>-->
+
+                <tr id="return"><td colspan="2">Retour</td></tr>
         `;
 
         // for (let s in audioSettings) {
@@ -124,6 +144,20 @@ extend(AudioMenu.prototype, {
                 audio.mute();
             }
         });
+
+        // Listen to music/fx controls
+        $('#switch-music').change(i =>
+        {
+            const checked = i.target.checked;
+            if (!checked) audio.muteMusic();
+            else audio.unmuteMusic();
+        });
+        // $('#switch-effects').change(i =>
+        // {
+        //     const checked = i.target.checked;
+        //     if (!checked) audio.muteEffects();
+        //     else audio.unmuteEffects();
+        // });
     },
 
     stopVolumeController()
@@ -132,6 +166,8 @@ extend(AudioMenu.prototype, {
         iconVolume.off('click');
         const volumeControl = $('#main-volume-controller');
         volumeControl.off('input change');
+        $('#switch-music').off('change');
+        // $('#switch-effects').off('change');
     },
 
     // Navigation

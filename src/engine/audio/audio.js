@@ -149,6 +149,16 @@ extend(AudioEngine.prototype, {
         p.forEach(s => s.setVolume(volume));
     },
 
+    muteMusic()
+    {
+        // TODO
+    },
+
+    unmuteMusic()
+    {
+        // TODO
+    },
+
     setVolume(volume) // volume should be in [0, 1]
     {
         // console.log(`Setting volume ${volume}.`);

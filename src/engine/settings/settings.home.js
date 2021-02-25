@@ -12,7 +12,7 @@ import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
 let HomeMenu = function(settingsModule)
 {
-    const nbNavigableObjects = 5;
+    const nbNavigableObjects = 4;
     GamepadNavigable.call(this, nbNavigableObjects);
 
     this.settingsModule = settingsModule;
@@ -30,10 +30,10 @@ extend(HomeMenu.prototype, {
             <div class="container">
                 <table class="table border rounded noselect" style="width:100%">
                 <tr ${this.hl(ga, ai, 0)} id="home"><td>Retour à l’Écran Titre</td></tr>
-                <tr ${this.hl(ga, ai, 1)} id="graphics"><td>Graphismes</td></tr>
-                <tr ${this.hl(ga, ai, 2)} id="gameplay"><td>Gameplay</td></tr>
-                <tr ${this.hl(ga, ai, 3)} id="audio"><td>Audio</td></tr>
-                <tr ${this.hl(ga, ai, 4)} id="return"><td>Retour au Jeu</td></tr>
+                <!-- <tr ${this.hl(ga, ai, 1)} id="graphics"><td>Graphismes</td></tr>-->
+                <tr ${this.hl(ga, ai, 1)} id="gameplay"><td>Gameplay</td></tr>
+                <tr ${this.hl(ga, ai, 2)} id="audio"><td>Audio</td></tr>
+                <tr ${this.hl(ga, ai, 3)} id="return"><td>Retour au Jeu</td></tr>
                 </table>
             </div>
         `;
@@ -54,9 +54,9 @@ extend(HomeMenu.prototype, {
         hm.click(() => sm.goBackToTitleScreen());
         hm.mouseenter(() => audio.playMenuSound());
 
-        const gx = $('#graphics');
-        gx.click(() => sm.switchToMenu(sm.graphicsMenu));
-        gx.mouseenter(() => audio.playMenuSound());
+        // const gx = $('#graphics');
+        // gx.click(() => sm.switchToMenu(sm.graphicsMenu));
+        // gx.mouseenter(() => audio.playMenuSound());
 
         const gp = $('#gameplay');
         gp.click(() => sm.switchToMenu(sm.controlsMenu));
@@ -79,12 +79,12 @@ extend(HomeMenu.prototype, {
     unlisten()
     {
         const hm = $('#home');
-        const gx = $('#graphics');
+        // const gx = $('#graphics');
         const gp = $('#gameplay');
         const au = $('#audio');
         const rn = $('#return');
         $(window).off('keydown');
-        gx.off('click'); gx.off('mouseenter');
+        // gx.off('click'); gx.off('mouseenter');
         gp.off('click'); gp.off('mouseenter');
         au.off('click'); au.off('mouseenter');
         hm.off('click'); hm.off('mouseenter');
@@ -108,7 +108,7 @@ extend(HomeMenu.prototype, {
     {
         return [
             $('#home'),
-            $('#graphics'),
+            // $('#graphics'),
             $('#gameplay'),
             $('#audio'),
             $('#return')

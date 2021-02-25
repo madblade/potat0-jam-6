@@ -26,17 +26,17 @@ let LevelSelectState = function(stateManager)
         <hr />
 
         <!-- Current progress -->
-        <div class="input-group">
-            <div class="input-group-prepend mb-1 flex-fill">
-                <span class="input-group-text flex-fill">Last Checkpoint</span>
-            </div>
-            <div class="input-group-append mb-1">
-                <button class="btn btn-outline-light"
-                    id="button-resume" style="float:none">
-                    Charger
-                </button>
-            </div>
-        </div>
+        <!-- <div class="input-group">-->
+        <!--     <div class="input-group-prepend mb-1 flex-fill">-->
+        <!--         <span class="input-group-text flex-fill">Last Checkpoint</span>-->
+        <!--     </div>-->
+        <!--     <div class="input-group-append mb-1">-->
+        <!--         <button class="btn btn-outline-light"-->
+        <!--             id="button-resume" style="float:none">-->
+        <!--             Charger-->
+        <!--         </button>-->
+        <!--     </div>-->
+        <!-- </div>-->
 
         <!-- <div class="input-group">-->
         <!--     <div class="custom-file">-->
@@ -167,10 +167,10 @@ extend(LevelSelectState.prototype, {
             ux.joinLevel(level);
         });
 
-        $('#button-resume').click(function() {
-            let ux = app.engine.ux;
-            ux.joinFarthestCheckpoint();
-        });
+        // $('#button-resume').click(function() {
+        //     let ux = app.engine.ux;
+        //     ux.joinFarthestCheckpoint();
+        // });
     },
 
     startListeners()
@@ -247,7 +247,7 @@ extend(LevelSelectState.prototype, {
             }
         }
 
-        selectableItems.push($('#button-resume'));
+        // selectableItems.push($('#button-resume'));
         selectableItems.push($('#return'));
 
         return selectableItems;

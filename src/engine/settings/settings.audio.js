@@ -40,6 +40,9 @@ extend(AudioMenu.prototype, {
                     </div>
                 </div>
             </div>
+
+            <!-- TODO music -->
+
             <table class="table table border rounded noselect" style="width:100%">
                 <tr id="return"><td>Retour</td></tr>
         `;

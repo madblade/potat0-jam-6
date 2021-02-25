@@ -28,8 +28,6 @@ import FootStepDirt2        from '../../assets/audio/movement/footstep-dirt-2.mp
 import FootStepDirt3        from '../../assets/audio/movement/footstep-dirt-3.mp3';
 import FootStepPuddle1      from '../../assets/audio/movement/footstep-puddle-1.mp3';
 import FootStepPuddle2      from '../../assets/audio/movement/footstep-puddle-2.mp3';
-import FootStepPuddle3      from '../../assets/audio/movement/footstep-puddle-3.mp3';
-import FootStepPuddle4      from '../../assets/audio/movement/footstep-puddle-4.mp3';
 
 const SFXLibrary = {
 
@@ -62,8 +60,6 @@ const SFXLibrary = {
 
         ['footstep-puddle-1', FootStepPuddle1],
         ['footstep-puddle-2', FootStepPuddle2],
-        ['footstep-puddle-3', FootStepPuddle3],
-        ['footstep-puddle-4', FootStepPuddle4],
 
         ['jump', JumpSound],
     ],

@@ -128,6 +128,10 @@ extend(Notes.prototype, {
             .toLowerCase()
             .replace(/\s+/g, ' '); // reduce spaces
 
+        // it’s extremely annoying, so limiting to 10 notes.
+        if (cleanedText.length > 10)
+            cleanedText = cleanedText.substring(0, 10);
+
         const firstLetter = cleanedText[0];
         cleanedText = cleanedText.substring(1);
         const wsw = this.whoSingsWhat;

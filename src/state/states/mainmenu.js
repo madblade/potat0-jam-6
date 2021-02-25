@@ -129,7 +129,7 @@ extend(MainMenuState.prototype, {
         // Listen to buttons.
         const buttonPlay = $('#button-play');
         buttonPlay.click(() => {
-            audio.playText('New Jam');
+            // audio.playText('New Jam');
             app.engine.ux.startNewGame();
         });
         buttonPlay.mouseenter(() => {

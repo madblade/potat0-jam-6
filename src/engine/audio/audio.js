@@ -243,7 +243,7 @@ extend(AudioEngine.prototype, {
         a.forEach(s => s.setVolume(volume));
         p.forEach(s => s.setVolume(volume));
         m.forEach(s => s.setVolume(volume));
-        this.notesEngine.mainVoiceMaxVolume = volume / 2;
+        this.notesEngine.mainVoiceMaxVolume = volume * 0.5;
         // ^  this can be annoying so…
     },
 
@@ -262,9 +262,9 @@ extend(AudioEngine.prototype, {
 
     playJumpSound()
     {
-        // TODO
-        console.log('jump');
-        this.playMenuSound();
+        const audioIndex = this.positionalSoundMap.get('jump');
+        const audio = this.positionalAudioSources[audioIndex];
+        audio.play();
     },
 
     playFootstepWaterSound()
@@ -282,9 +282,15 @@ extend(AudioEngine.prototype, {
 
     playFootstepSound()
     {
-        // TODO bind footstep
-        console.log('ground');
-        this.playMenuSound();
+        let c = this.currentFootstep;
+        let id = `footstep-hard-${c + 1}`;
+        const audioIndex = this.positionalSoundMap.get(id);
+        const audio = this.positionalAudioSources[audioIndex];
+        audio.play();
+
+        c++;
+        c %= this.nbFootsteps;
+        this.currentFootstep = c;
     },
 
     playMenuSound()
@@ -302,7 +308,7 @@ extend(AudioEngine.prototype, {
 
     playText(text, audioSource)
     {
-        assert(typeof text === 'string' && text.length < 3000, '[Audio] Text too long.');
+        assert(typeof text === 'string');
 
         const listener = this.listener;
         const notesEngine = this.notesEngine;

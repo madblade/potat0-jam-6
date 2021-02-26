@@ -50,7 +50,7 @@ let LevelA = function(title, id)
                 const textSequence = [
                     {
                         direct: true,
-                        text: 'Oh salut!'
+                        text: 'Oh, salut!'
                     },
                     {
                         direct: true,
@@ -65,9 +65,58 @@ let LevelA = function(title, id)
                         text: 'Tu vas bien ?'
                     },
                     {
+                        direct: true,
+                        text: '…'
+                    },
+                    {
                         timeToWaitBefore: 2000,
                         text: 'Bon.'
-                    }
+                    },
+                    {
+                        direct: true,
+                        timeToWaitBefore: 2000,
+                        text: 'Je me demande à quoi servent ces machins gris derrière.'
+                    },
+                    {
+                        timeToWaitBefore: 5000,
+                        text: 'Peut-être qu’en sautant dessus…'
+                    },
+                    {
+                        timeToWaitBefore: 5000,
+                        text: 'La clé, c’est l’observation.'
+                    },
+                    {
+                        timeToWaitBefore: 5000,
+                        text: 'L’observation de tous les recoins…'
+                    },
+                    {
+                        timeToWaitBefore: 10000,
+                        text: 'En tout cas, ça fait plaisir d’avoir de la visite.'
+                    },
+                    {
+                        direct: true,
+                        text: 'Je commençais à m’ennuyer :('
+                    },
+                    {
+                        direct: true,
+                        text: 'Heureusement, je suis l’objectif de quelqu’un !'
+                    },
+                    {
+                        direct: true,
+                        text: 'Pas vrai ?'
+                    },
+                    {
+                        timeToWaitBefore: 2000,
+                        text: '…'
+                    },
+                    {
+                        direct: true,
+                        text: '…pas vrai ?'
+                    },
+                    {
+                        direct: true,
+                        text: 'Je suis bien ton objectif, hein ?'
+                    },
                 ];
                 const bigCup = backend.entityModel.makeNewBigCup(
                     0, 0, 0.6, false,

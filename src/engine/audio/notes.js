@@ -128,6 +128,9 @@ extend(Notes.prototype, {
             .toLowerCase()
             .replace(/\s+/g, ' '); // reduce spaces
 
+        if (cleanedText.length < 1)
+            return;
+
         // it’s extremely annoying, so limiting to 10 notes.
         if (cleanedText.length > 10)
             cleanedText = cleanedText.substring(0, 10);

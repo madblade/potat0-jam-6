@@ -7,7 +7,6 @@
 let TextModule = {
 
     updateTextLabels(deltaT)
-    // TODO deltaT can be used for smooth feedback
     {
         const graphics = this.graphics;
         const backend = graphics.app.model.backend;
@@ -27,9 +26,6 @@ let TextModule = {
                 );
                 return;
             }
-
-            // TODO process conditions
-            //   fade in/out text
 
             const text = label.getText();
             if (!text || text.length < 1) return;

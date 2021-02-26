@@ -45,7 +45,6 @@ Game.Core = function()
         physics:      new Physics(this),
         controls:     new UI(this),
         settings:     new Settings(this),
-        // TODO graphics settings
         ux:           new UX(this),
     };
 

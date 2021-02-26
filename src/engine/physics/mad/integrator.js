@@ -137,7 +137,7 @@ extend(Integrator.prototype, {
         );
         const maxSpeedDtr = maxSpeed * dtr;
 
-        // TODO [GAMEPLAY] here go gameplay specifics
+        // XXX [GAMEPLAY] here go gameplay specifics
         // (jump, double/wall-jump, water, push, feedback, etc.)
         // (self movement uses Euler integration!)
         // max wv is ~ 1.1

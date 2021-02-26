@@ -42,6 +42,11 @@ let SelfUpdateModule = {
         // }
 
         // update cup helper
+        this.updateCupHelper(p);
+    },
+
+    updateCupHelper(p)
+    {
         const em = this.app.model.backend.entityModel;
         const hid = em.helperCupID;
         if (hid < 0)

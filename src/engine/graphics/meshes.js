@@ -111,6 +111,8 @@ let MeshesModule = {
         const rightEye = scene.children[2];
         cup.name = 'gltf0';
 
+        cup.geometry.computeVertexNormals();
+
         const tetGeo = new TetrahedronBufferGeometry();
         const phong = new MeshPhongMaterial(
             {

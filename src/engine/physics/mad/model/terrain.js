@@ -14,7 +14,7 @@ import {
 }               from 'three';
 
 const HeightMapConstants = {
-    DEFAULT_EXTENT: 35
+    DEFAULT_EXTENT: 70
 };
 
 // This does not extend CollisionModel.

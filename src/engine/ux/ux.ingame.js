@@ -22,9 +22,19 @@ let UXIngameModule = {
         }
 
         const backend = this.app.model.backend;
+        const rendererManager = this.app.engine.graphics.rendererManager;
 
         switch (currentTask.type)
         {
+            case 'end':
+                if (!rendererManager.isTransitioning)
+                // the renderer manager should have ended transitioning!
+                {
+                    // call things to perform (level model logic)
+                    currentTask.performWhenConditionMet(backend, this);
+                }
+                break;
+
             case 'splash':
 
                 const titles = currentTask.titles;
@@ -33,7 +43,6 @@ let UXIngameModule = {
                 // {
                 //     console.log(progressInCurrentTask);
                 // }
-                const rendererManager = this.app.engine.graphics.rendererManager;
 
                 // check if we already started transitioning…
                 if (playerState.getProgressInCurrentTask() >= titles.length)

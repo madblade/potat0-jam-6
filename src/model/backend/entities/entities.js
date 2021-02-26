@@ -260,6 +260,16 @@ extend(EntityModel.prototype, {
         tc.unstepTextSequence();
     },
 
+    getHelperCupDialogueAdvancement()
+    {
+        const id = this.helperCupID;
+        if (id < 0) return;
+        const c = this.lookers.get(id.toString());
+        const tc = c.textComponent;
+        if (!tc) return;
+        return tc.textIndex;
+    },
+
     addNewLittleCup(newEntities, px, py, pz, alreadyGenerated)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');

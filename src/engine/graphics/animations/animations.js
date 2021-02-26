@@ -142,7 +142,6 @@ extend(AnimationManager.prototype, {
             o3d.scale.set(
                 newScale, newScale, newScale
             );
-            // if (e.)
         });
     },
 

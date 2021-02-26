@@ -129,8 +129,6 @@ let LevelA = function(title, id)
                 const idCup = em.addNewBigCup(ne, bigCup, generated);
                 em.setHelperCupID(idCup);
 
-                const objectiveID = em.addNewLittleCup(ne, -15.75, -15.75, 0.3, generated);
-                em.setObjectiveID(objectiveID);
                 // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
 
                 // apply
@@ -139,6 +137,34 @@ let LevelA = function(title, id)
                 backend.selfModel.unlock();
 
                 ux.app.engine.audio.playMusic();
+
+                // validate task is auto-called for the splash event
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            checkCondition: function(backend, ux)
+            {
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                return i >= 3;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+                const em = backend.entityModel;
+
+                const generated = [];
+                const ne = {};
+                const objectiveID = em.addNewLittleCup(
+                    ne, -15.75, -15.75, 0.3, generated
+                );
+                em.setObjectiveID(objectiveID);
+                backend.updateEntities(ne);
+
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                ux.validateTask();
             }
         },
         {
@@ -156,22 +182,22 @@ let LevelA = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.validateTask(); // goto next task
                 ux.playValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();
 
+                ux.validateTask(); // goto next task
                 // add entity (id = 1)
-                const generatedIDs = [];
-                const newEntities = {};
+                // const generatedIDs = [];
+                // const newEntities = {};
                 // let k = 0;
                 // const bigCupID =
 
-                const bigCup = backend.entityModel.makeNewBigCup(
-                    0, 0, 10, false,
-                );
-                em.addNewBigCup(newEntities, bigCup, generatedIDs);
+                // const bigCup = backend.entityModel.makeNewBigCup(
+                //     0, 0, 10, false,
+                // );
+                // em.addNewBigCup(newEntities, bigCup, generatedIDs);
 
                 // for (let i = 10; i < 15; ++i)
                 //     for (let j = 10; j < 15; ++j)
@@ -179,23 +205,21 @@ let LevelA = function(title, id)
                 //         em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
                 //     }
 
-                backend.updateEntities(newEntities);
+                // backend.updateEntities(newEntities);
+
+                // call fadeout just before validate
+                const rendererManager = backend.app.engine.graphics.rendererManager;
+                rendererManager.setTransitionDuration(500);
+                rendererManager.startSceneTransition(true);
+                rendererManager.setTitleSceneText('');
             }
         },
         {
-            type: 'event',
-            // eslint-disable-next-line no-unused-vars
-            checkCondition: function(backend, ux)
-            {
-                // console.log(ux);
-                const player = backend.selfModel.position;
-                const destination = new Vector3(-5, -5, 1);
-                return player.distanceTo(destination) < 1;
-            },
+            type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                ux.informPlayer('Checkpoint passed! Go to the next level…');
-                ux.validateLevel(); // goto next level (or win)
+                ux.informPlayer('Level A cleared!');
+                ux.validateLevel();
             }
         }
     ];

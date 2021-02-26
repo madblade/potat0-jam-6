@@ -35,10 +35,10 @@ let Level0 = function(title, id)
                 '<h3>thème: “le vrai objectif est caché”</h3>', // main
                 '<h1>Puddle Game</h1>', // main
             ],
-            fadeInTitle: 1, //1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1, //1000,  // time fade out each title
-            keepTitle: 1, //2000,    // time to keep each title full brightness
-            fadeOutSplash: 1, //3000, // time to fade out the title screen
+            fadeInTitle: 1000, //1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000, //1000,  // time fade out each title
+            keepTitle: 1000, //2000,    // time to keep each title full brightness
+            fadeOutSplash: 1000, //3000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -118,7 +118,6 @@ let Level0 = function(title, id)
                 for (let i = 10; i < 15; ++i)
                     for (let j = 10; j < 15; ++j)
                     {
-                        // TODO [CRIT] add little cups
                         em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
                     }
 

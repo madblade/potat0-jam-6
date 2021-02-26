@@ -110,10 +110,10 @@ let LevelB = function(title, id)
                 '<h3>Puddle 1</h3>', // after, sub
                 '<h3>L’eaubjectif</h3>',
             ],
-            fadeInTitle: 1,   // for each title, time in milliseconds
-            fadeOutTitle: 200,  // time fade out each title
-            keepTitle: 200,     // time to keep each title full brightness
-            fadeOutSplash: 1000, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,     // time to keep each title full brightness
+            fadeOutSplash: 2000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

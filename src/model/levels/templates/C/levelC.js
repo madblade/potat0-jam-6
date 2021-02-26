@@ -68,10 +68,10 @@ let LevelC = function(title, id)
                 '<h3>Puddle 2</h3>', // after, sub
                 '<h3>Trop heaut</h3>',
             ],
-            fadeInTitle: 1,   // for each title, time in milliseconds
-            fadeOutTitle: 200,  // time fade out each title
-            keepTitle: 200,     // time to keep each title full brightness
-            fadeOutSplash: 1000, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,     // time to keep each title full brightness
+            fadeOutSplash: 2000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -179,7 +179,8 @@ let LevelC = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                ux.informPlayer('Level B cleared!');
+                ux.app.engine.audio.playCredits();
+                ux.informPlayer('Level C cleared!');
                 ux.validateLevel();
             }
         }

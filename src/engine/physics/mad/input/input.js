@@ -31,7 +31,12 @@ let PhysicsInputModule = {
         // the user is / controls the first entity so far.
         const entityId = 0;
         const entity = this.sweeper.physicsEntities[entityId];
-        if (!entity) throw Error(`[Mad/Input] Entity ${entityId} not found.`);
+        if (!entity)
+        {
+            // might happen in screen title
+            console.warn(`[Mad/Input] Entity ${entityId} not found.`);
+            return;
+        }
         const cm = entity.collisionModel;
         const d = cm._d;
 

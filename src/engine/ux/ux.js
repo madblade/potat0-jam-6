@@ -139,6 +139,7 @@ extend(UX.prototype, {
         if (!nextLevel)
         {
             this.informPlayer('You won!');
+            this.setGamePaused(true);
         }
         else
         {

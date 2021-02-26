@@ -75,6 +75,7 @@ extend(EntityModel.prototype, {
     addNewObjects(objects,
         graphics, physics, animationManager)
     {
+        if (!objects) return;
         objects.forEach(o => {
             switch (o.type)
             {

@@ -131,8 +131,10 @@ let AnimationOuter = {
             // Apply changes.
             const er = sm.getRotation();
             if (er)
+            {
                 this._r.set(er.x - pi / 2, er.y, entity.currentTheta);
-            sm.setRotation(this._r);
+                sm.setRotation(this._r);
+            }
         } else {
             entity.theta0 = entity.theta1;
         }
@@ -360,12 +362,14 @@ let AnimationOuter = {
             const cxy = entity.currentXY;
             const vt = entity.velTilt;
             if (er)
+            {
                 this._r.set(
                     cxy.x + vt.x,
                     cxy.y + vt.y,
                     er.z
                 );
-            sm.setRotation(this._r);
+                sm.setRotation(this._r);
+            }
         }
 
         const needsInterp1Again =

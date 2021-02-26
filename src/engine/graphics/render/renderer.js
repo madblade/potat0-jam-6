@@ -161,7 +161,7 @@ extend(RendererManager.prototype, {
 
             this.updateFootsteps(deltaT);
 
-            this.selectObjectsWithReflection(mainScene);
+            this.selectObjectsWithReflection(mainScene, deltaT);
 
             if (this.waterReflection)
                 this.updateWaterReflection(cameraManager, renderer, mainScene, mainCamera, renderRegister);

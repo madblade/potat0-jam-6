@@ -26,7 +26,7 @@ let RendererUpdates = {
         }
     },
 
-    selectObjectsWithReflection(scene)
+    selectObjectsWithReflection(scene, deltaTInMillis)
     {
         scene.traverse(obj => {
             if (!obj.isMesh) return;
@@ -34,7 +34,21 @@ let RendererUpdates = {
             if (obj.userData.hasReflection === true) // enforce type
                 obj.visible = true;
             else
+            {
                 obj.visible = false;
+                return;
+            }
+
+            // UGLY but no time so.
+            if (obj.userData.hasTransparency)
+            {
+                const o = obj.material.opacity;
+                if (o >= 1) return;
+                // it’s really obvious starting really early
+                obj.material.opacity = Math.min(
+                    o + deltaTInMillis / 200000, 1.
+                );
+            }
         });
     },
 

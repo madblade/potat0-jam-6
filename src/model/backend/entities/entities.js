@@ -89,12 +89,22 @@ extend(EntityModel.prototype, {
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
                     );
+                    else if (o.transplatform) mat = new MeshBasicMaterial(
+                        {
+                            color: '#3500b3',
+                            transparent: true,
+                            opacity: 0.
+                        }
+                    );
                     else if (o.stone) mat = new MeshPhongMaterial(
                         { color: '#727272' }
                     );
                     const m = new Mesh(geo, mat);
                     m.userData.hasReflection = o.reflection;
                     m.userData.hasPrimaryImage = o.image;
+                    if (o.transplatform)
+                        m.userData.hasTransparency = true;
+
                     const p = o.position;
                     const r = o.rotation;
                     m.position.set(p[0], p[1], p[2]);

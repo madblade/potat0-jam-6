@@ -180,6 +180,8 @@ extend(AudioEngine.prototype, {
 
     playMusic()
     {
+        this.stopMusic();
+
         // too lazy to do it beautifully
         const i1 = this.musicMap.get('ambience-1');
         const i2 = this.musicMap.get('ambience-2');

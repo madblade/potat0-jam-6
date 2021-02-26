@@ -62,7 +62,7 @@ let ChunksMeshModule = {
                 'smooth-phong',
                 {
                     color: '#161616',
-                    shininess: 0.1
+                    shininess: 0
                 }, worldId
             );
             return new Mesh(geometry, material);

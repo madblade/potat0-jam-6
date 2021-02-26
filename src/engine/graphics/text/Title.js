@@ -26,7 +26,7 @@ let Title = function(text)
     div.style.userSelect = 'none';
 
     this.element = div;
-    // document.body.appendChild(div);
+    document.body.appendChild(div);
 };
 
 extend(Title.prototype, {

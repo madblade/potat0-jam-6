@@ -5,8 +5,8 @@
     <base href="<%= htmlWebpackPlugin.options.baseUrl %>" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <!-- Preload essential styles for slow connections. -->
     <style>
-        /* Preload essential styles for slow connections. */
         .ie10-11 { display: none; }
         @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
             .ie10-11 { display: block; }

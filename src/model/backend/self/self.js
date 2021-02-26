@@ -83,10 +83,9 @@ extend(SelfModel.prototype, {
         if (!player) return;
         const positionVector = new Vector3().fromArray(player.position);
         const rotationVector = new Vector4().fromArray(player.rotation);
-        console.log('[Model/Self] TODO bind player state from level.');
+
         this.updateSelf(positionVector, rotationVector, '-1'); // -1 === main world
         this.updatePosition(this.position, this.avatar);
-        console.log(this.avatar);
         this.setRotation(this.rotation, this.avatar);
 
         // Notify physics engine.

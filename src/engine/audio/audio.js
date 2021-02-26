@@ -250,7 +250,7 @@ extend(AudioEngine.prototype, {
         const a = this.audioSources;
         const m = this.musicSources;
         a.forEach(s => s.setVolume(volume));
-        p.forEach(s => s.setVolume(volume));
+        p.forEach(s => s.setVolume(volume * 1.5));
         m.forEach(s => s.setVolume(volume));
         this.notesEngine.mainVoiceMaxVolume = volume * 0.5;
         // ^  this can be annoying so…

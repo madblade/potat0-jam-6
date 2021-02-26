@@ -52,9 +52,9 @@ let ChunksModule = {
         newMesh.userData.hasPrimaryImage = true;
 
         // debug
-        newMesh.material = new MeshBasicMaterial({
-            color: 0xff000000, wireframe: true
-        });
+        // newMesh.material = new MeshBasicMaterial({
+        //     color: 0xff000000, wireframe: true
+        // });
         newMesh.userData.points = points;
         this.attachDebugHelpers(newMesh);
 

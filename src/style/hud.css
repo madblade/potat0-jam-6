@@ -33,7 +33,7 @@
     cursor: pointer;
 }
 
-#announce tr:hover,
+/*#announce tr:hover,*/
 #announce tr.gamepad-selected {
     background-color: #413786;
     color: #db805e;

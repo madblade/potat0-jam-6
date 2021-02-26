@@ -188,9 +188,13 @@ extend(Integrator.prototype, {
         v1.copy(a0).add(a1).multiplyScalar(0.5 * dtr).add(v0);
 
         // Clamp max speed (vertical + horizontal).
+        // XXX keeping that for the jam,
+        // but really it should not work this way
         const l = v1.length();
+        // const lz = Math.abs(v1.z);
         if (l > maxSpeed)
         {
+            // v1.lz = Math.sign(v1.lz) * maxSpeed;
             v1.multiplyScalar(maxSpeed / l);
         }
     },

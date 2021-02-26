@@ -33,7 +33,8 @@ let MaterialsModule = {
                 break;
             case 'smooth-phong':
                 material = new MeshPhongMaterial({
-                    specular: 0xffffff,
+                    shininess: meta && meta.shininess ? meta.shininess : 0,
+                    specular: '#858585',
                     emissive: 0x000000,
                     side: FrontSide,
                     color: meta && meta.color ? meta.color : null,

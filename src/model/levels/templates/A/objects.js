@@ -5,7 +5,7 @@ let LevelAObjects = {
 
     generateWalls()
     {
-        const mapWidth = 40;
+        const mapWidth = 35;
         const wallHeight = 10;
 
         const mw2 = mapWidth / 2;
@@ -65,7 +65,7 @@ let LevelAObjects = {
         objects.push(...walls);
 
         // add 1 wall
-        const mapWidth = 30;
+        const mapWidth = 35;
         const wallHeight = 10;
         const mw2 = mapWidth / 2;
         const wh2 = wallHeight / 2;
@@ -74,39 +74,58 @@ let LevelAObjects = {
             // reflection: true,
             image: true,
             wall: true,
-            position: [-mw2 + 4, 2, wh2 - 0.1],
+            position: [2, -mw2 + 3, wh2 - 0.1],
             rotation: [0, 0, 0],
-            w: 2,
-            h: mapWidth,
+            w: mapWidth,
+            h: 1,
             d: wallHeight
         };
         objects.push(additionalWall);
 
-        // const placeHolders = [
-        //     {
-        //         type: 'box',
-        //         reflection: true,
-        //         image: true,
-        //         stone: true,
-        //         position: [0, -12, 0.],
-        //         rotation: [0, 0, 0],
-        //         w: 2,
-        //         h: 2,
-        //         d: 0.2
-        //     },
-        //     {
-        //         type: 'box',
-        //         reflection: true,
-        //         image: true,
-        //         stone: true,
-        //         position: [0, 0, 0],
-        //         rotation: [0, 0, 0],
-        //         w: 1,
-        //         h: 1,
-        //         d: 0.05
-        //     },
-        // ];
-        // objects.push(...placeHolders);
+        const placeHolders = [
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                stone: true,
+                position: [-10, 10, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 0.5
+            },
+            {
+                type: 'box',
+                image: true,
+                stone: true,
+                position: [-3, 10, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 1
+            },
+            {
+                type: 'box',
+                image: true,
+                stone: true,
+                position: [3, 10, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 2
+            },
+            {
+                type: 'box',
+                image: true,
+                stone: true,
+                position: [10, 10, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 4
+            },
+        ];
+        objects.push(...placeHolders);
 
         const cupCM = {
             type: 'box',

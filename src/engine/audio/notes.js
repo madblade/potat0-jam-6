@@ -150,7 +150,11 @@ extend(Notes.prototype, {
     // this is for R&D
     singRemainingText(text, threeAudio, listener, singingHandle)
     {
-        if (this.singingHandle !== singingHandle) return;
+        if (this.singingHandle !== singingHandle)
+        {
+            this.mainVoice.setVolume(0.);
+            return;
+        }
 
         const letter = text[0];
         const remainder = text.substring(1);

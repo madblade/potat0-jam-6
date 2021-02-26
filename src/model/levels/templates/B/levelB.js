@@ -99,27 +99,9 @@ let LevelB = function(title, id)
             {
                 ux.informPlayer('Go to checkpoint!');
 
-                // const generated = [];
-                // const ne = {}; // new entities
-
-                // const em = backend.entityModel;
-                // const bigCup = em.makeNewBigCup(
-                //     0, 0, 0.6, false,
-                //     textSequence
-                // );
-                // const idCup = em.addNewBigCup(ne, bigCup, generated);
-                // em.setHelperCupID(idCup);
-                // em.setHelperCupTextSequence(textSequence);
-                // em.talkToHelperCup();
-
-                // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
-
-                // apply
-                // backend.updateEntities(ne);
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
-                // ux.app.engine.audio.playMusic();
                 // validate task is auto-called for the splash event
             }
         },
@@ -136,21 +118,24 @@ let LevelB = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 const em = backend.entityModel;
-                em.setHelperCupTextSequence([
-                    {
-                        direct: true,
-                        text: 'Burp'
-                    },
-                    {
-                        direct: true,
-                        text: 'Burp burp'
-                    }
-                ]);
+                // em.setHelperCupTextSequence([
+                //     {
+                //         direct: true,
+                //         text: 'Burp'
+                //     },
+                //     {
+                //         direct: true,
+                //         text: 'Burp burp'
+                //     }
+                // ]);
 
                 const generated = [];
                 const ne = {};
+                const x = objectiveVector.x;
+                const y = objectiveVector.y;
+                const z = objectiveVector.z;
                 const objectiveID = em.addNewLittleCup(
-                    ne, 0., 1., 2.,
+                    ne, x, y, z,
                     true,
                     false,
                     false,
@@ -214,7 +199,7 @@ let LevelB = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                ux.informPlayer('Level A cleared!');
+                ux.informPlayer('Level B cleared!');
                 ux.validateLevel();
             }
         }

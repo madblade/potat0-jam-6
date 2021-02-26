@@ -11,12 +11,13 @@ let Title = function(text)
     this.text = text;
 
     let div = document.createElement('div');
+    div.id = 'title-label';
     div.className = 'title-label';
     div.style.position = 'absolute';
-    this.width = 300;
-    this.height = 100;
-    div.style.width = this.width.toString();
-    div.style.height = this.height.toString();
+    // this.width = 500;
+    // this.height = 200;
+    // div.style.width = this.width.toString();
+    // div.style.height = this.height.toString();
     div.style.textAlign = 'center';
     div.innerHTML = text;
     div.style.top = '-1000';
@@ -25,7 +26,7 @@ let Title = function(text)
     div.style.userSelect = 'none';
 
     this.element = div;
-    document.body.appendChild(div);
+    // document.body.appendChild(div);
 };
 
 extend(Title.prototype, {

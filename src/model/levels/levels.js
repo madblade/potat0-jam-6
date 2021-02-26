@@ -18,8 +18,8 @@ let Levels = function(app)
 
     this.levels = [
 
-        new LevelA('Introduction', 0),
         new LevelB('Flaque 1', 1),
+        new LevelA('Introduction', 0),
 
         new Level0('sample', 10),
         new Level1('second sample', 11),

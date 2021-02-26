@@ -48,11 +48,15 @@ let LevelB = function(title, id)
             text: 'Heureusement, tu sais où est ton <i>vrai</i> objectif.'
         },
         {
+            direct: true,
+            text: 'Devant tes yeux !'
+        },
+        {
             timeToWaitBefore: 5000,
             text: 'Hum.'
         },
         {
-            timeToWaitBefore: 2000,
+            direct: true,
             text: 'Il y a quelque chose qui cloche…'
         },
         {
@@ -60,29 +64,44 @@ let LevelB = function(title, id)
             text: 'Pourquoi je n’ai pas de reflet ?'
         },
         {
+            timeToWaitBefore: 5000,
+            text: 'Tu as bien un reflet, toi !'
+        },
+        {
             direct: true,
             text: '…'
         },
         {
             direct: true,
-            text: '……'
-        },
-        {
-            timeToWaitBefore: 2000,
-            text: 'Bon.'
+            text: 'Étrange…'
         },
         {
             direct: true,
-            timeToWaitBefore: 2000,
-            text: '.'
+            text: 'Peut-être qu’on n’a pas tous la chance d’en avoir un.'
+        },
+        {
+            timeToWaitBefore: 10000,
+            text: 'J’aimerais bien avoir un reflet.'
         },
         {
             timeToWaitBefore: 5000,
-            text: '...'
+            text: 'Mais bon, tant que tu es là…'
         },
+        {
+            direct: true,
+            text: 'C’est que tout va pour le mieux !'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: '…pas vrai ?'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: 'C’est bien pour moi que tu es là, non ?'
+        }
     ];
 
-    const objectiveVector = new Vector3(0, -10, 3);
+    const objectiveVector = new Vector3(2, -12, 3);
 
     this.scenario = [
         {
@@ -112,7 +131,7 @@ let LevelB = function(title, id)
             {
                 const em = backend.entityModel;
                 const i = em.getHelperCupDialogueAdvancement();
-                return i >= 3;
+                return i >= 7;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)

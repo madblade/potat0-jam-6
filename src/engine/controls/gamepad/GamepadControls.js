@@ -290,16 +290,16 @@ extend(GamepadControls.prototype, {
         }
     },
 
-    doVibration()
+    doVibration(duration, weakMagnitude, strongMagnitude)
     {
         const a = this.mainGamepad.vibrationActuator;
         assert(!!a, '[Gamepad] Vibration actuator not found.');
         if (!a) return;
         a.playEffect('dual-rumble', {
             startDelay: 0,
-            duration: 100,
-            weakMagnitude: 1.0,
-            strongMagnitude: 1.0
+            duration: duration || 100,
+            weakMagnitude: weakMagnitude || 1.,
+            strongMagnitude: strongMagnitude || 1.
         });
     },
 

@@ -120,6 +120,40 @@ let UXIngameModule = {
                 console.log('[UX] Task not recognized.');
                 break;
         }
+    },
+
+    playValidateFeedback()
+    {
+        const e = this.app.engine;
+
+        // sfx
+        e.audio.playValidateSound();
+
+        // vibration
+        if (e.settings.gamepadActive)
+        {
+            const controls = e.controls;
+            const gp = controls.gamepadControls;
+            if (gp)
+            {
+                gp.doVibration(100, 1., 1.);
+            }
+        }
+    },
+
+    playFakeValidateFeedback()
+    {
+        const e = this.app.engine;
+
+        if (e.settings.gamepadActive)
+        {
+            const controls = e.controls;
+            const gp = controls.gamepadControls;
+            if (gp)
+            {
+                gp.doVibration(100, 0., 1.);
+            }
+        }
     }
 
 };

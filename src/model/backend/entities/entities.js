@@ -35,6 +35,8 @@ let EntityModel = function(app)
     // ^  Invokers of the animations/secondary/lookAtPlayer behaviour.
     this.helperCupID = -1;
     // ^  Tutorial / help entity id.
+    this.objectiveID = -1;
+    // ^  Target cup id.
 
     // Text
     this.labelledEntities = new Map();
@@ -151,6 +153,7 @@ extend(EntityModel.prototype, {
         this.entitiesLoading.clear();
         this.lookers.clear();
         this.helperCupID = -1;
+        this.objectiveID = -1;
         this.needsUpdate = false;
         // XXX [CLEANUP] graphical component and all meshes
     },
@@ -202,6 +205,27 @@ extend(EntityModel.prototype, {
     setHelperCupID(id)
     {
         this.helperCupID = id;
+    },
+
+    setObjectiveID(id)
+    {
+        this.objectiveID = id;
+    },
+
+    triggerObjectiveShrink()
+    {
+        const id = this.objectiveID;
+        assert(id !== -1, '[Entities] Cannot shrink objective.');
+        if (id < 0) return;
+        this.triggerShrink(id);
+    },
+
+    triggerShrink(id)
+    {
+        const entity = this.entitiesIngame.get(id.toString());
+        assert(!!entity, `[Entities] Cannot shrink ${id}.`);
+        if (!entity) return;
+        entity.isShrinking = true;
     },
 
     setHelperCupTextSequence(newTextSequence)

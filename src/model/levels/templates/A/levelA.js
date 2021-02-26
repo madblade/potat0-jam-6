@@ -129,7 +129,8 @@ let LevelA = function(title, id)
                 const idCup = em.addNewBigCup(ne, bigCup, generated);
                 em.setHelperCupID(idCup);
 
-                em.addNewLittleCup(ne, -15.75, -15.75, 0.3, generated);
+                const objectiveID = em.addNewLittleCup(ne, -15.75, -15.75, 0.3, generated);
+                em.setObjectiveID(objectiveID);
                 // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
 
                 // apply
@@ -156,8 +157,10 @@ let LevelA = function(title, id)
                 // backend.addObject(); static sphere
                 // backend.removeObject();
                 ux.validateTask(); // goto next task
+                ux.playValidateFeedback();
 
                 const em = backend.entityModel;
+                em.triggerObjectiveShrink();
 
                 // add entity (id = 1)
                 const generatedIDs = [];
@@ -170,16 +173,13 @@ let LevelA = function(title, id)
                 );
                 em.addNewBigCup(newEntities, bigCup, generatedIDs);
 
-                for (let i = 10; i < 15; ++i)
-                    for (let j = 10; j < 15; ++j)
-                    {
-                        // TODO [CRIT] add little cups
-                        em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
-                    }
+                // for (let i = 10; i < 15; ++i)
+                //     for (let j = 10; j < 15; ++j)
+                //     {
+                //         em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
+                //     }
 
                 backend.updateEntities(newEntities);
-
-                ux.app.engine.audio.playValidateSound();
             }
         },
         {

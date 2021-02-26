@@ -24,6 +24,8 @@ let Entity = function(id, graphicalComponent, worldId)
 
     // Graphics
     this.graphicalComponent = graphicalComponent;
+    this.shrinkTime = 0.;
+    this.isShrinking = false;
     this.textComponent = null;
 
     // Animations

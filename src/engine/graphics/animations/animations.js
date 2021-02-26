@@ -124,6 +124,26 @@ extend(AnimationManager.prototype, {
                 deltaT
             );
         });
+
+        // inefficient but whatever
+        // shrink entities
+        entitiesIngame.forEach(e => {
+            if (!e.isShrinking) return;
+
+            const s = e.shrinkTime + deltaT;
+            const maxTime = 100; // in ms
+            if (s > maxTime) return;
+            e.shrinkTime = s;
+
+            const newScale = 1 - s / maxTime;
+
+            const o3d = e.graphicalComponent;
+            if (!o3d || !o3d.scale) return;
+            o3d.scale.set(
+                newScale, newScale, newScale
+            );
+            // if (e.)
+        });
     },
 
     updateAnimation(entityId)

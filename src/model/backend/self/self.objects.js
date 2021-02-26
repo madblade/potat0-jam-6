@@ -61,7 +61,7 @@ let SelfObjectsModule = {
             // eyes.material.color.set(0xffffff);
             // eyes.material.emissive.set(0xffffff);
             eyes.material = new MeshBasicMaterial({
-                color: '#7b9bbc',
+                color: '#9d9d9d',
             });
             // eyes.userData.bloom = true;
         } catch (e)

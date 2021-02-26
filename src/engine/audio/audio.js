@@ -154,7 +154,8 @@ extend(AudioEngine.prototype, {
         p.forEach(s => s.setVolume(0));
         m.forEach(s => s.setVolume(0));
         this.notesEngine.mainVoiceMaxVolume = 0;
-        this.notesEngine.mainVoice.setVolume(0);
+        if (this.notesEngine.mainVoice)
+            this.notesEngine.mainVoice.setVolume(0);
     },
 
     unMute()
@@ -262,10 +263,9 @@ extend(AudioEngine.prototype, {
 
     playValidateSound()
     {
-        // this._resume();
-        // const audioIndex = this.soundMap.get('validate');
-        // const validateAudio = this.audioSources[audioIndex];
-        // validateAudio.play();
+        const audioIndex = this.soundMap.get('pickup');
+        const validateAudio = this.audioSources[audioIndex];
+        validateAudio.play();
     },
 
     playJumpSound()

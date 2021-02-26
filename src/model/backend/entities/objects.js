@@ -78,6 +78,17 @@ let ObjectsModule = {
             'littlecup', false, true
         );
 
+        object3D.traverse(o =>
+        {
+            if (o.isMesh)
+            {
+                o.position.set(0, 0, 0);
+                o.rotation.set(0, Math.PI / 2, 0);
+                o.userData.hasPrimaryImage = true;
+                // o.userData.bloom = true;
+            }
+        });
+
         // model
         let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
 

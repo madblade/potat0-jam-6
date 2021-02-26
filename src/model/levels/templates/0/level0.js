@@ -118,7 +118,11 @@ let Level0 = function(title, id)
                 for (let i = 10; i < 15; ++i)
                     for (let j = 10; j < 15; ++j)
                     {
-                        em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
+                        em.addNewLittleCup(
+                            newEntities, i, j, 10,
+                            true, true, false,
+                            generatedIDs
+                        );
                     }
 
                 backend.updateEntities(newEntities);

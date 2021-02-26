@@ -270,14 +270,22 @@ extend(EntityModel.prototype, {
         return tc.textIndex;
     },
 
-    addNewLittleCup(newEntities, px, py, pz, alreadyGenerated)
+    addNewLittleCup(
+        newEntities, px, py, pz,
+        hasReflection,
+        hasPrimaryImage,
+        hasBloom,
+        alreadyGenerated)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
         newEntities[newID] = {
             p: new Vector3(px, py, pz),
             r: new Vector3(0, 0, 0),
-            k: 'littlecup'
+            k: 'littlecup',
+            bloom: hasBloom,
+            primaryImage: hasPrimaryImage,
+            reflection: hasReflection
         };
         alreadyGenerated.push(newID);
         return newID;

@@ -84,7 +84,8 @@ let ObjectsModule = {
             {
                 o.position.set(0, 0, 0);
                 o.rotation.set(0, Math.PI / 2, 0);
-                o.userData.hasPrimaryImage = true;
+                o.userData.hasPrimaryImage = updatedEntity.primaryImage;
+                o.userData.hasReflection = updatedEntity.reflection;
                 // o.userData.bloom = true;
             }
         });

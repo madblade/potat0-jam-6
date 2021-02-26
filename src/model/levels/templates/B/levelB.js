@@ -1,5 +1,5 @@
 /**
- * Level A.
+ * Level B.
  */
 
 'use strict';
@@ -8,10 +8,10 @@ import extend, { inherit }  from '../../../../extend';
 
 import { Level }            from '../../level';
 import { Vector3 }          from 'three';
-import { LevelATerrain }    from './terrain';
-import { LevelAObjects }    from './objects';
+import { LevelBTerrain }    from './terrain';
+import { LevelBObjects }    from './objects';
 
-let LevelA = function(title, id)
+let LevelB = function(title, id)
 {
     Level.call(this, title, id);
 
@@ -29,23 +29,39 @@ let LevelA = function(title, id)
     const textSequence = [
         {
             direct: true,
-            text: 'Oh, salut!'
+            text: 'Ah !'
         },
         {
             direct: true,
-            text: 'Tu dois être le joueur…'
+            text: 'Tu m’as fait peur !'
         },
         {
             direct: true,
-            text: 'Et je suppose que je suis l’objectif ?'
+            text: 'J’ai cru que tu ne reviendrais pas.'
         },
         {
             direct: true,
-            text: 'Tu vas bien ?'
+            text: 'Heureusement, tu sais où est ton <i>vrai</i> objectif.'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: 'Hum.'
+        },
+        {
+            timeToWaitBefore: 2000,
+            text: 'Il y a quelque chose qui cloche…'
+        },
+        {
+            direct: true,
+            text: 'Pourquoi je n’ai pas de reflet ?'
         },
         {
             direct: true,
             text: '…'
+        },
+        {
+            direct: true,
+            text: '……'
         },
         {
             timeToWaitBefore: 2000,
@@ -54,47 +70,11 @@ let LevelA = function(title, id)
         {
             direct: true,
             timeToWaitBefore: 2000,
-            text: 'Je me demande à quoi servent ces machins gris derrière.'
+            text: '.'
         },
         {
             timeToWaitBefore: 5000,
-            text: 'Peut-être qu’en sautant dessus…'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'La clé, c’est l’observation.'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'L’observation de tous les recoins…'
-        },
-        {
-            timeToWaitBefore: 10000,
-            text: 'En tout cas, ça fait plaisir d’avoir de la visite.'
-        },
-        {
-            direct: true,
-            text: 'Je commençais à m’ennuyer :('
-        },
-        {
-            direct: true,
-            text: 'Heureusement, je suis l’objectif de quelqu’un !'
-        },
-        {
-            direct: true,
-            text: 'Pas vrai ?'
-        },
-        {
-            timeToWaitBefore: 2000,
-            text: '…'
-        },
-        {
-            direct: true,
-            text: '…pas vrai ?'
-        },
-        {
-            direct: true,
-            text: 'Je suis bien ton objectif, hein ?'
+            text: '...'
         },
     ];
 
@@ -104,19 +84,16 @@ let LevelA = function(title, id)
         {
             type: 'splash',
             titles: [
-                '<h3>madblade présente</h3>', // after, sub
-                '<h3>fait pour la <b>Potat0 Game Jam</b> No.6</h3>avec m&alpha;dengine',
-                '<h3>thème: “le vrai objectif est caché”</h3>', // main
-                '<h1>Puddle Game</h1>', // main
+                '<h3>Puddle 1</h3>', // after, sub
+                '<h3>Eaubjectif</h3>',
             ],
-            fadeInTitle: 1, //1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1, //1000,  // time fade out each title
-            keepTitle: 1, //2000,    // time to keep each title full brightness
-            fadeOutSplash: 1, //3000, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 1000,     // time to keep each title full brightness
+            fadeOutSplash: 1000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
-                // backend.addObject(); // static sphere to indicate objective
 
                 const generated = [];
                 const ne = {}; // new entities
@@ -136,8 +113,7 @@ let LevelA = function(title, id)
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
-                ux.app.engine.audio.playMusic();
-
+                // ux.app.engine.audio.playMusic();
                 // validate task is auto-called for the splash event
             }
         },
@@ -158,9 +134,10 @@ let LevelA = function(title, id)
                 const generated = [];
                 const ne = {};
                 const objectiveID = em.addNewLittleCup(
-                    ne,
-                    -15.75, -15.75, 0.3,
-                    true, true, false,
+                    ne, 0., 1., 2.,
+                    true,
+                    false,
+                    false,
                     generated
                 );
                 em.setObjectiveID(objectiveID);
@@ -228,9 +205,9 @@ let LevelA = function(title, id)
     ];
 };
 
-inherit(LevelA, Level);
+inherit(LevelB, Level);
 
-extend(LevelA.prototype, {
+extend(LevelB.prototype, {
 
     getTerrain() {
         return this.terrain;
@@ -251,7 +228,7 @@ extend(LevelA.prototype, {
 
 });
 
-extend(LevelA.prototype, LevelATerrain);
-extend(LevelA.prototype, LevelAObjects);
+extend(LevelB.prototype, LevelBTerrain);
+extend(LevelB.prototype, LevelBObjects);
 
-export { LevelA };
+export { LevelB };

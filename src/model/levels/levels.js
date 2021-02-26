@@ -7,6 +7,7 @@
 import extend     from '../../extend';
 
 import { LevelA } from './templates/A/levelA';
+import { LevelB } from './templates/B/levelB';
 import { Level0 } from './templates/0/level0';
 import { Level1 } from './templates/1/level1';
 import { Level2 } from './templates/2/level2';
@@ -18,6 +19,7 @@ let Levels = function(app)
     this.levels = [
 
         new LevelA('Introduction', 0),
+        new LevelB('Flaque 1', 0),
 
         new Level0('sample', 1),
         new Level1('second sample', 2),

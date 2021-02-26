@@ -66,6 +66,15 @@ extend(EntityModel.prototype, {
         animationManager.resetRaycastables();
 
         let objects = level.getObjects();
+        this.addNewObjects(objects,
+            graphics, physics, animationManager);
+
+        level.startupObjects(this.app);
+    },
+
+    addNewObjects(objects,
+        graphics, physics, animationManager)
+    {
         objects.forEach(o => {
             switch (o.type)
             {
@@ -98,8 +107,6 @@ extend(EntityModel.prototype, {
                     break;
             }
         });
-
-        level.startupObjects(this.app);
     },
 
     refresh()

@@ -1,5 +1,5 @@
 /**
- * Level B.
+ * Level C.
  */
 
 'use strict';
@@ -8,10 +8,10 @@ import extend, { inherit }  from '../../../../extend';
 
 import { Level }            from '../../level';
 import { Vector3 }          from 'three';
-import { LevelBTerrain }    from './terrain';
-import { LevelBObjects }    from './objects';
+import { LevelCTerrain }    from './terrain';
+import { LevelCObjects }    from './objects';
 
-let LevelB = function(title, id)
+let LevelC = function(title, id)
 {
     Level.call(this, title, id);
 
@@ -33,82 +33,40 @@ let LevelB = function(title, id)
         },
         {
             direct: true,
-            text: 'Ah !'
+            text: 'Euh…'
         },
         {
             direct: true,
-            text: 'Tu m’as fait peur !'
+            text: 'J’ai bien vu ce que tu as fait…'
         },
         {
             direct: true,
-            text: 'J’ai cru que tu ne reviendrais pas.'
+            text: 'Ce n’était clairement pas mon reflet !'
         },
         {
             direct: true,
-            text: 'Heureusement, tu sais où est ton <i>vrai</i> objectif.'
-        },
-        {
-            direct: true,
-            text: 'Devant tes yeux !'
+            text: 'Cette… <i>chose</i> que tu as prise !'
         },
         {
             timeToWaitBefore: 5000,
-            text: 'Hum.'
+            text: 'C’est pas moi ton objectif, alors ?'
         },
         {
             direct: true,
-            text: 'Il y a quelque chose qui cloche…'
-        },
-        {
-            direct: true,
-            text: 'Pourquoi je n’ai pas de reflet ?'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'Tu as bien un reflet, toi !'
-        },
-        {
-            direct: true,
-            text: '…'
-        },
-        {
-            direct: true,
-            text: 'Étrange…'
-        },
-        {
-            direct: true,
-            text: 'Peut-être qu’on n’a pas tous la chance d’en avoir un.'
-        },
-        {
-            timeToWaitBefore: 10000,
-            text: 'J’aimerais bien avoir un reflet.'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'Mais bon, tant que tu es là…'
-        },
-        {
-            direct: true,
-            text: 'C’est que tout va pour le mieux !'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: '…pas vrai ?'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'C’est bien pour moi que tu es là, non ?'
+            text: 'Tristesse.'
         }
     ];
 
-    const objectiveVector = new Vector3(2, -12, 3);
+    const objectiveVector = new Vector3(1, 1, 5);
+
+    const pfs = this.getPlatforms();
 
     this.scenario = [
         {
             type: 'splash',
             titles: [
-                '<h3>Puddle 1</h3>', // after, sub
-                '<h3>L’eaubjectif</h3>',
+                '<h3>Puddle 2</h3>', // after, sub
+                '<h3>Trop heaut</h3>',
             ],
             fadeInTitle: 1,   // for each title, time in milliseconds
             fadeOutTitle: 200,  // time fade out each title
@@ -131,7 +89,7 @@ let LevelB = function(title, id)
             {
                 const em = backend.entityModel;
                 const i = em.getHelperCupDialogueAdvancement();
-                return i >= 7;
+                return i >= 4;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
@@ -147,6 +105,9 @@ let LevelB = function(title, id)
                 //         text: 'Burp burp'
                 //     }
                 // ]);
+
+                const e = backend.app.engine;
+                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
                 const generated = [];
                 const ne = {};
@@ -225,9 +186,9 @@ let LevelB = function(title, id)
     ];
 };
 
-inherit(LevelB, Level);
+inherit(LevelC, Level);
 
-extend(LevelB.prototype, {
+extend(LevelC.prototype, {
 
     getTerrain() {
         return this.terrain;
@@ -263,7 +224,7 @@ extend(LevelB.prototype, {
 
 });
 
-extend(LevelB.prototype, LevelBTerrain);
-extend(LevelB.prototype, LevelBObjects);
+extend(LevelC.prototype, LevelCTerrain);
+extend(LevelC.prototype, LevelCObjects);
 
-export { LevelB };
+export { LevelC };

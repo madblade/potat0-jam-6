@@ -38,8 +38,10 @@ extend(Integrator.prototype, {
         );
     },
 
-    integrateEntity(entity, relativeDt)
+    integrateEntity(entity, relativeDt2)
     {
+        let relativeDt = relativeDt2;
+
         const cm = entity.collisionModel;
         assert(!cm.isStatic,
             `[Integrator] Trying to integrate a static entity ${entity}.`
@@ -76,6 +78,7 @@ extend(Integrator.prototype, {
                 // a0.z = targetA0 / 8;
             }
         }
+
         if (cm.isPreparingJump)
         {
             // console.log('waiting.');
@@ -90,6 +93,7 @@ extend(Integrator.prototype, {
                 // const jumpHeight = 2.5; // 0.72 -> 6.969
                 const jumpHeight = 4.5; // 0.72 -> 6.969
                 const rh = jumpHeight - 1.969; // + 0.72;e
+                relativeDt = 0.016;
                 const targetA0 = 2 * rh / (relativeDt * relativeDt);
                 a0.z = targetA0 / 4;
                 // const targetV0 = 2 * rh / (relativeDt);
@@ -118,11 +122,11 @@ extend(Integrator.prototype, {
 
         const localTimeDilation = this.physics.getTimeDilation(p0, entity);
         let dtr = relativeDt * localTimeDilation; // dtr = 1 / fps
-        if (dtr > 0.1)
+        if (dtr > 0.051) // 20fps
         {
             if (this._debug)
                 console.warn(`[Integrator] Large DT: ${dtr}.`);
-            dtr = 0.016;
+            dtr = 0.051;
         }
         const inWater = this.physics.isWater(p0);
         const maxSpeed = inWater ?

@@ -107,7 +107,7 @@ extend(UX.prototype, {
     informPlayer(text)
     {
         // display text to player.
-        console.log('[UX] Got a message…');
+        // console.log('[UX] Got a message…');
         console.log(`[UX] Message: '${text}'`);
     },
 

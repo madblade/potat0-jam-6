@@ -22,11 +22,15 @@ let LevelB = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, -10, 1.5],
+        position: [0, -12, 1.5],
         rotation: [0, 0, Math.PI]
     };
 
-    const textSequence = [
+    this.textSequence = [
+        {
+            direct: true,
+            text: ''
+        },
         {
             direct: true,
             text: 'Ah !'
@@ -78,7 +82,7 @@ let LevelB = function(title, id)
         },
     ];
 
-    const objectiveVector = new Vector3(-15.75, -15.75);
+    const objectiveVector = new Vector3(0, -10, 3);
 
     this.scenario = [
         {
@@ -87,29 +91,31 @@ let LevelB = function(title, id)
                 '<h3>Puddle 1</h3>', // after, sub
                 '<h3>Eaubjectif</h3>',
             ],
-            fadeInTitle: 1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1000,  // time fade out each title
-            keepTitle: 1000,     // time to keep each title full brightness
+            fadeInTitle: 1,   // for each title, time in milliseconds
+            fadeOutTitle: 200,  // time fade out each title
+            keepTitle: 200,     // time to keep each title full brightness
             fadeOutSplash: 1000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
 
-                const generated = [];
-                const ne = {}; // new entities
+                // const generated = [];
+                // const ne = {}; // new entities
 
-                const em = backend.entityModel;
-                const bigCup = em.makeNewBigCup(
-                    0, 0, 0.6, false,
-                    textSequence
-                );
-                const idCup = em.addNewBigCup(ne, bigCup, generated);
-                em.setHelperCupID(idCup);
+                // const em = backend.entityModel;
+                // const bigCup = em.makeNewBigCup(
+                //     0, 0, 0.6, false,
+                //     textSequence
+                // );
+                // const idCup = em.addNewBigCup(ne, bigCup, generated);
+                // em.setHelperCupID(idCup);
+                // em.setHelperCupTextSequence(textSequence);
+                // em.talkToHelperCup();
 
                 // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
 
                 // apply
-                backend.updateEntities(ne);
+                // backend.updateEntities(ne);
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
@@ -130,6 +136,16 @@ let LevelB = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 const em = backend.entityModel;
+                em.setHelperCupTextSequence([
+                    {
+                        direct: true,
+                        text: 'Burp'
+                    },
+                    {
+                        direct: true,
+                        text: 'Burp burp'
+                    }
+                ]);
 
                 const generated = [];
                 const ne = {};
@@ -225,6 +241,21 @@ extend(LevelB.prototype, {
     getScenario() {
         return this.scenario;
     },
+
+    startupObjects(app)
+    {
+        const backend = app.model.backend;
+        const em = backend.entityModel;
+        const ne = {};
+        const generated = [];
+        const bigCup = em.makeNewBigCup(
+            0, 0, 0.6, false,
+            this.textSequence
+        );
+        const idCup = em.addNewBigCup(ne, bigCup, generated);
+        em.setHelperCupID(idCup);
+        backend.updateEntities(ne);
+    }
 
 });
 

@@ -19,11 +19,11 @@ let Levels = function(app)
     this.levels = [
 
         new LevelA('Introduction', 0),
-        new LevelB('Flaque 1', 0),
+        new LevelB('Flaque 1', 1),
 
-        new Level0('sample', 1),
-        new Level1('second sample', 2),
-        new Level2('third sample', 3),
+        new Level0('sample', 10),
+        new Level1('second sample', 11),
+        new Level2('third sample', 12),
     ];
 };
 

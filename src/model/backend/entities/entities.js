@@ -98,6 +98,8 @@ extend(EntityModel.prototype, {
                     break;
             }
         });
+
+        level.startupObjects(this.app);
     },
 
     refresh()
@@ -234,8 +236,8 @@ extend(EntityModel.prototype, {
         assert(id !== -1, '[Entities] Cannot feed text.');
         if (id < 0) return;
         const c = this.lookers.get(id.toString());
+        assert(!!c, '[Entities] Cannot feed text.');
         const tc = c.textComponent;
-        assert(!!tc, '[Entities] Cannot feed text.');
         if (!tc) return;
         tc.setTextSequence(newTextSequence);
     },

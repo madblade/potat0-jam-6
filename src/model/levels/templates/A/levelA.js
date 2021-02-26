@@ -26,7 +26,11 @@ let LevelA = function(title, id)
         rotation: [0, 0, Math.PI]
     };
 
-    const textSequence = [
+    this.textSequence = [
+        {
+            direct: true,
+            text: ''
+        },
         {
             direct: true,
             text: 'Oh, salut!'
@@ -105,34 +109,19 @@ let LevelA = function(title, id)
             type: 'splash',
             titles: [
                 '<h3>madblade présente</h3>', // after, sub
-                '<h3>fait pour la <b>Potat0 Game Jam</b> No.6</h3>avec m&alpha;dengine',
-                '<h3>thème: “le vrai objectif est caché”</h3>', // main
+                '<h3>fait pour la <b>Potat0 Game Jam</b> No.6</h3>' +
+                'avec m&alpha;dengine<br/>' +
+                'thème: « le vrai objectif est caché »',
                 '<h1>Puddle Game</h1>', // main
             ],
-            fadeInTitle: 1, //1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1, //1000,  // time fade out each title
-            keepTitle: 1, //2000,    // time to keep each title full brightness
-            fadeOutSplash: 1, //3000, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,    // time to keep each title full brightness
+            fadeOutSplash: 3000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
-                // backend.addObject(); // static sphere to indicate objective
 
-                const generated = [];
-                const ne = {}; // new entities
-
-                const em = backend.entityModel;
-                const bigCup = em.makeNewBigCup(
-                    0, 0, 0.6, false,
-                    textSequence
-                );
-                const idCup = em.addNewBigCup(ne, bigCup, generated);
-                em.setHelperCupID(idCup);
-
-                // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
-
-                // apply
-                backend.updateEntities(ne);
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
@@ -249,6 +238,26 @@ extend(LevelA.prototype, {
         return this.scenario;
     },
 
+    startupObjects(app)
+    {
+        const backend = app.model.backend;
+        const em = backend.entityModel;
+
+        const generated = [];
+        const ne = {}; // new entities
+
+        const bigCup = em.makeNewBigCup(
+            0, 0, 0.6, false,
+            this.textSequence
+        );
+        const idCup = em.addNewBigCup(ne, bigCup, generated);
+        em.setHelperCupID(idCup);
+
+        // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
+
+        // apply
+        backend.updateEntities(ne);
+    }
 });
 
 extend(LevelA.prototype, LevelATerrain);

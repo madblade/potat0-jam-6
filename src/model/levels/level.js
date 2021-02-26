@@ -41,6 +41,11 @@ extend(Level.prototype, {
         console.warn('[Model/Level] Abstract level function.');
     },
 
+    startupObjects()
+    {
+        console.warn('[Model/Level] Abstract level function.');
+    }
+
 });
 
 export { Level };

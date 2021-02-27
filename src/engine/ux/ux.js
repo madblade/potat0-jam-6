@@ -79,6 +79,9 @@ extend(UX.prototype, {
             state.resetProgressInCurrentTask();
             this.resetTimeSinceLastEvent();
             this.app.runGame();
+
+            // if (level.getID() > 0)
+            //     this.app.engine.audio.playMusic();
         }
     },
 

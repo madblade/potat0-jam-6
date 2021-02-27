@@ -92,6 +92,16 @@ extend(SelfModel.prototype, {
         this.updateSelf(positionVector, rotationVector, '-1'); // -1 === main world
         this.updatePosition(this.position, this.avatar);
         this.setRotation(this.rotation, this.avatar);
+        if (player.isXYFlipped)
+        {
+            this.avatar.userData.isXYFlipped = true;
+            // this.avatar.userData.saveP = new Vector3(0, 0, 0);
+            // this.avatar.traverse(o =>
+            // {
+            //     if (o.isMesh)
+            //         o.userData.isXYFlipped = true;
+            // });
+        }
 
         // Notify physics engine.
         let physics = this.app.engine.physics;

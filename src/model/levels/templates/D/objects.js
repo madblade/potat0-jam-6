@@ -1,11 +1,11 @@
 
 'use strict';
 
-let LevelBObjects = {
+let LevelDObjects = {
 
     generateWalls()
     {
-        const mapWidth = 30;
+        const mapWidth = 40;
         const wallHeight = 10;
 
         const mw2 = mapWidth / 2;
@@ -94,17 +94,17 @@ let LevelBObjects = {
                 h: 2,
                 d: 0.2
             },
-            {
-                type: 'box',
-                reflection: true,
-                image: true,
-                stone: true,
-                position: [0, 0, 0],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.05
-            },
+            // {
+            //     type: 'box',
+            //     reflection: true,
+            //     image: true,
+            //     stone: true,
+            //     position: [0, 0, 0],
+            //     rotation: [0, 0, 0],
+            //     w: 1,
+            //     h: 1,
+            //     d: 0.05
+            // },
         ];
         objects.push(...placeHolders);
 
@@ -126,4 +126,4 @@ let LevelBObjects = {
 
 };
 
-export { LevelBObjects };
+export { LevelDObjects };

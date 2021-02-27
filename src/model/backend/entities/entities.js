@@ -295,7 +295,8 @@ extend(EntityModel.prototype, {
         hasReflection,
         hasPrimaryImage,
         hasBloom,
-        alreadyGenerated)
+        alreadyGenerated,
+        isXYFlipped)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
@@ -305,7 +306,8 @@ extend(EntityModel.prototype, {
             k: 'littlecup',
             bloom: hasBloom,
             primaryImage: hasPrimaryImage,
-            reflection: hasReflection
+            reflection: hasReflection,
+            reverted: isXYFlipped
         };
         alreadyGenerated.push(newID);
         return newID;

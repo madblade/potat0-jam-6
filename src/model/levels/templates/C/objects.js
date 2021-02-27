@@ -128,22 +128,22 @@ let LevelCObjects = {
         objects.push(...walls);
 
         // add 1 wall
-        const mapWidth = 35;
-        const wallHeight = 10;
-        const mw2 = mapWidth / 2;
-        const wh2 = wallHeight / 2;
-        const additionalWall = {
-            type: 'box',
-            // reflection: true,
-            image: true,
-            wall: true,
-            position: [-2, -mw2 + 3, wh2 - 0.1],
-            rotation: [0, 0, 0],
-            w: mapWidth,
-            h: 1,
-            d: wallHeight
-        };
-        objects.push(additionalWall);
+        // const mapWidth = 35;
+        // const wallHeight = 10;
+        // const mw2 = mapWidth / 2;
+        // const wh2 = wallHeight / 2;
+        // const additionalWall = {
+        //     type: 'box',
+        //     // reflection: true,
+        //     image: true,
+        //     wall: true,
+        //     position: [-2, -mw2 + 3, wh2 - 0.1],
+        //     rotation: [0, 0, 0],
+        //     w: mapWidth,
+        //     h: 1,
+        //     d: wallHeight
+        // };
+        // objects.push(additionalWall);
 
         const placeHolders = [
             {

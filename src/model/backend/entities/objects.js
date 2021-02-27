@@ -86,6 +86,7 @@ let ObjectsModule = {
                 o.rotation.set(0, Math.PI / 2, 0);
                 o.userData.hasPrimaryImage = updatedEntity.primaryImage;
                 o.userData.hasReflection = updatedEntity.reflection;
+                o.userData.isXYFlipped = updatedEntity.isXYFlipped;
                 // o.userData.bloom = true;
             }
         });

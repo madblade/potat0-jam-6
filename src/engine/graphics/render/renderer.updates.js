@@ -29,6 +29,27 @@ let RendererUpdates = {
     selectObjectsWithReflection(scene, deltaTInMillis)
     {
         scene.traverse(obj => {
+            if (obj.userData.isXYFlipped)
+            {
+                const p = obj.position;
+                // obj.userData.saveP.copy(p);
+                p.set(p.y, p.x, p.z);
+                // obj.updateWorldMatrix(false, false);
+                // obj.traverse(o2 => {
+                //     if (!o2.isSkinnedMesh)
+                //         o2.updateWorldMatrix(false, false);
+                // });
+                obj.updateMatrixWorld(true);
+                console.log(p.x);
+                // console.log(p);
+                // const tx = obj.position.x;
+                // obj.position.x = obj.position.y;
+                // obj.position.y = tx;
+                // obj.traverse(o2 => {
+                //     if (o2.isMesh) o2.updateMatrixWorld();
+                // });
+            }
+
             if (!obj.isMesh) return;
 
             if (obj.userData.hasReflection === true) // enforce type
@@ -55,6 +76,22 @@ let RendererUpdates = {
     selectObjectsWithPrimaryImage(scene)
     {
         scene.traverse(obj => {
+            if (obj.userData.isXYFlipped)
+            {
+                const p = obj.position;
+                p.set(p.y, p.x, p.z);
+                // console.log(obj);
+                // p.copy(obj.userData.saveP);
+                // obj.updateWorldMatrix(false, false);
+                // obj.traverse(o2 =>
+                // {
+                //     if (!o2.isSkinnedMesh)
+                //         o2.updateWorldMatrix(false, true);
+                // });
+                obj.updateMatrixWorld(true);
+                console.log(p.x);
+            }
+
             if (!obj.isMesh) return;
 
             if (obj.userData.hasPrimaryImage === true)

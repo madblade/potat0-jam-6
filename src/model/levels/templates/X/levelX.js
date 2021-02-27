@@ -19,9 +19,11 @@ let LevelX = function(title, id)
                 '<h3>FIN</h3>', // after, sub
                 '<h3><b>Potat0 Game Jam</b> No.6</h3>' +
                 'thème: « le vrai objectif est caché »',
-                '<h3>musique originale<br/> Guilhem Dross</h3>',
-                '<h3>moteur, modèles, animations, gameplay, ' +
-                'design et tout le reste<br/>madblade</h3>',
+                '<h3>musique originale<br/> TheLevg34</h3>',
+                '<h3>gameplay, programmation, modèles, animations, ' +
+                'design, texte<br/>madblade</h3>',
+                '<h3>moteur maison' +
+                '<br/>madblade</h3>',
                 '<h1>Puddle Game</h1>', // main
                 '<h3>Merci d’avoir joué !</h3>',
             ],

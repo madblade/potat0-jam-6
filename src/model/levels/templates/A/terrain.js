@@ -30,7 +30,9 @@ let LevelATerrain = {
             nbSegmentsX, nbSegmentsY,
             widthX, widthY,
             points,
-            isWater: false
+            isWater: false,
+            color: '#161616',
+            shininess: 0.1
         });
 
         this.terrain = {

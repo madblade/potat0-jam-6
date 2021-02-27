@@ -11,7 +11,7 @@ import { LevelB } from './templates/B/levelB';
 import { LevelC } from './templates/C/levelC';
 import { LevelD } from './templates/D/levelD';
 import { LevelE } from './templates/E/levelE';
-import { LevelF } from './templates/F/levelF';
+// import { LevelF } from './templates/F/levelF';
 import { LevelX } from './templates/X/levelX';
 // import { Level0 } from './templates/0/level0';
 // import { Level1 } from './templates/1/level1';
@@ -23,13 +23,13 @@ let Levels = function(app)
 
     this.levels = [
 
-        new LevelF('Flaque 5', 5),
+        // new LevelF('Flaque 5', 5),
         new LevelA('Introduction', 0),
         new LevelB('Flaque 1', 1),
         new LevelC('Flaque 2', 2),
         new LevelD('Flaque 3', 3),
         new LevelE('Flaque 4', 4),
-        new LevelX('Générique', 6),
+        new LevelX('Générique', 5),
 
         // new Level0('sample', 10),
         // new Level1('second sample', 11),

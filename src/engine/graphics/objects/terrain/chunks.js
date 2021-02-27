@@ -47,7 +47,12 @@ let ChunksModule = {
         geometry.computeVertexNormals();
 
         const isWater = chunk.isWater;
-        let newMesh = this.createChunkMesh(geometry, isWater, true, worldId);
+        const c = chunk.color;
+        const s = chunk.shininess;
+        let newMesh = this.createChunkMesh(
+            geometry, isWater, true, worldId,
+            c,
+            s);
         if (!isWater) newMesh.receiveShadow = true;
         newMesh.userData.hasPrimaryImage = true;
 

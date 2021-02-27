@@ -13,7 +13,8 @@ import {
 
 let ChunksMeshModule = {
 
-    createChunkMesh(geometry, isWater, isWorldFlat, worldId)
+    createChunkMesh(geometry, isWater, isWorldFlat, worldId,
+        c, s)
     {
         if (isWater)
         {
@@ -63,8 +64,8 @@ let ChunksMeshModule = {
                 'smooth-phong',
                 {
                     // color: '#948e7a',
-                    color: '#645946',
-                    shininess: 0.5
+                    color: c ? c : '#645946',
+                    shininess: s ? s : 0.5
                 }, worldId
             );
             return new Mesh(geometry, material);

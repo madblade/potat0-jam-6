@@ -151,8 +151,8 @@ extend(GamepadControls.prototype, {
             const s2 = s1 + 1;
             let a1 = newStickStates[s1];
             let a2 = newStickStates[s2];
-            if (Math.abs(a1) < 0.1) a1 = 0.;
-            if (Math.abs(a2) < 0.1) a2 = 0.;
+            if (Math.abs(a1) < 0.15) a1 = 0.;
+            if (Math.abs(a2) < 0.15) a2 = 0.;
 
             if (
                 a1 !== lastStickStates[s1] ||

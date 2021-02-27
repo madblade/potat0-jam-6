@@ -175,6 +175,7 @@ let MeshesModule = {
         object.scale.set(0.44, 0.44, 0.44);
         // object.scale.multiplyScalar(0.010);
 
+        // object.material.flatShading = true;
         let innerWrapper = new Object3D();
         innerWrapper.name = 'inner';
         innerWrapper.add(object);

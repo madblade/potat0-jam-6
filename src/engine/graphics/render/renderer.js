@@ -17,7 +17,8 @@ import {
     MeshBasicMaterial,
     Scene,
     PlaneBufferGeometry,
-    Mesh, FrontSide, BackSide, MeshLambertMaterial, MeshPhongMaterial
+    Mesh, FrontSide,
+    // BackSide, MeshLambertMaterial, MeshPhongMaterial
 } from 'three';
 
 let RendererManager = function(graphicsEngine)
@@ -98,7 +99,7 @@ let RendererManager = function(graphicsEngine)
             color: 'black',
             side: FrontSide,
             skinning: true,
-            flatShading: true,
+            flatShading: false,
         }
     );
     this.darkWater = new MeshBasicMaterial(

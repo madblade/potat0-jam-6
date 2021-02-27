@@ -45,9 +45,14 @@ let MaterialsModule = {
                 const nbColors = meta.nbColors;
                 const colors = new Uint8Array(nbColors);
                 for (let c = 0; c <= colors.length; ++c) {
-                    colors[c] = (c / colors.length) * 256;
+                    const nc = c / colors.length;
+                    // const cc = nc;
+                    const cc = Math.pow(nc, 10.);
+                    colors[c] = cc * 256;
                 }
-                const gradientMap = new DataTexture(colors, colors.length, 1, LuminanceFormat);
+                const gradientMap = new DataTexture(
+                    colors, colors.length, 1, LuminanceFormat
+                );
                 gradientMap.minFilter = NearestFilter;
                 gradientMap.magFilter = NearestFilter;
                 gradientMap.generateMipmaps = false;

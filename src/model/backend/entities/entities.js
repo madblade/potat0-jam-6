@@ -12,12 +12,14 @@ import { EntitiesInterpolationModule }  from './entities.interpolate';
 import { EntitiesUpdateModule }         from './entities.update';
 import { ProjectileUpdateModule }       from './projectile';
 import {
-    BoxBufferGeometry, DoubleSide,
+    BoxBufferGeometry,
+    DoubleSide,
+    FrontSide,
     Mesh,
     MeshBasicMaterial,
     MeshPhongMaterial,
     Vector3
-} from 'three';
+}                                       from 'three';
 
 let EntityModel = function(app)
 {
@@ -86,6 +88,9 @@ extend(EntityModel.prototype, {
                     let mat;
                     if (o.wall) mat = new MeshPhongMaterial(
                         { color: '#eceaea', side: DoubleSide }
+                    );
+                    else if (o.color) mat = new MeshPhongMaterial(
+                        { color: o.color, side: FrontSide }
                     );
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
@@ -290,6 +295,18 @@ extend(EntityModel.prototype, {
         const tc = c.textComponent;
         if (!tc) return;
         tc.unstepTextSequence();
+    },
+
+    debloomMainCup()
+    {
+        const id = this.helperCupID;
+        if (id < 0) return;
+        const c = this.lookers.get(id.toString());
+        const gc = c.graphicalComponent;
+        gc.traverse(o => {
+            if (o.isMesh)
+                o.userData.bloom = false;
+        });
     },
 
     getHelperCupDialogueAdvancement()

@@ -8,58 +8,14 @@ let LevelFObjects = {
         const platforms = [
             {
                 type: 'box',
+                color: '#797979',
                 reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-10, 0, 1.5],
-                rotation: [0, 0, 0],
+                image: true,
+                position: [10, 0, 0],
+                rotation: [0, Math.PI / 16, 0],
                 w: 1,
                 h: 1,
-                d: 0.5
-            },
-            {
-                type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-10, 5, 2.5],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.5
-            },
-            {
-                type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-5, 5, 3.5],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.5
-            },
-            {
-                type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [0, 5, 4.5],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.5
-            },
-            {
-                type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [5, 5, 4.5],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.5
+                d: 10
             },
         ];
 
@@ -68,7 +24,7 @@ let LevelFObjects = {
 
     generateWalls()
     {
-        const mapWidth = 50;
+        const mapWidth = 75;
         const wallHeight = 10;
 
         const mw2 = mapWidth / 2;
@@ -146,17 +102,17 @@ let LevelFObjects = {
         // objects.push(additionalWall);
 
         const placeHolders = [
-            {
-                type: 'box',
-                reflection: true,
-                image: true,
-                stone: true,
-                position: [0, -12, 0.],
-                rotation: [0, 0, 0],
-                w: 2,
-                h: 2,
-                d: 0.2
-            },
+            // {
+            //     type: 'box',
+            //     reflection: true,
+            //     image: true,
+            //     stone: true,
+            //     position: [0, -12, 0.],
+            //     rotation: [0, 0, 0],
+            //     w: 2,
+            //     h: 2,
+            //     d: 0.2
+            // },
             {
                 type: 'box',
                 reflection: true,

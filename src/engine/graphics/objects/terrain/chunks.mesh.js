@@ -56,13 +56,15 @@ let ChunksMeshModule = {
             // let c = '#3e94d7';
             // let material = this.createMaterial(
             //     'toon',
-            //     { color: '#11ee11', nbColors: 10 }, worldId
+            //     { color: '#948e7a', nbColors: 10 },
+            //     worldId
             // );
             let material = this.createMaterial(
                 'smooth-phong',
                 {
-                    color: '#161616',
-                    shininess: 0
+                    // color: '#948e7a',
+                    color: '#645946',
+                    shininess: 0.5
                 }, worldId
             );
             return new Mesh(geometry, material);

@@ -21,7 +21,7 @@ let LevelF = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, -12, 1.5],
+        position: [0, -17, 1.5],
         rotation: [0, 0, Math.PI],
     };
 
@@ -34,13 +34,39 @@ let LevelF = function(title, id)
             direct: true,
             text: 'Je brille !!'
         },
+    ];
+
+    const ts1 = [
+        {
+            direct: true,
+            text: 'Je brille !!'
+        },
+        {
+            direct: true,
+            text: 'Je brille !!'
+        }
+    ];
+
+    const ts2 = [
+        {
+            direct: true,
+            text: 'Hein ?'
+        },
+        {
+            direct: true,
+            text: 'Tu as bien vu que je brillais ?'
+        },
         {
             timeToWaitBefore: 5000,
             text: 'Ça te donne pas envie que je sois ton objectif ?'
         },
+        {
+            direct: true,
+            text: '…s’il te plaît ?'
+        }
     ];
 
-    // const pfs = this.getPlatforms();
+    const pfs = this.getPlatforms();
 
     this.scenario = [
         {
@@ -56,6 +82,10 @@ let LevelF = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
+
+                const em = backend.entityModel;
+                const e = backend.app.engine;
+                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
@@ -77,6 +107,29 @@ let LevelF = function(title, id)
             {
                 const em = backend.entityModel;
 
+                em.setHelperCupTextSequence(ts1);
+
+                em.debloomMainCup();
+
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                ux.validateTask();
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            checkCondition: function(backend, ux)
+            {
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                return i >= 1;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+                const em = backend.entityModel;
+
+                em.setHelperCupTextSequence(ts2);
                 ux.playLittleValidateFeedback();
 
                 // const e = backend.app.engine;
@@ -86,6 +139,13 @@ let LevelF = function(title, id)
                 const ne = {};
 
                 em.addNewAxolotl(ne, 0, 0, 2,
+                    true, true,
+                    generated, false
+                );
+
+                backend.updateEntities(ne);
+
+                em.addNewAxolotl(ne, 0, 10, 2,
                     true, true,
                     generated, false
                 );

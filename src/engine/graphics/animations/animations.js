@@ -148,6 +148,20 @@ extend(AnimationManager.prototype, {
                 return;
             }
 
+            if (e.finalAxolotlIndex)
+            {
+                const i = e.finalAxolotlIndex;
+                const p = e.graphicalComponent.position;
+                const dts = deltaT / 1e3;
+                let tt = e.graphicalComponent.ttt || 0;
+                tt += dts;
+                e.graphicalComponent.ttt = tt;
+                if (i === 1)
+                    p.y = -5 + 2.7 * Math.sin(tt / 2);
+                else if (i === 2)
+                    p.y = -15 - 2.7 * Math.sin(tt / 2);
+            }
+
             if (!e.isShrinking) return;
 
             const s = e.shrinkTime + deltaT;

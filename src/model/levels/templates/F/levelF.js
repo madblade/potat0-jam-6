@@ -88,8 +88,6 @@ let LevelF = function(title, id)
             {
                 ux.informPlayer('Go to checkpoint!');
 
-                const em = backend.entityModel;
-
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
@@ -109,13 +107,35 @@ let LevelF = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 const em = backend.entityModel;
-
                 em.setHelperCupTextSequence(ts1);
-
                 em.debloomMainCup();
 
                 const e = backend.app.engine;
                 em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
+
+                const generated = [];
+                const ne = {};
+                const a1Index = em.addNewAxolotl(ne, 30, -5, 6,
+                    true, false,
+                    generated, 1
+                );
+                const a2Index = em.addNewAxolotl(ne, 30, -15, 6,
+                    true, false,
+                    generated, 2
+                );
+                const objectiveID = em.addNewLittleCup(
+                    ne, 0, -2, 1,
+                    true,
+                    false,
+                    false,
+                    generated,
+                    false,
+                    true
+                );
+                em.setObjectiveID(objectiveID);
+                em.setAxolotlIndex1(a1Index);
+                em.setAxolotlIndex2(a2Index);
+                backend.updateEntities(ne);
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();
@@ -154,18 +174,7 @@ let LevelF = function(title, id)
                 //     true
                 // );
 
-                const generated = [];
-                const ne = {};
-                em.addNewAxolotl(ne, 0, 0, 2,
-                    true, true,
-                    generated, false
-                );
-                em.addNewAxolotl(ne, 0, 10, 2,
-                    true, true,
-                    generated, false
-                );
                 // em.setObjectiveID(objectiveID);
-                backend.updateEntities(ne);
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();

@@ -325,7 +325,7 @@ extend(EntityModel.prototype, {
         hasPrimaryImage,
         hasBloom,
         alreadyGenerated,
-        isRotating)
+        isRotating, isFinalCup)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
@@ -336,10 +336,26 @@ extend(EntityModel.prototype, {
             bloom: hasBloom,
             primaryImage: hasPrimaryImage,
             reflection: hasReflection,
-            isRotating
+            isRotating,
+            isFinalCup
         };
         alreadyGenerated.push(newID);
         return newID;
+    },
+
+    setAxolotlIndex1(ai)
+    {
+        this.axolotlIndex1 = ai;
+    },
+    setAxolotlIndex2(ai)
+    {
+        this.axolotlIndex2 = ai;
+    },
+    revealAxolotl1()
+    {
+    },
+    revealAxolotl2()
+    {
     },
 
     addNewAxolotl(
@@ -347,17 +363,25 @@ extend(EntityModel.prototype, {
         hasReflection,
         hasPrimaryImage,
         alreadyGenerated,
-        isToAndFro)
+        finalAxolotlIndex)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
+        let r = new Vector3(0, 0, 0);
+        if (finalAxolotlIndex === 1)
+            r.set(0, -Math.PI / 2, -Math.PI / 2);
+            // r.set(0, 0, 0);
+        else if (finalAxolotlIndex === 2)
+            r.set(0, Math.PI / 2, -Math.PI / 2);
+            // r.set(Math.PI / 2, 0, 0);
+
         newEntities[newID] = {
             p: new Vector3(px, py, pz),
-            r: new Vector3(0, 0, 0),
+            r,
             k: 'axolotl',
             primaryImage: hasPrimaryImage,
             reflection: hasReflection,
-            isToAndFro
+            finalAxolotlIndex
         };
         alreadyGenerated.push(newID);
         return newID;

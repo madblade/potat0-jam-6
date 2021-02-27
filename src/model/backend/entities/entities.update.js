@@ -105,7 +105,7 @@ let EntitiesUpdateModule = {
             rot.x !== ur.x || rot.y !== ur.y || rot.z !== ur.z)
         {
             currentEntity.position.set(up.x, up.y, up.z);
-            currentEntity.rotation.set(ur.x, ur.z, ur.w);
+            currentEntity.rotation.set(ur.x, ur.z, ur.y); // TODO beware
             currentEntity.needsUpdate = true;
         }
 

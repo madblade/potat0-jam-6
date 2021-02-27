@@ -114,6 +114,7 @@ let ObjectsModule = {
             'axolotl', false, true
         );
 
+        const axolotlIndex = updatedEntity.finalAxolotlIndex;
         object3D.traverse(o => {
             if (o.isMesh)
             {
@@ -121,11 +122,17 @@ let ObjectsModule = {
                 o.rotation.set(0, Math.PI / 2, 0);
                 o.userData.hasPrimaryImage = updatedEntity.primaryImage;
                 o.userData.hasReflection = updatedEntity.reflection;
+
+                if (axolotlIndex)
+                    o.userData.finalAxolotlIndex = axolotlIndex;
             }
         });
 
         // model
         let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
+
+        if (axolotlIndex)
+            entity.finalAxolotlIndex = axolotlIndex;
 
         // add to graphics
         graphics.addToScene(entity.getObject3D(), entity.getWorldId());

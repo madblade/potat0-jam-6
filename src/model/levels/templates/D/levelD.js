@@ -22,7 +22,7 @@ let LevelD = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, -12, 1.5],
+        position: [0, -15, 1.5],
         rotation: [0, 0, Math.PI],
         isXYFlipped: true
     };
@@ -80,16 +80,29 @@ let LevelD = function(title, id)
             text: 'J’ai le pied mouillé.'
         },
         {
+            direct: true,
+            text: 'C’est pas vraiment désagréable…'
+        },
+        {
+            direct: true,
+            text: 'Ça rafraîchit.'
+        },
+        {
             timeToWaitBefore: 10000,
+            text: 'Je peux te dire un secret?'
+        },
+        {
+            direct: true,
             text: '<span style="color: rebeccapurple">' +
                 'C’est près de l’eau que je rêve le mieux.</span>'
         },
     ];
 
-    const preObjectiveVector = new Vector3(-10, 0, 0.5);
-    const objectiveVector = new Vector3(2, -12, 3);
+    const preObjectiveVector = new Vector3(-15, 0, 0.5);
+    const objectiveVector = new Vector3(6, -11, 3.5);
 
     const pfs = this.getStelas();
+    const bck = this.getBlockers();
 
     this.scenario = [
         {
@@ -125,19 +138,8 @@ let LevelD = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 const em = backend.entityModel;
-                // em.setHelperCupTextSequence([
-                //     {
-                //         direct: true,
-                //         text: 'Burp'
-                //     },
-                //     {
-                //         direct: true,
-                //         text: 'Burp burp'
-                //     }
-                // ]);
 
-                // aller sur une stèle -> flip
-
+                // apparition des stèles
                 const e = backend.app.engine;
                 em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
@@ -152,7 +154,7 @@ let LevelD = function(title, id)
             {
                 const player = backend.selfModel.position;
                 const destination = preObjectiveVector;
-                return player.distanceTo(destination) < 3;
+                return player.distanceTo(destination) < 2;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
@@ -160,7 +162,9 @@ let LevelD = function(title, id)
                 const em = backend.entityModel;
                 em.setHelperCupTextSequence(secondTextSequence);
 
-                // aller sur une stèle -> flip
+                // apparition des blockers
+                const e = backend.app.engine;
+                em.addNewObjects(bck, e.graphics, e.physics, e.graphics.animationManager);
 
                 const generated = [];
                 const ne = {};
@@ -168,7 +172,7 @@ let LevelD = function(title, id)
                 const y = objectiveVector.y;
                 const z = objectiveVector.z;
                 const objectiveID = em.addNewLittleCup(
-                    ne, x, y, z,
+                    ne, y, x, z, // flip
                     true,
                     false,
                     false,

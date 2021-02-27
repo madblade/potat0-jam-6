@@ -6,50 +6,76 @@ let LevelDObjects = {
     getStelas()
     {
         const platforms = [
-            {
+            { // red platform
                 type: 'box',
                 red: true,
                 reflection: true,
                 image: true,
-                position: [-10, 0, 0],
+                position: [-15, 0, 0],
                 rotation: [0, 0, 0],
                 w: 5,
                 h: 5,
-                d: 0.25
+                d: 0.2
             },
             {
                 type: 'box',
                 reflection: true,
                 image: true,
-                position: [10, 0, 0],
+                position: [15, 0, 0],
                 rotation: [0, 0, 0],
                 w: 5,
                 h: 5,
-                d: 0.25
+                d: 0.2
             },
             {
                 type: 'box',
                 reflection: true,
                 image: true,
-                position: [0, 10, 0],
+                position: [0, 15, 0],
                 rotation: [0, 0, 0],
                 w: 5,
                 h: 5,
-                d: 0.25
+                d: 0.2
             },
             {
                 type: 'box',
                 reflection: true,
                 image: true,
-                position: [0, -10, 0],
+                position: [0, -15, 0],
                 rotation: [0, 0, 0],
                 w: 5,
                 h: 5,
-                d: 0.25
+                d: 0.2
             },
         ];
 
         return platforms;
+    },
+
+    getBlockers()
+    {
+        return [{ // Wall blocking view
+            type: 'box',
+            wall: true,
+            reflection: true,
+            image: true,
+            position: [-5, -5, 0],
+            rotation: [0, 0, 0],
+            w: 20,
+            h: 1,
+            d: 5
+        },
+        { // Wall blocking cup
+            type: 'box',
+            wall: true,
+            reflection: true,
+            image: true,
+            position: [-10, 5, 0],
+            rotation: [0, 0, -Math.PI / 4],
+            w: 0.5,
+            h: 3,
+            d: 7
+        }];
     },
 
     generateWalls()
@@ -137,11 +163,11 @@ let LevelDObjects = {
                 reflection: true,
                 image: true,
                 stone: true,
-                position: [0, -12, 0.],
+                position: [0, -15, 0.],
                 rotation: [0, 0, 0],
                 w: 2,
                 h: 2,
-                d: 0.2
+                d: 0.1
             },
             // {
             //     type: 'box',

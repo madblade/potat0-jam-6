@@ -124,9 +124,9 @@ let LevelF = function(title, id)
                     generated, 2
                 );
                 const objectiveID = em.addNewLittleCup(
-                    ne, 0, -2, 1,
+                    ne, -20, -8, 12,
                     true,
-                    false,
+                    true,
                     false,
                     generated,
                     false,

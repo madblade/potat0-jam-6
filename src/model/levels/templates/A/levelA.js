@@ -114,10 +114,10 @@ let LevelA = function(title, id)
                 'thème: « le vrai objectif est caché »',
                 '<h1>Puddle Game</h1>', // main
             ],
-            fadeInTitle: 1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1000,  // time fade out each title
-            keepTitle: 2000,    // time to keep each title full brightness
-            fadeOutSplash: 3000, // time to fade out the title screen
+            fadeInTitle: 1,   // for each title, time in milliseconds
+            fadeOutTitle: 1,  // time fade out each title
+            keepTitle: 2,    // time to keep each title full brightness
+            fadeOutSplash: 3, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');

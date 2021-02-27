@@ -91,10 +91,12 @@ extend(Integrator.prototype, {
                 cm.timeSinceJumpStarted = 0;
                 cm.numberOfIterationsInAir = 0;
                 // const jumpHeight = 2.5; // 0.72 -> 6.969
+                // const jumpHeight = .55; // 4.5; // 0.72 -> 6.969
                 const jumpHeight = 4.5; // 0.72 -> 6.969
                 const rh = jumpHeight - 1.969; // + 0.72;e
-                relativeDt = 0.016;
+                // relativeDt = 0.016;
                 const targetA0 = 2 * rh / (relativeDt * relativeDt);
+                // const targetA0 = 2 * jumpHeight / (relativeDt * relativeDt);
                 a0.z = targetA0 / 4;
                 // const targetV0 = 2 * rh / (relativeDt);
                 // v0.z = targetV0 / 4;
@@ -186,6 +188,10 @@ extend(Integrator.prototype, {
             increment.y *= maxSpeedDtr / lxy;
         }
 
+        // Clamp max speed (vertical)
+        if (increment.z < -0.4)
+            increment.z = -0.4;
+
         // Apply Leapfrog integration.
         p1.copy(p0).add(increment);
         a1.copy(sumOfForces);
@@ -199,7 +205,8 @@ extend(Integrator.prototype, {
         if (l > maxSpeed)
         {
             // v1.lz = Math.sign(v1.lz) * maxSpeed;
-            v1.multiplyScalar(maxSpeed / l);
+            if (v1.z > 0)
+                v1.multiplyScalar(maxSpeed / l);
         }
     },
 
@@ -221,11 +228,17 @@ extend(Integrator.prototype, {
 
         // const p = window.dh.sg1.position;
         // p.set(0, 0, Math.max(p.z, cm.position0.z));
+        // console.log(cm.position0.z);
 
         if (cm.isCharacter)
         {
             cm.wasLifted = false;
             cm.wasLiftedByAStaticObject = false;
+            if (cm.position0.z < 0.72)
+            {
+                cm.position0.z = 0.72;
+                cm.position1.z = 0.72;
+            }
         }
 
         // Apply to sweeper model.

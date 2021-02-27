@@ -98,7 +98,7 @@ let LevelA = function(title, id)
         },
         {
             direct: true,
-            text: 'Je suis bien ton objectif, hein ?'
+            text: '<span style="color: rebeccapurple">Je suis bien ton objectif, hein ?</span>'
         },
     ];
 
@@ -174,7 +174,7 @@ let LevelA = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.playValidateFeedback();
+                ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();

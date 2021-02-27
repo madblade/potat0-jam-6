@@ -97,7 +97,7 @@ let LevelB = function(title, id)
         },
         {
             timeToWaitBefore: 5000,
-            text: 'C’est bien pour moi que tu es là, non ?'
+            text: '<span style="color: rebeccapurple">C’est bien pour moi que tu es là, non ?</span>'
         }
     ];
 
@@ -148,6 +148,8 @@ let LevelB = function(title, id)
                 //     }
                 // ]);
 
+                ux.playLittleValidateFeedback();
+
                 const generated = [];
                 const ne = {};
                 const x = objectiveVector.x;
@@ -182,7 +184,7 @@ let LevelB = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.playValidateFeedback();
+                ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();

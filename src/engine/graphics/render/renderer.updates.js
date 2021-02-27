@@ -40,11 +40,11 @@ let RendererUpdates = {
                 });
             }
 
-            if (obj.userData.isCupXYFlipped)
-            {
-                const p = obj.position;
-                p.set(p.y, p.x, p.z);
-            }
+            // if (obj.userData.isCupXYFlipped)
+            // {
+            //     const p = obj.position;
+            //     p.set(p.y, p.x, p.z);
+            // }
 
             if (!obj.isMesh) return;
 
@@ -84,11 +84,11 @@ let RendererUpdates = {
                 });
             }
 
-            if (obj.userData.isCupXYFlipped)
-            {
-                const p = obj.position;
-                p.set(p.y, p.x, p.z);
-            }
+            // if (obj.userData.isCupXYFlipped)
+            // {
+            //     const p = obj.position;
+            //     p.set(p.y, p.x, p.z);
+            // }
 
             if (!obj.isMesh) return;
 

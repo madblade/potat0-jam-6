@@ -54,6 +54,10 @@ let LevelC = function(title, id)
         {
             direct: true,
             text: 'Tristesse.'
+        },
+        {
+            direct: true,
+            text: '<span style="color: rebeccapurple">Tristesse.</span>'
         }
     ];
 
@@ -106,6 +110,8 @@ let LevelC = function(title, id)
                 //     }
                 // ]);
 
+                ux.playLittleValidateFeedback();
+
                 const e = backend.app.engine;
                 em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
@@ -143,7 +149,7 @@ let LevelC = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.playValidateFeedback();
+                ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();

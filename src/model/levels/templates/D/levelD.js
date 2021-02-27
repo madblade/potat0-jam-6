@@ -59,26 +59,37 @@ let LevelD = function(title, id)
         {
             direct: true,
             text: '…comme objectif ?'
-        },
+        }
+    ];
+
+    const secondTextSequence = [
         {
             direct: true,
-            text: 'Cette… <i>chose</i> que tu as prise !'
+            text: 'Qu’est-ce que tu fais ?'
         },
         {
             timeToWaitBefore: 5000,
-            text: 'C’est pas moi ton objectif, alors ?'
+            text: 'Hm…'
         },
         {
             direct: true,
-            text: 'Tristesse.'
+            text: 'Hmmmmm…'
         },
         {
             timeToWaitBefore: 10000,
             text: 'J’ai le pied mouillé.'
         },
+        {
+            timeToWaitBefore: 10000,
+            text: '<span style="color: rebeccapurple">' +
+                'C’est près de l’eau que je rêve le mieux.</span>'
+        },
     ];
 
+    const preObjectiveVector = new Vector3(-10, 0, 0.5);
     const objectiveVector = new Vector3(2, -12, 3);
+
+    const pfs = this.getStelas();
 
     this.scenario = [
         {
@@ -127,6 +138,30 @@ let LevelD = function(title, id)
 
                 // aller sur une stèle -> flip
 
+                const e = backend.app.engine;
+                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
+
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                ux.validateTask();
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            checkCondition: function(backend, ux)
+            {
+                const player = backend.selfModel.position;
+                const destination = preObjectiveVector;
+                return player.distanceTo(destination) < 3;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+                const em = backend.entityModel;
+                em.setHelperCupTextSequence(secondTextSequence);
+
+                // aller sur une stèle -> flip
+
                 const generated = [];
                 const ne = {};
                 const x = objectiveVector.x;
@@ -137,8 +172,7 @@ let LevelD = function(title, id)
                     true,
                     false,
                     false,
-                    generated,
-                    true
+                    generated
                 );
                 em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);
@@ -164,7 +198,7 @@ let LevelD = function(title, id)
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 // backend.addObject(); static sphere
                 // backend.removeObject();
-                ux.playValidateFeedback();
+                ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();

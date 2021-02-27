@@ -3,9 +3,58 @@
 
 let LevelDObjects = {
 
+    getStelas()
+    {
+        const platforms = [
+            {
+                type: 'box',
+                red: true,
+                reflection: true,
+                image: true,
+                position: [-10, 0, 0],
+                rotation: [0, 0, 0],
+                w: 5,
+                h: 5,
+                d: 0.25
+            },
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                position: [10, 0, 0],
+                rotation: [0, 0, 0],
+                w: 5,
+                h: 5,
+                d: 0.25
+            },
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                position: [0, 10, 0],
+                rotation: [0, 0, 0],
+                w: 5,
+                h: 5,
+                d: 0.25
+            },
+            {
+                type: 'box',
+                reflection: true,
+                image: true,
+                position: [0, -10, 0],
+                rotation: [0, 0, 0],
+                w: 5,
+                h: 5,
+                d: 0.25
+            },
+        ];
+
+        return platforms;
+    },
+
     generateWalls()
     {
-        const mapWidth = 40;
+        const mapWidth = 45;
         const wallHeight = 10;
 
         const mw2 = mapWidth / 2;

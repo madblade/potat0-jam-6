@@ -90,6 +90,9 @@ extend(EntityModel.prototype, {
                     else if (o.platform) mat = new MeshBasicMaterial(
                         { color: '#797979' }
                     );
+                    else if (o.red) mat = new MeshPhongMaterial(
+                        { color: '#945252' }
+                    );
                     else if (o.transplatform) mat = new MeshBasicMaterial(
                         {
                             color: '#3500b3',

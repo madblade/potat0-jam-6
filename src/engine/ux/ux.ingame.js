@@ -131,7 +131,7 @@ let UXIngameModule = {
         }
     },
 
-    playValidateFeedback()
+    playBigValidateFeedback()
     {
         const e = this.app.engine;
 
@@ -145,12 +145,12 @@ let UXIngameModule = {
             const gp = controls.gamepadControls;
             if (gp)
             {
-                gp.doVibration(100, 1., 1.);
+                gp.doVibration(200, 1., 1.);
             }
         }
     },
 
-    playFakeValidateFeedback()
+    playLittleValidateFeedback()
     {
         const e = this.app.engine;
 
@@ -160,7 +160,7 @@ let UXIngameModule = {
             const gp = controls.gamepadControls;
             if (gp)
             {
-                gp.doVibration(100, 0., 1.);
+                gp.doVibration(100, 1., 1.);
             }
         }
     }

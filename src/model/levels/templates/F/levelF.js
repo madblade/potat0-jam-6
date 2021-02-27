@@ -69,6 +69,8 @@ let LevelF = function(title, id)
 
     const pfs = this.getPlatforms();
 
+    const cbs = this.getClimbers();
+
     const ov1 = new Vector3(-8.5, -8, 12);
 
     this.scenario = [
@@ -87,8 +89,6 @@ let LevelF = function(title, id)
                 ux.informPlayer('Go to checkpoint!');
 
                 const em = backend.entityModel;
-                const e = backend.app.engine;
-                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
@@ -114,6 +114,9 @@ let LevelF = function(title, id)
 
                 em.debloomMainCup();
 
+                const e = backend.app.engine;
+                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
+
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();
             }
@@ -138,10 +141,8 @@ let LevelF = function(title, id)
                 // const e = backend.app.engine;
                 // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
-                const generated = [];
-                const ne = {};
-
-                backend.updateEntities(ne);
+                const e = backend.app.engine;
+                em.addNewObjects(cbs, e.graphics, e.physics, e.graphics.animationManager);
 
                 // const factor = 1.2;
                 // const objectiveID = em.addNewLittleCup(
@@ -153,6 +154,16 @@ let LevelF = function(title, id)
                 //     true
                 // );
 
+                const generated = [];
+                const ne = {};
+                em.addNewAxolotl(ne, 0, 0, 2,
+                    true, true,
+                    generated, false
+                );
+                em.addNewAxolotl(ne, 0, 10, 2,
+                    true, true,
+                    generated, false
+                );
                 // em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);
 
@@ -180,20 +191,8 @@ let LevelF = function(title, id)
                 // const e = backend.app.engine;
                 // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
-                const generated = [];
-                const ne = {};
-                em.addNewAxolotl(ne, 0, 0, 2,
-                    true, true,
-                    generated, false
-                );
-                em.addNewAxolotl(ne, 0, 10, 2,
-                    true, true,
-                    generated, false
-                );
-                backend.updateEntities(ne);
-
                 // em.setObjectiveID(objectiveID);
-                backend.updateEntities(ne);
+                // backend.updateEntities(ne);
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();

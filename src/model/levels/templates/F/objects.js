@@ -54,21 +54,37 @@ let LevelFObjects = {
                 h: 1,
                 d: 0.5
             },
-            {
-                type: 'box',
-                reflection: true,
-                platform: true,
-                // transplatform: true,
-                image: true,
-                position: [0, -8, 7],
-                rotation: [0, Math.PI / 2 + Math.PI / 8, 0],
-                w: 1,
-                h: 1,
-                d: 20
-            },
+            // {
+            //     type: 'box',
+            //     reflection: true,
+            //     platform: true,
+            //     // transplatform: true,
+            //     image: true,
+            //     position: [0, -8, 7],
+            //     rotation: [0, Math.PI / 2 + Math.PI / 8, 0],
+            //     w: 1,
+            //     h: 1,
+            //     d: 20
+            // },
         ];
 
         return platforms;
+    },
+
+    getClimbers()
+    {
+        return [{
+            type: 'box',
+            reflection: true,
+            // platform: true,
+            transplatform: true,
+            image: false,
+            position: [0, -8, 7],
+            rotation: [0, Math.PI / 2 + Math.PI / 8, 0],
+            w: 1,
+            h: 1,
+            d: 20
+        }];
     },
 
     generateWalls()

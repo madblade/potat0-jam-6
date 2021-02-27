@@ -6,9 +6,10 @@
 
 import extend, { inherit }  from '../../../../extend';
 
-import { Level }            from '../../level';
-import { LevelFTerrain }    from './terrain';
-import { LevelFObjects }    from './objects';
+import { Level }         from '../../level';
+import { LevelFTerrain } from './terrain';
+import { LevelFObjects } from './objects';
+import { Vector3 }       from 'three';
 
 let LevelF = function(title, id)
 {
@@ -67,6 +68,8 @@ let LevelF = function(title, id)
     ];
 
     const pfs = this.getPlatforms();
+
+    const ov1 = new Vector3(-8.5, -8, 12);
 
     this.scenario = [
         {
@@ -138,17 +141,7 @@ let LevelF = function(title, id)
                 const generated = [];
                 const ne = {};
 
-                em.addNewAxolotl(ne, 0, 0, 2,
-                    true, true,
-                    generated, false
-                );
-
                 backend.updateEntities(ne);
-
-                em.addNewAxolotl(ne, 0, 10, 2,
-                    true, true,
-                    generated, false
-                );
 
                 // const factor = 1.2;
                 // const objectiveID = em.addNewLittleCup(
@@ -160,8 +153,44 @@ let LevelF = function(title, id)
                 //     true
                 // );
 
-                // TODO going back and forth
-                // TODO axolotl same
+                // em.setObjectiveID(objectiveID);
+                backend.updateEntities(ne);
+
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                ux.validateTask();
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            checkCondition: function(backend, ux)
+            {
+                const player = backend.selfModel.position;
+                const d = player.distanceTo(ov1);
+                return d < 1;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+                const em = backend.entityModel;
+
+                em.setHelperCupTextSequence(ts2);
+                ux.playLittleValidateFeedback();
+
+                // const e = backend.app.engine;
+                // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
+
+                const generated = [];
+                const ne = {};
+                em.addNewAxolotl(ne, 0, 0, 2,
+                    true, true,
+                    generated, false
+                );
+                em.addNewAxolotl(ne, 0, 10, 2,
+                    true, true,
+                    generated, false
+                );
+                backend.updateEntities(ne);
 
                 // em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);

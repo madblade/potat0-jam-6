@@ -8,7 +8,8 @@ let LevelFObjects = {
         const platforms = [
             {
                 type: 'box',
-                color: '#797979',
+                color: '#735656',
+                wall: true,
                 reflection: true,
                 image: true,
                 position: [10, 0, 0],
@@ -19,7 +20,8 @@ let LevelFObjects = {
             },
             {
                 type: 'box',
-                color: '#797979',
+                color: '#706854',
+                wall: true,
                 reflection: true,
                 image: true,
                 position: [10, 12, 0],
@@ -30,7 +32,8 @@ let LevelFObjects = {
             },
             {
                 type: 'box',
-                color: '#797979',
+                color: '#67705b',
+                wall: true,
                 reflection: true,
                 image: true,
                 position: [10, 20, 0],
@@ -41,7 +44,8 @@ let LevelFObjects = {
             },
             {
                 type: 'box',
-                color: '#797979',
+                color: '#567774',
+                wall: true,
                 reflection: true,
                 image: false,
                 position: [10, 5, 5],
@@ -49,6 +53,18 @@ let LevelFObjects = {
                 w: 1,
                 h: 1,
                 d: 0.5
+            },
+            {
+                type: 'box',
+                reflection: true,
+                platform: true,
+                // transplatform: true,
+                image: true,
+                position: [0, -8, 7],
+                rotation: [0, Math.PI / 2 + Math.PI / 8, 0],
+                w: 1,
+                h: 1,
+                d: 20
             },
         ];
 
@@ -58,7 +74,7 @@ let LevelFObjects = {
     generateWalls()
     {
         const mapWidth = 75;
-        const wallHeight = 10;
+        const wallHeight = 15;
 
         const mw2 = mapWidth / 2;
         const wh2 = wallHeight / 2;

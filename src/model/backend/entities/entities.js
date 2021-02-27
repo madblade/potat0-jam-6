@@ -87,7 +87,7 @@ extend(EntityModel.prototype, {
                     );
                     let mat;
                     if (o.wall) mat = new MeshPhongMaterial(
-                        { color: '#eceaea', side: DoubleSide }
+                        { color: o.color ? o.color : '#eceaea', side: DoubleSide }
                     );
                     else if (o.color) mat = new MeshPhongMaterial(
                         { color: o.color, side: FrontSide }

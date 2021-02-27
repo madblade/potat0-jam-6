@@ -304,9 +304,11 @@ let CharacterResponseModule = {
         if (correct)
         {
             console.log('[Character response] Correcting bump.');
-            nx = p1x + displacement.x;
-            ny = p1y + displacement.y;
-            nz = p1z + displacement.z;
+            // revert instead
+            nx = p0x;// p1x + displacement.x;
+            ny = p0y;// p1y + displacement.y;
+            nz = p0z;// p1z + displacement.z;
+            // ^  extremely annoying
         }
         if (displacement.manhattanLength() > 0) this._hasBumped = true;
         this.position1.set(nx, ny, nz);

@@ -42,6 +42,10 @@ let LevelD = function(title, id)
         },
         {
             direct: true,
+            text: 'Encore toi.'
+        },
+        {
+            direct: true,
             text: 'J’ai toujours pas de reflet.'
         },
         {
@@ -76,20 +80,28 @@ let LevelD = function(title, id)
             text: 'Hmmmmm…'
         },
         {
+            direct: true,
+            text: 'Ton reflet est…'
+        },
+        {
+            direct: true,
+            text: 'Bizarre.'
+        },
+        {
+            direct: true,
+            text: 'C’est comme s’il s’était désynchronizé !'
+        },
+        {
             timeToWaitBefore: 10000,
             text: 'J’ai le pied mouillé.'
         },
         {
             direct: true,
-            text: 'C’est pas vraiment désagréable…'
-        },
-        {
-            direct: true,
-            text: 'Ça rafraîchit.'
+            text: 'Ça rafraîchit !'
         },
         {
             timeToWaitBefore: 10000,
-            text: 'Je peux te dire un secret?'
+            text: 'Je peux te dire un secret ?'
         },
         {
             direct: true,
@@ -111,10 +123,10 @@ let LevelD = function(title, id)
                 '<h3>Puddle 3</h3>', // after, sub
                 '<h3>Réflection</h3>',
             ],
-            fadeInTitle: 1,   // for each title, time in milliseconds
-            fadeOutTitle: 1,  // time fade out each title
-            keepTitle: 2,     // time to keep each title full brightness
-            fadeOutSplash: 2, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,     // time to keep each title full brightness
+            fadeOutSplash: 2000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -238,8 +250,12 @@ let LevelD = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                ux.updateDialogueAdvancement(this.levelID, i);
+
                 ux.app.engine.audio.playCredits();
-                ux.informPlayer('Level C cleared!');
+                ux.informPlayer('Level D cleared!');
                 ux.validateLevel();
             }
         }

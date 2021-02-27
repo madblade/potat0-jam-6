@@ -185,7 +185,10 @@ let LevelC = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                ux.app.engine.audio.playCredits();
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                ux.updateDialogueAdvancement(this.levelID, i);
+
                 ux.informPlayer('Level C cleared!');
                 ux.validateLevel();
             }

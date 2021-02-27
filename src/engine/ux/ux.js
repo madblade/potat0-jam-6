@@ -25,6 +25,9 @@ let UX = function(app)
     // Progress
     this.playerState = new PlayerState();
 
+    // 1 dialogue / level id
+    this.unlockedDialogues = new Map();
+
     // Time counters.
     this.setupClocks();
 };
@@ -172,6 +175,14 @@ extend(UX.prototype, {
             this.validateLevel();
         }
     },
+
+    updateDialogueAdvancement(levelID, maxD)
+    {
+        const ud = this.unlockedDialogues;
+        const l = ud.get(levelID);
+        if (!l) ud.set(levelID, maxD);
+        else ud.set(levelID, Math.max(maxD, l));
+    }
 
 });
 

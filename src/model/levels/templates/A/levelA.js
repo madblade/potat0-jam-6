@@ -210,6 +210,10 @@ let LevelA = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                ux.updateDialogueAdvancement(this.levelID, i);
+
                 ux.informPlayer('Level A cleared!');
                 ux.validateLevel();
             }

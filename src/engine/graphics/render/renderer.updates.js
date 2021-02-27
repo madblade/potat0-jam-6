@@ -40,6 +40,12 @@ let RendererUpdates = {
                 });
             }
 
+            if (obj.userData.isCupXYFlipped)
+            {
+                const p = obj.position;
+                p.set(p.y, p.x, p.z);
+            }
+
             if (!obj.isMesh) return;
 
             if (obj.userData.hasReflection === true) // enforce type
@@ -76,6 +82,12 @@ let RendererUpdates = {
                     if (o2.isSkinnedMesh)
                         o2.updateWorldMatrix(true, true);
                 });
+            }
+
+            if (obj.userData.isCupXYFlipped)
+            {
+                const p = obj.position;
+                p.set(p.y, p.x, p.z);
             }
 
             if (!obj.isMesh) return;

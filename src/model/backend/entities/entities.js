@@ -325,6 +325,27 @@ extend(EntityModel.prototype, {
         return newID;
     },
 
+    addNewAxolotl(
+        newEntities, px, py, pz,
+        hasReflection,
+        hasPrimaryImage,
+        alreadyGenerated,
+        isToAndFro)
+    {
+        assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
+        const newID = this.generateNewEntityID(alreadyGenerated);
+        newEntities[newID] = {
+            p: new Vector3(px, py, pz),
+            r: new Vector3(0, 0, 0),
+            k: 'axolotl',
+            primaryImage: hasPrimaryImage,
+            reflection: hasReflection,
+            isToAndFro
+        };
+        alreadyGenerated.push(newID);
+        return newID;
+    }
+
 });
 
 extend(EntityModel.prototype, EntitiesUpdateModule);

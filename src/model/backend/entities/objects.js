@@ -51,7 +51,6 @@ let ObjectsModule = {
         object3D.traverse(o => {
             if (o.isMesh)
             {
-                // o.material.flatShading = false;
                 if (updatedEntity.b)
                     o.userData.bloom = true;
                 o.userData.hasPrimaryImage = true;
@@ -107,8 +106,33 @@ let ObjectsModule = {
         this.entitiesLoading.delete(id);
     },
 
+    // no CM
     loadAxolotl(id, updatedEntity, entities)
     {
+        const graphics = this.app.engine.graphics;
+        const object3D = graphics.loadReferenceMeshFromMemory(
+            'axolotl', false, true
+        );
+
+        object3D.traverse(o => {
+            if (o.isMesh)
+            {
+                o.position.set(0, 0, 0);
+                o.rotation.set(0, Math.PI / 2, 0);
+                o.userData.hasPrimaryImage = updatedEntity.primaryImage;
+                o.userData.hasReflection = updatedEntity.reflection;
+            }
+        });
+
+        // model
+        let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
+
+        // add to graphics
+        graphics.addToScene(entity.getObject3D(), entity.getWorldId());
+
+        // update model
+        this.updateEntity(id, entity, updatedEntity, graphics, entities);
+        this.entitiesLoading.delete(id);
     },
 
     createFootStepMesh()

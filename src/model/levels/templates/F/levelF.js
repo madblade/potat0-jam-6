@@ -70,7 +70,7 @@ let LevelF = function(title, id)
             {
                 const em = backend.entityModel;
                 const i = em.getHelperCupDialogueAdvancement();
-                return i >= 4;
+                return i >= 1;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
@@ -85,33 +85,25 @@ let LevelF = function(title, id)
                 const generated = [];
                 const ne = {};
 
-                const factor = 1.2;
-                const objectiveID = em.addNewLittleCup(
-                    ne, -4 * factor, -6 * factor, 3,
-                    false,
-                    false,
-                    false,
-                    generated,
-                    true
+                em.addNewAxolotl(ne, 0, 0, 2,
+                    true, true,
+                    generated, false
                 );
 
-                // 225 should do
-                for (let i = 1; i < 15; ++i)
-                    for (let j = 1; j < 15; ++j)
-                    {
-                        if (i === 4 && j === 6) continue;
-                        em.addNewLittleCup(
-                            ne,
-                            (i % 2 > 0 ? i : -i) * factor,
-                            (j % 2 > 0 ? j : -j) * factor,
-                            3,
-                            true, false, false,
-                            generated,
-                            true
-                        );
-                    }
+                // const factor = 1.2;
+                // const objectiveID = em.addNewLittleCup(
+                //     ne, -4 * factor, -6 * factor, 3,
+                //     false,
+                //     false,
+                //     false,
+                //     generated,
+                //     true
+                // );
 
-                em.setObjectiveID(objectiveID);
+                // TODO going back and forth
+                // TODO axolotl same
+
+                // em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
@@ -126,9 +118,10 @@ let LevelF = function(title, id)
                 const em = backend.entityModel;
                 const p = em.getObjectivePosition();
                 const player = backend.selfModel.position;
-                const d = player.distanceTo(p);
+                // const d = player.distanceTo(p);
                 // window.dh.sg1.position.copy(p);
-                return d < 1;
+                // return d < 1;
+                return false;
             },
             performWhenConditionMet: function(backend, ux)
             {

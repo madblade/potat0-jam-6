@@ -79,6 +79,11 @@ extend(SelfModel.prototype, {
         // Init graphics and mixer.
         this.loadSelfGraphics();
 
+        // Re-init animation model
+        const ae = this.app.engine.graphics.animationManager;
+        const initialTheta = this.getTheta(); // entityModel.rotation.z;
+        ae.initializeEntityAnimation(this.animationComponent, initialTheta);
+
         let player = level.getPlayer();
         if (!player) return;
         const positionVector = new Vector3().fromArray(player.position);

@@ -1,5 +1,5 @@
 /**
- * Level E.
+ * Level F.
  */
 
 'use strict';
@@ -7,10 +7,10 @@
 import extend, { inherit }  from '../../../../extend';
 
 import { Level }            from '../../level';
-import { LevelETerrain }    from './terrain';
-import { LevelEObjects }    from './objects';
+import { LevelFTerrain }    from './terrain';
+import { LevelFObjects }    from './objects';
 
-let LevelE = function(title, id)
+let LevelF = function(title, id)
 {
     Level.call(this, title, id);
 
@@ -22,69 +22,21 @@ let LevelE = function(title, id)
 
     this.player = {
         position: [0, -12, 1.5],
-        rotation: [0, 0, Math.PI]
+        rotation: [0, 0, Math.PI],
     };
 
     this.textSequence = [
         {
             direct: true,
-            text: 'Encore ?'
+            text: 'Regarde !'
         },
         {
             direct: true,
-            text: 'J’ai des yeux, je te signale !'
-        },
-        {
-            direct: true,
-            text: 'Je te vois me tourner autour…'
-        },
-        {
-            direct: true,
-            text: 'Si tu ne veux pas de moi, rien ne t’oblige à rester.'
-        },
-        {
-            direct: true,
-            text: 'Puisque c’est comme ça, tiens !'
-        },
-        {
-            direct: true,
-            text: 'Et bonne chance pour trouver la bonne !'
+            text: 'Je brille !!'
         },
         {
             timeToWaitBefore: 5000,
-            text: 'Elles ne peuvent pas te voir.'
-        },
-        {
-            timeToWaitBefore: 5000,
-            text: 'Elles n’ont pas d’yeux !'
-        },
-        {
-            direct: true,
-            text: 'Toi, en revanche…'
-        },
-        {
-            direct: true,
-            text: 'Tu peux toutes les voir.'
-        },
-        {
-            direct: true,
-            text: 'Absolument toutes.'
-        },
-        {
-            direct: true,
-            text: 'Sans aucune exception.'
-        },
-        {
-            direct: true,
-            text: 'Non ?'
-        },
-        {
-            timeToWaitBefore: 20000,
-            text: 'Je ne t’en veux pas, tu sais.'
-        },
-        {
-            direct: true,
-            text: '<span style="color: rebeccapurple">Ce n’est pas comme si tu avais le choix.</span>'
+            text: 'Ça te donne pas envie que je sois ton objectif ?'
         },
     ];
 
@@ -94,13 +46,13 @@ let LevelE = function(title, id)
         {
             type: 'splash',
             titles: [
-                '<h3>Puddle 4</h3>', // after, sub
-                '<h3>Beaucoup</h3>',
+                '<h3>Puddle 5</h3>', // after, sub
+                '<h3>Synchreaune</h3>',
             ],
-            fadeInTitle: 1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1000,  // time fade out each title
-            keepTitle: 2000,     // time to keep each title full brightness
-            fadeOutSplash: 2000, // time to fade out the title screen
+            fadeInTitle: 1,   // for each title, time in milliseconds
+            fadeOutTitle: 1,  // time fade out each title
+            keepTitle: 2,     // time to keep each title full brightness
+            fadeOutSplash: 2, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -227,9 +179,9 @@ let LevelE = function(title, id)
     ];
 };
 
-inherit(LevelE, Level);
+inherit(LevelF, Level);
 
-extend(LevelE.prototype, {
+extend(LevelF.prototype, {
 
     getTerrain() {
         return this.terrain;
@@ -255,7 +207,7 @@ extend(LevelE.prototype, {
         const ne = {};
         const generated = [];
         const bigCup = em.makeNewBigCup(
-            0, 0, 0.6, false,
+            0, 0, 0.6, true,
             this.textSequence
         );
         const idCup = em.addNewBigCup(ne, bigCup, generated);
@@ -265,7 +217,7 @@ extend(LevelE.prototype, {
 
 });
 
-extend(LevelE.prototype, LevelETerrain);
-extend(LevelE.prototype, LevelEObjects);
+extend(LevelF.prototype, LevelFTerrain);
+extend(LevelF.prototype, LevelFObjects);
 
-export { LevelE };
+export { LevelF };

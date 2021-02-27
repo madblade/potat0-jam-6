@@ -15,7 +15,7 @@ import {
     Line,
     LineDashedMaterial,
     Mesh,
-    MeshBasicMaterial,
+    // MeshBasicMaterial,
     Object3D,
     PlaneBufferGeometry,
     RingBufferGeometry,
@@ -51,7 +51,7 @@ let ObjectsModule = {
         object3D.traverse(o => {
             if (o.isMesh)
             {
-                o.material.flatShading = false;
+                // o.material.flatShading = false;
                 if (updatedEntity.b)
                     o.userData.bloom = true;
                 o.userData.hasPrimaryImage = true;

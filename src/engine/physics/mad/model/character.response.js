@@ -113,6 +113,8 @@ let CharacterResponseModule = {
 
         let displacement;
 
+        const wasLiftedBefore = this.wasLifted;
+
         // Go through heightmap patch.
         for (let ix = minX; ix < maxX; ++ix)
             for (let iy = minY; iy < maxY; ++iy)
@@ -154,7 +156,10 @@ let CharacterResponseModule = {
             }
 
         if (this.wasLifted && heightMap.isWater)
-            this.onWater = true;
+        {
+            if (!wasLiftedBefore) // water hm is first
+                this.onWater = true;
+        }
     },
 
     bumpAgainstTrimesh(

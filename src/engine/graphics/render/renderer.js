@@ -98,7 +98,7 @@ let RendererManager = function(graphicsEngine)
             color: 'black',
             side: FrontSide,
             skinning: true,
-            flatShading: true,
+            // flatShading: true,
         }
     );
     this.darkWater = new MeshBasicMaterial(

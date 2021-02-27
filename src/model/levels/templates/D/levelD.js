@@ -254,7 +254,7 @@ let LevelD = function(title, id)
                 const i = em.getHelperCupDialogueAdvancement();
                 ux.updateDialogueAdvancement(this.levelID, i);
 
-                ux.app.engine.audio.playCredits();
+                // ux.app.engine.audio.playCredits();
                 ux.informPlayer('Level D cleared!');
                 ux.validateLevel();
             }

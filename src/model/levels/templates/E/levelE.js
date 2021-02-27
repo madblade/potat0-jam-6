@@ -56,12 +56,38 @@ let LevelE = function(title, id)
             text: 'Elles ne peuvent pas te voir.'
         },
         {
+            timeToWaitBefore: 5000,
+            text: 'Elles n’ont pas d’yeux !'
+        },
+        {
             direct: true,
-            text: '<span style="color: rebeccapurple">Tristesse.</span>'
-        }
+            text: 'Toi, en revanche…'
+        },
+        {
+            direct: true,
+            text: 'Tu peux toutes les voir.'
+        },
+        {
+            direct: true,
+            text: 'Absolument toutes.'
+        },
+        {
+            direct: true,
+            text: 'Sans aucune exception.'
+        },
+        {
+            direct: true,
+            text: 'Non ?'
+        },
+        {
+            timeToWaitBefore: 20000,
+            text: 'Je ne t’en veux pas, tu sais.'
+        },
+        {
+            direct: true,
+            text: '<span style="color: rebeccapurple">Tu n’as pas le choix.</span>'
+        },
     ];
-
-    const objectiveVector = new Vector3(5, 5, 5.5);
 
     // const pfs = this.getPlatforms();
 
@@ -107,13 +133,10 @@ let LevelE = function(title, id)
 
                 const generated = [];
                 const ne = {};
-                // const x = objectiveVector.x;
-                // const y = objectiveVector.y;
-                // const z = objectiveVector.z;
 
-                const factor = 1.1;
+                const factor = 1.2;
                 const objectiveID = em.addNewLittleCup(
-                    ne, 4 * factor, 6 * factor, 3,
+                    ne, -4 * factor, -6 * factor, 3,
                     false,
                     false,
                     false,
@@ -121,7 +144,7 @@ let LevelE = function(title, id)
                     true
                 );
 
-                // 100 should do
+                // 225 should do
                 for (let i = 1; i < 15; ++i)
                     for (let j = 1; j < 15; ++j)
                     {
@@ -149,10 +172,12 @@ let LevelE = function(title, id)
             // eslint-disable-next-line no-unused-vars
             checkCondition: function(backend, ux)
             {
-                // console.log(ux);
+                const em = backend.entityModel;
+                const p = em.getObjectivePosition();
                 const player = backend.selfModel.position;
-                const destination = objectiveVector;
-                return player.distanceTo(destination) < 1;
+                const d = player.distanceTo(p);
+                // window.dh.sg1.position.copy(p);
+                return d < 1;
             },
             performWhenConditionMet: function(backend, ux)
             {

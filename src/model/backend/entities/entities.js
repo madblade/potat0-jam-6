@@ -237,7 +237,11 @@ extend(EntityModel.prototype, {
 
     getObjectivePosition()
     {
-        // TODO
+        const id = this.objectiveID;
+        if (id <= 0) return null;
+        const e = this.entitiesIngame.get(id.toString());
+        const gce = e.graphicalComponent.position;
+        return gce;
     },
 
     triggerObjectiveShrink()

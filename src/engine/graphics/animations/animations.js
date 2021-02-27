@@ -160,6 +160,19 @@ extend(AnimationManager.prototype, {
                     p.y = -5 + 2.7 * Math.sin(tt / 2);
                 else if (i === 2)
                     p.y = -15 - 2.7 * Math.sin(tt / 2);
+                return;
+            }
+
+            if (e.isFinalCup)
+            {
+                // Should be in sync with axolotls.
+                const p = e.graphicalComponent.position;
+                const dts = deltaT / 1e3;
+                let tt = e.graphicalComponent.ttt || 0;
+                tt += dts;
+                e.graphicalComponent.ttt = tt;
+                p.x = 1 + 2.7 * Math.sin(tt / 2);
+                return;
             }
 
             if (!e.isShrinking) return;

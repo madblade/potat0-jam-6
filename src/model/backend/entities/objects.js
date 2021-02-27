@@ -98,6 +98,11 @@ let ObjectsModule = {
             entity.isRotating = true;
         }
 
+        if (updatedEntity.isFinalCup)
+        {
+            entity.isFinalCup = true;
+        }
+
         // add to graphics
         graphics.addToScene(entity.getObject3D(), entity.getWorldId());
 
@@ -123,8 +128,8 @@ let ObjectsModule = {
                 o.userData.hasPrimaryImage = updatedEntity.primaryImage;
                 o.userData.hasReflection = updatedEntity.reflection;
 
-                if (axolotlIndex)
-                    o.userData.finalAxolotlIndex = axolotlIndex;
+                // if (axolotlIndex)
+                //     o.userData.finalAxolotlIndex = axolotlIndex;
             }
         });
 

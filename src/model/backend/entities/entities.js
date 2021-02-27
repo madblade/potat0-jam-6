@@ -235,6 +235,11 @@ extend(EntityModel.prototype, {
         this.objectiveID = id;
     },
 
+    getObjectivePosition()
+    {
+        // TODO
+    },
+
     triggerObjectiveShrink()
     {
         const id = this.objectiveID;
@@ -299,7 +304,7 @@ extend(EntityModel.prototype, {
         hasPrimaryImage,
         hasBloom,
         alreadyGenerated,
-        isCupXYFlipped)
+        isRotating)
     {
         assert(!!alreadyGenerated, '[Entities] Argument mismatch.');
         const newID = this.generateNewEntityID(alreadyGenerated);
@@ -310,7 +315,7 @@ extend(EntityModel.prototype, {
             bloom: hasBloom,
             primaryImage: hasPrimaryImage,
             reflection: hasReflection,
-            isCupXYFlipped: isCupXYFlipped
+            isRotating
         };
         alreadyGenerated.push(newID);
         return newID;

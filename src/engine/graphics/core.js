@@ -108,11 +108,11 @@ let CoreModule = {
 
         // Init stats.
         // Benches.
-        // let fpsElement = this.fps.dom;
-        // fpsElement.setAttribute('id', 'stats');
-        // fpsElement.style.left = '300px';
-        // if (!document.getElementById('stats'))
-        //     document.body.appendChild(fpsElement);
+        let fpsElement = this.fps.dom;
+        fpsElement.setAttribute('id', 'stats');
+        fpsElement.style.left = '300px';
+        if (!document.getElementById('stats'))
+            document.body.appendChild(fpsElement);
     },
 
     initializeDOM()

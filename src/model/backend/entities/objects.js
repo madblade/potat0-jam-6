@@ -94,6 +94,11 @@ let ObjectsModule = {
         // model
         let entity = new Entity(id, object3D, parseInt(updatedEntity.w, 10));
 
+        if (updatedEntity.isRotating)
+        {
+            entity.isRotating = true;
+        }
+
         // add to graphics
         graphics.addToScene(entity.getObject3D(), entity.getWorldId());
 

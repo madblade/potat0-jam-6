@@ -104,6 +104,7 @@ extend(AnimationManager.prototype, {
             if (!entityModel) return;
 
             const animationComponent = entityModel.animationComponent;
+            if (!animationComponent) return;
 
             this.updateEntityPosition(
                 entityModel,
@@ -128,6 +129,25 @@ extend(AnimationManager.prototype, {
         // inefficient but whatever
         // shrink entities
         entitiesIngame.forEach(e => {
+            if (e.isRotating)
+            {
+                // compute rotation
+                // e.rotation.z += 0.1;
+                const p = e.graphicalComponent.position;
+                // const r = e.graphicalComponent.rotation;
+                const dts = deltaT / 1e3;
+                const d = Math.sqrt(p.x * p.x + p.y * p.y);
+                let t = Math.atan2(p.y, p.x);
+                t += 0.5 * dts;
+                p.set(
+                    d * Math.cos(t),
+                    d * Math.sin(t),
+                    p.z
+                );
+                e.graphicalComponent.rotation.z += dts;
+                return;
+            }
+
             if (!e.isShrinking) return;
 
             const s = e.shrinkTime + deltaT;

@@ -1,5 +1,5 @@
 /**
- * Level D.
+ * Level E.
  */
 
 'use strict';
@@ -8,10 +8,10 @@ import extend, { inherit }  from '../../../../extend';
 
 import { Level }            from '../../level';
 import { Vector3 }          from 'three';
-import { LevelDTerrain }    from './terrain';
-import { LevelDObjects }    from './objects';
+import { LevelETerrain }    from './terrain';
+import { LevelEObjects }    from './objects';
 
-let LevelD = function(title, id)
+let LevelE = function(title, id)
 {
     Level.call(this, title, id);
 
@@ -22,111 +22,60 @@ let LevelD = function(title, id)
     this.generateStaticObjects();
 
     this.player = {
-        position: [0, -15, 1.5],
-        rotation: [0, 0, Math.PI],
-        isXYFlipped: true
+        position: [0, -12, 1.5],
+        rotation: [0, 0, Math.PI]
     };
 
     this.textSequence = [
         {
             direct: true,
-            text: ''
+            text: 'Encore ?'
         },
         {
             direct: true,
-            text: ''
+            text: 'J’ai des yeux, je te signale !'
         },
         {
             direct: true,
-            text: '…'
+            text: 'Je te vois me tourner autour…'
         },
         {
             direct: true,
-            text: 'Encore toi.'
+            text: 'Si tu ne veux pas de moi, rien ne t’oblige à rester.'
         },
         {
             direct: true,
-            text: 'J’ai toujours pas de reflet.'
+            text: 'Puisque c’est comme ça, tiens !'
         },
         {
             direct: true,
-            text: 'Qu’est-ce que ça peut bien vouloir dire ?'
-        },
-        {
-            direct: true,
-            text: '…'
-        },
-        {
-            direct: true,
-            text: 'J’imagine que tu ne veux toujours pas de moi…'
-        },
-        {
-            direct: true,
-            text: '…comme objectif ?'
-        }
-    ];
-
-    const secondTextSequence = [
-        {
-            direct: true,
-            text: 'Qu’est-ce que tu fais ?'
+            text: 'Et bonne chance pour trouver la bonne !'
         },
         {
             timeToWaitBefore: 5000,
-            text: 'Hm…'
+            text: 'Elles ne peuvent pas te voir.'
         },
         {
             direct: true,
-            text: 'Hmmmmm…'
-        },
-        {
-            direct: true,
-            text: 'Ton reflet est…'
-        },
-        {
-            direct: true,
-            text: 'Bizarre.'
-        },
-        {
-            direct: true,
-            text: 'C’est comme s’il s’était désynchronizé !'
-        },
-        {
-            timeToWaitBefore: 10000,
-            text: 'J’ai le pied mouillé.'
-        },
-        {
-            direct: true,
-            text: 'Ça rafraîchit !'
-        },
-        {
-            timeToWaitBefore: 10000,
-            text: 'Je peux te dire un secret ?'
-        },
-        {
-            direct: true,
-            text: '<span style="color: rebeccapurple">' +
-                'C’est près de l’eau que je rêve le mieux.</span>'
-        },
+            text: '<span style="color: rebeccapurple">Tristesse.</span>'
+        }
     ];
 
-    const preObjectiveVector = new Vector3(-15, 0, 0.5);
-    const objectiveVector = new Vector3(6, -11, 3.5);
+    const objectiveVector = new Vector3(5, 5, 5.5);
 
-    const pfs = this.getStelas();
-    const bck = this.getBlockers();
+    // const pfs = this.getPlatforms();
 
     this.scenario = [
         {
             type: 'splash',
             titles: [
-                '<h3>Puddle 3</h3>', // after, sub
-                '<h3>Réflection</h3>',
+                '<h3>Puddle 4</h3>', // after, sub
+                '<h3>Beaucoup</h3>',
             ],
-            fadeInTitle: 1000,   // for each title, time in milliseconds
-            fadeOutTitle: 1000,  // time fade out each title
-            keepTitle: 2000,     // time to keep each title full brightness
-            fadeOutSplash: 2000, // time to fade out the title screen
+            fadeInTitle: 1,   // for each title, time in milliseconds
+            fadeOutTitle: 1,  // time fade out each title
+            keepTitle: 2,     // time to keep each title full brightness
+            fadeOutSplash: 2, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -144,56 +93,52 @@ let LevelD = function(title, id)
             {
                 const em = backend.entityModel;
                 const i = em.getHelperCupDialogueAdvancement();
-                return i >= 7;
+                return i >= 4;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
             {
                 const em = backend.entityModel;
 
-                // apparition des stèles
-                const e = backend.app.engine;
-                em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
+                ux.playLittleValidateFeedback();
 
-                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
-                ux.validateTask();
-            }
-        },
-        {
-            type: 'event',
-            // eslint-disable-next-line no-unused-vars
-            checkCondition: function(backend, ux)
-            {
-                const player = backend.selfModel.position;
-                const destination = preObjectiveVector;
-                return player.distanceTo(destination) < 2;
-            },
-            // eslint-disable-next-line no-unused-vars
-            performWhenConditionMet: function(backend, ux)
-            {
-                const em = backend.entityModel;
-                em.setHelperCupTextSequence(secondTextSequence);
-
-                // apparition des blockers
-                const e = backend.app.engine;
-                em.addNewObjects(bck, e.graphics, e.physics, e.graphics.animationManager);
+                // const e = backend.app.engine;
+                // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
                 const generated = [];
                 const ne = {};
-                const x = objectiveVector.x;
-                const y = objectiveVector.y;
-                const z = objectiveVector.z;
+                // const x = objectiveVector.x;
+                // const y = objectiveVector.y;
+                // const z = objectiveVector.z;
+
+                const factor = 1.1;
                 const objectiveID = em.addNewLittleCup(
-                    ne, y, x, z, // flip
-                    true,
+                    ne, 4 * factor, 6 * factor, 3,
                     false,
                     false,
-                    generated
+                    false,
+                    generated,
+                    true
                 );
+
+                // 100 should do
+                for (let i = 1; i < 15; ++i)
+                    for (let j = 1; j < 15; ++j)
+                    {
+                        if (i === 4 && j === 6) continue;
+                        em.addNewLittleCup(
+                            ne,
+                            (i % 2 > 0 ? i : -i) * factor,
+                            (j % 2 > 0 ? j : -j) * factor,
+                            3,
+                            true, false, false,
+                            generated,
+                            true
+                        );
+                    }
+
                 em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);
-
-                backend.selfModel.flipXYMain();
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();
@@ -250,21 +195,17 @@ let LevelD = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                const em = backend.entityModel;
-                const i = em.getHelperCupDialogueAdvancement();
-                ux.updateDialogueAdvancement(this.levelID, i);
-
                 ux.app.engine.audio.playCredits();
-                ux.informPlayer('Level D cleared!');
+                ux.informPlayer('Level E cleared!');
                 ux.validateLevel();
             }
         }
     ];
 };
 
-inherit(LevelD, Level);
+inherit(LevelE, Level);
 
-extend(LevelD.prototype, {
+extend(LevelE.prototype, {
 
     getTerrain() {
         return this.terrain;
@@ -290,7 +231,7 @@ extend(LevelD.prototype, {
         const ne = {};
         const generated = [];
         const bigCup = em.makeNewBigCup(
-            0, 0, 0.5, false,
+            0, 0, 0.6, false,
             this.textSequence
         );
         const idCup = em.addNewBigCup(ne, bigCup, generated);
@@ -300,7 +241,7 @@ extend(LevelD.prototype, {
 
 });
 
-extend(LevelD.prototype, LevelDTerrain);
-extend(LevelD.prototype, LevelDObjects);
+extend(LevelE.prototype, LevelETerrain);
+extend(LevelE.prototype, LevelEObjects);
 
-export { LevelD };
+export { LevelE };

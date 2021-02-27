@@ -12,6 +12,11 @@ let LevelX = function(title, id)
 {
     Level.call(this, title, id);
 
+    this.player = {
+        position: [0, 0, 1.5],
+        rotation: [0, 0, Math.PI]
+    };
+
     this.scenario = [
         {
             type: 'splash',
@@ -44,11 +49,11 @@ inherit(LevelX, Level);
 extend(LevelX.prototype, {
 
     getTerrain() {
-        return this.terrain;
+        return null;
     },
 
     getObjects() {
-        return this.objects;
+        return null;
     },
 
     getPlayer()
@@ -60,26 +65,8 @@ extend(LevelX.prototype, {
         return this.scenario;
     },
 
-    startupObjects(app)
-    {
-        const backend = app.model.backend;
-        const em = backend.entityModel;
-
-        const generated = [];
-        const ne = {}; // new entities
-
-        const bigCup = em.makeNewBigCup(
-            0, 0, 0.6, false,
-            this.textSequence
-        );
-        const idCup = em.addNewBigCup(ne, bigCup, generated);
-        em.setHelperCupID(idCup);
-
-        // em.addNewLittleCup(ne, 1, 1, 0.3, generated);
-
-        // apply
-        backend.updateEntities(ne);
-    }
+    startupObjects()
+    {}
 });
 
 export { LevelX };

@@ -36,7 +36,7 @@ let CharacterCollisionModel = function(physicsEntity, collisionSettings, e)
     // Step down test
     this.bumperCenterTest = new Vector3();
     this.bumperCenterTestTranslated = new Vector3();
-    this.stepDownHeight = this.lifterRadius / 2 - 0.05;
+    this.stepDownHeight = this.lifterRadius / 8;// - 0.05;
     // Math.min(
     //     this.lifterRadius / 2,
     //     this.lifterRadius - (this.bumperRadius - this.lifterDelta)

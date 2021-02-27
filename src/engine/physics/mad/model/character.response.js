@@ -191,6 +191,12 @@ let CharacterResponseModule = {
             v2.set(tris[3 * b], tris[3 * b + 1], tris[3 * b + 2]);
             v3.set(tris[3 * c], tris[3 * c + 1], tris[3 * c + 2]);
 
+            if (
+                v1.z < bumperCenter.z &&
+                v2.z < bumperCenter.z &&
+                v3.z < bumperCenter.z
+            ) continue;
+
             // Collide bump and clamp correction.
             displacement = collider.intersectSphereTriOrthogonal(
                 bumperCenter, bumpR2, v1, v2, v3, bumpR, gravityUp

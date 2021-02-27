@@ -17,6 +17,39 @@ let LevelFObjects = {
                 h: 1,
                 d: 10
             },
+            {
+                type: 'box',
+                color: '#797979',
+                reflection: true,
+                image: true,
+                position: [10, 12, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 10
+            },
+            {
+                type: 'box',
+                color: '#797979',
+                reflection: true,
+                image: true,
+                position: [10, 20, 0],
+                rotation: [0, -Math.PI / 16, 0],
+                w: 1,
+                h: 1,
+                d: 10
+            },
+            {
+                type: 'box',
+                color: '#797979',
+                reflection: true,
+                image: false,
+                position: [10, 5, 5],
+                rotation: [0, 0, Math.PI / 4],
+                w: 1,
+                h: 1,
+                d: 0.5
+            },
         ];
 
         return platforms;

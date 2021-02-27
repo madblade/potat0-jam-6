@@ -24,7 +24,7 @@ let LevelFTerrain = {
             // const nx = (i / nbVerticesX - 0.5) * 8;
             for (let j = 0; j < nbVerticesY; ++j)
             {
-                const a = 1.5 * Math.sin(-0.5 + i / 8 - j / 8);
+                const a = 2.5 * Math.sin(-0.5 + i / 8 - j / 8);
                 const b = 0.8 * Math.cos(1.8 + i * j / 80);
                 const c = 1.5 * Math.sin(0.5 + j / 12 + i / 12);
                 points.push(

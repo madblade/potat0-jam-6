@@ -29,25 +29,15 @@ let RendererUpdates = {
     selectObjectsWithReflection(scene, deltaTInMillis)
     {
         scene.traverse(obj => {
-            if (obj.userData.isXYFlipped)
+            if (obj.userData.isMainXYFlipped)
             {
                 const p = obj.position;
-                // obj.userData.saveP.copy(p);
                 p.set(p.y, p.x, p.z);
-                // obj.updateWorldMatrix(false, false);
-                // obj.traverse(o2 => {
-                //     if (!o2.isSkinnedMesh)
-                //         o2.updateWorldMatrix(false, false);
-                // });
-                obj.updateMatrixWorld(true);
-                console.log(p.x);
-                // console.log(p);
-                // const tx = obj.position.x;
-                // obj.position.x = obj.position.y;
-                // obj.position.y = tx;
-                // obj.traverse(o2 => {
-                //     if (o2.isMesh) o2.updateMatrixWorld();
-                // });
+                obj.updateWorldMatrix(false, false);
+                obj.traverse(o2 => {
+                    if (o2.isSkinnedMesh)
+                        o2.updateWorldMatrix(true, false);
+                });
             }
 
             if (!obj.isMesh) return;
@@ -76,20 +66,16 @@ let RendererUpdates = {
     selectObjectsWithPrimaryImage(scene)
     {
         scene.traverse(obj => {
-            if (obj.userData.isXYFlipped)
+            if (obj.userData.isMainXYFlipped)
             {
                 const p = obj.position;
                 p.set(p.y, p.x, p.z);
-                // console.log(obj);
-                // p.copy(obj.userData.saveP);
-                // obj.updateWorldMatrix(false, false);
-                // obj.traverse(o2 =>
-                // {
-                //     if (!o2.isSkinnedMesh)
-                //         o2.updateWorldMatrix(false, true);
-                // });
-                obj.updateMatrixWorld(true);
-                console.log(p.x);
+                obj.updateWorldMatrix(false, false);
+                obj.traverse(o2 =>
+                {
+                    if (o2.isSkinnedMesh)
+                        o2.updateWorldMatrix(true, true);
+                });
             }
 
             if (!obj.isMesh) return;

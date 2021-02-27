@@ -125,6 +125,8 @@ let LevelD = function(title, id)
                 //     }
                 // ]);
 
+                // aller sur une stèle -> flip
+
                 const generated = [];
                 const ne = {};
                 const x = objectiveVector.x;
@@ -140,6 +142,8 @@ let LevelD = function(title, id)
                 );
                 em.setObjectiveID(objectiveID);
                 backend.updateEntities(ne);
+
+                backend.selfModel.flipXYMain();
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();

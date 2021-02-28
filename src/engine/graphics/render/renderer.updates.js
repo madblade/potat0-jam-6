@@ -46,7 +46,7 @@ let RendererUpdates = {
                 obj.visible = true;
             else
             {
-                obj.visible = false;
+                // obj.visible = false;
                 return;
             }
 

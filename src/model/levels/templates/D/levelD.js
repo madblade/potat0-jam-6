@@ -89,7 +89,7 @@ let LevelD = function(title, id)
         },
         {
             direct: true,
-            text: 'C’est comme s’il s’était désynchronizé !'
+            text: 'C’est comme s’il s’était désynchronisé !'
         },
         {
             timeToWaitBefore: 10000,

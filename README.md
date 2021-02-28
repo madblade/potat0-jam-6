@@ -3,7 +3,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-![](https://raw.githubusercontent.com/madblade/madblade/potat0-jam-6/master/img/miniature-large-gh.jpg)
+![](https://raw.githubusercontent.com/madblade/potat0-jam-6/master/img/miniature-large-gh.jpg)
 
 # Demo
 

@@ -20,12 +20,12 @@ let Levels = function(app)
 
     this.levels = [
 
-        new LevelF('Flaque 5', 5),
         new LevelA('Introduction', 0),
         new LevelB('Flaque 1', 1),
         new LevelC('Flaque 2', 2),
         new LevelD('Flaque 3', 3),
         new LevelE('Flaque 4', 4),
+        new LevelF('Flaque 5', 5),
         new LevelX('Générique', 6),
 
     ];

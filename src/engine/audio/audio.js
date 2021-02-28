@@ -178,6 +178,11 @@ extend(AudioEngine.prototype, {
         a1.play();
     },
 
+    playBonusCredits()
+    {
+        this.stopMusic();
+    },
+
     playMusic()
     {
         this.stopMusic();

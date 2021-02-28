@@ -110,6 +110,24 @@ let LevelF = function(title, id)
                 em.setHelperCupTextSequence(ts1);
                 em.debloomMainCup();
 
+                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
+                ux.validateTask();
+            }
+        },
+        {
+            type: 'event',
+            // eslint-disable-next-line no-unused-vars
+            checkCondition: function(backend, ux)
+            {
+                const em = backend.entityModel;
+                const i = em.getHelperCupDialogueAdvancement();
+                return i >= 1;
+            },
+            // eslint-disable-next-line no-unused-vars
+            performWhenConditionMet: function(backend, ux)
+            {
+                const em = backend.entityModel;
+
                 const e = backend.app.engine;
                 em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
 
@@ -137,44 +155,10 @@ let LevelF = function(title, id)
                 em.setAxolotlIndex2(a2Index);
                 backend.updateEntities(ne);
 
-                ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
-                ux.validateTask();
-            }
-        },
-        {
-            type: 'event',
-            // eslint-disable-next-line no-unused-vars
-            checkCondition: function(backend, ux)
-            {
-                const em = backend.entityModel;
-                const i = em.getHelperCupDialogueAdvancement();
-                return i >= 1;
-            },
-            // eslint-disable-next-line no-unused-vars
-            performWhenConditionMet: function(backend, ux)
-            {
-                const em = backend.entityModel;
-
                 em.setHelperCupTextSequence(ts2);
                 ux.playLittleValidateFeedback();
 
-                // const e = backend.app.engine;
-                // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
-
-                const e = backend.app.engine;
                 em.addNewObjects(cbs, e.graphics, e.physics, e.graphics.animationManager);
-
-                // const factor = 1.2;
-                // const objectiveID = em.addNewLittleCup(
-                //     ne, -4 * factor, -6 * factor, 3,
-                //     false,
-                //     false,
-                //     false,
-                //     generated,
-                //     true
-                // );
-
-                // em.setObjectiveID(objectiveID);
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();

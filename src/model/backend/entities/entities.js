@@ -343,6 +343,22 @@ extend(EntityModel.prototype, {
         return newID;
     },
 
+    disappearObjective()
+    {
+        const id = this.objectiveID;
+        if (id < 0) return;
+        if (id <= 0) return null;
+        const e = this.entitiesIngame.get(id.toString());
+        const gc = e.graphicalComponent;
+        gc.traverse(o => {
+            if (o.isMesh)
+            {
+                o.userData.hasReflection = false;
+                o.userData.hasPrimaryImage = false;
+            }
+        });
+    },
+
     setAxolotlIndex1(ai)
     {
         this.axolotlIndex1 = ai;
@@ -353,9 +369,31 @@ extend(EntityModel.prototype, {
     },
     revealAxolotl1()
     {
+        const id = this.axolotlIndex1;
+        if (id < 0) return;
+        const c = this.entitiesIngame.get(id.toString());
+        const gc = c.graphicalComponent;
+        gc.traverse(o => {
+            if (o.isMesh)
+            {
+                o.userData.hasReflection = true;
+                o.userData.hasPrimaryImage = false;
+            }
+        });
     },
     revealAxolotl2()
     {
+        const id = this.axolotlIndex2;
+        if (id < 0) return;
+        const c = this.entitiesIngame.get(id.toString());
+        const gc = c.graphicalComponent;
+        gc.traverse(o => {
+            if (o.isMesh)
+            {
+                o.userData.hasReflection = true;
+                o.userData.hasPrimaryImage = false;
+            }
+        });
     },
 
     addNewAxolotl(

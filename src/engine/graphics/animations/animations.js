@@ -171,7 +171,7 @@ extend(AnimationManager.prototype, {
                 let tt = e.graphicalComponent.ttt || 0;
                 tt += dts;
                 e.graphicalComponent.ttt = tt;
-                p.x = -20 - 10. * Math.sin(tt / 2);
+                p.x = -20 - 8. * Math.sin(tt / 2);
                 return;
             }
 

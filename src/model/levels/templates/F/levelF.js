@@ -116,11 +116,11 @@ let LevelF = function(title, id)
                 const generated = [];
                 const ne = {};
                 const a1Index = em.addNewAxolotl(ne, 30, -5, 6,
-                    true, false,
+                    false, false,
                     generated, 1
                 );
                 const a2Index = em.addNewAxolotl(ne, 30, -15, 6,
-                    true, false,
+                    false, false,
                     generated, 2
                 );
                 const objectiveID = em.addNewLittleCup(
@@ -192,10 +192,11 @@ let LevelF = function(title, id)
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
             {
-                const em = backend.entityModel;
-
-                em.setHelperCupTextSequence(ts2);
                 ux.playLittleValidateFeedback();
+                const em = backend.entityModel;
+                em.disappearObjective();
+                em.revealAxolotl1();
+                em.revealAxolotl2();
 
                 // const e = backend.app.engine;
                 // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
@@ -215,10 +216,11 @@ let LevelF = function(title, id)
                 const em = backend.entityModel;
                 const p = em.getObjectivePosition();
                 const player = backend.selfModel.position;
-                // const d = player.distanceTo(p);
+                const d = player.distanceTo(p);
                 // window.dh.sg1.position.copy(p);
-                // return d < 1;
-                return false;
+                // console.log(d);
+                return d < 2;
+                // return false;
             },
             performWhenConditionMet: function(backend, ux)
             {

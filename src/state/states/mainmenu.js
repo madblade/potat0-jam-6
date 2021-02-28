@@ -9,7 +9,7 @@ import extend, { inherit }  from '../../extend';
 import { $ }                from '../../modules/polyfills/dom';
 import { GamepadNavigable } from '../../modules/navigation/navigable.gamepad';
 
-const GameTitle = 'Rad';
+const GameTitle = 'Puddle Game';
 const GameHeader = `
 <div class="container small-title">
     <h2>${GameTitle}</h2>

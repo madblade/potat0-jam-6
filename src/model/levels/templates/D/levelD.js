@@ -123,7 +123,7 @@ let LevelD = function(title, id)
             type: 'splash',
             titles: [
                 '<h3>Puddle 3</h3>', // after, sub
-                '<h3>Réflection</h3>',
+                '<h3>Réflexion</h3>',
             ],
             fadeInTitle: 1000,   // for each title, time in milliseconds
             fadeOutTitle: 1000,  // time fade out each title

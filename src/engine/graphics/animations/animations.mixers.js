@@ -4,6 +4,9 @@
  * - jump
  * - crouch
  * - attack
+ *
+ * I’m for hire!
+ * github.com/madblade
  */
 
 'use strict';

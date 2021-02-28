@@ -181,6 +181,9 @@ extend(AudioEngine.prototype, {
     playBonusCredits()
     {
         this.stopMusic();
+        const i1 = this.musicMap.get('bonus-credits');
+        const a1 = this.musicSources[i1];
+        a1.play();
     },
 
     playMusic()

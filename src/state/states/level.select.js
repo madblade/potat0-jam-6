@@ -164,6 +164,8 @@ extend(LevelSelectState.prototype, {
             let levelId = parseInt(levelIdString, 10);
             let ux = app.engine.ux;
             let level = app.model.levels.getLevel(levelId);
+            if (level.getTitle() === 'Générique')
+                ux.app.engine.audio.playCredits();
             ux.joinLevel(level);
         });
 

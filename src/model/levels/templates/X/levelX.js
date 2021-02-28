@@ -39,7 +39,15 @@ let LevelX = function(title, id)
         },
         {
             direct: true,
-            text: 'Il n’y a plus grand chose.'
+            text: 'Voilà, c’est fini.'
+        },
+        {
+            direct: true,
+            text: 'Tada !'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: '<span style="color: rebeccapurple">Merci de m’avoir tenu compagnie !</span>'
         },
     ];
 
@@ -48,15 +56,40 @@ let LevelX = function(title, id)
             type: 'splash',
             titles: [
                 '<h3>FIN</h3>', // after, sub
+
                 '<h3><b>Potat0 Game Jam</b> No.6</h3>' +
                 'thème: « le vrai objectif est caché »',
-                '<h3>musique originale<br/> TheLevg34</h3>',
+
+                '<h3>musique originale<br/> <small>TheLevg34</small></h3>',
+
+                '<h3>musique originale <small>(post-crédits)</small><br/> ' +
+                '<small>TheLevg34 et Nicolas Dross</small></h3>',
+
                 '<h3>gameplay, programmation, modèles, animations, ' +
-                'design, texte<br/>madblade</h3>',
-                '<h3>moteur maison' +
-                '<br/>madblade</h3>',
+                'design<br/><small>madblade</small></h3>',
+
+                '<h3>moteur maison (open-source GPLv3)' +
+                '<br/><small>madblade</small></h3>',
+
+                '<h3>assets CC BY 4.0 (attribution)' +
+                '<br/><small>modèle d’axolotl par xiaotian_63</small></h3>',
+
+                '<h3>assets CC0 (domaine public)' +
+                '<br/><small>sfx de marche / saut</small></h3>',
+
                 '<h1>Puddle Game</h1>', // main
+
                 '<h3>Merci d’avoir joué !</h3>',
+
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
+                '<h3></h3>',
             ],
             fadeInTitle: 1000,   // for each title, time in milliseconds
             fadeOutTitle: 1000,  // time fade out each title
@@ -67,8 +100,6 @@ let LevelX = function(title, id)
                 ux.informPlayer('Vous gagnâtes !');
 
                 backend.selfModel.unlock();
-
-                ux.app.engine.audio.playBonusCredits();
             }
         },
         {
@@ -78,13 +109,14 @@ let LevelX = function(title, id)
             {
                 const em = backend.entityModel;
                 const i = em.getHelperCupDialogueAdvancement();
-                return i >= 3;
+                return i >= 4;
             },
             // eslint-disable-next-line no-unused-vars
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();
+                ux.app.engine.audio.playBonusCredits();
             }
         },
         { // force user to quit via menu

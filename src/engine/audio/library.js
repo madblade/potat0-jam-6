@@ -8,6 +8,7 @@ import PompeJoyeuse         from '../../assets/audio/music/2_pompe_joyeuse.mp3';
 import PompeMelancolique    from '../../assets/audio/music/3_pompe_melancolique.mp3';
 import ValseManouche        from '../../assets/audio/music/4_valse_manouche.mp3';
 import LesYeuxNoirs         from '../../assets/audio/music/5_les_yeux_noirs.mp3';
+import PulvisAquae          from '../../assets/audio/music/6_pulvis_aquae.mp3';
 
 // sfx global
 import SelectSound          from '../../assets/audio/menu.select.wav';
@@ -42,6 +43,7 @@ const SFXLibrary = {
         ['ambience-3', PompeMelancolique],
         ['ambience-4', ValseManouche],
         ['credits', LesYeuxNoirs],
+        ['bonus-credits', PulvisAquae],
     ],
 
     positional: [

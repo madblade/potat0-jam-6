@@ -234,7 +234,7 @@ let LevelE = function(title, id)
             type: 'end',
             performWhenConditionMet: function(backend, ux)
             {
-                ux.app.engine.audio.playCredits();
+                // ux.app.engine.audio.playCredits();
                 ux.informPlayer('Level E cleared!');
                 ux.validateLevel();
             }

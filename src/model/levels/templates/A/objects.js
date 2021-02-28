@@ -103,7 +103,7 @@ let LevelAObjects = {
                 rotation: [0, 0, 0],
                 w: 1,
                 h: 1,
-                d: 0.5
+                d: 0.25
             },
             {
                 type: 'box',
@@ -113,7 +113,7 @@ let LevelAObjects = {
                 rotation: [0, 0, 0],
                 w: 1,
                 h: 1,
-                d: 1
+                d: 0.5
             },
             {
                 type: 'box',

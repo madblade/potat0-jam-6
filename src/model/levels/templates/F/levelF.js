@@ -121,6 +121,14 @@ let LevelF = function(title, id)
                 // DON’T FORGET TO UNLOCK
                 backend.selfModel.unlock();
 
+                const sm = backend.selfModel;
+                sm.avatar.traverse(o => {
+                    if (o.isMesh)
+                    {
+                        o.userData.bloom = true;
+                    }
+                });
+
                 // validate task is auto-called for the splash event
             }
         },
@@ -139,6 +147,13 @@ let LevelF = function(title, id)
                 const em = backend.entityModel;
                 em.setHelperCupTextSequence(ts1);
                 em.debloomMainCup();
+                const sm = backend.selfModel;
+                sm.avatar.traverse(o => {
+                    if (o.isMesh)
+                    {
+                        o.userData.bloom = false;
+                    }
+                });
 
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();

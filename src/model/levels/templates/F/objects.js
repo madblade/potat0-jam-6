@@ -44,6 +44,18 @@ let LevelFObjects = {
             },
             {
                 type: 'box',
+                color: '#506473',
+                wall: true,
+                reflection: true,
+                image: true,
+                position: [10, 25, 0],
+                rotation: [0, 0, 0],
+                w: 1,
+                h: 1,
+                d: 8.5
+            },
+            {
+                type: 'box',
                 color: '#567774',
                 wall: true,
                 reflection: true,

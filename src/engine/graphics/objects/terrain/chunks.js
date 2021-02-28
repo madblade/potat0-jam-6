@@ -61,7 +61,7 @@ let ChunksModule = {
         //     color: 0xff000000, wireframe: true
         // });
         newMesh.userData.points = points;
-        this.attachDebugHelpers(newMesh);
+        // this.attachDebugHelpers(newMesh);
 
         // newMesh.rotation.set(0, 0, -Math.PI / 2);
         newMesh.position.set(px, py, 0.0); // Water == 0! (watercamera.js -> scope)

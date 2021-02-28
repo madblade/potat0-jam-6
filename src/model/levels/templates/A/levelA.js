@@ -102,6 +102,8 @@ let LevelA = function(title, id)
         },
     ];
 
+    this.nbUnlockableDialogue = this.textSequence.length;
+
     const objectiveVector = new Vector3(-15.75, -15.75);
 
     this.scenario = [

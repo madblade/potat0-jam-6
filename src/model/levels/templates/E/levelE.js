@@ -79,6 +79,18 @@ let LevelE = function(title, id)
             text: 'Non ?'
         },
         {
+            timeToWaitBefore: 2000,
+            text: 'Burp.'
+        },
+        {
+            direct: true,
+            text: 'J’ai le tournis.'
+        },
+        {
+            direct: true,
+            text: 'Si tu as le tournis aussi, n’hésite pas à faire une pause !'
+        },
+        {
             timeToWaitBefore: 20000,
             text: 'Je ne t’en veux pas, tu sais.'
         },
@@ -87,6 +99,9 @@ let LevelE = function(title, id)
             text: '<span style="color: rebeccapurple">Ce n’est pas comme si tu avais le choix.</span>'
         },
     ];
+
+
+    this.nbUnlockableDialogue = this.textSequence.length;
 
     // const pfs = this.getPlatforms();
 

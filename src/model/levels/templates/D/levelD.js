@@ -110,6 +110,8 @@ let LevelD = function(title, id)
         },
     ];
 
+    this.nbUnlockableDialogue = secondTextSequence.length;
+
     const preObjectiveVector = new Vector3(-15, 0, 0.5);
     const objectiveVector = new Vector3(6, -11, 3.5);
 

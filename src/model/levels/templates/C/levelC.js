@@ -61,6 +61,8 @@ let LevelC = function(title, id)
         }
     ];
 
+    this.nbUnlockableDialogue = this.textSequence.length;
+
     const objectiveVector = new Vector3(5, 5, 5.5);
 
     const pfs = this.getPlatforms();

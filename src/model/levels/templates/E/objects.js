@@ -9,57 +9,43 @@ let LevelEObjects = {
             {
                 type: 'box',
                 reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-10, 0, 1.5],
-                rotation: [0, 0, 0],
+                image: true,
+                stone: true,
+                position: [-10, 10, 0],
+                rotation: [0, 0, Math.PI / 16],
                 w: 1,
                 h: 1,
                 d: 0.5
             },
             {
                 type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-10, 5, 2.5],
-                rotation: [0, 0, 0],
+                image: true,
+                stone: true,
+                position: [-3, 10, 0],
+                rotation: [0, 0, Math.PI / 8],
                 w: 1,
                 h: 1,
-                d: 0.5
+                d: 1
             },
             {
                 type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [-5, 5, 3.5],
-                rotation: [0, 0, 0],
+                image: true,
+                stone: true,
+                position: [3, 10, 0],
+                rotation: [0, 0, Math.PI / 4],
                 w: 1,
                 h: 1,
-                d: 0.5
+                d: 2
             },
             {
                 type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [0, 5, 4.5],
-                rotation: [0, 0, 0],
+                image: true,
+                stone: true,
+                position: [10, 10, 0],
+                rotation: [0, 0, Math.PI / 3],
                 w: 1,
                 h: 1,
-                d: 0.5
-            },
-            {
-                type: 'box',
-                reflection: true,
-                image: false,
-                transplatform: true,
-                position: [5, 5, 4.5],
-                rotation: [0, 0, 0],
-                w: 1,
-                h: 1,
-                d: 0.5
+                d: 4
             },
         ];
 
@@ -127,23 +113,8 @@ let LevelEObjects = {
         const walls = this.generateWalls();
         objects.push(...walls);
 
-        // add 1 wall
-        // const mapWidth = 35;
-        // const wallHeight = 10;
-        // const mw2 = mapWidth / 2;
-        // const wh2 = wallHeight / 2;
-        // const additionalWall = {
-        //     type: 'box',
-        //     // reflection: true,
-        //     image: true,
-        //     wall: true,
-        //     position: [-2, -mw2 + 3, wh2 - 0.1],
-        //     rotation: [0, 0, 0],
-        //     w: mapWidth,
-        //     h: 1,
-        //     d: wallHeight
-        // };
-        // objects.push(additionalWall);
+        const platforms = this.getPlatforms();
+        objects.push(...platforms);
 
         const placeHolders = [
             {

@@ -64,8 +64,38 @@ let LevelF = function(title, id)
         {
             direct: true,
             text: '…s’il te plaît ?'
-        }
+        },
+        {
+            direct: true,
+            text: '…tant pis, j’imagine.'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: 'Ces colonnes m’ont l’air glissantes…'
+        },
+        {
+            direct: true,
+            text: 'Et ces reflets pour le moins <i>insolites</i>.'
+        },
+        {
+            timeToWaitBefore: 5000,
+            text: 'Tant que tout bouge en rythme,'
+        },
+        {
+            direct: true,
+            text: 'la vie est moins monotone.'
+        },
+        {
+            timeToWaitBefore: 20000,
+            text: 'J’aimerais bien savoir danser.'
+        },
+        {
+            direct: true,
+            text: '<span style="color: rebeccapurple">Comme ça on pourrait valser ensemble…</span>'
+        },
     ];
+
+    this.nbUnlockableDialogue = ts2.length;
 
     const pfs = this.getPlatforms();
 

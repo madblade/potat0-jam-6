@@ -13,7 +13,7 @@ let LevelFObjects = {
                 reflection: true,
                 image: true,
                 position: [10, 0, 0],
-                rotation: [0, Math.PI / 16, 0],
+                rotation: [0, Math.PI / 32, 0],
                 w: 1,
                 h: 1,
                 d: 10
@@ -37,7 +37,7 @@ let LevelFObjects = {
                 reflection: true,
                 image: true,
                 position: [10, 20, 0],
-                rotation: [0, -Math.PI / 16, 0],
+                rotation: [0, -Math.PI / 32, 0],
                 w: 1,
                 h: 1,
                 d: 10

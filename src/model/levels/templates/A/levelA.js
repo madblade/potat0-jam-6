@@ -174,32 +174,12 @@ let LevelA = function(title, id)
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
-                // backend.addObject(); static sphere
-                // backend.removeObject();
                 ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();
 
                 ux.validateTask(); // goto next task
-                // add entity (id = 1)
-                // const generatedIDs = [];
-                // const newEntities = {};
-                // let k = 0;
-                // const bigCupID =
-
-                // const bigCup = backend.entityModel.makeNewBigCup(
-                //     0, 0, 10, false,
-                // );
-                // em.addNewBigCup(newEntities, bigCup, generatedIDs);
-
-                // for (let i = 10; i < 15; ++i)
-                //     for (let j = 10; j < 15; ++j)
-                //     {
-                //         em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
-                //     }
-
-                // backend.updateEntities(newEntities);
 
                 // call fadeout just before validate
                 const rendererManager = backend.app.engine.graphics.rendererManager;

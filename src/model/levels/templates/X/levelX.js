@@ -66,12 +66,12 @@ let LevelX = function(title, id)
                 '<small>TheLevg34 et Nicolas Dross</small></h3>',
 
                 '<h3>gameplay, programmation, modèles, animations, ' +
-                'design<br/><small>madblade</small></h3>',
+                'design et bugs divers<br/><small>madblade</small></h3>',
 
                 '<h3>moteur maison (open-source GPLv3)' +
                 '<br/><small>madblade</small></h3>',
 
-                '<h3>assets CC BY 4.0 (attribution)' +
+                '<h3>asset CC BY 4.0 (attribution)' +
                 '<br/><small>modèle d’axolotl par xiaotian_63</small></h3>',
 
                 '<h3>assets CC0 (domaine public)' +

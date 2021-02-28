@@ -110,10 +110,10 @@ let LevelF = function(title, id)
                 '<h3>Puddle 5</h3>', // after, sub
                 '<h3>Synchreaune</h3>',
             ],
-            fadeInTitle: 1,   // for each title, time in milliseconds
-            fadeOutTitle: 1,  // time fade out each title
-            keepTitle: 2,     // time to keep each title full brightness
-            fadeOutSplash: 2, // time to fade out the title screen
+            fadeInTitle: 1000,   // for each title, time in milliseconds
+            fadeOutTitle: 1000,  // time fade out each title
+            keepTitle: 2000,     // time to keep each title full brightness
+            fadeOutSplash: 2000, // time to fade out the title screen
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Go to checkpoint!');
@@ -212,12 +212,6 @@ let LevelF = function(title, id)
                 em.revealAxolotl1();
                 em.revealAxolotl2();
 
-                // const e = backend.app.engine;
-                // em.addNewObjects(pfs, e.graphics, e.physics, e.graphics.animationManager);
-
-                // em.setObjectiveID(objectiveID);
-                // backend.updateEntities(ne);
-
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
                 ux.validateTask();
             }
@@ -231,40 +225,17 @@ let LevelF = function(title, id)
                 const p = em.getObjectivePosition();
                 const player = backend.selfModel.position;
                 const d = player.distanceTo(p);
-                // window.dh.sg1.position.copy(p);
-                // console.log(d);
                 return d < 2;
-                // return false;
             },
             performWhenConditionMet: function(backend, ux)
             {
                 ux.informPlayer('Checkpoint passed! Go to the next checkpoint…');
-                // backend.addObject(); static sphere
-                // backend.removeObject();
                 ux.playBigValidateFeedback();
 
                 const em = backend.entityModel;
                 em.triggerObjectiveShrink();
 
                 ux.validateTask(); // goto next task
-                // add entity (id = 1)
-                // const generatedIDs = [];
-                // const newEntities = {};
-                // let k = 0;
-                // const bigCupID =
-
-                // const bigCup = backend.entityModel.makeNewBigCup(
-                //     0, 0, 10, false,
-                // );
-                // em.addNewBigCup(newEntities, bigCup, generatedIDs);
-
-                // for (let i = 10; i < 15; ++i)
-                //     for (let j = 10; j < 15; ++j)
-                //     {
-                //         em.addNewLittleCup(newEntities, i, j, 10, generatedIDs);
-                //     }
-
-                // backend.updateEntities(newEntities);
 
                 // call fadeout just before validate
                 const rendererManager = backend.app.engine.graphics.rendererManager;

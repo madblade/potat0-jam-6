@@ -166,6 +166,8 @@ extend(LevelSelectState.prototype, {
             let level = app.model.levels.getLevel(levelId);
             if (level.getTitle() === 'Générique')
                 ux.app.engine.audio.playCredits();
+            else
+                ux.app.engine.audio.playMusic();
             ux.joinLevel(level);
         });
 
